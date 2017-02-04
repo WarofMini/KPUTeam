@@ -1,0 +1,43 @@
+
+1. IOCP책 읽고 소켓모델 한번 보자.
+
+2. 영어공부 계획서 작성하기
+
+
+===========================================================================
+
+1. 최종발표  ppt 교수님 메일로 다음주 월요일까지 보내주세요
+
+2. guthub 팀별로 만들어서 주소 교수님께 알려주세요
+
+3. 팀안에서 개인별로 스케줄표 작성해서 메일로 보내주세요.
+
+4. 1월달 안으로 교수님께 상담 받으세요(3~4주)!!
+
+5. 깃허브 폴더 안에 weekely report 폴더를 만들어서 개인 일주일 일지 업로드(구현 및 학습내용, 문제점 및 해결방안, 다음주 계획 등)해주세요
+
+1~ 4번은 각 팀장이 모아서 교수님께 메일로 보내주시면 됩니다.
+
+그리고 2/27일날 팀별 발표 및 회식이 있습니다
+
+============================================================================
+
+
+윈도우 -> 설정 -> 업데이트 및 복구 -> 복구 -> 이 PC 초기화 시작
+
+
+
+TED 외우기 
+
+1. Frans Lanting: Photos that give voice to the animal kingdom
+
+2. Paolo Cardini: Forget multitasking, try monotasking
+
+3. Eric Berlow: Simplifying complexity
+
+4. Marcin Jakubowski: Open-sourced blueprints for civilization
+
+5. Derek Sivers: Keep your goals to yourself
+
+
+천천히 하되 꾸준히 하자.
