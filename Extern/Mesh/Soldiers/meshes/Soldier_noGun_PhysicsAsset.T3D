@@ -1,0 +1,480 @@
+Begin Object Class=PhysicsAsset Name="Soldier_noGun_PhysicsAsset"
+   Begin Object Class=SkeletalBodySetup Name="SkeletalBodySetup_20"
+   End Object
+   Begin Object Class=SkeletalBodySetup Name="SkeletalBodySetup_19"
+   End Object
+   Begin Object Class=SkeletalBodySetup Name="SkeletalBodySetup_18"
+   End Object
+   Begin Object Class=SkeletalBodySetup Name="SkeletalBodySetup_17"
+   End Object
+   Begin Object Class=SkeletalBodySetup Name="SkeletalBodySetup_16"
+   End Object
+   Begin Object Class=SkeletalBodySetup Name="SkeletalBodySetup_15"
+   End Object
+   Begin Object Class=SkeletalBodySetup Name="SkeletalBodySetup_14"
+   End Object
+   Begin Object Class=SkeletalBodySetup Name="SkeletalBodySetup_13"
+   End Object
+   Begin Object Class=SkeletalBodySetup Name="SkeletalBodySetup_12"
+   End Object
+   Begin Object Class=SkeletalBodySetup Name="SkeletalBodySetup_11"
+   End Object
+   Begin Object Class=SkeletalBodySetup Name="SkeletalBodySetup_10"
+   End Object
+   Begin Object Class=SkeletalBodySetup Name="SkeletalBodySetup_9"
+   End Object
+   Begin Object Class=SkeletalBodySetup Name="SkeletalBodySetup_8"
+   End Object
+   Begin Object Class=SkeletalBodySetup Name="SkeletalBodySetup_7"
+   End Object
+   Begin Object Class=SkeletalBodySetup Name="SkeletalBodySetup_6"
+   End Object
+   Begin Object Class=SkeletalBodySetup Name="SkeletalBodySetup_5"
+   End Object
+   Begin Object Class=SkeletalBodySetup Name="SkeletalBodySetup_4"
+   End Object
+   Begin Object Class=SkeletalBodySetup Name="SkeletalBodySetup_3"
+   End Object
+   Begin Object Class=SkeletalBodySetup Name="SkeletalBodySetup_2"
+   End Object
+   Begin Object Class=SkeletalBodySetup Name="SkeletalBodySetup_1"
+   End Object
+   Begin Object Class=SkeletalBodySetup Name="SkeletalBodySetup_0"
+   End Object
+   Begin Object Class=PhysicsConstraintTemplate Name="PhysicsConstraintTemplate_64"
+   End Object
+   Begin Object Class=PhysicsConstraintTemplate Name="PhysicsConstraintTemplate_63"
+   End Object
+   Begin Object Class=PhysicsConstraintTemplate Name="PhysicsConstraintTemplate_62"
+   End Object
+   Begin Object Class=PhysicsConstraintTemplate Name="PhysicsConstraintTemplate_61"
+   End Object
+   Begin Object Class=PhysicsConstraintTemplate Name="PhysicsConstraintTemplate_60"
+   End Object
+   Begin Object Class=PhysicsConstraintTemplate Name="PhysicsConstraintTemplate_59"
+   End Object
+   Begin Object Class=PhysicsConstraintTemplate Name="PhysicsConstraintTemplate_58"
+   End Object
+   Begin Object Class=PhysicsConstraintTemplate Name="PhysicsConstraintTemplate_57"
+   End Object
+   Begin Object Class=PhysicsConstraintTemplate Name="PhysicsConstraintTemplate_56"
+   End Object
+   Begin Object Class=PhysicsConstraintTemplate Name="PhysicsConstraintTemplate_55"
+   End Object
+   Begin Object Class=PhysicsConstraintTemplate Name="PhysicsConstraintTemplate_54"
+   End Object
+   Begin Object Class=PhysicsConstraintTemplate Name="PhysicsConstraintTemplate_53"
+   End Object
+   Begin Object Class=PhysicsConstraintTemplate Name="PhysicsConstraintTemplate_52"
+   End Object
+   Begin Object Class=PhysicsConstraintTemplate Name="PhysicsConstraintTemplate_51"
+   End Object
+   Begin Object Class=PhysicsConstraintTemplate Name="PhysicsConstraintTemplate_50"
+   End Object
+   Begin Object Class=PhysicsConstraintTemplate Name="PhysicsConstraintTemplate_49"
+   End Object
+   Begin Object Class=PhysicsConstraintTemplate Name="PhysicsConstraintTemplate_48"
+   End Object
+   Begin Object Class=PhysicsConstraintTemplate Name="PhysicsConstraintTemplate_47"
+   End Object
+   Begin Object Class=PhysicsConstraintTemplate Name="PhysicsConstraintTemplate_46"
+   End Object
+   Begin Object Class=PhysicsConstraintTemplate Name="PhysicsConstraintTemplate_45"
+   End Object
+   Begin Object Class=BodySetup Name="BodySetup_367"
+   End Object
+   Begin Object Class=BodySetup Name="BodySetup_366"
+   End Object
+   Begin Object Class=BodySetup Name="BodySetup_365"
+   End Object
+   Begin Object Class=BodySetup Name="BodySetup_364"
+   End Object
+   Begin Object Class=BodySetup Name="BodySetup_363"
+   End Object
+   Begin Object Class=BodySetup Name="BodySetup_362"
+   End Object
+   Begin Object Class=BodySetup Name="BodySetup_361"
+   End Object
+   Begin Object Class=BodySetup Name="BodySetup_360"
+   End Object
+   Begin Object Class=BodySetup Name="BodySetup_359"
+   End Object
+   Begin Object Class=BodySetup Name="BodySetup_358"
+   End Object
+   Begin Object Class=BodySetup Name="BodySetup_357"
+   End Object
+   Begin Object Class=BodySetup Name="BodySetup_356"
+   End Object
+   Begin Object Class=BodySetup Name="BodySetup_355"
+   End Object
+   Begin Object Class=BodySetup Name="BodySetup_354"
+   End Object
+   Begin Object Class=BodySetup Name="BodySetup_353"
+   End Object
+   Begin Object Class=BodySetup Name="BodySetup_352"
+   End Object
+   Begin Object Class=BodySetup Name="BodySetup_351"
+   End Object
+   Begin Object Class=BodySetup Name="BodySetup_350"
+   End Object
+   Begin Object Class=BodySetup Name="BodySetup_349"
+   End Object
+   Begin Object Class=BodySetup Name="BodySetup_348"
+   End Object
+   Begin Object Class=BodySetup Name="BodySetup_347"
+   End Object
+   Begin Object Name="SkeletalBodySetup_20"
+      AggGeom=(SphylElems=((Center=(X=4.557027,Y=0.565342,Z=-0.105732),Orientation=(X=0.500000,Y=0.500000,Z=0.500000,W=0.500000),Radius=5.118466,Length=2.999785)))
+      BoneName="Soldier_LLeg2"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+   End Object
+   Begin Object Name="SkeletalBodySetup_19"
+      AggGeom=(SphylElems=((Center=(X=5.141595,Y=0.317337,Z=0.089597),Orientation=(X=0.500000,Y=0.500000,Z=0.500000,W=0.500000),Radius=7.310692,Length=4.206481)))
+      BoneName="Soldier_LLeg1"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+   End Object
+   Begin Object Name="SkeletalBodySetup_18"
+      AggGeom=(SphylElems=((Center=(X=6.730920,Y=-0.024470,Z=1.099115),Orientation=(X=-0.121264,Y=0.039251,Z=-0.706017,W=0.696631),Radius=3.974306,Length=8.078423)))
+      BoneName="Soldier_LArmPalm"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+   End Object
+   Begin Object Name="SkeletalBodySetup_17"
+      AggGeom=(SphylElems=((Center=(X=7.491443,Y=0.609326,Z=0.526524),Orientation=(X=0.500000,Y=0.500000,Z=0.500000,W=0.500000),Radius=7.165580,Length=3.939170)))
+      BoneName="Soldier_LArm2"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+   End Object
+   Begin Object Name="SkeletalBodySetup_16"
+      AggGeom=(SphylElems=((Center=(X=12.735767,Y=0.111676,Z=0.217338),Orientation=(X=0.500000,Y=0.500000,Z=0.500000,W=0.500000),Radius=9.688364,Length=5.827472)))
+      BoneName="Soldier_LArm1"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+   End Object
+   Begin Object Name="SkeletalBodySetup_15"
+      AggGeom=(SphylElems=((Orientation=(X=0.503598,Y=0.496375,Z=0.496375,W=0.503598),Radius=0.505000,Length=0.505000)))
+      BoneName="Soldier_LArmCollarbone"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+   End Object
+   Begin Object Name="SkeletalBodySetup_14"
+      AggGeom=(SphylElems=((Center=(X=6.730958,Y=-0.024720,Z=-1.098847),Orientation=(X=0.121284,Y=-0.039176,Z=-0.706021,W=0.696628),Radius=3.974528,Length=8.078387)))
+      BoneName="Soldier_RArmPalm"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+   End Object
+   Begin Object Name="SkeletalBodySetup_13"
+      AggGeom=(SphylElems=((Center=(X=7.491432,Y=0.609292,Z=-0.536137),Orientation=(X=0.500000,Y=0.500000,Z=0.500000,W=0.500000),Radius=7.165580,Length=3.939166)))
+      BoneName="Soldier_RArm2"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+   End Object
+   Begin Object Name="SkeletalBodySetup_12"
+      AggGeom=(SphylElems=((Center=(X=12.759016,Y=0.311580,Z=-0.174011),Orientation=(X=0.500000,Y=0.500000,Z=0.500000,W=0.500000),Radius=9.693486,Length=5.803951)))
+      BoneName="Soldier_RArm1"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+   End Object
+   Begin Object Name="SkeletalBodySetup_11"
+      AggGeom=(SphylElems=((Orientation=(X=0.495628,Y=0.504334,Z=0.504334,W=0.495628),Radius=0.505000,Length=0.505000)))
+      BoneName="Soldier_RArmCollarbone"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+   End Object
+   Begin Object Name="SkeletalBodySetup_10"
+      AggGeom=(SphylElems=((Center=(X=-0.102618,Y=-0.000016,Z=0.736687),Orientation=(X=0.472349,Y=0.472359,Z=0.526201,W=0.526190),Radius=3.501021,Length=3.500286)))
+      BoneName="Soldier_REye"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+   End Object
+   Begin Object Name="SkeletalBodySetup_9"
+      AggGeom=(SphylElems=((Center=(X=0.177771,Y=-0.000015,Z=0.771014),Orientation=(X=0.477756,Y=0.477770,Z=0.521297,W=0.521282),Radius=3.501021,Length=3.501019)))
+      BoneName="Soldier_LEye"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+   End Object
+   Begin Object Name="SkeletalBodySetup_8"
+      AggGeom=(SphylElems=((Center=(X=-0.011855,Y=-2.203970,Z=0.730368),Orientation=(X=0.502551,Y=-0.496488,Z=-0.497424,W=0.503498),Radius=3.899595,Length=6.262641)))
+      BoneName="Soldier_chin"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+   End Object
+   Begin Object Name="SkeletalBodySetup_7"
+      AggGeom=(SphylElems=((Center=(X=3.056900,Y=-0.908147,Z=0.007232),Orientation=(X=0.671995,Y=-0.218456,Z=-0.218762,W=0.672936),Radius=20.151543,Length=22.143909)))
+      BoneName="Soldier_Head"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+   End Object
+   Begin Object Name="SkeletalBodySetup_6"
+      AggGeom=(SphylElems=((Orientation=(X=0.500000,Y=0.500000,Z=0.500000,W=0.500000),Radius=0.505000,Length=0.505000)))
+      BoneName="Soldier_Spine"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+   End Object
+   Begin Object Name="SkeletalBodySetup_5"
+      AggGeom=(SphylElems=((Center=(X=0.801234,Y=0.619513,Z=0.047891),Orientation=(X=0.005228,Y=-0.004748,Z=-0.707091,W=0.707087),Radius=16.340433,Length=24.025166)))
+      BoneName="Soldier_Spine3"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+   End Object
+   Begin Object Name="SkeletalBodySetup_4"
+      AggGeom=(SphylElems=((Center=(X=2.667606,Y=0.120930,Z=-0.044549),Orientation=(X=0.500000,Y=0.500000,Z=0.500000,W=0.500000),Radius=23.246632,Length=2.442327)))
+      BoneName="Soldier_Spine2"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+   End Object
+   Begin Object Name="SkeletalBodySetup_3"
+      AggGeom=(SphylElems=((Center=(X=8.536106,Y=-0.271583,Z=-0.065073),Orientation=(X=0.500000,Y=0.500000,Z=0.500000,W=0.500000),Radius=22.505056,Length=4.848245)))
+      BoneName="Soldier_Spine1"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+   End Object
+   Begin Object Name="SkeletalBodySetup_2"
+      AggGeom=(SphylElems=((Center=(X=4.570870,Y=0.485873,Z=0.015176),Orientation=(X=0.500000,Y=0.500000,Z=0.500000,W=0.500000),Radius=5.072155,Length=2.986200)))
+      BoneName="Soldier_RLeg2"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+   End Object
+   Begin Object Name="SkeletalBodySetup_1"
+      AggGeom=(SphylElems=((Center=(X=5.032503,Y=0.140183,Z=-0.127730),Orientation=(X=0.500000,Y=0.500000,Z=0.500000,W=0.500000),Radius=7.422084,Length=4.284768)))
+      BoneName="Soldier_RLeg1"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+   End Object
+   Begin Object Name="SkeletalBodySetup_0"
+      AggGeom=(SphylElems=((Center=(X=-2.131902,Y=0.300509,Z=-0.035992),Orientation=(X=0.000149,Y=-0.000765,Z=-0.707106,W=0.707107),Radius=14.325013,Length=17.787457)))
+      BoneName="Soldier_Pelvis"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+   End Object
+   Begin Object Name="PhysicsConstraintTemplate_64"
+      DefaultInstance=(JointName="Soldier_LLeg2",ConstraintBone1="Soldier_LLeg2",ConstraintBone2="Soldier_LLeg1",Pos2=(X=8.501052,Y=-0.000003,Z=0.000006),PriAxis2=(X=0.973385,Y=0.225082,Z=0.043120),SecAxis2=(X=-0.213211,Y=0.958402,Z=-0.189751),ProfileInstance=(ConeLimit=(Swing1Motion=ACM_Limited,Swing2Motion=ACM_Limited),TwistLimit=(TwistMotion=ACM_Limited)),AngularSwing1Motion=ACM_Limited,AngularTwistMotion=ACM_Limited,AngularSwing2Motion=ACM_Limited)
+   End Object
+   Begin Object Name="PhysicsConstraintTemplate_63"
+      DefaultInstance=(JointName="Soldier_LLeg1",ConstraintBone1="Soldier_LLeg1",ConstraintBone2="Soldier_Pelvis",Pos2=(X=-3.790911,Y=-0.000000,Z=9.419620),PriAxis2=(X=-0.978725,Y=-0.106015,Z=0.175668),SecAxis2=(X=-0.121061,Y=0.989635,Z=-0.077247),ProfileInstance=(ConeLimit=(Swing1Motion=ACM_Limited,Swing2Motion=ACM_Limited),TwistLimit=(TwistMotion=ACM_Limited)),AngularSwing1Motion=ACM_Limited,AngularTwistMotion=ACM_Limited,AngularSwing2Motion=ACM_Limited)
+   End Object
+   Begin Object Name="PhysicsConstraintTemplate_62"
+      DefaultInstance=(JointName="Soldier_LArmPalm",ConstraintBone1="Soldier_LArmPalm",ConstraintBone2="Soldier_LArm2",Pos2=(X=10.869266,Y=-0.000000,Z=-0.000000),PriAxis2=(X=0.999311,Y=-0.021088,Z=0.030546),SecAxis2=(X=0.030533,Y=-0.000923,Z=-0.999533),ProfileInstance=(ConeLimit=(Swing1Motion=ACM_Limited,Swing2Motion=ACM_Limited),TwistLimit=(TwistMotion=ACM_Limited)),AngularSwing1Motion=ACM_Limited,AngularTwistMotion=ACM_Limited,AngularSwing2Motion=ACM_Limited)
+   End Object
+   Begin Object Name="PhysicsConstraintTemplate_61"
+      DefaultInstance=(JointName="Soldier_LArm2",ConstraintBone1="Soldier_LArm2",ConstraintBone2="Soldier_LArm1",Pos2=(X=17.528008,Y=-0.000000,Z=0.000002),PriAxis2=(X=0.999586,Y=0.020062,Z=0.020617),SecAxis2=(X=-0.019999,Y=0.999795,Z=-0.003263),ProfileInstance=(ConeLimit=(Swing1Motion=ACM_Limited,Swing2Motion=ACM_Limited),TwistLimit=(TwistMotion=ACM_Limited)),AngularSwing1Motion=ACM_Limited,AngularTwistMotion=ACM_Limited,AngularSwing2Motion=ACM_Limited)
+   End Object
+   Begin Object Name="PhysicsConstraintTemplate_60"
+      DefaultInstance=(JointName="Soldier_LArm1",ConstraintBone1="Soldier_LArm1",ConstraintBone2="Soldier_LArmCollarbone",Pos2=(X=7.608353,Y=-0.109917,Z=-0.000000),PriAxis2=(X=0.985504,Y=-0.169385,Z=-0.009538),SecAxis2=(X=0.169408,Y=0.985545,Z=0.001619),ProfileInstance=(ConeLimit=(Swing1Motion=ACM_Limited,Swing2Motion=ACM_Limited),TwistLimit=(TwistMotion=ACM_Limited)),AngularSwing1Motion=ACM_Limited,AngularTwistMotion=ACM_Limited,AngularSwing2Motion=ACM_Limited)
+   End Object
+   Begin Object Name="PhysicsConstraintTemplate_59"
+      DefaultInstance=(JointName="Soldier_LArmCollarbone",ConstraintBone1="Soldier_LArmCollarbone",ConstraintBone2="Soldier_Spine3",Pos2=(X=0.000000,Y=-0.000017,Z=8.586184),PriAxis2=(X=0.000000,Y=0.167479,Z=0.985876),SecAxis2=(X=0.000000,Y=0.985876,Z=-0.167479),ProfileInstance=(ConeLimit=(Swing1Motion=ACM_Limited,Swing2Motion=ACM_Limited),TwistLimit=(TwistMotion=ACM_Limited)),AngularSwing1Motion=ACM_Limited,AngularTwistMotion=ACM_Limited,AngularSwing2Motion=ACM_Limited)
+   End Object
+   Begin Object Name="PhysicsConstraintTemplate_58"
+      DefaultInstance=(JointName="Soldier_RArmPalm",ConstraintBone1="Soldier_RArmPalm",ConstraintBone2="Soldier_RArm2",Pos2=(X=10.869265,Y=0.000000,Z=-0.000001),PriAxis2=(X=0.999311,Y=-0.021088,Z=-0.030546),SecAxis2=(X=0.030534,Y=-0.000922,Z=0.999533),ProfileInstance=(ConeLimit=(Swing1Motion=ACM_Limited,Swing2Motion=ACM_Limited),TwistLimit=(TwistMotion=ACM_Limited)),AngularSwing1Motion=ACM_Limited,AngularTwistMotion=ACM_Limited,AngularSwing2Motion=ACM_Limited)
+   End Object
+   Begin Object Name="PhysicsConstraintTemplate_57"
+      DefaultInstance=(JointName="Soldier_RArm2",ConstraintBone1="Soldier_RArm2",ConstraintBone2="Soldier_RArm1",Pos2=(X=17.528008,Y=-0.000000,Z=0.000002),PriAxis2=(X=0.999587,Y=0.020059,Z=-0.020605),SecAxis2=(X=-0.019996,Y=0.999795,Z=0.003269),ProfileInstance=(ConeLimit=(Swing1Motion=ACM_Limited,Swing2Motion=ACM_Limited),TwistLimit=(TwistMotion=ACM_Limited)),AngularSwing1Motion=ACM_Limited,AngularTwistMotion=ACM_Limited,AngularSwing2Motion=ACM_Limited)
+   End Object
+   Begin Object Name="PhysicsConstraintTemplate_56"
+      DefaultInstance=(JointName="Soldier_RArm1",ConstraintBone1="Soldier_RArm1",ConstraintBone2="Soldier_RArmCollarbone",Pos2=(X=6.314075,Y=0.109947,Z=0.000000),PriAxis2=(X=0.985504,Y=-0.169384,Z=0.009533),SecAxis2=(X=0.169407,Y=0.985545,Z=-0.001622),ProfileInstance=(ConeLimit=(Swing1Motion=ACM_Limited,Swing2Motion=ACM_Limited),TwistLimit=(TwistMotion=ACM_Limited)),AngularSwing1Motion=ACM_Limited,AngularTwistMotion=ACM_Limited,AngularSwing2Motion=ACM_Limited)
+   End Object
+   Begin Object Name="PhysicsConstraintTemplate_55"
+      DefaultInstance=(JointName="Soldier_RArmCollarbone",ConstraintBone1="Soldier_RArmCollarbone",ConstraintBone2="Soldier_Spine3",Pos2=(X=-0.000000,Y=-0.000013,Z=-9.899004),PriAxis2=(X=-0.000000,Y=0.167480,Z=-0.985876),SecAxis2=(X=0.000000,Y=0.985876,Z=0.167480),ProfileInstance=(ConeLimit=(Swing1Motion=ACM_Limited,Swing2Motion=ACM_Limited),TwistLimit=(TwistMotion=ACM_Limited)),AngularSwing1Motion=ACM_Limited,AngularTwistMotion=ACM_Limited,AngularSwing2Motion=ACM_Limited)
+   End Object
+   Begin Object Name="PhysicsConstraintTemplate_54"
+      DefaultInstance=(JointName="Soldier_REye",ConstraintBone1="Soldier_REye",ConstraintBone2="Soldier_Head",Pos2=(X=6.224777,Y=-11.872083,Z=-5.556693),PriAxis2=(X=0.000000,Y=0.000000,Z=1.000000),SecAxis2=(X=-1.000000,Y=0.000000,Z=0.000000),ProfileInstance=(ConeLimit=(Swing1Motion=ACM_Limited,Swing2Motion=ACM_Limited),TwistLimit=(TwistMotion=ACM_Limited)),AngularSwing1Motion=ACM_Limited,AngularTwistMotion=ACM_Limited,AngularSwing2Motion=ACM_Limited)
+   End Object
+   Begin Object Name="PhysicsConstraintTemplate_53"
+      DefaultInstance=(JointName="Soldier_LEye",ConstraintBone1="Soldier_LEye",ConstraintBone2="Soldier_Head",Pos2=(X=6.224777,Y=-11.872082,Z=5.557001),PriAxis2=(X=0.000000,Y=0.000000,Z=1.000000),SecAxis2=(X=-1.000000,Y=0.000000,Z=0.000000),ProfileInstance=(ConeLimit=(Swing1Motion=ACM_Limited,Swing2Motion=ACM_Limited),TwistLimit=(TwistMotion=ACM_Limited)),AngularSwing1Motion=ACM_Limited,AngularTwistMotion=ACM_Limited,AngularSwing2Motion=ACM_Limited)
+   End Object
+   Begin Object Name="PhysicsConstraintTemplate_52"
+      DefaultInstance=(JointName="Soldier_chin",ConstraintBone1="Soldier_chin",ConstraintBone2="Soldier_Head",Pos2=(X=-12.813004,Y=-16.711584,Z=-0.008362),PriAxis2=(X=0.000000,Y=0.000000,Z=1.000000),SecAxis2=(X=-1.000000,Y=0.000000,Z=0.000000),ProfileInstance=(ConeLimit=(Swing1Motion=ACM_Limited,Swing2Motion=ACM_Limited),TwistLimit=(TwistMotion=ACM_Limited)),AngularSwing1Motion=ACM_Limited,AngularTwistMotion=ACM_Limited,AngularSwing2Motion=ACM_Limited)
+   End Object
+   Begin Object Name="PhysicsConstraintTemplate_51"
+      DefaultInstance=(JointName="Soldier_Head",ConstraintBone1="Soldier_Head",ConstraintBone2="Soldier_Spine",Pos2=(X=17.395954,Y=0.000003,Z=-0.000000),SecAxis2=(X=0.000000,Y=1.000000,Z=-0.000000),ProfileInstance=(ConeLimit=(Swing1Motion=ACM_Limited,Swing2Motion=ACM_Limited),TwistLimit=(TwistMotion=ACM_Limited)),AngularSwing1Motion=ACM_Limited,AngularTwistMotion=ACM_Limited,AngularSwing2Motion=ACM_Limited)
+   End Object
+   Begin Object Name="PhysicsConstraintTemplate_50"
+      DefaultInstance=(JointName="Soldier_Spine",ConstraintBone1="Soldier_Spine",ConstraintBone2="Soldier_Spine3",Pos2=(X=3.285564,Y=-0.000000,Z=-0.000000),SecAxis2=(X=0.000000,Y=1.000000,Z=0.000000),ProfileInstance=(ConeLimit=(Swing1Motion=ACM_Limited,Swing2Motion=ACM_Limited),TwistLimit=(TwistMotion=ACM_Limited)),AngularSwing1Motion=ACM_Limited,AngularTwistMotion=ACM_Limited,AngularSwing2Motion=ACM_Limited)
+   End Object
+   Begin Object Name="PhysicsConstraintTemplate_49"
+      DefaultInstance=(JointName="Soldier_Spine3",ConstraintBone1="Soldier_Spine3",ConstraintBone2="Soldier_Spine2",Pos2=(X=12.116508,Y=0.000002,Z=-0.000000),SecAxis2=(X=0.000000,Y=1.000000,Z=-0.000000),ProfileInstance=(ConeLimit=(Swing1Motion=ACM_Limited,Swing2Motion=ACM_Limited),TwistLimit=(TwistMotion=ACM_Limited)),AngularSwing1Motion=ACM_Limited,AngularTwistMotion=ACM_Limited,AngularSwing2Motion=ACM_Limited)
+   End Object
+   Begin Object Name="PhysicsConstraintTemplate_48"
+      DefaultInstance=(JointName="Soldier_Spine2",ConstraintBone1="Soldier_Spine2",ConstraintBone2="Soldier_Spine1",Pos2=(X=14.162813,Y=0.000002,Z=-0.000000),SecAxis2=(X=0.000000,Y=1.000000,Z=0.000000),ProfileInstance=(ConeLimit=(Swing1Motion=ACM_Limited,Swing2Motion=ACM_Limited),TwistLimit=(TwistMotion=ACM_Limited)),AngularSwing1Motion=ACM_Limited,AngularTwistMotion=ACM_Limited,AngularSwing2Motion=ACM_Limited)
+   End Object
+   Begin Object Name="PhysicsConstraintTemplate_47"
+      DefaultInstance=(JointName="Soldier_Spine1",ConstraintBone1="Soldier_Spine1",ConstraintBone2="Soldier_Pelvis",Pos2=(X=3.671276,Y=-0.000000,Z=0.000000),SecAxis2=(X=0.000000,Y=1.000000,Z=0.000000),ProfileInstance=(ConeLimit=(Swing1Motion=ACM_Limited,Swing2Motion=ACM_Limited),TwistLimit=(TwistMotion=ACM_Limited)),AngularSwing1Motion=ACM_Limited,AngularTwistMotion=ACM_Limited,AngularSwing2Motion=ACM_Limited)
+   End Object
+   Begin Object Name="PhysicsConstraintTemplate_46"
+      DefaultInstance=(JointName="Soldier_RLeg2",ConstraintBone1="Soldier_RLeg2",ConstraintBone2="Soldier_RLeg1",Pos2=(X=8.501052,Y=-0.000003,Z=-0.000006),PriAxis2=(X=0.973402,Y=0.225016,Z=-0.043108),SecAxis2=(X=-0.213147,Y=0.958413,Z=0.189768),ProfileInstance=(ConeLimit=(Swing1Motion=ACM_Limited,Swing2Motion=ACM_Limited),TwistLimit=(TwistMotion=ACM_Limited)),AngularSwing1Motion=ACM_Limited,AngularTwistMotion=ACM_Limited,AngularSwing2Motion=ACM_Limited)
+   End Object
+   Begin Object Name="PhysicsConstraintTemplate_45"
+      DefaultInstance=(JointName="Soldier_RLeg1",ConstraintBone1="Soldier_RLeg1",ConstraintBone2="Soldier_Pelvis",Pos2=(X=-3.790911,Y=-0.000000,Z=-9.419620),PriAxis2=(X=-0.978724,Y=-0.106017,Z=-0.175667),SecAxis2=(X=-0.121064,Y=0.989634,Z=0.077252),ProfileInstance=(ConeLimit=(Swing1Motion=ACM_Limited,Swing2Motion=ACM_Limited),TwistLimit=(TwistMotion=ACM_Limited)),AngularSwing1Motion=ACM_Limited,AngularTwistMotion=ACM_Limited,AngularSwing2Motion=ACM_Limited)
+   End Object
+   Begin Object Name="BodySetup_367"
+      AggGeom=(SphylElems=((Center=(X=4.557027,Y=0.565342,Z=-0.105732),Orientation=(X=0.500000,Y=0.500000,Z=0.500000,W=0.500000),Radius=5.118466,Length=2.999785)))
+      BoneName="Soldier_LLeg2"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+      DefaultInstance=(ResponseToChannels=(EngineTraceChannel1=ECR_Ignore),CollisionResponses=())
+   End Object
+   Begin Object Name="BodySetup_366"
+      AggGeom=(SphylElems=((Center=(X=5.141595,Y=0.317337,Z=0.089597),Orientation=(X=0.500000,Y=0.500000,Z=0.500000,W=0.500000),Radius=7.310692,Length=4.206481)))
+      BoneName="Soldier_LLeg1"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+      DefaultInstance=(ResponseToChannels=(EngineTraceChannel1=ECR_Ignore),CollisionResponses=())
+   End Object
+   Begin Object Name="BodySetup_365"
+      AggGeom=(SphylElems=((Center=(X=6.730920,Y=-0.024470,Z=1.099115),Orientation=(X=-0.121264,Y=0.039251,Z=-0.706017,W=0.696631),Radius=3.974306,Length=8.078423)))
+      BoneName="Soldier_LArmPalm"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+      DefaultInstance=(ResponseToChannels=(EngineTraceChannel1=ECR_Ignore),CollisionResponses=())
+   End Object
+   Begin Object Name="BodySetup_364"
+      AggGeom=(SphylElems=((Center=(X=7.491443,Y=0.609326,Z=0.526524),Orientation=(X=0.500000,Y=0.500000,Z=0.500000,W=0.500000),Radius=7.165580,Length=3.939170)))
+      BoneName="Soldier_LArm2"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+      DefaultInstance=(ResponseToChannels=(EngineTraceChannel1=ECR_Ignore),CollisionResponses=())
+   End Object
+   Begin Object Name="BodySetup_363"
+      AggGeom=(SphylElems=((Center=(X=12.735767,Y=0.111676,Z=0.217338),Orientation=(X=0.500000,Y=0.500000,Z=0.500000,W=0.500000),Radius=9.688364,Length=5.827472)))
+      BoneName="Soldier_LArm1"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+      DefaultInstance=(ResponseToChannels=(EngineTraceChannel1=ECR_Ignore),CollisionResponses=())
+   End Object
+   Begin Object Name="BodySetup_362"
+      AggGeom=(SphylElems=((Orientation=(X=0.503598,Y=0.496375,Z=0.496375,W=0.503598),Radius=0.505000,Length=0.505000)))
+      BoneName="Soldier_LArmCollarbone"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+      DefaultInstance=(ResponseToChannels=(EngineTraceChannel1=ECR_Ignore),CollisionResponses=())
+   End Object
+   Begin Object Name="BodySetup_361"
+      AggGeom=(SphylElems=((Center=(X=6.730958,Y=-0.024720,Z=-1.098847),Orientation=(X=0.121284,Y=-0.039176,Z=-0.706021,W=0.696628),Radius=3.974528,Length=8.078387)))
+      BoneName="Soldier_RArmPalm"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+      DefaultInstance=(ResponseToChannels=(EngineTraceChannel1=ECR_Ignore),CollisionResponses=())
+   End Object
+   Begin Object Name="BodySetup_360"
+      AggGeom=(SphylElems=((Center=(X=7.491432,Y=0.609292,Z=-0.536137),Orientation=(X=0.500000,Y=0.500000,Z=0.500000,W=0.500000),Radius=7.165580,Length=3.939166)))
+      BoneName="Soldier_RArm2"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+      DefaultInstance=(ResponseToChannels=(EngineTraceChannel1=ECR_Ignore),CollisionResponses=())
+   End Object
+   Begin Object Name="BodySetup_359"
+      AggGeom=(SphylElems=((Center=(X=12.759016,Y=0.311580,Z=-0.174011),Orientation=(X=0.500000,Y=0.500000,Z=0.500000,W=0.500000),Radius=9.693486,Length=5.803951)))
+      BoneName="Soldier_RArm1"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+      DefaultInstance=(ResponseToChannels=(EngineTraceChannel1=ECR_Ignore),CollisionResponses=())
+   End Object
+   Begin Object Name="BodySetup_358"
+      AggGeom=(SphylElems=((Orientation=(X=0.495628,Y=0.504334,Z=0.504334,W=0.495628),Radius=0.505000,Length=0.505000)))
+      BoneName="Soldier_RArmCollarbone"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+      DefaultInstance=(ResponseToChannels=(EngineTraceChannel1=ECR_Ignore),CollisionResponses=())
+   End Object
+   Begin Object Name="BodySetup_357"
+      AggGeom=(SphylElems=((Center=(X=-0.102618,Y=-0.000016,Z=0.736687),Orientation=(X=0.472349,Y=0.472359,Z=0.526201,W=0.526190),Radius=3.501021,Length=3.500286)))
+      BoneName="Soldier_REye"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+      DefaultInstance=(ResponseToChannels=(EngineTraceChannel1=ECR_Ignore),CollisionResponses=())
+   End Object
+   Begin Object Name="BodySetup_356"
+      AggGeom=(SphylElems=((Center=(X=0.177771,Y=-0.000015,Z=0.771014),Orientation=(X=0.477756,Y=0.477770,Z=0.521297,W=0.521282),Radius=3.501021,Length=3.501019)))
+      BoneName="Soldier_LEye"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+      DefaultInstance=(ResponseToChannels=(EngineTraceChannel1=ECR_Ignore),CollisionResponses=())
+   End Object
+   Begin Object Name="BodySetup_355"
+      AggGeom=(SphylElems=((Center=(X=-0.011855,Y=-2.203970,Z=0.730368),Orientation=(X=0.502551,Y=-0.496488,Z=-0.497424,W=0.503498),Radius=3.899595,Length=6.262641)))
+      BoneName="Soldier_chin"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+      DefaultInstance=(ResponseToChannels=(EngineTraceChannel1=ECR_Ignore),CollisionResponses=())
+   End Object
+   Begin Object Name="BodySetup_354"
+      AggGeom=(SphylElems=((Center=(X=3.056900,Y=-0.908147,Z=0.007232),Orientation=(X=0.671995,Y=-0.218456,Z=-0.218762,W=0.672936),Radius=20.151543,Length=22.143909)))
+      BoneName="Soldier_Head"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+      DefaultInstance=(ResponseToChannels=(EngineTraceChannel1=ECR_Ignore),CollisionResponses=())
+   End Object
+   Begin Object Name="BodySetup_353"
+      AggGeom=(SphylElems=((Orientation=(X=0.500000,Y=0.500000,Z=0.500000,W=0.500000),Radius=0.505000,Length=0.505000)))
+      BoneName="Soldier_Spine"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+      DefaultInstance=(ResponseToChannels=(EngineTraceChannel1=ECR_Ignore),CollisionResponses=())
+   End Object
+   Begin Object Name="BodySetup_352"
+      AggGeom=(SphylElems=((Center=(X=0.801234,Y=0.619513,Z=0.047891),Orientation=(X=0.005228,Y=-0.004748,Z=-0.707091,W=0.707087),Radius=16.340433,Length=24.025166)))
+      BoneName="Soldier_Spine3"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+      DefaultInstance=(ResponseToChannels=(EngineTraceChannel1=ECR_Ignore),CollisionResponses=())
+   End Object
+   Begin Object Name="BodySetup_351"
+      AggGeom=(SphylElems=((Center=(X=2.667606,Y=0.120930,Z=-0.044549),Orientation=(X=0.500000,Y=0.500000,Z=0.500000,W=0.500000),Radius=23.246632,Length=2.442327)))
+      BoneName="Soldier_Spine2"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+      DefaultInstance=(ResponseToChannels=(EngineTraceChannel1=ECR_Ignore),CollisionResponses=())
+   End Object
+   Begin Object Name="BodySetup_350"
+      AggGeom=(SphylElems=((Center=(X=8.536106,Y=-0.271583,Z=-0.065073),Orientation=(X=0.500000,Y=0.500000,Z=0.500000,W=0.500000),Radius=22.505056,Length=4.848245)))
+      BoneName="Soldier_Spine1"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+      DefaultInstance=(ResponseToChannels=(EngineTraceChannel1=ECR_Ignore),CollisionResponses=())
+   End Object
+   Begin Object Name="BodySetup_349"
+      AggGeom=(SphylElems=((Center=(X=4.570870,Y=0.485873,Z=0.015176),Orientation=(X=0.500000,Y=0.500000,Z=0.500000,W=0.500000),Radius=5.072155,Length=2.986200)))
+      BoneName="Soldier_RLeg2"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+      DefaultInstance=(ResponseToChannels=(EngineTraceChannel1=ECR_Ignore),CollisionResponses=())
+   End Object
+   Begin Object Name="BodySetup_348"
+      AggGeom=(SphylElems=((Center=(X=5.032503,Y=0.140183,Z=-0.127730),Orientation=(X=0.500000,Y=0.500000,Z=0.500000,W=0.500000),Radius=7.422084,Length=4.284768)))
+      BoneName="Soldier_RLeg1"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+      DefaultInstance=(ResponseToChannels=(EngineTraceChannel1=ECR_Ignore),CollisionResponses=())
+   End Object
+   Begin Object Name="BodySetup_347"
+      AggGeom=(SphylElems=((Center=(X=-2.131902,Y=0.300509,Z=-0.035992),Orientation=(X=0.000149,Y=-0.000765,Z=-0.707106,W=0.707107),Radius=14.325013,Length=17.787457)))
+      BoneName="Soldier_Pelvis"
+      CollisionTraceFlag=CTF_UseSimpleAsComplex
+      DefaultInstance=(ResponseToChannels=(EngineTraceChannel1=ECR_Ignore),CollisionResponses=())
+   End Object
+   PreviewSkeletalMesh=/Game/Soldiers/meshes/Soldier_noGun.Soldier_noGun
+   BoundsBodies(0)=0
+   BoundsBodies(1)=1
+   BoundsBodies(2)=2
+   BoundsBodies(3)=3
+   BoundsBodies(4)=4
+   BoundsBodies(5)=5
+   BoundsBodies(6)=6
+   BoundsBodies(7)=7
+   BoundsBodies(8)=8
+   BoundsBodies(9)=9
+   BoundsBodies(10)=10
+   BoundsBodies(11)=11
+   BoundsBodies(12)=12
+   BoundsBodies(13)=13
+   BoundsBodies(14)=14
+   BoundsBodies(15)=15
+   BoundsBodies(16)=16
+   BoundsBodies(17)=17
+   BoundsBodies(18)=18
+   BoundsBodies(19)=19
+   BoundsBodies(20)=20
+   SkeletalBodySetups(0)=SkeletalBodySetup'SkeletalBodySetup_0'
+   SkeletalBodySetups(1)=SkeletalBodySetup'SkeletalBodySetup_1'
+   SkeletalBodySetups(2)=SkeletalBodySetup'SkeletalBodySetup_2'
+   SkeletalBodySetups(3)=SkeletalBodySetup'SkeletalBodySetup_3'
+   SkeletalBodySetups(4)=SkeletalBodySetup'SkeletalBodySetup_4'
+   SkeletalBodySetups(5)=SkeletalBodySetup'SkeletalBodySetup_5'
+   SkeletalBodySetups(6)=SkeletalBodySetup'SkeletalBodySetup_6'
+   SkeletalBodySetups(7)=SkeletalBodySetup'SkeletalBodySetup_7'
+   SkeletalBodySetups(8)=SkeletalBodySetup'SkeletalBodySetup_8'
+   SkeletalBodySetups(9)=SkeletalBodySetup'SkeletalBodySetup_9'
+   SkeletalBodySetups(10)=SkeletalBodySetup'SkeletalBodySetup_10'
+   SkeletalBodySetups(11)=SkeletalBodySetup'SkeletalBodySetup_11'
+   SkeletalBodySetups(12)=SkeletalBodySetup'SkeletalBodySetup_12'
+   SkeletalBodySetups(13)=SkeletalBodySetup'SkeletalBodySetup_13'
+   SkeletalBodySetups(14)=SkeletalBodySetup'SkeletalBodySetup_14'
+   SkeletalBodySetups(15)=SkeletalBodySetup'SkeletalBodySetup_15'
+   SkeletalBodySetups(16)=SkeletalBodySetup'SkeletalBodySetup_16'
+   SkeletalBodySetups(17)=SkeletalBodySetup'SkeletalBodySetup_17'
+   SkeletalBodySetups(18)=SkeletalBodySetup'SkeletalBodySetup_18'
+   SkeletalBodySetups(19)=SkeletalBodySetup'SkeletalBodySetup_19'
+   SkeletalBodySetups(20)=SkeletalBodySetup'SkeletalBodySetup_20'
+   ConstraintSetup(0)=PhysicsConstraintTemplate'PhysicsConstraintTemplate_45'
+   ConstraintSetup(1)=PhysicsConstraintTemplate'PhysicsConstraintTemplate_46'
+   ConstraintSetup(2)=PhysicsConstraintTemplate'PhysicsConstraintTemplate_47'
+   ConstraintSetup(3)=PhysicsConstraintTemplate'PhysicsConstraintTemplate_48'
+   ConstraintSetup(4)=PhysicsConstraintTemplate'PhysicsConstraintTemplate_49'
+   ConstraintSetup(5)=PhysicsConstraintTemplate'PhysicsConstraintTemplate_50'
+   ConstraintSetup(6)=PhysicsConstraintTemplate'PhysicsConstraintTemplate_51'
+   ConstraintSetup(7)=PhysicsConstraintTemplate'PhysicsConstraintTemplate_52'
+   ConstraintSetup(8)=PhysicsConstraintTemplate'PhysicsConstraintTemplate_53'
+   ConstraintSetup(9)=PhysicsConstraintTemplate'PhysicsConstraintTemplate_54'
+   ConstraintSetup(10)=PhysicsConstraintTemplate'PhysicsConstraintTemplate_55'
+   ConstraintSetup(11)=PhysicsConstraintTemplate'PhysicsConstraintTemplate_56'
+   ConstraintSetup(12)=PhysicsConstraintTemplate'PhysicsConstraintTemplate_57'
+   ConstraintSetup(13)=PhysicsConstraintTemplate'PhysicsConstraintTemplate_58'
+   ConstraintSetup(14)=PhysicsConstraintTemplate'PhysicsConstraintTemplate_59'
+   ConstraintSetup(15)=PhysicsConstraintTemplate'PhysicsConstraintTemplate_60'
+   ConstraintSetup(16)=PhysicsConstraintTemplate'PhysicsConstraintTemplate_61'
+   ConstraintSetup(17)=PhysicsConstraintTemplate'PhysicsConstraintTemplate_62'
+   ConstraintSetup(18)=PhysicsConstraintTemplate'PhysicsConstraintTemplate_63'
+   ConstraintSetup(19)=PhysicsConstraintTemplate'PhysicsConstraintTemplate_64'
+End Object

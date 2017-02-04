@@ -1,0 +1,45 @@
+Begin Object Class=BlendSpace Name="Soldier_01_Crawling_BlendSpace"
+   Begin Object Class=SceneThumbnailInfo Name="SceneThumbnailInfo_0"
+   End Object
+   Begin Object Name="SceneThumbnailInfo_0"
+   End Object
+   BlendParameters(0)=(DisplayName="Direction",Min=-180.000000,Max=180.000000)
+   BlendParameters(1)=(DisplayName="Speed",Max=1.000000)
+   SampleData(0)=(Animation=AnimSequence'/Game/Soldiers/animations/Soldier_Lying.Soldier_Lying',SampleValue=(X=-180.000000,Y=0.000000,Z=0.000000))
+   SampleData(1)=(Animation=AnimSequence'/Game/Soldiers/animations/Soldier_Lying.Soldier_Lying',SampleValue=(X=-90.000000,Y=0.000000,Z=0.000000))
+   SampleData(2)=(Animation=AnimSequence'/Game/Soldiers/animations/Soldier_Lying.Soldier_Lying')
+   SampleData(3)=(Animation=AnimSequence'/Game/Soldiers/animations/Soldier_Lying.Soldier_Lying',SampleValue=(X=90.000000,Y=0.000000,Z=0.000000))
+   SampleData(4)=(Animation=AnimSequence'/Game/Soldiers/animations/Soldier_Lying.Soldier_Lying',SampleValue=(X=180.000000,Y=0.000000,Z=0.000000))
+   SampleData(5)=(Animation=AnimSequence'/Game/Soldiers/animations/Soldier_CrawlingBack.Soldier_CrawlingBack',SampleValue=(X=-180.000000,Y=1.000000,Z=0.000000))
+   SampleData(6)=(Animation=AnimSequence'/Game/Soldiers/animations/Soldier_CrawlingBack.Soldier_CrawlingBack',SampleValue=(X=180.000000,Y=1.000000,Z=0.000000))
+   SampleData(7)=(Animation=AnimSequence'/Game/Soldiers/animations/Soldier_CrawlingFront.Soldier_CrawlingFront',SampleValue=(X=0.000000,Y=1.000000,Z=0.000000))
+   SampleData(8)=(Animation=AnimSequence'/Game/Soldiers/animations/Soldier_CrawlingLeft.Soldier_CrawlingLeft',SampleValue=(X=-90.000000,Y=1.000000,Z=0.000000))
+   SampleData(9)=(Animation=AnimSequence'/Game/Soldiers/animations/Soldier_CrawlingRight.Soldier_CrawlingRight',SampleValue=(X=90.000000,Y=1.000000,Z=0.000000))
+   GridSamples(0)=(Indices[0]=0,Indices[1]=1,Indices[2]=5,Weights[0]=1.000000)
+   GridSamples(1)=(Indices[0]=0,Indices[1]=1,Indices[2]=5,Weights[0]=0.750000,Weights[2]=0.250000)
+   GridSamples(2)=(Indices[0]=0,Indices[1]=1,Indices[2]=5,Weights[0]=0.500000,Weights[2]=0.500000)
+   GridSamples(3)=(Indices[0]=0,Indices[1]=1,Indices[2]=5,Weights[0]=0.250000,Weights[2]=0.750000)
+   GridSamples(4)=(Indices[0]=0,Indices[1]=1,Indices[2]=5,Weights[2]=1.000000)
+   GridSamples(5)=(Indices[0]=1,Indices[1]=2,Indices[2]=8,Weights[0]=1.000000)
+   GridSamples(6)=(Indices[0]=1,Indices[1]=2,Indices[2]=8,Weights[0]=0.750000,Weights[2]=0.250000)
+   GridSamples(7)=(Indices[0]=1,Indices[1]=8,Indices[2]=5,Weights[0]=0.500000,Weights[1]=0.500000)
+   GridSamples(8)=(Indices[0]=1,Indices[1]=8,Indices[2]=5,Weights[0]=0.250000,Weights[1]=0.750000)
+   GridSamples(9)=(Indices[0]=1,Indices[1]=8,Indices[2]=5,Weights[1]=1.000000)
+   GridSamples(10)=(Indices[0]=2,Indices[1]=3,Indices[2]=7,Weights[0]=1.000000)
+   GridSamples(11)=(Indices[0]=2,Indices[1]=3,Indices[2]=7,Weights[0]=0.750000,Weights[2]=0.250000)
+   GridSamples(12)=(Indices[0]=2,Indices[1]=3,Indices[2]=7,Weights[0]=0.500000,Weights[2]=0.500000)
+   GridSamples(13)=(Indices[0]=2,Indices[1]=7,Indices[2]=8,Weights[0]=0.250000,Weights[1]=0.750000)
+   GridSamples(14)=(Indices[0]=2,Indices[1]=7,Indices[2]=8,Weights[1]=1.000000)
+   GridSamples(15)=(Indices[0]=3,Indices[1]=4,Indices[2]=9,Weights[0]=1.000000)
+   GridSamples(16)=(Indices[0]=3,Indices[1]=4,Indices[2]=9,Weights[0]=0.750000,Weights[2]=0.250000)
+   GridSamples(17)=(Indices[0]=3,Indices[1]=4,Indices[2]=9,Weights[0]=0.500000,Weights[2]=0.500000)
+   GridSamples(18)=(Indices[0]=3,Indices[1]=9,Indices[2]=7,Weights[0]=0.250000,Weights[1]=0.750000)
+   GridSamples(19)=(Indices[0]=3,Indices[1]=9,Indices[2]=7,Weights[1]=1.000000)
+   GridSamples(20)=(Indices[0]=4,Indices[1]=6,Indices[2]=9,Weights[0]=1.000000)
+   GridSamples(21)=(Indices[0]=4,Indices[1]=6,Indices[2]=9,Weights[0]=0.750000,Weights[1]=0.250000)
+   GridSamples(22)=(Indices[0]=4,Indices[1]=6,Indices[2]=9,Weights[0]=0.500000,Weights[1]=0.500000)
+   GridSamples(23)=(Indices[0]=4,Indices[1]=6,Indices[2]=9,Weights[0]=0.250000,Weights[1]=0.750000)
+   GridSamples(24)=(Indices[0]=4,Indices[1]=6,Indices[2]=9,Weights[1]=1.000000)
+   Skeleton=Skeleton'/Game/Soldiers/meshes/Soldier_Skeleton.Soldier_Skeleton'
+   ThumbnailInfo=SceneThumbnailInfo'SceneThumbnailInfo_0'
+End Object
