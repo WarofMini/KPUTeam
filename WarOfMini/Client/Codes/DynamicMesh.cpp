@@ -255,7 +255,7 @@ void CDynamicMesh::PlayAnimation(int _iIdx)
 		break;
 	}*/
 
-	if (m_fAniPlayTimer > m_vecAni[_iIdx]->llAniMaxTime/10)
+	if (m_fAniPlayTimer > m_vecAni[_iIdx]->llAniMaxTime / 10)
 	{
 		m_fAniPlayTimer = 0;
 		m_bAniEnd = true;

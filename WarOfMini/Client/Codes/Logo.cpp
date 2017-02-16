@@ -87,8 +87,8 @@ HRESULT CLogo::Add_Dynamic_Buffer(void)
 	vector<string> vecAni;
 
 	/////
-	vecAni.push_back("Soldier_Idle");
-	vecAni.push_back("Soldier_Jump");
+	vecAni.push_back("Soldier_Idle_NG");
+	vecAni.push_back("Soldier_Jump_NG");
 
 	hr = CResourcesMgr::GetInstance()->AddMesh(
 		RESOURCE_STAGE,

@@ -145,6 +145,9 @@
     <Filter Include="02.Object\01.Soldier\State\03.Attack">
       <UniqueIdentifier>{0f161fe0-784d-4a59-bf3e-5174476d2951}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Server">
+      <UniqueIdentifier>{ecd47a3a-d1fb-47e3-ac8f-604a13a13bcc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -297,6 +300,12 @@
     <ClInclude Include="..\Codes\SoldierDefine.h">
       <Filter>02.Object\01.Soldier\State</Filter>
     </ClInclude>
+    <ClInclude Include="ClientClass.h">
+      <Filter>Server</Filter>
+    </ClInclude>
+    <ClInclude Include="Protocol.h">
+      <Filter>Server</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -421,6 +430,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\SoldierAttack.cpp">
       <Filter>02.Object\01.Soldier\State\03.Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientClass.cpp">
+      <Filter>Server</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -37,8 +37,23 @@
 #include <map>
 #include <string>
 #include <ctime>
-#include <iostream>
+
 #include <process.h>
+///////////////////////////////////////////
+#pragma comment(lib, "ws2_32")
+
+#include <WinSock2.h>
+
+#include <iostream>
+using namespace std;
+
+#include "Protocol.h"
+// client Ελ½Ε class
+#include<fstream>
+#include"clientClass.h"
+
+#define WM_SOCKET (WM_USER + 1)
+///////////////////////////////////////////
 
 #pragma warning(disable : 4005)
 
