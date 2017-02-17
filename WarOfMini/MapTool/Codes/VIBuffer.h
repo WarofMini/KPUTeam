@@ -18,6 +18,7 @@ public:
 	ID3D11Buffer*		m_ConstantBuffer;
 	ID3D11Buffer*		m_VertexBuffer;
 	//ID3D11InputLayout*  m_VertexLayout;
+
 	int					m_iVertices;
 	int					m_iBuffers;
 	UINT				m_iSlot;
@@ -26,6 +27,7 @@ public:
 	UINT				m_iVertexOffsets;
 
 	ID3D11Buffer*		m_IndexBuffer;
+
 	UINT				m_iIndex;
 	UINT				m_iStartIndex;
 	int					m_iBaseVertex;
@@ -33,9 +35,11 @@ public:
 	UINT				m_iIndexOffset;
 
 	DrawType			m_eDrawType;
-
 	//레스터 라이저 스테이트
 	ID3D11RasterizerState*		m_pRasterizerState;
+
+
+	VTXTEX*				pVTXTex;
 
 public:
 	virtual void	Render(void);

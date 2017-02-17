@@ -7,13 +7,14 @@
 class CShader;
 class CVIBuffer;
 class CTexture;
+class CMouseCol;
+
 
 class CToolStaticObject :
 		public CObj
 {
 public:
 	explicit CToolStaticObject();
-
 	virtual  ~CToolStaticObject();
 
 private:
@@ -21,9 +22,13 @@ private:
 	CShader*		m_pVertexShader;
 	CShader*		m_pPixelShader;
 	CTexture*		m_pTexture;
-
 	OBJ_INFO		m_tInfo;
 	wstring			m_strName;
+	CMouseCol*		m_pMouseCol;
+
+	CVIBuffer*		m_pBoundingBox;
+	CShader*		m_pVertexColorShader;
+	CShader*		m_pPixelColorShader;
 
 public:
 	virtual HRESULT Initialize(void);
@@ -40,6 +45,8 @@ private:
 public:
 	void			SetStrName(wstring _strName);
 	wstring			GetStrName(void);
+
+	void			BoundingBoxRender(void);
 
 };
 

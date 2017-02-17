@@ -49,7 +49,7 @@ private:
 
 public:
 	D3DXVECTOR3	 GetCamEye(void);
-
+	D3DXMATRIX	 GetView(void);
 	D3DXMATRIX   GetProj(void);
 };
 

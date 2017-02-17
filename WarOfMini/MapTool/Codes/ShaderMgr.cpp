@@ -30,6 +30,7 @@ HRESULT CShaderMgr::AddShaderFiles(wstring wstrShaderTag, wstring wstrFilePath, 
 CShader * CShaderMgr::Clone_Shader(wstring wstrShaderTag)
 {
 	CShader*		pShader = Find_Shader(wstrShaderTag);
+
 	if (pShader == NULL)
 		return NULL;
 

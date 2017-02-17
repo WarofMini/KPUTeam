@@ -199,6 +199,11 @@ D3DXVECTOR3 CToolCamera::GetCamEye(void)
 	return  m_vEye;
 }
 
+D3DXMATRIX CToolCamera::GetView(void)
+{
+	return m_matView;
+}
+
 D3DXMATRIX CToolCamera::GetProj(void)
 {
 	return m_matProj;

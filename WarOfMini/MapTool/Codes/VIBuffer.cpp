@@ -20,6 +20,8 @@ CVIBuffer::CVIBuffer()
 	m_iIndex = 0;
 	m_iStartIndex = 0;
 	m_iBaseVertex = 0;
+
+	pVTXTex = NULL;
 }
 
 CVIBuffer::CVIBuffer(const CVIBuffer & rhs)
@@ -50,6 +52,7 @@ void CVIBuffer::Render(void)
 	CDevice* pGrapicDevice = CDevice::GetInstance();
 	
 	pGrapicDevice->m_pDeviceContext->IASetVertexBuffers(m_iSlot, 1, &m_VertexBuffer, &m_iVertexStrides, &m_iVertexOffsets);
+	
 	if(m_IndexBuffer)
 		pGrapicDevice->m_pDeviceContext->IASetIndexBuffer(m_IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	pGrapicDevice->m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -91,6 +94,7 @@ void CVIBuffer::CreateRasterizerState()
 	ZeroMemory(&tRasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
 	tRasterizerDesc.CullMode = D3D11_CULL_NONE;
 	tRasterizerDesc.FillMode = D3D11_FILL_SOLID;
+	//tRasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;
 	pGrapicDevice->m_pDevice->CreateRasterizerState(&tRasterizerDesc, &m_pRasterizerState);
 }
 

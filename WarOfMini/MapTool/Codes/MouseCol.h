@@ -1,6 +1,8 @@
 #ifndef MouseCol_h__
 #define MouseCol_h__
 
+class CMesh;
+class CVIBuffer;
 
 class CMouseCol
 {
@@ -18,6 +20,11 @@ public:
 	HRESULT		Initialize(void);
 	void		Translation_ViewSpace(void);
 	void		Translation_Local(const D3DXMATRIX* pWorld);
+	
+	bool		PickObjMesh(CMesh* pMesh, D3DXMATRIX* pMatWorld);
+
+	bool		PickBoundingBox(CVIBuffer* pBuffer, D3DXMATRIX* pMatWorld);
+	
 	void		Release(void);
 
 private:

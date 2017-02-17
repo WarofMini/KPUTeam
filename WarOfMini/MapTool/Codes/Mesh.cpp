@@ -5,8 +5,10 @@
 
 
 CMesh::CMesh()
-	: m_pShader(NULL),
-	m_pGrapicDevice(CDevice::GetInstance())
+: m_pShader(NULL)
+, m_pGrapicDevice(CDevice::GetInstance())
+, m_vMin(0.0f, 0.0f, 0.0f)
+, m_vMax(0.0f, 0.0f, 0.0f)
 {
 }
 
@@ -34,6 +36,7 @@ void CMesh::SetNormalVectorByBasic(BYTE * _pVertices)
 	VTXTEX*	pVertex = NULL;
 
 	int nPrimitives = m_iVertices / 3;
+
 	for (int i = 0; i < nPrimitives; ++i)
 	{
 		vNormal = GetTriAngleNormal(_pVertices, (i * 3 + 0), (i * 3 + 1), (i * 3 + 2));
@@ -70,6 +73,7 @@ void CMesh::SetNormalVectorByAverage(BYTE * _pVertices, WORD * _pIndices, int _i
 			if ((nIndex_0 == i) || (nIndex_1 == i) || (nIndex_2 == i))
 				vNormal += GetTriAngleNormal(_pVertices, nIndex_0, nIndex_1, nIndex_2);
 		}
+
 		D3DXVec3Normalize(&vNormal, &vNormal);
 		pVertex = (VTXTEX *)(_pVertices + (i * m_iVertexStrides));
 		pVertex->vNormal = vNormal;

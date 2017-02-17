@@ -73,7 +73,6 @@ HRESULT CToolStage::Add_Environment_Layer(void)
 
 HRESULT CToolStage::Add_GameLogic_Layer(void)
 {
-
 	return S_OK;
 }
 
@@ -107,6 +106,16 @@ void CToolStage::InitBookMesh(void)
 	hr = CResourcesMgr::GetInstance()->AddMesh(
 		RESOURCE_STAGE,
 		MESH_STATIC
+		, L"Mesh_Couch"
+		, "../Resource/Mesh/"
+		, "Couch.FBX");
+
+	FAILED_CHECK_RETURN(hr, );
+
+
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
 		, L"Mesh_Book1"
 		, "../Resource/Mesh/"
 		, "Book1.FBX");
@@ -116,28 +125,18 @@ void CToolStage::InitBookMesh(void)
 	hr = CResourcesMgr::GetInstance()->AddMesh(
 		RESOURCE_STAGE,
 		MESH_STATIC
-		, L"Mesh_Couch"
+		, L"Mesh_Book2"
 		, "../Resource/Mesh/"
-		, "Couch.FBX");
+		, "Book2.FBX");
 
 	FAILED_CHECK_RETURN(hr, );
 
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_Book3"
+		, "../Resource/Mesh/"
+		, "Book3.FBX");
 
-	//hr = CResourcesMgr::GetInstance()->AddMesh(
-	//	RESOURCE_STAGE,
-	//	MESH_STATIC
-	//	, L"Mesh_Book2"
-	//	, "../Resource/Mesh/"
-	//	, "Book2.FBX");
-
-	//FAILED_CHECK_RETURN(hr, );
-
-	//hr = CResourcesMgr::GetInstance()->AddMesh(
-	//	RESOURCE_STAGE,
-	//	MESH_STATIC
-	//	, L"Mesh_Book3"
-	//	, "../Resource/Mesh/"
-	//	, "Book3.FBX");
-
-	//FAILED_CHECK_RETURN(hr, );
+	FAILED_CHECK_RETURN(hr, );
 }

@@ -6,6 +6,7 @@
 
 class CDevice;
 class CShader;
+
 class CMesh :
 	public CVIBuffer
 {
@@ -14,12 +15,12 @@ public:
 	virtual ~CMesh();
 
 public:
-	CShader* m_pShader;
-	CDevice* m_pGrapicDevice;
+	CShader*		m_pShader;
+	CDevice*		m_pGrapicDevice;
+	D3DXVECTOR3		m_vMin, m_vMax;
 
 public:
 	virtual void Render();
-
 	void MakeVertexNormal(BYTE* _pVertices, WORD* _pIndices);
 	void SetNormalVectorByBasic(BYTE* _pVertices);
 	void SetNormalVectorByAverage(BYTE* _pVertices, WORD* _pIndices, int _iPrimitives, int _iOffset, bool _bStrip);

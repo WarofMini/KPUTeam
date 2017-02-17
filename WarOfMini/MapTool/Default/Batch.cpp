@@ -8,8 +8,7 @@
 #include "Obj.h"
 #include "ObjMgr.h"
 #include "StaticObject.h"
-
-
+#include "Info.h"
 // CBatch 대화 상자입니다.
 
 IMPLEMENT_DYNAMIC(CBatch, CDialog)
@@ -138,13 +137,11 @@ void CBatch::OnBnClickedCreateBtn()
 	CString strName = m_ctrlTreeObject.GetItemText(Object);
 	wstring wstrName = (LPCTSTR)strName;
 
-
 	CObj* pObj = NULL;
 
 	pObj = CToolStaticObject::Create(wstrName);
 
 	CObjMgr::GetInstance()->AddObject(L"StaticObject", pObj);
-
 
 	UpdateData(FALSE);
 }

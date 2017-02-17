@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "StaticMesh.h"
 #include "Device.h"
+#include "CubeCol.h"
 
 CStaticMesh::CStaticMesh()
 {
@@ -226,7 +227,7 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,const char* szFileNa
 	}
 
 	unsigned int n = vecVTXTEX.size();
-	VTXTEX* pVTXTex = new VTXTEX[n];
+	pVTXTex = new VTXTEX[n];
 	for (unsigned int i = 0; i < vecVTXTEX.size(); ++i)
 	{
 		pVTXTex[i].vPos = vecVTXTEX[i].vPos;
@@ -236,7 +237,7 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,const char* szFileNa
 
 	m_iVertices = vecVTXTEX.size();
 	m_iVertexStrides = sizeof(VTXTEX);
-	m_iVertexOffsets = 0;
+	m_iVertexOffsets = 0; //메시의 오프셋 단위
 
 	MakeVertexNormal((BYTE*)pVTXTex, NULL);
 
@@ -271,6 +272,9 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,const char* szFileNa
 		MessageBox(NULL, L"System Message", L"Constant Buffer Error", MB_OK);
 		return hr;
 	}
+
+	//바운딩박스 생성을위한 함수
+	D3DXComputeBoundingBox(&vecVTXTEX[m_iVertexOffsets].vPos, m_iVertices, m_iVertexStrides, &m_vMin,  &m_vMax);
 	
 	return S_OK;
 }
@@ -291,6 +295,8 @@ HRESULT CStaticMesh::Initalize(const char * szFilePath, const char * szFileName)
 
 
 	CMesh::CreateRasterizerState();
+
+
 	//Init_Shader();
 	pFBXScene->Destroy();
 	pImporter->Destroy();

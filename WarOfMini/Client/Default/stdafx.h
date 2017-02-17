@@ -26,7 +26,6 @@
 #include <D3DX10Math.h>
 #include <d3dcompiler.h>
 #include <xnamath.h>
-
 #include <fbxsdk.h>
 
 #define DIRECTINPUT_VERSION 0x0800

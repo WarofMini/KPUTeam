@@ -18,6 +18,30 @@ cbuffer cbBoneWorldMatrix : register(b1)
 };
 
 
+struct VS_COLOR_INPUT
+{
+	float3 Pos : POSITION;
+	float4 Color : COLOR0;
+};
+
+struct VS_COLOR_OUTPUT
+{
+	float4 Pos : POSITION;
+	float4 Color : COLOR0;
+};
+
+VS_COLOR_OUTPUT VS_COLOR(VS_COLOR_INPUT input)
+{
+	VS_COLOR_OUTPUT output = (VS_COLOR_OUTPUT)0;
+	output.Pos = mul(float4(input.Pos, 1), gMatWorld);
+	output.Pos = mul(output.Pos, gMatView);
+	output.Pos = mul(output.Pos, gMatProjection);
+	output.Color = input.Color;
+
+	return output;
+}
+
+
 
 struct VS_INPUT
 {
@@ -75,6 +99,8 @@ struct VS_ANI_OUT
 	float2 tex2dcoord : TEXCOORD0;
 };
 
+
+//애니메이션
 VS_OUT VS_ANI(VS_ANI_IN input)
 {
 	VS_OUT output = (VS_OUT)0;
@@ -138,4 +164,10 @@ float4 PS(VS_OUT input) : SV_Target
 	return txDiffuse.Sample(samLinear, input.Tex);
 }
 
+
+//Color
+float4 PS_COLOR(VS_COLOR_OUTPUT input) : SV_Target
+{
+	return input.Color;
+}
 

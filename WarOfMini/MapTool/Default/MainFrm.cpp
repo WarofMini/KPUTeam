@@ -23,7 +23,7 @@ const UINT uiLastUserToolBarId = uiFirstUserToolBarId + iMaxUserToolbars - 1;
 HINSTANCE g_hInst;								// 현재 인스턴스입니다.
 HWND g_hWnd;
 D3DXVECTOR3 g_vMouse;
-
+D3DXVECTOR3 g_vViewMouse;
 
 BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_WM_CREATE()

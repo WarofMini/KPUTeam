@@ -53,9 +53,24 @@ HRESULT CToolApp::Initialize(void)
 		MessageBox(NULL, L"System Message", L"Resource Container Reserve Failed", MB_OK);
 		return E_FAIL;
 	}
+	//색깔 Shader=====================================================================================================================
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"VS_COLOR", L"../ShaderCode/Shader.fx", "VS_COLOR", "vs_5_0", SHADER_VS_COLOR);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"Vertex Shader(Color) Create Failed", MB_OK);
+		return hr;
+	}
 
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"PS_COLOR", L"../ShaderCode/Shader.fx", "PS_COLOR", "ps_5_0", SHADER_PS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"PIXEL Shader(Color) Create Failed", MB_OK);
+		return hr;
+	}
 
-	//일반
+	//================================================================================================================================
+
+	//일반 Shader
 	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"VS", L"../ShaderCode/Shader.fx", "VS", "vs_5_0", SHADER_VS);
 	if (FAILED(hr))
 	{
@@ -70,12 +85,11 @@ HRESULT CToolApp::Initialize(void)
 		return hr;
 	}
 
-	//Camera
+	//Camera======================================================================
 	if (FAILED(CToolCamera::GetInstance()->Initialize()))
 	{
 		MessageBox(NULL, L"System Message", L"ToolCamera Initialize Failed", MB_OK);
 	}
-
 
 	//Input
 	hr = CInput::GetInstance()->InitInputDevice(g_hInst, g_hWnd);
