@@ -87,8 +87,14 @@ HRESULT CLogo::Add_Dynamic_Buffer(void)
 	vector<string> vecAni;
 
 	/////
-	vecAni.push_back("Soldier_Idle_NG");
-	vecAni.push_back("Soldier_Jump_NG");
+	vecAni.push_back("Soldier_CrawlingBack");
+	vecAni.push_back("Soldier_CrawlingFront");
+	vecAni.push_back("Soldier_CrawlingLeft");
+	vecAni.push_back("Soldier_CrawlingRight");
+	vecAni.push_back("Soldier_Damage");
+	vecAni.push_back("Soldier_Death");
+	vecAni.push_back("Soldier_Death2");
+	vecAni.push_back("Soldier_GetCover");
 
 	hr = CResourcesMgr::GetInstance()->AddMesh(
 		RESOURCE_STAGE,

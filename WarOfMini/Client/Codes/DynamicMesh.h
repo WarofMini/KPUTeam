@@ -79,7 +79,6 @@ public:
 	virtual CResources*			CloneResource();
 	float					m_fAniPlayTimer;//현재 재생하고 있는 애니매이션의 시간
 	bool					m_bAniEnd;//애니매이션이 끝낫는지의 여부를 알려주는 Bool값
-	bool					Yamae;
 
 protected:
 	virtual HRESULT		Load_Model(const char*, vector<string> _vecAniName, FbxManager*, FbxIOSettings*, FbxScene*, FbxImporter*);

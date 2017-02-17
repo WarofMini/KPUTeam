@@ -38,7 +38,7 @@ HRESULT CSoldier::Initialize(void)
 
 	FAILED_CHECK(Prepare_StateMachine());
 
-	m_pInfo->m_vScale = D3DXVECTOR3(0.01f, 0.01f, 0.01f);
+	m_pInfo->m_vScale = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
 	m_pInfo->m_vPos = D3DXVECTOR3(0.f, 0.f, 0.f);
 
 	m_pInputDev = CInput::GetInstance();
@@ -87,16 +87,24 @@ void CSoldier::KeyInput(void)
 // 		dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_fAniPlayTimer = 0.f;
 // 		m_dwAniIdx = 0;
 // 	}
-	if (m_dwAniIdx == 0 && m_pInputDev->GetDIKeyState(DIK_1) & 0x80)
+// 	if (m_dwAniIdx == 0 && m_pInputDev->GetDIKeyState(DIK_1) & 0x80)
+// 	{
+// 		dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false;
+// 		dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_fAniPlayTimer = 0.f;
+// 		m_dwAniIdx = 1;
+// 	}
+	if (m_pInputDev->GetDIKeyStateOnce(DIK_RETURN))
 	{
+		++m_dwAniIdx;
+		if (m_dwAniIdx >= 8)
+			m_dwAniIdx = 0;
 		dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false;
 		dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_fAniPlayTimer = 0.f;
-		m_dwAniIdx = 1;
 	}
-	if (m_dwAniIdx == 1 && dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd)
-	{
-		m_dwAniIdx = 0;
-	}
+	//if (m_dwAniIdx != 0 && dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd)
+	//{
+	//	m_dwAniIdx = 0;
+	//}
 
 	/*if (m_pInputDev->GetDIKeyStateOnce(DIK_1))
 	{

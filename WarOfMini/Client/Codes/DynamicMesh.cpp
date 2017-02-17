@@ -55,7 +55,6 @@ HRESULT CDynamicMesh::Initialize(const char* _pPath, vector<string> _vecAniName)
 	pFBXManager->Destroy();
 
 	m_bAniEnd = false;
-	Yamae = false;
 
 	HRESULT hr;
 
