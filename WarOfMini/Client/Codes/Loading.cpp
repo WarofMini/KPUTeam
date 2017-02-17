@@ -13,6 +13,7 @@ CLoading::CLoading(LOADINGID eLoadID)
 	: m_eLoadID(eLoadID)
 	, m_hThread(NULL)
 	, m_bComplete(false)
+	, m_bServerConnected(false)
 {
 	ZeroMemory(m_szLoadMessage, sizeof(TCHAR) * 128);
 	ZeroMemory(&m_CSKey, sizeof(CRITICAL_SECTION));
@@ -65,6 +66,12 @@ void CLoading::StageLoading(void)
 		
 	//cout << "StaticBufferLoading" << endl;	//Buffer
 	
+	if (m_bServerConnected == false)
+	{
+		g_Client.InitSock(g_hWnd);
+		m_bServerConnected = true;
+	}
+
 	cout << "Thread Loading End" << endl;
 	m_bComplete = true;
 }

@@ -52,6 +52,8 @@ using namespace std;
 #include"clientClass.h"
 
 #define WM_SOCKET (WM_USER + 1)
+
+static AsynchronousClientClass g_Client;
 ///////////////////////////////////////////
 
 #pragma warning(disable : 4005)

@@ -30,6 +30,8 @@ private:
 	LOADINGID				m_eLoadID;
 	CRITICAL_SECTION		m_CSKey;
 	HANDLE					m_hThread;
+	bool					m_bServerConnected;
+
 
 private:
 	TCHAR		m_szLoadMessage[128];

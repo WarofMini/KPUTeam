@@ -10,6 +10,7 @@ public:
 
 	void ProcessWinMessage(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	void sendPacket_TEST();
+	void sendPacket(const BYTE data_size, const BYTE type, BYTE* data_start_pointer);
 
 private:
 
@@ -22,7 +23,7 @@ private:
 	void error_quit(wchar_t *msg, int err_no);
 
 	SOCKET* GetServerSocket();
-	void ProcessPacket(const BYTE data_size, const BYTE type, BYTE* data_start_pointer);
+	void ProcessPacket(const Packet buf[]);
 
 	//윈도우 창 관련 변수
 
