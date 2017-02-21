@@ -34,6 +34,8 @@ BEGIN_MESSAGE_MAP(CMapToolView, CView)
 	ON_WM_RBUTTONUP()
 	ON_WM_MOUSEMOVE()
 	ON_WM_LBUTTONDOWN()
+	ON_WM_LBUTTONUP()
+	ON_WM_RBUTTONDOWN()
 END_MESSAGE_MAP()
 
 // CMapToolView 생성/소멸
@@ -42,6 +44,7 @@ CMapToolView::CMapToolView()
 {
 	// TODO: 여기에 생성 코드를 추가합니다.
 	m_pToolApp = NULL;
+	m_pBatch = NULL;
 }
 
 CMapToolView::~CMapToolView()
@@ -67,6 +70,19 @@ void CMapToolView::OnDraw(CDC* /*pDC*/)
 
 	m_pToolApp->Update();
 	m_pToolApp->Render();
+
+
+
+	if( ((CMainFrame*)AfxGetMainWnd())->m_pMyForm->m_eToolMode == CMyForm::BATCH_TOOL)
+	{
+		if (m_pBatch == NULL)
+		{
+			m_pBatch = &((CMainFrame*)AfxGetMainWnd())->m_pMyForm->m_pBatchDIg;
+		}
+
+		m_pBatch->Update();
+
+	}
 
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
 }
@@ -100,6 +116,8 @@ void CMapToolView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 
 void CMapToolView::OnRButtonUp(UINT /* nFlags */, CPoint point)
 {
+	g_bRBtnCheck = false;
+
 	//ClientToScreen(&point);
 	//OnContextMenu(this, point);
 }
@@ -179,15 +197,19 @@ void CMapToolView::OnMouseMove(UINT nFlags, CPoint point)
 
 	CView::OnMouseMove(nFlags, point);
 
+	g_bRBtnCheck = false;
+
 	g_vMouse = D3DXVECTOR3( (float)point.x, (float)point.y, 0.f);
 
 
-	if( ((CMainFrame*)AfxGetMainWnd())->m_pMyForm->m_eToolMode == CMyForm::BATCH_TOOL)
-	{
+	//if( ((CMainFrame*)AfxGetMainWnd())->m_pMyForm->m_eToolMode == CMyForm::BATCH_TOOL)
+	//{
+	//}
 		CBatch* 	pDIg = &((CMainFrame*)AfxGetMainWnd())->m_pMyForm->m_pBatchDIg;
 
-		//pDIg->SetDlgItemInt(IDC_EDIT_MOUSEX)
-	}
+		pDIg->SetDlgItemInt(IDC_EDIT_MOUSEX, int(g_vViewMouse.x));
+		pDIg->SetDlgItemInt(IDC_EDIT_MOUSEY, int(g_vViewMouse.y));
+		pDIg->SetDlgItemInt(IDC_EDIT_MOUSEZ, int(g_vViewMouse.z));
 
 }
 
@@ -197,4 +219,21 @@ void CMapToolView::OnLButtonDown(UINT nFlags, CPoint point)
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 
 	CView::OnLButtonDown(nFlags, point);
+}
+
+
+void CMapToolView::OnLButtonUp(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+
+	CView::OnLButtonUp(nFlags, point);
+}
+
+
+void CMapToolView::OnRButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	g_bRBtnCheck = true;
+
+	CView::OnRButtonDown(nFlags, point);
 }

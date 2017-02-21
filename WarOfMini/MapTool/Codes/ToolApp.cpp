@@ -10,6 +10,7 @@
 #include "RenderMgr.h"
 #include "ObjMgr.h"
 #include "SceneMgr.h"
+#include "ObjCol.h"
 
 //일반객체
 #include "Shader.h"
@@ -68,7 +69,7 @@ HRESULT CToolApp::Initialize(void)
 		return hr;
 	}
 
-	//================================================================================================================================
+	//===========================================================================================
 
 	//일반 Shader
 	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"VS", L"../ShaderCode/Shader.fx", "VS", "vs_5_0", SHADER_VS);
@@ -91,7 +92,7 @@ HRESULT CToolApp::Initialize(void)
 		MessageBox(NULL, L"System Message", L"ToolCamera Initialize Failed", MB_OK);
 	}
 
-	//Input
+	//DInput System
 	hr = CInput::GetInstance()->InitInputDevice(g_hInst, g_hWnd);
 	if (FAILED(hr))
 	{
@@ -150,4 +151,5 @@ void CToolApp::Release(void)
 	CObjMgr::GetInstance()->DestroyInstance();
 	CSceneMgr::GetInstance()->DestroyInstance();
 	CResourcesMgr::GetInstance()->DestroyInstance();
+	CObjCol::GetInstance()->DestroyInstance();
 }

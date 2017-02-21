@@ -13,9 +13,12 @@
 #include "ResourcesMgr.h"
 #include "MouseCol.h"
 #include "CubeCol.h"
+#include "Input.h"
+#include "TimeMgr.h"
 
 CToolStaticObject::CToolStaticObject()
 {
+
 	m_pBuffer = NULL;
 	m_pVertexShader = NULL;
 	m_pPixelShader = NULL;
@@ -23,10 +26,11 @@ CToolStaticObject::CToolStaticObject()
 	m_pMouseCol = NULL;
 	m_pBoundingBox = NULL;
 
-	m_pVertexColorShader = NULL;
-	m_pPixelColorShader = NULL;
-
 	ZeroMemory(&m_tInfo, sizeof(OBJ_INFO));
+
+	m_eMode = MODE_CREATE;
+
+	m_eRenderGroup = TYPE_NONEALPHA;
 }
 
 CToolStaticObject::~CToolStaticObject()
@@ -39,7 +43,7 @@ HRESULT CToolStaticObject::Initialize(void)
 	if (FAILED(AddComponent()))
 		return E_FAIL;
 
-	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, this);
+	CRenderMgr::GetInstance()->AddRenderGroup(m_eRenderGroup, this);
 	
 	m_pMouseCol = CMouseCol::Create();
 
@@ -52,16 +56,24 @@ int CToolStaticObject::Update(void)
 
 	CObj::Update();
 
+	//if (m_eMode == MODE_FIX)
+	//{
+	//	m_pMouseCol->PickObjMesh((CMesh*)m_pBuffer, &m_pInfo->m_matWorld);
+	//}
+	//else
+	//{
+	//	SettingWork();
+	//}
+
 	//오브젝트 피킹체크
 	//if(m_pMouseCol->PickObjMesh((CMesh*)m_pBuffer, &m_pInfo->m_matWorld))
 	//{
-	//	
 	//}
 
 	//바운딩 박스 피킹
-	if(m_pMouseCol->PickBoundingBox(m_pBoundingBox, &m_pInfo->m_matWorld))
-	{
-	}
+	//if(m_pMouseCol->PickBoundingBox(m_pBoundingBox, &m_pInfo->m_matWorld))
+	//{
+	//}
 
 	return 0;
 }
@@ -98,14 +110,15 @@ CToolStaticObject * CToolStaticObject::Create(wstring strName)
 		::Safe_Delete(pObj);
 
 
+
 	return pObj;
 }
 
 void CToolStaticObject::Release(void)
 {
-	::Safe_Delete(m_pBuffer);
-	::Safe_Delete(m_pInfo);
-	::Safe_Delete(m_pTexture);
+	//::Safe_Delete(m_pBuffer);
+	//::Safe_Delete(m_pInfo);
+	//::Safe_Delete(m_pTexture);
 	::Safe_Delete(m_pMouseCol);
 	::Safe_Delete(m_pBoundingBox);
 }
@@ -137,10 +150,6 @@ HRESULT CToolStaticObject::AddComponent(void)
 	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS");
 	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");
 
-	m_pVertexColorShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS_COLOR");
-	m_pPixelColorShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS_COLOR");
-
-
 	return S_OK;
 }
 
@@ -168,4 +177,173 @@ void CToolStaticObject::BoundingBoxRender(void)
 	m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
 
 	m_pBoundingBox->Render();
+}
+
+void CToolStaticObject::SettingWork(void)
+{
+	/*
+	//초기  생성하고 이동상태일 경우
+	if (m_eMode == MODE_MOVE)
+	{
+		//g_vViewMouse : 마우스와 메시의 충돌 포지션
+		m_pInfo->m_vPos = D3DXVECTOR3(g_vViewMouse);
+
+		//R버튼을 누르면(우클릭)
+		if (CInput::GetInstance()->GetDIMouseState(CInput::DIM_RBUTTON))
+			m_eMode = MODE_ANGLE;
+	}
+	//회전, 크기 변환
+	else if (m_eMode == MODE_ANGLE)
+	{
+		if (CToolCamera::GetInstance()->GetMouseFixCheck() == false)
+		{
+			CToolCamera::GetInstance()->SetMouseFixCheck(true);
+		}
+
+		ScaleAndRotateChange();
+
+		if (CInput::GetInstance()->GetDIMouseState(CInput::DIM_LBUTTON))
+		{
+			m_eMode = MODE_STOP;
+			CToolCamera::GetInstance()->SetMouseFixCheck(false);
+		}
+
+	}
+	//STOP 상태
+	else if (m_eMode == MODE_STOP)
+	{
+		if (g_vMouse.x > 0.0f)
+		{
+
+			//STOP 상황에서 메시 피킹이 된경우
+			if (m_pMouseCol->PickObjMesh((CMesh*)m_pBuffer, &m_pInfo->m_matWorld))
+			{
+				if (CInput::GetInstance()->GetDIMouseState(CInput::DIM_LBUTTON))
+				{
+
+					list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"StaticObject")->begin();
+					list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"StaticObject")->end();
+
+					for (iter; iter != iter_end; iter++)
+					{
+						if (((CToolStaticObject*)(*iter))->GetMode() == MODE_MODIFY)
+						{
+							((CToolStaticObject*)(*iter))->SetMode(MODE_STOP);
+						}
+					}
+
+					//수정 상태로 변경
+					m_eMode = MODE_MODIFY;
+
+				}
+			}
+		}
+	}
+	//수정상태
+	else if (m_eMode == MODE_MODIFY)
+	{
+		ScaleAndRotateChange();
+		//우클릭 시 STOP상태로 변환
+		if (CInput::GetInstance()->GetDIMouseState(CInput::DIM_RBUTTON))
+		{
+			m_eMode = MODE_STOP;
+		}
+	}
+
+	*/
+}
+
+void CToolStaticObject::SetMode(OBJECT_MODE eMode)
+{
+	m_eMode = eMode;
+}
+
+OBJECT_MODE CToolStaticObject::GetMode(void)
+{
+	return m_eMode;
+}
+
+void CToolStaticObject::ScaleAndRotateChange(void)
+{
+
+	long dwMouseMove = 0;
+	long dwMouseWheel = 0;
+	//회전
+	if (dwMouseMove = CInput::GetInstance()->GetDIMouseMove(CInput::DIM_X))
+	{
+		//Y축 기준 회전
+		m_pInfo->m_fAngle[ANGLE_Y] += (float)(dwMouseMove * D3DXToRadian(90.f)) * CTimeMgr::GetInstance()->GetTime();
+	}
+
+	//마우스 휠에 따른 스케일값 조정
+	if (dwMouseWheel = CInput::GetInstance()->GetDIMouseMove(CInput::DIM_Z))
+	{
+		if (dwMouseWheel > 0) //크기증가
+		{
+			D3DXVECTOR3 vScale;
+			m_pInfo->GetScale(&vScale);
+
+			vScale.x += 0.01f;
+			vScale.y += 0.01f;
+			vScale.z += 0.01f;
+
+			m_pInfo->SetScale(&vScale);
+
+		}
+		else //크기 감소
+		{
+			D3DXVECTOR3 vScale;
+			m_pInfo->GetScale(&vScale);
+
+			vScale.x -= 0.01f;
+			vScale.y -= 0.01f;
+			vScale.z -= 0.01f;
+
+			m_pInfo->SetScale(&vScale);
+		}
+	}
+}
+
+CVIBuffer * CToolStaticObject::GetBuffer(void)
+{
+	return m_pBuffer;
+}
+
+D3DXVECTOR3 * CToolStaticObject::GetPickMeshPos(void)
+{
+	return &m_vPickMeshPos;
+}
+
+OBJ_INFO * CToolStaticObject::GetObjInfo(void)
+{
+	return &m_tInfo;
+}
+
+void CToolStaticObject::SetObjInfo(OBJ_INFO* pInfo)
+{
+	memcpy(&m_tInfo, pInfo, sizeof(OBJ_INFO));
+}
+
+void CToolStaticObject::ObjInfoSetting(void)
+{
+	//위치값
+	m_tInfo.m_vPos = m_pInfo->m_vPos;
+	//이름
+	lstrcpy(m_tInfo.m_szName, m_strName.c_str());
+	//크기
+	m_tInfo.m_vScale = m_pInfo->m_vScale;
+	//회전값
+	m_tInfo.m_vAngle.x = (float)D3DXToDegree(m_pInfo->m_fAngle[ANGLE_X]);
+	m_tInfo.m_vAngle.y = (float)D3DXToDegree(m_pInfo->m_fAngle[ANGLE_Y]);
+	m_tInfo.m_vAngle.z = (float)D3DXToDegree(m_pInfo->m_fAngle[ANGLE_Z]);
+}
+
+void CToolStaticObject::InfoSetting(void)
+{
+	m_pInfo->m_vPos = m_tInfo.m_vPos;
+	m_pInfo->m_vScale = m_tInfo.m_vScale;
+
+	m_pInfo->m_fAngle[ANGLE_X] = (float)D3DXToRadian(m_tInfo.m_vAngle.x);
+	m_pInfo->m_fAngle[ANGLE_Y] = (float)D3DXToRadian(m_tInfo.m_vAngle.y);
+	m_pInfo->m_fAngle[ANGLE_Z] = (float)D3DXToRadian(m_tInfo.m_vAngle.z);
 }

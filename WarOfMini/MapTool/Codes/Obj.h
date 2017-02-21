@@ -20,6 +20,10 @@ protected:
 	ReleaseType					m_eReleaseType;
 	vector<string>				vecAniName;
 
+	OBJSTATE					m_eState;
+
+	RENDERGROUP					m_eRenderGroup;
+
 public:
 	virtual HRESULT Initialize(void);
 	virtual int		Update(void);
@@ -34,6 +38,14 @@ public:
 	const float&	GetViewZ(void) const;
 	CInfo*			GetInfo(void) { return m_pInfo; }
 	ReleaseType&	GetReleaseType(void) { return m_eReleaseType; }
+
+	void			 SetObjState(OBJSTATE eState);
+
+	OBJSTATE		 GetObjState(void);
+
+	RENDERGROUP		 GetRenderGroup(void);
+
+	void			 SetRenderGroup(RENDERGROUP eRender);
 	
 
 public:

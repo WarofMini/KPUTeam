@@ -11,6 +11,7 @@ CInfo::CInfo(const D3DXVECTOR3 & vLook)
 	m_vPos = D3DXVECTOR3(0.f, 0.f, 0.f);
 	m_vDir = vLook;
 	D3DXMatrixIdentity(&m_matWorld);
+	D3DXMatrixIdentity(&m_matNRotWorld);
 }
 
 CInfo::~CInfo()
@@ -29,6 +30,8 @@ int CInfo::Update(void)
 	D3DXMatrixTranslation(&matTrans, m_vPos.x, m_vPos.y, m_vPos.z);
 
 	m_matWorld = matScale * matRotX * matRotY * matRotZ * matTrans;
+	m_matNRotWorld = matScale * matTrans;
+	
 	return 0;
 }
 
@@ -41,4 +44,15 @@ CInfo * CInfo::Create(const D3DXVECTOR3 & vLook)
 {
 
 	return new CInfo(vLook);
+}
+
+D3DXVECTOR3 * CInfo::GetScale(D3DXVECTOR3 * pScale)
+{
+	*pScale = m_vScale;
+	return pScale;
+}
+
+void CInfo::SetScale(D3DXVECTOR3 * pScale)
+{
+	m_vScale = *pScale;
 }

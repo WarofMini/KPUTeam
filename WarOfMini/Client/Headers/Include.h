@@ -16,4 +16,3 @@ extern HINSTANCE	g_hInst;
 extern DWORD		g_dwLightIndex;
 extern D3DXVECTOR3	g_vLightDir;
 
-

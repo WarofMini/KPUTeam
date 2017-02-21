@@ -27,8 +27,11 @@ private:
 	CMouseCol*		m_pMouseCol;
 
 	CVIBuffer*		m_pBoundingBox;
-	CShader*		m_pVertexColorShader;
-	CShader*		m_pPixelColorShader;
+	OBJECT_MODE		m_eMode;
+
+	D3DXVECTOR3     m_vPickMeshPos;
+
+
 
 public:
 	virtual HRESULT Initialize(void);
@@ -47,6 +50,29 @@ public:
 	wstring			GetStrName(void);
 
 	void			BoundingBoxRender(void);
+
+	void			SettingWork(void);
+
+
+	void			SetMode(OBJECT_MODE eMode);
+
+	OBJECT_MODE		GetMode(void);
+
+
+	void			 ScaleAndRotateChange(void);
+
+	CVIBuffer*		 GetBuffer(void);
+
+	D3DXVECTOR3*     GetPickMeshPos(void);
+
+	OBJ_INFO*		 GetObjInfo(void);
+
+	void			 SetObjInfo(OBJ_INFO* pInfo);
+
+	void			 ObjInfoSetting(void);
+
+
+	void			 InfoSetting(void);
 
 };
 

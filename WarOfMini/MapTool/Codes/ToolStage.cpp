@@ -13,6 +13,8 @@
 #include "ObjMgr.h"
 #include "AnimationMgr.h"
 #include "StaticObject.h"
+#include "Info.h"
+#include "ObjCol.h"
 
 CToolStage::CToolStage()
 {
@@ -21,7 +23,7 @@ CToolStage::CToolStage()
 
 CToolStage::~CToolStage()
 {
-
+	Release();
 }
 
 HRESULT CToolStage::Initialize(void)
@@ -32,6 +34,8 @@ HRESULT CToolStage::Initialize(void)
 	FAILED_CHECK_RETURN_MSG(Add_Environment_Layer(), E_FAIL, L"Environment_Layer Add false");
 	FAILED_CHECK_RETURN_MSG(Add_GameLogic_Layer(), E_FAIL, L"GameLogic_Layer Add false");
 	//FAILED_CHECK_RETURN_MSG(Add_Light(), E_FAIL, L"Light Add false");
+
+	CObjCol::GetInstance()->Initialize();
 	
 	return S_OK;
 }
@@ -39,6 +43,8 @@ HRESULT CToolStage::Initialize(void)
 int CToolStage::Update(void)
 {
 	CObjMgr::GetInstance()->Update();
+
+	CObjCol::GetInstance()->Update();
 
 	return 0;
 }
@@ -51,7 +57,6 @@ void CToolStage::Render(void)
 
 void CToolStage::Release(void)
 {
-
 }
 
 CToolStage * CToolStage::Create(void)
@@ -73,6 +78,8 @@ HRESULT CToolStage::Add_Environment_Layer(void)
 
 HRESULT CToolStage::Add_GameLogic_Layer(void)
 {
+	InitFloor();
+
 	return S_OK;
 }
 
@@ -93,7 +100,6 @@ void CToolStage::InitMesh(void)
 
 	FAILED_CHECK_RETURN(hr, );
 
-	//Buffer
 
 	//BookMesh Loading
 	InitBookMesh();
@@ -139,4 +145,53 @@ void CToolStage::InitBookMesh(void)
 		, "Book3.FBX");
 
 	FAILED_CHECK_RETURN(hr, );
+
+
+	//Floor1
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_Floor1"
+		, "../Resource/Mesh/"
+		, "Floor1.FBX");
+
+	FAILED_CHECK_RETURN(hr, );
+
+	//Floor2
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_Floor2"
+		, "../Resource/Mesh/"
+		, "Floor2.FBX");
+
+	FAILED_CHECK_RETURN(hr, );
+}
+
+void CToolStage::InitFloor(void)
+{
+	wstring strName = L"Mesh_Floor1";
+
+	float m_iSize = 500.f;
+	float m_fSize = 0.4f;
+
+	m_iSize *= m_fSize;
+
+	for (int i = 0; i < 5; ++i)
+	{
+		for (int j = 0; j < 5; ++j)
+		{
+			CObj* pObject = NULL;
+
+			pObject = CToolStaticObject::Create(strName);
+
+			pObject->GetInfo()->m_fAngle[ANGLE_X] += (float)(D3DXToRadian(90.f));
+			pObject->GetInfo()->m_vScale = D3DXVECTOR3(m_fSize, m_fSize, m_fSize);
+			((CToolStaticObject*)pObject)->SetMode(MODE_FIX);
+
+			pObject->GetInfo()->m_vPos = D3DXVECTOR3((j % 5) * m_iSize, 0.f, i * m_iSize);
+
+			CObjMgr::GetInstance()->AddObject(L"StaticObject", pObject);
+		}
+	}
 }

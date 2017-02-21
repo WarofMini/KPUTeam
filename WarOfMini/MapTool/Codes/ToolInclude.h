@@ -15,5 +15,6 @@ extern D3DXVECTOR3	g_vLightDir;
 //MFC 전역 마우스
 extern D3DXVECTOR3	g_vMouse;
 extern D3DXVECTOR3  g_vViewMouse;
+extern bool			g_bRBtnCheck;
 
 #endif

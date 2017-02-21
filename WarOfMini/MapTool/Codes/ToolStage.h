@@ -5,6 +5,7 @@
 
 class CShader;
 class CTexture;
+class CObjCol;
 
 class CToolStage :
 	public CScene
@@ -12,6 +13,7 @@ class CToolStage :
 public:
 	CToolStage();
 	virtual ~CToolStage();
+
 
 public:
 	virtual HRESULT Initialize(void);
@@ -27,8 +29,9 @@ public:
 
 public:
 	void		InitMesh(void);
-
 	void		InitBookMesh(void);
+
+	void		InitFloor(void);
 
 };
 

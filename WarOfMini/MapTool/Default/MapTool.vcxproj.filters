@@ -145,6 +145,9 @@
     <Filter Include="94.Mgr\02.CollisionMgr\00.MouseCol">
       <UniqueIdentifier>{d1e3d0fa-9dfe-42da-8e7b-c7c90af1aa88}</UniqueIdentifier>
     </Filter>
+    <Filter Include="94.Mgr\02.CollisionMgr\01.ObjCol">
+      <UniqueIdentifier>{8d098dbd-ae8f-4900-a4c1-afd281629b8c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -294,6 +297,9 @@
     <ClInclude Include="..\Codes\MouseCol.h">
       <Filter>94.Mgr\02.CollisionMgr\00.MouseCol</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\ObjCol.h">
+      <Filter>94.Mgr\02.CollisionMgr\01.ObjCol</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -421,6 +427,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\MouseCol.cpp">
       <Filter>94.Mgr\02.CollisionMgr\00.MouseCol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\ObjCol.cpp">
+      <Filter>94.Mgr\02.CollisionMgr\01.ObjCol</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

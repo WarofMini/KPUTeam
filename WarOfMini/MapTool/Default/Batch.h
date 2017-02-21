@@ -27,6 +27,15 @@ public:
 	virtual BOOL OnInitDialog();
 
 public:
+	BOOL						bStartReSize;
+	int							nYOrgHeight;
+
+
+public:
+	void			InitSlider(void);
+	void			Update(void);
+
+public:
 	void		 InitTreeObject(void);
 	afx_msg void OnBnClickedCreateBtn();
 	afx_msg void OnBnClickedDeleteBtn();
@@ -36,4 +45,16 @@ public:
 	afx_msg void OnBnClickedObjpathbtn();
 
 	wstring ConvertRelativePath(wstring	strFullPath);
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	CSliderCtrl m_ctrObjXSlider;
+	CSliderCtrl m_ctrObjYSlider;
+	CSliderCtrl m_ctrObjZSlider;
+	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+
+	afx_msg void OnEnChangeEditObjX();
+	afx_msg void OnEnChangeEditObjY();
+	afx_msg void OnEnChangeEditObjZ();
+	CSliderCtrl m_ctrObjRotXSlider;
+	CSliderCtrl m_ctrObjRotZSlider;
 };

@@ -25,6 +25,12 @@ public:
 	D3DXVECTOR3			m_vPos;
 	D3DXVECTOR3			m_vDir;
 	D3DXMATRIX			m_matWorld;
+	D3DXMATRIX			m_matNRotWorld;
+
+
+public:
+	D3DXVECTOR3*		   GetScale(D3DXVECTOR3* pScale);
+	void				   SetScale(D3DXVECTOR3* pScale);
 
 
 };

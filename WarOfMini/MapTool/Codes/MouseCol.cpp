@@ -53,7 +53,7 @@ void CMouseCol::Translation_ViewSpace(void)
 
 	m_vPivotPos = D3DXVECTOR3(0.f, 0.f, 0.f);
 	m_vRayDir = vTemp - m_vPivotPos;
-
+	D3DXVec3Normalize(&m_vRayDir, &m_vRayDir);
 }
 
 void CMouseCol::Translation_Local(const D3DXMATRIX * pWorld)
@@ -71,13 +71,15 @@ void CMouseCol::Translation_Local(const D3DXMATRIX * pWorld)
 
 }
 
-bool CMouseCol::PickObjMesh(CMesh * pMesh, D3DXMATRIX * pMatWorld)
+bool CMouseCol::PickObjMesh(CMesh * pMesh, D3DXMATRIX * pMatWorld, float* fDist, D3DXVECTOR3* vPickPos)
 {
 	if (pMesh == NULL)
 		return false;
 
+
 	if (pMesh->pVTXTex == NULL)
 		return false;
+
 
 	Translation_ViewSpace();
 
@@ -85,7 +87,7 @@ bool CMouseCol::PickObjMesh(CMesh * pMesh, D3DXMATRIX * pMatWorld)
 
 	BYTE* pbPositions = (BYTE*)pMesh->pVTXTex + pMesh->m_iVertexOffsets;
 
-	
+
 	int nOffset = 3;
 	int nPrimitives = pMesh->m_iVertices / 3;
 
@@ -104,7 +106,11 @@ bool CMouseCol::PickObjMesh(CMesh * pMesh, D3DXMATRIX * pMatWorld)
 		{
 			if (fHitDistance < fNearHitDistance)
 			{
-				fNearHitDistance = fHitDistance;
+				*fDist = fHitDistance;
+
+				*vPickPos = v0 + (fuHitBaryCentric * (v1 - v0)) + (fvHitBaryCentric * (v2 - v0));
+
+				D3DXVec3TransformCoord(vPickPos, vPickPos, pMatWorld);
 
 				return true;
 			}
@@ -277,6 +283,7 @@ bool CMouseCol::PickBoundingBox(CVIBuffer* pBuffer, D3DXMATRIX * pMatWorld)
 
 	return false;
 }
+
 
 void CMouseCol::Release(void)
 {

@@ -22,7 +22,7 @@ CToolCamera::~CToolCamera(void)
 
 HRESULT CToolCamera::Initialize(void)
 {
-	m_vEye = D3DXVECTOR3(0.0f, 0.f, -20.0f);
+	m_vEye = D3DXVECTOR3(0.0f, 20.f, -200.0f);
 	m_vAt = D3DXVECTOR3(0.f, 0.f, 0.f);
 	m_vUp = D3DXVECTOR3(0.f, 1.f, 0.f);
 
@@ -35,12 +35,12 @@ HRESULT CToolCamera::Initialize(void)
 	m_fFovY = (float)D3DXToRadian(45.f);
 	m_fAspect = float(WINCX) / float(WINCY);
 	m_fNear = 1.f;
-	m_fFar = 1000.f;
+	m_fFar = 5000.f;
 	MakeView();
 	MakeProjection();
 
 	m_fCameraDistance = 10.f;
-	m_fCameraSpeed = 10.f;
+	m_fCameraSpeed = 80.f;
 	
 	return S_OK;
 }
@@ -150,8 +150,8 @@ void CToolCamera::FixMouse(void)
 
 void CToolCamera::MouseMove(void)
 {
-	if (m_bMouseFix == false)
-		return;
+	//if (m_bMouseFix == false)
+	//	return;
 
 	long dwMouseMove = 0;
 	float	fTime = CTimeMgr::GetInstance()->GetTime();
@@ -207,4 +207,14 @@ D3DXMATRIX CToolCamera::GetView(void)
 D3DXMATRIX CToolCamera::GetProj(void)
 {
 	return m_matProj;
+}
+
+bool CToolCamera::GetMouseFixCheck(void)
+{
+	return m_bMouseFix;
+}
+
+void CToolCamera::SetMouseFixCheck(bool bCheck)
+{
+	m_bMouseFix = bCheck;
 }

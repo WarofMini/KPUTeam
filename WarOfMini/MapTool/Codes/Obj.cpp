@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Obj.h"
-//#include "Camera.h"
 #include "Info.h"
 #include "Device.h"
 
@@ -8,12 +7,15 @@
 CObj::CObj()
 	:m_pInfo(NULL), m_bZSort(false), m_pGrapicDevice(CDevice::GetInstance()), m_eReleaseType(Release_End)
 {
+	m_eState = STATE_ALIVE;
+
+	m_eRenderGroup = TYPE_END;
 }
 
 
 CObj::~CObj()
 {
-	Release();
+	//Release();
 }
 
 HRESULT CObj::Initialize(void)
@@ -92,6 +94,26 @@ void CObj::Compute_ViewZ(const D3DXVECTOR3 * pPos)
 const float & CObj::GetViewZ(void) const
 {
 	return m_fViewZ;
+}
+
+void CObj::SetObjState(OBJSTATE eState)
+{
+	m_eState = eState;
+}
+
+OBJSTATE CObj::GetObjState(void)
+{
+	return m_eState;
+}
+
+RENDERGROUP CObj::GetRenderGroup(void)
+{
+	return m_eRenderGroup;
+}
+
+void CObj::SetRenderGroup(RENDERGROUP eRender)
+{
+	m_eRenderGroup = eRender;
 }
 
 

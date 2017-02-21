@@ -6,6 +6,7 @@
 
 class CToolApp;
 class CMapToolDoc;
+class CBatch;
 
 class CMapToolView : public CView
 {
@@ -20,7 +21,7 @@ public:
 // 작업입니다.
 public:
 	CToolApp*			m_pToolApp;
-
+	CBatch* 			m_pBatch;
 
 // 재정의입니다.
 public:
@@ -51,6 +52,8 @@ public:
 	virtual void OnInitialUpdate();
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 };
 
 #ifndef _DEBUG  // MapToolView.cpp의 디버그 버전

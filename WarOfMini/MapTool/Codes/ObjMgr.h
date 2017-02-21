@@ -22,6 +22,8 @@ public:
 	void	Update(void);
 	list<CObj*>*  Get_ObjList(wstring wstrKey);
 
+	void	AllDestroy(void);
+
 };
 
 #endif

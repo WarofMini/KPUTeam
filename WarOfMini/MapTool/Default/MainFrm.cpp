@@ -24,6 +24,7 @@ HINSTANCE g_hInst;								// 현재 인스턴스입니다.
 HWND g_hWnd;
 D3DXVECTOR3 g_vMouse;
 D3DXVECTOR3 g_vViewMouse;
+bool		g_bRBtnCheck;
 
 BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_WM_CREATE()
@@ -50,6 +51,7 @@ CMainFrame::CMainFrame()
 
 	m_pMainView = NULL;
 	m_pMyForm = NULL;
+	g_bRBtnCheck = false;
 }
 
 CMainFrame::~CMainFrame()

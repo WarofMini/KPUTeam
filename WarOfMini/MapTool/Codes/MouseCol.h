@@ -21,7 +21,7 @@ public:
 	void		Translation_ViewSpace(void);
 	void		Translation_Local(const D3DXMATRIX* pWorld);
 	
-	bool		PickObjMesh(CMesh* pMesh, D3DXMATRIX* pMatWorld);
+	bool		PickObjMesh(CMesh* pMesh, D3DXMATRIX* pMatWorld, float* fDist, D3DXVECTOR3* vPickPos);
 
 	bool		PickBoundingBox(CVIBuffer* pBuffer, D3DXMATRIX* pMatWorld);
 	

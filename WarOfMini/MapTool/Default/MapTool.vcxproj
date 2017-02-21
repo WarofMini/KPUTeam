@@ -201,6 +201,7 @@
     <ClInclude Include="..\Codes\Mesh.h" />
     <ClInclude Include="..\Codes\MouseCol.h" />
     <ClInclude Include="..\Codes\Obj.h" />
+    <ClInclude Include="..\Codes\ObjCol.h" />
     <ClInclude Include="..\Codes\ObjMgr.h" />
     <ClInclude Include="..\Codes\RcCol.h" />
     <ClInclude Include="..\Codes\RcTerrain.h" />
@@ -252,6 +253,7 @@
     <ClCompile Include="..\Codes\Mesh.cpp" />
     <ClCompile Include="..\Codes\MouseCol.cpp" />
     <ClCompile Include="..\Codes\Obj.cpp" />
+    <ClCompile Include="..\Codes\ObjCol.cpp" />
     <ClCompile Include="..\Codes\ObjMgr.cpp" />
     <ClCompile Include="..\Codes\RcCol.cpp" />
     <ClCompile Include="..\Codes\RcTerrain.cpp" />
