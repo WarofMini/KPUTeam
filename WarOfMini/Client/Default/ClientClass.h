@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Soldier.h"
 class AsynchronousClientClass
 {
 public:
@@ -31,6 +31,13 @@ private:
 	HWND m_hWnd;
 	MSG m_msg;
 
+	//////////////////////////////////////
+	Ser_PLAYER_DATA*	 m_pPlayerData;
+	//Ser_InitPlayer	 m_tInitPlayer;
+
+
+	//////////////////////////////////////
+	int myID;
 	//통신 변수
 	WSADATA m_wsadata;
 	SOCKET m_sock;

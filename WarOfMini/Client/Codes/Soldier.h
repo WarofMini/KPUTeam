@@ -27,6 +27,7 @@ private:
 
 	CInput*			m_pInputDev;
 	CStateMachine*	m_pComStateMachine;
+	Ser_PLAYER_DATA* m_pSer_PlayerData;
 
 private:
 	DWORD			m_dwAniIdx;

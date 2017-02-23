@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ObjMgr.h"
 #include "Object.h"
+#include "COtherSoldier.h"
 
 IMPLEMENT_SINGLETON(CObjMgr)
 
@@ -90,4 +91,25 @@ list<CObject*>*  CObjMgr::Get_ObjList(wstring wstrKey)
 		return NULL;
 
 	return &(*iter).second;
+}
+
+Ser_PLAYER_DATA * CObjMgr::Get_Server_Data(int uId)
+{
+	map<wstring, list<CObject*>>::iterator iter = m_mapObj.find(L"OtherPlayer");
+
+	if (iter == m_mapObj.end())
+	{
+		return NULL;
+	}
+	for(auto ptr : iter->second)
+	{
+		 int iCompare = ((COtherSoldier*)ptr)->GetPacketData()->ID;
+
+		 if (iCompare == uId)
+		 {
+			 return ((COtherSoldier*)ptr)->GetPacketData();
+		 }
+	}
+
+	return NULL;
 }

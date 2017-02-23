@@ -162,6 +162,7 @@
     <ClInclude Include="..\Codes\Camera.h" />
     <ClInclude Include="..\Codes\Collision.h" />
     <ClInclude Include="..\Codes\Component.h" />
+    <ClInclude Include="..\Codes\COtherSoldier.h" />
     <ClInclude Include="..\Codes\Device.h" />
     <ClInclude Include="..\Codes\DynamicMesh.h" />
     <ClInclude Include="..\Codes\FbxParser.h" />
@@ -217,6 +218,7 @@
     <ClCompile Include="..\Codes\Camera.cpp" />
     <ClCompile Include="..\Codes\Collision.cpp" />
     <ClCompile Include="..\Codes\Component.cpp" />
+    <ClCompile Include="..\Codes\COtherSoldier.cpp" />
     <ClCompile Include="..\Codes\Device.cpp" />
     <ClCompile Include="..\Codes\DynamicMesh.cpp" />
     <ClCompile Include="..\Codes\FbxParser.cpp" />

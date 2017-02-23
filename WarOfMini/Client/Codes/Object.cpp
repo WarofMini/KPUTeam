@@ -6,7 +6,7 @@
 
 
 CObject::CObject()
-	:m_pInfo(NULL), m_bZSort(false), m_pGrapicDevice(CDevice::GetInstance()), m_eReleaseType(Release_End)
+	:m_pInfo(NULL), m_bZSort(false), m_pGrapicDevice(CDevice::GetInstance()), m_eReleaseType(Release_End), m_pServer_PlayerData(NULL)
 {
 }
 

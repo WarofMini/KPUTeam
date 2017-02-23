@@ -20,6 +20,7 @@ public:
 	HRESULT AddObject(wstring wstrKey, CObject* pObj);
 	void	Update(void);
 	list<CObject*>*  Get_ObjList(wstring wstrKey);
+	Ser_PLAYER_DATA* Get_Server_Data(int uid);
 
 };
 

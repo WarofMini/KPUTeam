@@ -205,3 +205,5 @@ void CSoldier::Release(void)
 	Safe_Delete(m_pInfo);
 	Safe_Delete(m_pTexture);
 }
+
+

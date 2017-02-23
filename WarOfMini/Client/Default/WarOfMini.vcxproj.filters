@@ -151,6 +151,9 @@
     <Filter Include="02.Object\02.StaticObject">
       <UniqueIdentifier>{56b0656f-7a5e-406f-bdb8-104fe43d211c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\03.OtherPlayer">
+      <UniqueIdentifier>{fad12007-0f63-4ee3-8179-ca0887e6da13}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -175,9 +178,6 @@
       <Filter>98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\Macro.h">
-      <Filter>98.Header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Headers\Struct.h">
       <Filter>98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\targetver.h">
@@ -312,6 +312,12 @@
     <ClInclude Include="..\Codes\StaticObject.h">
       <Filter>02.Object\02.StaticObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\COtherSoldier.h">
+      <Filter>02.Object\03.OtherPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Struct.h">
+      <Filter>98.Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -442,6 +448,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\StaticObject.cpp">
       <Filter>02.Object\02.StaticObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\COtherSoldier.cpp">
+      <Filter>02.Object\03.OtherPlayer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

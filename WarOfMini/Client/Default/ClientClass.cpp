@@ -1,4 +1,13 @@
 #include "stdafx.h"
+#include "Soldier.h"
+#include "struct.h"
+#include "Include.h"
+#include "ObjMgr.h"
+#include "Object.h"
+#include "COtherSoldier.h"
+#include "SceneMgr.h"
+#include "RenderMgr.h"
+
 
 AsynchronousClientClass::AsynchronousClientClass()
 {
@@ -256,16 +265,98 @@ SOCKET * AsynchronousClientClass::GetServerSocket()
 
 void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 {
-	int iA = 0;
+	static bool first_time = true;
+	static int id;
+
 	switch (buf[1])
 	{
+
 	case TEST:
+#ifdef _DEBUG
 		cout << "Server is Running. TEST Packet Recived Successfully.\n";
+#endif //_DEBUG
 		break;
 	case KEYINPUT:
-		
 		break;
-	default:
+	case INIT_CLIENT:
+	{
+		m_pPlayerData = reinterpret_cast<Ser_PLAYER_DATA*>(buf[2]);
+		id = m_pPlayerData->ID;	//첫 입장시 플레이어 id 값.
+	}
+		break;
+	case INIT_OTHER_PLAYER:
+	{
+		Ser_PLAYER_DATA* pData = CObjMgr::GetInstance()->Get_Server_Data(reinterpret_cast<Ser_PLAYER_DATA*>(buf[2])->ID);
+
+		if (nullptr != pData)
+		{
+			break;
+		}
+		else
+		{
+			CObject* pObj = NULL;
+			pObj = COtherSoldier::Create();
+			pObj->SetPos(m_pPlayerData->vPos);
+			pObj->SetPacketData(reinterpret_cast<Ser_PLAYER_DATA*>(buf[2]));
+			CObjMgr::GetInstance()->AddObject(L"OtherPlayer", pObj);
+			CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, pObj);
+
+		}
+	}
+	case CLIENT_POSITION:
+		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
+		{
+			//플레이어 포지션 값을 다른 클라에 뿌려준다.
+
+			Ser_PLAYER_DATA* pData = CObjMgr::GetInstance()->Get_Server_Data(*reinterpret_cast<int*>(buf[sizeof(pData->vPos) + 2]));
+			if (nullptr != pData)
+			{
+				memcpy(&pData->vPos, &buf[2], sizeof(Ser_PLAYER_DATA::vPos));
+			}
+			else
+			{
+				break;
+			}
+		}
+		break;
+	case CLIENT_DIRECTION:
+
+		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
+		{
+			Ser_PLAYER_DATA* pData = CObjMgr::GetInstance()->Get_Server_Data(*reinterpret_cast<int*>(buf[sizeof(pData->vPos) + 2]));
+
+			if (nullptr != pData)
+			{
+				memcpy(&pData->vDir, &buf[2], sizeof(Ser_PLAYER_DATA::vDir));
+			}
+			else
+			{
+				break;
+			}
+
+		}
+
+		break;
+	case PLAYER_DISCONNECTED:
+		Ser_PLAYER_DATA* pData = CObjMgr::GetInstance()->Get_Server_Data(reinterpret_cast<Ser_PLAYER_DATA*>(buf[2])->ID);
+		
+		list<CObject*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
+		list<CObject*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
+
+		for (iter; iter != iter_end;)
+		{
+			if ((*iter)->GetPacketData()->ID == reinterpret_cast<Ser_PLAYER_DATA*>(pData)->ID)
+			{
+				CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
+				Safe_Delete(*iter);
+				CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->erase(iter++);
+			}
+			
+			else
+			{
+				++iter;
+			}
+		}
 		break;
 	}
 }
