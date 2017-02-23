@@ -57,4 +57,5 @@ public:
 	afx_msg void OnEnChangeEditObjZ();
 	CSliderCtrl m_ctrObjRotXSlider;
 	CSliderCtrl m_ctrObjRotZSlider;
+	CSliderCtrl m_ctrObjRotYSlider;
 };

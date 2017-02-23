@@ -36,6 +36,7 @@ void CBatch::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_SLIDER_OBJ_Z, m_ctrObjZSlider);
 	DDX_Control(pDX, IDC_SLIDER_OBJ_RotX, m_ctrObjRotXSlider);
 	DDX_Control(pDX, IDC_SLIDER_OBJ_RotZ, m_ctrObjRotZSlider);
+	DDX_Control(pDX, IDC_SLIDER_OBJ_RotY, m_ctrObjRotYSlider);
 }
 
 
@@ -84,9 +85,9 @@ void CBatch::InitSlider(void)
 {
 	//X 슬라이더
 	//범위
-	m_ctrObjXSlider.SetRange(-1000, 1000);
-	m_ctrObjXSlider.SetRangeMin(-1000);
-	m_ctrObjXSlider.SetRangeMax(1000);
+	m_ctrObjXSlider.SetRange(-5000, 5000);
+	m_ctrObjXSlider.SetRangeMin(-5000);
+	m_ctrObjXSlider.SetRangeMax(5000);
 	m_ctrObjXSlider.SetPos(0);
 
 	//눈금 간격
@@ -95,9 +96,9 @@ void CBatch::InitSlider(void)
 
 	//Y 슬라이더
 	//범위
-	m_ctrObjYSlider.SetRange(-1000, 1000);
-	m_ctrObjYSlider.SetRangeMin(-1000);
-	m_ctrObjYSlider.SetRangeMax(1000);
+	m_ctrObjYSlider.SetRange(-5000, 5000);
+	m_ctrObjYSlider.SetRangeMin(-5000);
+	m_ctrObjYSlider.SetRangeMax(5000);
 	m_ctrObjYSlider.SetPos(0);
 
 	//눈금 간격
@@ -107,9 +108,9 @@ void CBatch::InitSlider(void)
 
 	//Z 슬라이더
 	//범위
-	m_ctrObjZSlider.SetRange(-1000, 1000);
-	m_ctrObjZSlider.SetRangeMin(-1000);
-	m_ctrObjZSlider.SetRangeMax(1000);
+	m_ctrObjZSlider.SetRange(-5000, 5000);
+	m_ctrObjZSlider.SetRangeMin(-5000);
+	m_ctrObjZSlider.SetRangeMax(5000);
 	m_ctrObjZSlider.SetPos(0);
 
 	//눈금 간격
@@ -127,7 +128,20 @@ void CBatch::InitSlider(void)
 	//눈금 간격
 	m_ctrObjRotXSlider.SetTicFreq(1);
 	//키보드 커서키로 슬라이더 움직일떄 증가 크기 설정
-	m_ctrObjRotXSlider.SetLineSize(1);
+	m_ctrObjRotXSlider.SetLineSize(2);
+
+
+
+	//RotY
+	m_ctrObjRotYSlider.SetRange(0, 360);
+	m_ctrObjRotYSlider.SetRangeMin(0);
+	m_ctrObjRotYSlider.SetRangeMax(360);
+	m_ctrObjRotYSlider.SetPos(0);
+
+	//눈금 간격
+	m_ctrObjRotYSlider.SetTicFreq(1);
+	//키보드 커서키로 슬라이더 움직일떄 증가 크기 설정
+	m_ctrObjRotYSlider.SetLineSize(2);
 
 	//RotZ
 	m_ctrObjRotZSlider.SetRange(0, 360);
@@ -138,7 +152,7 @@ void CBatch::InitSlider(void)
 	//눈금 간격
 	m_ctrObjRotZSlider.SetTicFreq(1);
 	//키보드 커서키로 슬라이더 움직일떄 증가 크기 설정
-	m_ctrObjRotZSlider.SetLineSize(1);
+	m_ctrObjRotZSlider.SetLineSize(2);
 
 
 
@@ -153,6 +167,7 @@ void CBatch::InitSlider(void)
 
 	//Rot
 	GetDlgItem(IDC_EDIT_OBJ_RotX)->SetWindowText(str);
+	GetDlgItem(IDC_EDIT_OBJ_RotY)->SetWindowText(str);
 	GetDlgItem(IDC_EDIT_OBJ_RotZ)->SetWindowText(str);
 }
 
@@ -167,6 +182,7 @@ void CBatch::Update(void)
 
 		D3DXVECTOR3 vPos = pCreateMesh->GetInfo()->m_vPos;
 		float vRotX = (float)D3DXToDegree(pCreateMesh->GetInfo()->m_fAngle[ANGLE_X]);
+		float vRotY = (float)D3DXToDegree(pCreateMesh->GetInfo()->m_fAngle[ANGLE_Y]);
 		float vRotZ = (float)D3DXToDegree(pCreateMesh->GetInfo()->m_fAngle[ANGLE_Z]);
 
 		CString str;
@@ -185,6 +201,10 @@ void CBatch::Update(void)
 		GetDlgItem(IDC_EDIT_OBJ_RotX)->SetWindowText(str);
 		m_ctrObjRotXSlider.SetPos((int)vRotX);
 
+		str.Format(L"%.1f", vRotY);
+		GetDlgItem(IDC_EDIT_OBJ_RotY)->SetWindowText(str);
+		m_ctrObjRotYSlider.SetPos((int)vRotY);
+
 		str.Format(L"%.1f", vRotZ);
 		GetDlgItem(IDC_EDIT_OBJ_RotZ)->SetWindowText(str);
 		m_ctrObjRotZSlider.SetPos((int)vRotZ);
@@ -195,8 +215,10 @@ void CBatch::Update(void)
 		pCreateMesh = NULL;
 
 		D3DXVECTOR3 vPos = pSelectMesh->GetInfo()->m_vPos;
-		float vRotX = pSelectMesh->GetInfo()->m_fAngle[ANGLE_X];
-		float vRotZ = pSelectMesh->GetInfo()->m_fAngle[ANGLE_Z];
+		float vRotX = (float)D3DXToDegree(pSelectMesh->GetInfo()->m_fAngle[ANGLE_X]);
+		float vRotY = (float)D3DXToDegree(pSelectMesh->GetInfo()->m_fAngle[ANGLE_Y]);
+		float vRotZ = (float)D3DXToDegree(pSelectMesh->GetInfo()->m_fAngle[ANGLE_Z]);
+
 		CString str;
 
 		str.Format(L"%.1f", vPos.x);
@@ -213,6 +235,10 @@ void CBatch::Update(void)
 		GetDlgItem(IDC_EDIT_OBJ_RotX)->SetWindowText(str);
 		m_ctrObjRotXSlider.SetPos((int)vRotX);
 
+		str.Format(L"%.1f", vRotY);
+		GetDlgItem(IDC_EDIT_OBJ_RotY)->SetWindowText(str);
+		m_ctrObjRotYSlider.SetPos((int)vRotY);
+
 		str.Format(L"%.1f", vRotZ);
 		GetDlgItem(IDC_EDIT_OBJ_RotZ)->SetWindowText(str);
 		m_ctrObjRotZSlider.SetPos((int)vRotZ);
@@ -225,6 +251,7 @@ void CBatch::InitTreeObject(void)
 	HTREEITEM hRoot;
 
 	hRoot = m_ctrlTreeObject.InsertItem(L"Object", 0/* nImage */, 1/* nSelectedImage */, TVI_ROOT, TVI_LAST);
+
 
 	//Book
 	HTREEITEM  hBook;
@@ -240,7 +267,59 @@ void CBatch::InitTreeObject(void)
 	HTREEITEM  hBook3;
 	hBook3 = m_ctrlTreeObject.InsertItem(L"Mesh_Book3", 1/* nImage */, 1/* nSelectedImage */, hBook, TVI_LAST);
 
-	//Book
+
+
+	//Painting
+	HTREEITEM  hPainting;
+
+	hPainting = m_ctrlTreeObject.InsertItem(L"Painting", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	HTREEITEM  hPainting1;
+	hPainting1 = m_ctrlTreeObject.InsertItem(L"Mesh_Painting1", 1/* nImage */, 1/* nSelectedImage */, hPainting, TVI_LAST);
+
+	HTREEITEM  hPainting2;
+	hPainting2 = m_ctrlTreeObject.InsertItem(L"Mesh_Painting2", 1/* nImage */, 1/* nSelectedImage */, hPainting, TVI_LAST);
+
+
+
+
+	//Wall
+	HTREEITEM  hWall;
+
+	hWall = m_ctrlTreeObject.InsertItem(L"Wall", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	HTREEITEM  hWall1;
+	hWall1 = m_ctrlTreeObject.InsertItem(L"Mesh_Wall1", 1/* nImage */, 1/* nSelectedImage */, hWall, TVI_LAST);
+
+	HTREEITEM  hWall2;
+	hWall2 = m_ctrlTreeObject.InsertItem(L"Mesh_Wall2", 1/* nImage */, 1/* nSelectedImage */, hWall, TVI_LAST);
+
+	HTREEITEM  hWall3;
+	hWall3 = m_ctrlTreeObject.InsertItem(L"Mesh_Wall3", 1/* nImage */, 1/* nSelectedImage */, hWall, TVI_LAST);
+
+	HTREEITEM  hWall4;
+	hWall4 = m_ctrlTreeObject.InsertItem(L"Mesh_Wall4", 1/* nImage */, 1/* nSelectedImage */, hWall, TVI_LAST);
+
+	HTREEITEM  hWall5;
+	hWall5 = m_ctrlTreeObject.InsertItem(L"Mesh_Wall5", 1/* nImage */, 1/* nSelectedImage */, hWall, TVI_LAST);
+
+	HTREEITEM  hWall6;
+	hWall6 = m_ctrlTreeObject.InsertItem(L"Mesh_Wall6", 1/* nImage */, 1/* nSelectedImage */, hWall, TVI_LAST);
+
+	HTREEITEM  hWall7;
+	hWall7 = m_ctrlTreeObject.InsertItem(L"Mesh_Wall7", 1/* nImage */, 1/* nSelectedImage */, hWall, TVI_LAST);
+
+	HTREEITEM  hWall8;
+	hWall8 = m_ctrlTreeObject.InsertItem(L"Mesh_Wall8", 1/* nImage */, 1/* nSelectedImage */, hWall, TVI_LAST);
+
+	HTREEITEM  hWall9;
+	hWall9 = m_ctrlTreeObject.InsertItem(L"Mesh_Wall9", 1/* nImage */, 1/* nSelectedImage */, hWall, TVI_LAST);
+
+	HTREEITEM  hWall10;
+	hWall10 = m_ctrlTreeObject.InsertItem(L"Mesh_Wall10", 1/* nImage */, 1/* nSelectedImage */, hWall, TVI_LAST);
+
+
+	//BookBox
 	HTREEITEM  hBookBox;
 	hBookBox = m_ctrlTreeObject.InsertItem(L"BookBox", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
 
@@ -280,6 +359,109 @@ void CBatch::InitTreeObject(void)
 	hBoxFile8 = m_ctrlTreeObject.InsertItem(L"Mesh_BoxFile8", 1/* nImage */, 1/* nSelectedImage */, hBoxFile, TVI_LAST);
 
 
+
+	//WaterCooler
+	HTREEITEM  hWaterCooler;
+
+	hWaterCooler = m_ctrlTreeObject.InsertItem(L"WaterCooler", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	//WaterCooler1
+	HTREEITEM  hWaterCooler1;
+	hWaterCooler1 = m_ctrlTreeObject.InsertItem(L"Mesh_WaterCooler", 1/* nImage */, 1/* nSelectedImage */, hWaterCooler, TVI_LAST);
+
+
+	//Couch
+	HTREEITEM  hCouch;
+
+	hCouch = m_ctrlTreeObject.InsertItem(L"Couch", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	//Couch1
+	HTREEITEM  hCouch1;
+	hCouch1 = m_ctrlTreeObject.InsertItem(L"Mesh_Couch1", 1/* nImage */, 1/* nSelectedImage */, hCouch, TVI_LAST);
+
+	//Couch2
+	HTREEITEM  hCouch2;
+	hCouch2 = m_ctrlTreeObject.InsertItem(L"Mesh_Couch2", 1/* nImage */, 1/* nSelectedImage */, hCouch, TVI_LAST);
+
+	//Couch3
+	HTREEITEM  hCouch3;
+	hCouch3 = m_ctrlTreeObject.InsertItem(L"Mesh_Couch3", 1/* nImage */, 1/* nSelectedImage */, hCouch, TVI_LAST);
+
+	//Couch4
+	HTREEITEM  hCouch4;
+	hCouch4 = m_ctrlTreeObject.InsertItem(L"Mesh_Couch4", 1/* nImage */, 1/* nSelectedImage */, hCouch, TVI_LAST);
+
+	//RubbishBin
+	HTREEITEM  hRubbishBin;
+
+	hRubbishBin = m_ctrlTreeObject.InsertItem(L"RubbishBin", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	//RubbishBin1
+	HTREEITEM  hRubbishBin1;
+	hRubbishBin1 = m_ctrlTreeObject.InsertItem(L"Mesh_RubbishBin1", 1/* nImage */, 1/* nSelectedImage */, hRubbishBin, TVI_LAST);
+
+	//RubbishBin2
+	HTREEITEM  hRubbishBin2;
+	hRubbishBin2 = m_ctrlTreeObject.InsertItem(L"Mesh_RubbishBin2", 1/* nImage */, 1/* nSelectedImage */, hRubbishBin, TVI_LAST);
+
+
+	//Coffeetable
+	HTREEITEM  hCoffeetable;
+
+	hCoffeetable = m_ctrlTreeObject.InsertItem(L"Coffeetable", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	//Coffeetable1
+	HTREEITEM  hCoffeetable1;
+	hCoffeetable1 = m_ctrlTreeObject.InsertItem(L"Mesh_Coffeetable1", 1/* nImage */, 1/* nSelectedImage */, hCoffeetable, TVI_LAST);
+
+	//Coffeetable2
+	HTREEITEM  hCoffeetable2;
+	hCoffeetable2 = m_ctrlTreeObject.InsertItem(L"Mesh_Coffeetable2", 1/* nImage */, 1/* nSelectedImage */, hCoffeetable, TVI_LAST);
+
+
+
+	//Clock
+	HTREEITEM  hClock;
+
+	hClock = m_ctrlTreeObject.InsertItem(L"Clock", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	//Clock
+	HTREEITEM  hClock1;
+	hClock1 = m_ctrlTreeObject.InsertItem(L"Mesh_Clock", 1/* nImage */, 1/* nSelectedImage */, hClock, TVI_LAST);
+
+
+	//Door
+	HTREEITEM  hDoor;
+
+	hDoor = m_ctrlTreeObject.InsertItem(L"Door", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	//Door1
+	HTREEITEM  hDoor1;
+	hDoor1 = m_ctrlTreeObject.InsertItem(L"Mesh_Door", 1/* nImage */, 1/* nSelectedImage */, hDoor, TVI_LAST);
+
+
+
+	//Pinboard
+	HTREEITEM  hPinboard;
+
+	hPinboard = m_ctrlTreeObject.InsertItem(L"Pinboard", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+	
+	//Pinboard1
+	HTREEITEM  hPinboard1;
+	hPinboard1 = m_ctrlTreeObject.InsertItem(L"Mesh_Pinboard", 1/* nImage */, 1/* nSelectedImage */, hPinboard, TVI_LAST);
+
+
+
+	//PowerOutlet
+	HTREEITEM  hPowerOutlet;
+
+	hPowerOutlet = m_ctrlTreeObject.InsertItem(L"PowerOutlet", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	//PowerOutlet1
+	HTREEITEM  hPowerOutlet1;
+	hPowerOutlet1 = m_ctrlTreeObject.InsertItem(L"Mesh_PowerOutlet", 1/* nImage */, 1/* nSelectedImage */, hPowerOutlet, TVI_LAST);
+
+
 	//Floor
 	HTREEITEM  hFloor;
 
@@ -292,6 +474,154 @@ void CBatch::InitTreeObject(void)
 	//Floor2
 	HTREEITEM  hFloor2;
 	hFloor2 = m_ctrlTreeObject.InsertItem(L"Mesh_Floor2", 1/* nImage */, 1/* nSelectedImage */, hFloor, TVI_LAST);
+
+	//Floor3
+	HTREEITEM  hFloor3;
+	hFloor3 = m_ctrlTreeObject.InsertItem(L"Mesh_Floor3", 1/* nImage */, 1/* nSelectedImage */, hFloor, TVI_LAST);
+
+
+
+
+	//Plant
+	HTREEITEM  hPlant;
+
+	hPlant = m_ctrlTreeObject.InsertItem(L"Plant", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	//Plant1
+	HTREEITEM  hPlant1;
+	hPlant1 = m_ctrlTreeObject.InsertItem(L"Mesh_Plant1", 1/* nImage */, 1/* nSelectedImage */, hPlant, TVI_LAST);
+
+	//Plant2
+	HTREEITEM  hPlant2;
+	hPlant2 = m_ctrlTreeObject.InsertItem(L"Mesh_Plant2", 1/* nImage */, 1/* nSelectedImage */, hPlant, TVI_LAST);
+
+	//Plant3
+	HTREEITEM  hPlant3;
+	hPlant3 = m_ctrlTreeObject.InsertItem(L"Mesh_Plant3", 1/* nImage */, 1/* nSelectedImage */, hPlant, TVI_LAST);
+
+	//Plant4
+	HTREEITEM  hPlant4;
+	hPlant4 = m_ctrlTreeObject.InsertItem(L"Mesh_Plant4", 1/* nImage */, 1/* nSelectedImage */, hPlant, TVI_LAST);
+
+
+	//Plant5
+	HTREEITEM  hPlant5;
+	hPlant5 = m_ctrlTreeObject.InsertItem(L"Mesh_Plant5", 1/* nImage */, 1/* nSelectedImage */, hPlant, TVI_LAST);
+
+
+	//Chair
+	HTREEITEM  hChair;
+
+	hChair = m_ctrlTreeObject.InsertItem(L"Chair", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	//Chair1
+	HTREEITEM  hChair1;
+	hChair1 = m_ctrlTreeObject.InsertItem(L"Mesh_Chair1", 1/* nImage */, 1/* nSelectedImage */, hChair, TVI_LAST);
+
+	//Chair2
+	HTREEITEM  hChair2;
+	hChair2 = m_ctrlTreeObject.InsertItem(L"Mesh_Chair2", 1/* nImage */, 1/* nSelectedImage */, hChair, TVI_LAST);
+
+	//Chair3
+	HTREEITEM  hChair3;
+	hChair3 = m_ctrlTreeObject.InsertItem(L"Mesh_Chair3", 1/* nImage */, 1/* nSelectedImage */, hChair, TVI_LAST);
+
+	//Chair4
+	HTREEITEM  hChair4;
+	hChair4 = m_ctrlTreeObject.InsertItem(L"Mesh_Chair4", 1/* nImage */, 1/* nSelectedImage */, hChair, TVI_LAST);
+
+
+	//Cabinet
+	HTREEITEM  hCabinet;
+	hCabinet = m_ctrlTreeObject.InsertItem(L"Cabinet", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	//Cabinet1
+	HTREEITEM  hCabinet1;
+	hCabinet1 = m_ctrlTreeObject.InsertItem(L"Mesh_Cabinet1", 1/* nImage */, 1/* nSelectedImage */, hCabinet, TVI_LAST);
+
+	//Cabinet2
+	HTREEITEM  hCabinet2;
+	hCabinet2 = m_ctrlTreeObject.InsertItem(L"Mesh_Cabinet2", 1/* nImage */, 1/* nSelectedImage */, hCabinet, TVI_LAST);
+
+	//Shelf
+	HTREEITEM  hShelf;
+	hShelf = m_ctrlTreeObject.InsertItem(L"Shelf", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	//Shelf1
+	HTREEITEM  hShelf1;
+	hShelf1 = m_ctrlTreeObject.InsertItem(L"Mesh_Shelf1", 1/* nImage */, 1/* nSelectedImage */, hShelf, TVI_LAST);
+
+	//Shelf2
+	HTREEITEM  hShelf2;
+	hShelf2 = m_ctrlTreeObject.InsertItem(L"Mesh_Shelf2", 1/* nImage */, 1/* nSelectedImage */, hShelf, TVI_LAST);
+
+	//Shelf3
+	HTREEITEM  hShelf3;
+	hShelf3 = m_ctrlTreeObject.InsertItem(L"Mesh_Shelf3", 1/* nImage */, 1/* nSelectedImage */, hShelf, TVI_LAST);
+
+
+	//Desk
+	HTREEITEM  hDesk;
+	hDesk = m_ctrlTreeObject.InsertItem(L"Desk", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	//Desk1
+	HTREEITEM  hDesk1;
+	hDesk1 = m_ctrlTreeObject.InsertItem(L"Mesh_Desk1", 1/* nImage */, 1/* nSelectedImage */, hDesk, TVI_LAST);
+
+	//Desk2
+	HTREEITEM  hDesk2;
+	hDesk2 = m_ctrlTreeObject.InsertItem(L"Mesh_Desk2", 1/* nImage */, 1/* nSelectedImage */, hDesk, TVI_LAST);
+
+	//Desk3
+	HTREEITEM  hDesk3;
+	hDesk3 = m_ctrlTreeObject.InsertItem(L"Mesh_Desk3", 1/* nImage */, 1/* nSelectedImage */, hDesk, TVI_LAST);
+
+	//Desk4
+	HTREEITEM  hDesk4;
+	hDesk4 = m_ctrlTreeObject.InsertItem(L"Mesh_Desk4", 1/* nImage */, 1/* nSelectedImage */, hDesk, TVI_LAST);
+
+	//Desk5
+	HTREEITEM  hDesk5;
+	hDesk5 = m_ctrlTreeObject.InsertItem(L"Mesh_Desk5", 1/* nImage */, 1/* nSelectedImage */, hDesk, TVI_LAST);
+
+	//Desk6
+	HTREEITEM  hDesk6;
+	hDesk6 = m_ctrlTreeObject.InsertItem(L"Mesh_Desk6", 1/* nImage */, 1/* nSelectedImage */, hDesk, TVI_LAST);
+
+	//Desk7
+	HTREEITEM  hDesk7;
+	hDesk7 = m_ctrlTreeObject.InsertItem(L"Mesh_Desk7", 1/* nImage */, 1/* nSelectedImage */, hDesk, TVI_LAST);
+
+	//Desk8
+	HTREEITEM  hDesk8;
+	hDesk8 = m_ctrlTreeObject.InsertItem(L"Mesh_Desk8", 1/* nImage */, 1/* nSelectedImage */, hDesk, TVI_LAST);
+
+	//Desk9
+	HTREEITEM  hDesk9;
+	hDesk9 = m_ctrlTreeObject.InsertItem(L"Mesh_Desk9", 1/* nImage */, 1/* nSelectedImage */, hDesk, TVI_LAST);
+
+	//Desk10
+	HTREEITEM  hDesk10;
+	hDesk10 = m_ctrlTreeObject.InsertItem(L"Mesh_Desk10", 1/* nImage */, 1/* nSelectedImage */, hDesk, TVI_LAST);
+
+	//Desk11
+	HTREEITEM  hDesk11;
+	hDesk11 = m_ctrlTreeObject.InsertItem(L"Mesh_Desk11", 1/* nImage */, 1/* nSelectedImage */, hDesk, TVI_LAST);
+
+	//Desk12
+	HTREEITEM  hDesk12;
+	hDesk12 = m_ctrlTreeObject.InsertItem(L"Mesh_Desk12", 1/* nImage */, 1/* nSelectedImage */, hDesk, TVI_LAST);
+
+
+	//Photocopier
+	HTREEITEM  hPhotocopier;
+	hPhotocopier = m_ctrlTreeObject.InsertItem(L"Photocopier", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	//Photocopier1
+	HTREEITEM  hPhotocopier1;
+	hPhotocopier1 = m_ctrlTreeObject.InsertItem(L"Mesh_Photocopier", 1/* nImage */, 1/* nSelectedImage */, hPhotocopier, TVI_LAST);
+
+
 }
 
 //생성
@@ -720,6 +1050,35 @@ void CBatch::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 		}
 	}
 
+	//RotY 슬라이더가 움직이는 경우
+	if ((pScrollBar != NULL) && (pScrollBar->m_hWnd == m_ctrObjRotYSlider.m_hWnd))
+	{
+		CToolStaticObject* pCreateMesh = CObjCol::GetInstance()->m_pCreateMesh;
+		CToolStaticObject* pSelectMesh = CObjCol::GetInstance()->m_pSelectMesh;
+
+		if (pCreateMesh != NULL)//생성상태
+		{
+			pSelectMesh = NULL;
+
+			pCreateMesh->GetInfo()->m_fAngle[ANGLE_Y] = (float)D3DXToRadian(m_ctrObjRotYSlider.GetPos());
+			CString str;
+
+			str.Format(L"%.1f", (float)m_ctrObjRotYSlider.GetPos());
+
+			GetDlgItem(IDC_EDIT_OBJ_RotY)->SetWindowText(str);
+		}
+
+		if (pSelectMesh != NULL)
+		{
+			pCreateMesh = NULL;
+
+			pSelectMesh->GetInfo()->m_fAngle[ANGLE_Y] = (float)D3DXToRadian(m_ctrObjRotYSlider.GetPos());
+			CString str;
+
+			str.Format(L"%.1f", (float)m_ctrObjRotYSlider.GetPos());
+			GetDlgItem(IDC_EDIT_OBJ_RotY)->SetWindowText(str);
+		}
+	}
 
 	//RotZ 슬라이더가 움직이는 경우
 	if ((pScrollBar != NULL) && (pScrollBar->m_hWnd == m_ctrObjRotZSlider.m_hWnd))

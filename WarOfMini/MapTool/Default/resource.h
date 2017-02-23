@@ -55,6 +55,8 @@
 #define IDC_SLIDER_OBJ_Z                1023
 #define IDC_SLIDER_OBJ_RotX             1024
 #define IDC_SLIDER_OBJ_RotZ             1025
+#define IDC_EDIT_OBJ_RotY               1026
+#define IDC_SLIDER_OBJ_RotY             1027
 
 // Next default values for new objects
 // 

@@ -67,43 +67,6 @@ void CLoading::StageLoading(void)
 		, L"Texture_Couch"
 		, L"../Bin/Resources/StaticMesh/Office.png");
 
-
-	//StaticMesh
-	hr = CResourcesMgr::GetInstance()->AddMesh(
-		RESOURCE_STAGE,
-		MESH_STATIC
-		, L"Mesh_Book1"
-		, "../Bin/Resources/StaticMesh/Mesh/"
-		, "Book1.FBX");
-
-	hr = CResourcesMgr::GetInstance()->AddMesh(
-		RESOURCE_STAGE,
-		MESH_STATIC
-		, L"Mesh_Book2"
-		, "../Bin/Resources/StaticMesh/Mesh/"
-		, "Book2.FBX");
-
-	hr = CResourcesMgr::GetInstance()->AddMesh(
-		RESOURCE_STAGE,
-		MESH_STATIC
-		, L"Mesh_Book3"
-		, "../Bin/Resources/StaticMesh/Mesh/"
-		, "Book3.FBX");
-
-	hr = CResourcesMgr::GetInstance()->AddMesh(
-		RESOURCE_STAGE,
-		MESH_STATIC
-		, L"Mesh_Floor1"
-		, "../Bin/Resources/StaticMesh/Mesh/"
-		, "Floor1.FBX");
-
-	hr = CResourcesMgr::GetInstance()->AddMesh(
-		RESOURCE_STAGE,
-		MESH_STATIC
-		, L"Mesh_Floor2"
-		, "../Bin/Resources/StaticMesh/Mesh/"
-		, "Floor2.FBX");
-
 // 	if(FAILED(Load_Soldier()))
 // 		FAILED_CHECK_RETURN(hr, );
 		

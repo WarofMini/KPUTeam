@@ -77,7 +77,7 @@ HRESULT CStage::CreateStaticFloor(void)
 
 	m_iSize *= m_fSize;
 
-	for (int i = 0; i < 5; ++i)
+	for (int i = 0; i < 7; ++i)
 	{
 		for (int j = 0; j < 5; ++j)
 		{

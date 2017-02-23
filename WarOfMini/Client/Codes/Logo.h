@@ -26,6 +26,7 @@ public:
 	virtual int Update(void);
 	virtual void Render(void);
 	virtual void Release(void);
+	void InitStaticMesh(void);
 
 public:
 	static CLogo* Create(void);

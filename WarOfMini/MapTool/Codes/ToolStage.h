@@ -30,9 +30,22 @@ public:
 public:
 	void		InitMesh(void);
 	void		InitBookMesh(void);
-
+	void		InitFloorMesh(void);
+	void		InitDeskMesh(void);
+	void		InitChairMesh(void);
+	void		InitCabinetMesh(void);
+	void		InitShelfMesh(void);
 	void		InitFloor(void);
-
+	void		InitPhotoCopier(void);
+	void		InitPlant(void);
+	void		InitRubbishBin(void);
+	void		InitWaterCooler(void);
+	void		InitCouch(void);
+	void		InitCoffeetable(void);
+	void		InitBookBox(void);
+	void		InitWall(void);
+	void		InitPainting(void);
+	void		InitEtc(void);
 };
 
 #endif

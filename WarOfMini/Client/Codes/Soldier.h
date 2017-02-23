@@ -27,6 +27,7 @@ private:
 
 	CInput*			m_pInputDev;
 	CStateMachine*	m_pComStateMachine;
+	float			m_fSpeed;
 	Ser_PLAYER_DATA* m_pSer_PlayerData;
 
 private:

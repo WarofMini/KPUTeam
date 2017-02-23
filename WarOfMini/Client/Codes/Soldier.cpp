@@ -14,6 +14,7 @@
 #include "Input.h"
 #include "StateMachine.h"
 #include "SoldierDefine.h"
+#include "TimeMgr.h"
 
 CSoldier::CSoldier()
 	: m_dwAniIdx(0)
@@ -24,6 +25,7 @@ CSoldier::CSoldier()
 	m_pPixelShader = NULL;
 	m_pTexture = NULL;
 	m_pVerTex = NULL;
+	m_fSpeed = 20.0f;
 }
 
 CSoldier::~CSoldier()
@@ -38,8 +40,8 @@ HRESULT CSoldier::Initialize(void)
 
 	FAILED_CHECK(Prepare_StateMachine());
 
-	m_pInfo->m_vScale = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
-	m_pInfo->m_vPos = D3DXVECTOR3(0.f, 0.f, 0.f);
+	m_pInfo->m_vScale = D3DXVECTOR3(0.3f, 0.3f, 0.3f);
+	m_pInfo->m_vPos = D3DXVECTOR3(200.f, 0.f, 0.f);
 
 	m_pInputDev = CInput::GetInstance();
 
@@ -82,6 +84,9 @@ void CSoldier::Render(void)
 
 void CSoldier::KeyInput(void)
 {
+	float fTime = CTimeMgr::GetInstance()->GetTime();
+
+
 // 	if (m_pInputDev->GetDIKeyState(DIK_1) & 0x80)
 // 	{
 // 		dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_fAniPlayTimer = 0.f;
@@ -100,6 +105,30 @@ void CSoldier::KeyInput(void)
 			m_dwAniIdx = 0;
 		dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false;
 		dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_fAniPlayTimer = 0.f;
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_RIGHT) & 0x80)
+	{
+		D3DXVECTOR3 vLook = D3DXVECTOR3(1.f, 0.f, 0.f);
+		m_pInfo->m_vPos += vLook * fTime * m_fSpeed;
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_LEFT) & 0x80)
+	{
+		D3DXVECTOR3 vLook = D3DXVECTOR3(-1.f, 0.f, 0.f);
+		m_pInfo->m_vPos += vLook * fTime * m_fSpeed;
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_DOWN) & 0x80)
+	{
+		D3DXVECTOR3 vLook = D3DXVECTOR3(0.f, 0.f, -1.f);
+		m_pInfo->m_vPos += vLook * fTime * m_fSpeed;
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_UP) & 0x80)
+	{
+		D3DXVECTOR3 vLook = D3DXVECTOR3(0.f, 0.f, 1.f);
+		m_pInfo->m_vPos += vLook * fTime * m_fSpeed;
 	}
 	//if (m_dwAniIdx != 0 && dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd)
 	//{
