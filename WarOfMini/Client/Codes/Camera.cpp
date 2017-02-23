@@ -42,7 +42,7 @@ HRESULT CCamera::Initialize(void)
 	MakeProjection();
 
 	m_fCameraDistance = 10.f;
-	m_fCameraSpeed = 10.f;
+	m_fCameraSpeed = 70.f;
 	
 	return S_OK;
 }

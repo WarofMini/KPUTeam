@@ -10,6 +10,8 @@ public:
 
 private:
 	HRESULT CreateSoldier(void);
+	HRESULT CreateStaticFloor(void);
+	HRESULT CreateStaticObject(void);
 public:
 	virtual HRESULT Initialize(void);
 	virtual int Update(void);

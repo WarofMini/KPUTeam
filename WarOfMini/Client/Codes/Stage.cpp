@@ -7,6 +7,8 @@
 #include "TimeMgr.h"
 #include "RenderMgr.h"
 #include "Camera.h"
+#include "StaticObject.h"
+#include "Info.h"
 
 CStage::CStage()
 {
@@ -29,6 +31,12 @@ HRESULT CStage::Initialize(void)
 	}
 
 	if (FAILED(CreateSoldier()))
+		return E_FAIL;
+
+	if (FAILED(CreateStaticFloor()))
+		return E_FAIL;
+
+	if (FAILED(CreateStaticObject()))
 		return E_FAIL;
 
 	return S_OK;
@@ -56,6 +64,72 @@ HRESULT CStage::CreateSoldier(void)
 		return E_FAIL;
 
 	CObjMgr::GetInstance()->AddObject(L"Soldier", pObject);
+
+	return S_OK;
+}
+
+HRESULT CStage::CreateStaticFloor(void)
+{
+	wstring strName = L"Mesh_Floor1";
+
+	float m_iSize = 500.f;
+	float m_fSize = 0.4f;
+
+	m_iSize *= m_fSize;
+
+	for (int i = 0; i < 5; ++i)
+	{
+		for (int j = 0; j < 5; ++j)
+		{
+			CStaticObject* pObject = NULL;
+
+			pObject = CStaticObject::Create(strName);
+
+			pObject->GetInfo()->m_fAngle[ANGLE_X] += (float)(D3DXToRadian(90.f));
+			pObject->GetInfo()->m_vScale = D3DXVECTOR3(m_fSize, m_fSize, m_fSize);
+
+			pObject->GetInfo()->m_vPos = D3DXVECTOR3((j % 5) * m_iSize, 0.f, i * m_iSize);
+
+			CObjMgr::GetInstance()->AddObject(L"StaticObject", pObject);
+		}
+	}
+
+	return S_OK;
+}
+
+
+//Load Static Object Data
+HRESULT CStage::CreateStaticObject(void)
+{
+	TCHAR*	tPath = L"../Bin/Data/MapObj.dat";
+
+	HANDLE	hFile = CreateFile(tPath, GENERIC_READ, 0, NULL,
+		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	DWORD	dwByte = 0;
+
+	while (true)
+	{
+		OBJ_INFO   tInfo;
+
+		ReadFile(hFile, &tInfo, sizeof(OBJ_INFO), &dwByte, NULL);
+
+		if (dwByte == 0)
+		{
+			CloseHandle(hFile);
+			break;
+		}
+
+		CObject* pObject = NULL;
+
+		wstring strName = tInfo.m_szName;
+
+		pObject = CStaticObject::Create(strName);
+		((CStaticObject*)(pObject))->SetObjInfo(&tInfo);
+		((CStaticObject*)(pObject))->InfoSetting();
+		CObjMgr::GetInstance()->AddObject(L"StaticObject", pObject);
+
+	}
 
 	return S_OK;
 }

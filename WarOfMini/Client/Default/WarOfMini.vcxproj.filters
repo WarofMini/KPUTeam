@@ -148,6 +148,9 @@
     <Filter Include="Server">
       <UniqueIdentifier>{ecd47a3a-d1fb-47e3-ac8f-604a13a13bcc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\02.StaticObject">
+      <UniqueIdentifier>{56b0656f-7a5e-406f-bdb8-104fe43d211c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -306,6 +309,9 @@
     <ClInclude Include="Protocol.h">
       <Filter>Server</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\StaticObject.h">
+      <Filter>02.Object\02.StaticObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -433,6 +439,9 @@
     </ClCompile>
     <ClCompile Include="ClientClass.cpp">
       <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\StaticObject.cpp">
+      <Filter>02.Object\02.StaticObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -352,9 +352,7 @@ void CBatch::OnBnClickedDeleteBtn()
 
 			(*iter)->SetObjState(STATE_DESTROY);
 		}
-
 	}
-
 }
 
 //모두 삭제
@@ -603,7 +601,7 @@ void CBatch::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 
-	//X슬라이더가 움직일경우
+	
 	if ((pScrollBar != NULL) && (pScrollBar->m_hWnd == m_ctrObjXSlider.m_hWnd))
 	{
 		CToolStaticObject* pCreateMesh = CObjCol::GetInstance()->m_pCreateMesh;
@@ -706,6 +704,7 @@ void CBatch::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 			CString str;
 
 			str.Format(L"%.1f", (float)m_ctrObjRotXSlider.GetPos());
+
 			GetDlgItem(IDC_EDIT_OBJ_RotX)->SetWindowText(str);
 		}
 

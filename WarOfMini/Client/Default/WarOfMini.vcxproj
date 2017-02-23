@@ -194,6 +194,7 @@
     <ClInclude Include="..\Codes\State.h" />
     <ClInclude Include="..\Codes\StateMachine.h" />
     <ClInclude Include="..\Codes\StaticMesh.h" />
+    <ClInclude Include="..\Codes\StaticObject.h" />
     <ClInclude Include="..\Codes\Texture.h" />
     <ClInclude Include="..\Codes\TimeMgr.h" />
     <ClInclude Include="..\Codes\VIBuffer.h" />
@@ -247,6 +248,7 @@
     <ClCompile Include="..\Codes\State.cpp" />
     <ClCompile Include="..\Codes\StateMachine.cpp" />
     <ClCompile Include="..\Codes\StaticMesh.cpp" />
+    <ClCompile Include="..\Codes\StaticObject.cpp" />
     <ClCompile Include="..\Codes\Texture.cpp" />
     <ClCompile Include="..\Codes\TimeMgr.cpp" />
     <ClCompile Include="..\Codes\VIBuffer.cpp" />
