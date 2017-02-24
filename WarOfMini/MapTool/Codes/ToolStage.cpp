@@ -79,6 +79,7 @@ HRESULT CToolStage::Add_Environment_Layer(void)
 HRESULT CToolStage::Add_GameLogic_Layer(void)
 {
 	InitFloor();
+	InitToiletFloor();
 
 	return S_OK;
 }
@@ -131,7 +132,10 @@ void CToolStage::InitMesh(void)
 	InitWall();
 	//Painting Loading
 	InitPainting();
+	//Door Loading
+	InitDoor();
 
+	InitToiletStall();
 	//Etc Loading
 	InitEtc();
 
@@ -412,7 +416,7 @@ void CToolStage::InitShelfMesh(void)
 
 
 }
-
+//¹Ù´Ú »ý¼º
 void CToolStage::InitFloor(void)
 {
 	wstring strName = L"Mesh_Floor1";
@@ -422,9 +426,9 @@ void CToolStage::InitFloor(void)
 
 	m_iSize *= m_fSize;
 
-	for (int i = 0; i < 7; ++i)
+	for (int i = 0; i < 8; ++i)
 	{
-		for (int j = 0; j < 5; ++j)
+		for (int j = 0; j < 6; ++j)
 		{
 			CObj* pObject = NULL;
 
@@ -434,11 +438,40 @@ void CToolStage::InitFloor(void)
 			pObject->GetInfo()->m_vScale = D3DXVECTOR3(m_fSize, m_fSize, m_fSize);
 			((CToolStaticObject*)pObject)->SetMode(MODE_FIX);
 
-			pObject->GetInfo()->m_vPos = D3DXVECTOR3((j % 5) * m_iSize, 0.f, i * m_iSize);
+			pObject->GetInfo()->m_vPos = D3DXVECTOR3((j % 6) * m_iSize, 0.f, i * m_iSize);
 
 			CObjMgr::GetInstance()->AddObject(L"StaticObject", pObject);
 		}
 	}
+}
+
+void CToolStage::InitToiletFloor(void)
+{
+	wstring strName = L"Mesh_Floor2";
+
+	float m_iSize = 500.f;
+	float m_fSize = 0.4f;
+
+	m_iSize *= m_fSize;
+
+	for (int i = 0; i < 4; ++i)
+	{
+		for (int j = 0; j < 4; ++j)
+		{
+			CObj* pObject = NULL;
+
+			pObject = CToolStaticObject::Create(strName);
+
+			pObject->GetInfo()->m_fAngle[ANGLE_X] += (float)(D3DXToRadian(90.f));
+			pObject->GetInfo()->m_vScale = D3DXVECTOR3(m_fSize, m_fSize, m_fSize);
+			((CToolStaticObject*)pObject)->SetMode(MODE_FIX);
+
+			pObject->GetInfo()->m_vPos = D3DXVECTOR3((j % 4) * m_iSize + 1182.f, 0.1f, i * m_iSize + 400.f);
+
+			CObjMgr::GetInstance()->AddObject(L"StaticObject", pObject);
+		}
+	}
+
 }
 
 void CToolStage::InitPhotoCopier(void)
@@ -756,6 +789,48 @@ void CToolStage::InitPainting(void)
 	FAILED_CHECK_RETURN(hr, );
 }
 
+void CToolStage::InitDoor(void)
+{
+	HRESULT hr = NULL;
+
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_Door"
+		, "../Resource/Mesh/Door/"
+		, "Door1.FBX");
+	FAILED_CHECK_RETURN(hr, );
+
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_Door1"
+		, "../Resource/Mesh/Door/"
+		, "Door2.FBX");
+	FAILED_CHECK_RETURN(hr, );
+}
+
+void CToolStage::InitToiletStall(void)
+{
+	HRESULT hr = NULL;
+
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_ToiletStall1"
+		, "../Resource/Mesh/ToiletStall/"
+		, "ToiletStall1.FBX");
+	FAILED_CHECK_RETURN(hr, );
+
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_ToiletStall2"
+		, "../Resource/Mesh/ToiletStall/"
+		, "ToiletStall2.FBX");
+	FAILED_CHECK_RETURN(hr, );
+}
+
 void CToolStage::InitEtc(void)
 {
 	HRESULT hr = NULL;
@@ -766,15 +841,6 @@ void CToolStage::InitEtc(void)
 		, L"Mesh_Clock"
 		, "../Resource/Mesh/"
 		, "Clock.FBX");
-	FAILED_CHECK_RETURN(hr, );
-
-
-	hr = CResourcesMgr::GetInstance()->AddMesh(
-		RESOURCE_STAGE,
-		MESH_STATIC
-		, L"Mesh_Door"
-		, "../Resource/Mesh/"
-		, "Door.FBX");
 	FAILED_CHECK_RETURN(hr, );
 
 
@@ -792,6 +858,54 @@ void CToolStage::InitEtc(void)
 		, L"Mesh_PowerOutlet"
 		, "../Resource/Mesh/"
 		, "PowerOutlet.FBX");
+	FAILED_CHECK_RETURN(hr, );
+
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_SoapDispenser"
+		, "../Resource/Mesh/"
+		, "SoapDispenser.FBX");
+	FAILED_CHECK_RETURN(hr, );
+
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_Urinal"
+		, "../Resource/Mesh/"
+		, "Urinal.FBX");
+	FAILED_CHECK_RETURN(hr, );
+
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_HandDryer"
+		, "../Resource/Mesh/"
+		, "HandDryer.FBX");
+	FAILED_CHECK_RETURN(hr, );
+
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_Mirror"
+		, "../Resource/Mesh/"
+		, "Mirror.FBX");
+	FAILED_CHECK_RETURN(hr, );
+
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_PaperTowelDispenser"
+		, "../Resource/Mesh/"
+		, "PaperTowelDispenser.FBX");
+	FAILED_CHECK_RETURN(hr, );
+
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_Sinks"
+		, "../Resource/Mesh/"
+		, "Sinks.FBX");
 	FAILED_CHECK_RETURN(hr, );
 }
 

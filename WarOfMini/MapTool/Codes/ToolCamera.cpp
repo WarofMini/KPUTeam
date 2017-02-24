@@ -40,7 +40,7 @@ HRESULT CToolCamera::Initialize(void)
 	MakeProjection();
 
 	m_fCameraDistance = 10.f;
-	m_fCameraSpeed = 100.f;
+	m_fCameraSpeed = 120.f;
 	
 	return S_OK;
 }

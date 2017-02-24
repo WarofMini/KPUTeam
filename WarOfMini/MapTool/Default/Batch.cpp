@@ -438,6 +438,86 @@ void CBatch::InitTreeObject(void)
 	//Door1
 	HTREEITEM  hDoor1;
 	hDoor1 = m_ctrlTreeObject.InsertItem(L"Mesh_Door", 1/* nImage */, 1/* nSelectedImage */, hDoor, TVI_LAST);
+	//Door2
+	HTREEITEM  hDoor2;
+	hDoor2 = m_ctrlTreeObject.InsertItem(L"Mesh_Door1", 1/* nImage */, 1/* nSelectedImage */, hDoor, TVI_LAST);
+
+
+	//ToiletStall
+	HTREEITEM  hToiletStall;
+
+	hToiletStall = m_ctrlTreeObject.InsertItem(L"ToiletStall", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	//ToiletStall1
+	HTREEITEM  hToiletStall1;
+	hToiletStall1 = m_ctrlTreeObject.InsertItem(L"Mesh_ToiletStall1", 1/* nImage */, 1/* nSelectedImage */, hToiletStall, TVI_LAST);
+	//ToiletStall2
+	HTREEITEM  hToiletStall2;
+	hToiletStall2 = m_ctrlTreeObject.InsertItem(L"Mesh_ToiletStall2", 1/* nImage */, 1/* nSelectedImage */, hToiletStall, TVI_LAST);
+
+
+
+	//SoapDispenser
+	HTREEITEM  hSoapDispenser;
+
+	hSoapDispenser = m_ctrlTreeObject.InsertItem(L"SoapDispenser", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	//SoapDispenser1
+	HTREEITEM  hSoapDispenser1;
+	hSoapDispenser1 = m_ctrlTreeObject.InsertItem(L"Mesh_SoapDispenser", 1/* nImage */, 1/* nSelectedImage */, hSoapDispenser, TVI_LAST);
+
+
+	//Urinal
+	HTREEITEM  hUrinal;
+
+	hUrinal = m_ctrlTreeObject.InsertItem(L"Urinal", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	//Urinal1
+	HTREEITEM  hUrinal1;
+	hUrinal1 = m_ctrlTreeObject.InsertItem(L"Mesh_Urinal", 1/* nImage */, 1/* nSelectedImage */, hUrinal, TVI_LAST);
+
+
+	//HandDryer
+	HTREEITEM  hHandDryer;
+
+	hHandDryer = m_ctrlTreeObject.InsertItem(L"HandDryer", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	//Urinal1
+	HTREEITEM  hHandDryer1;
+	hHandDryer1 = m_ctrlTreeObject.InsertItem(L"Mesh_HandDryer", 1/* nImage */, 1/* nSelectedImage */, hHandDryer, TVI_LAST);
+
+
+
+	//Mirror
+	HTREEITEM  hMirror;
+
+	hMirror = m_ctrlTreeObject.InsertItem(L"Mirror", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	//hMirror1
+	HTREEITEM  hMirror1;
+	hMirror1 = m_ctrlTreeObject.InsertItem(L"Mesh_Mirror", 1/* nImage */, 1/* nSelectedImage */, hMirror, TVI_LAST);
+
+
+
+
+	//PaperTowelDispenser
+	HTREEITEM  hPaperTowelDispenser;
+
+	hPaperTowelDispenser = m_ctrlTreeObject.InsertItem(L"PaperTowelDispenser", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	//PaperTowelDispenser1
+	HTREEITEM  hPaperTowelDispenser1;
+	hPaperTowelDispenser1 = m_ctrlTreeObject.InsertItem(L"Mesh_PaperTowelDispenser", 1/* nImage */, 1/* nSelectedImage */, hPaperTowelDispenser, TVI_LAST);
+
+
+	//Sinks
+	HTREEITEM  hSinks;
+
+	hSinks = m_ctrlTreeObject.InsertItem(L"Sinks", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	//Sinks1
+	HTREEITEM  hSinks1;
+	hSinks1 = m_ctrlTreeObject.InsertItem(L"Mesh_Sinks", 1/* nImage */, 1/* nSelectedImage */, hSinks, TVI_LAST);
 
 
 

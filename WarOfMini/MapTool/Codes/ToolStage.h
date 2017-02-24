@@ -36,6 +36,7 @@ public:
 	void		InitCabinetMesh(void);
 	void		InitShelfMesh(void);
 	void		InitFloor(void);
+	void		InitToiletFloor(void);
 	void		InitPhotoCopier(void);
 	void		InitPlant(void);
 	void		InitRubbishBin(void);
@@ -45,7 +46,10 @@ public:
 	void		InitBookBox(void);
 	void		InitWall(void);
 	void		InitPainting(void);
+	void		InitDoor(void);
+	void		InitToiletStall(void);
 	void		InitEtc(void);
+
 };
 
 #endif
