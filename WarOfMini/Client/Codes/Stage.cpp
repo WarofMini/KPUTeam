@@ -36,6 +36,9 @@ HRESULT CStage::Initialize(void)
 	if (FAILED(CreateStaticFloor()))
 		return E_FAIL;
 
+	if (FAILED(CreateToiletFloor()))
+		return E_FAIL;
+
 	if (FAILED(CreateStaticObject()))
 		return E_FAIL;
 
@@ -77,9 +80,9 @@ HRESULT CStage::CreateStaticFloor(void)
 
 	m_iSize *= m_fSize;
 
-	for (int i = 0; i < 7; ++i)
+	for (int i = 0; i < 8; ++i)
 	{
-		for (int j = 0; j < 5; ++j)
+		for (int j = 0; j < 6; ++j)
 		{
 			CStaticObject* pObject = NULL;
 
@@ -88,7 +91,36 @@ HRESULT CStage::CreateStaticFloor(void)
 			pObject->GetInfo()->m_fAngle[ANGLE_X] += (float)(D3DXToRadian(90.f));
 			pObject->GetInfo()->m_vScale = D3DXVECTOR3(m_fSize, m_fSize, m_fSize);
 
-			pObject->GetInfo()->m_vPos = D3DXVECTOR3((j % 5) * m_iSize, 0.f, i * m_iSize);
+			pObject->GetInfo()->m_vPos = D3DXVECTOR3((j % 6) * m_iSize, 0.f, i * m_iSize);
+
+			CObjMgr::GetInstance()->AddObject(L"StaticObject", pObject);
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CStage::CreateToiletFloor(void)
+{
+	wstring strName = L"Mesh_Floor2";
+
+	float m_iSize = 500.f;
+	float m_fSize = 0.4f;
+
+	m_iSize *= m_fSize;
+
+	for (int i = 0; i < 4; ++i)
+	{
+		for (int j = 0; j < 4; ++j)
+		{
+			CStaticObject* pObject = NULL;
+
+			pObject = CStaticObject::Create(strName);
+
+			pObject->GetInfo()->m_fAngle[ANGLE_X] += (float)(D3DXToRadian(90.f));
+			pObject->GetInfo()->m_vScale = D3DXVECTOR3(m_fSize, m_fSize, m_fSize);
+
+			pObject->GetInfo()->m_vPos = D3DXVECTOR3((j % 4) * m_iSize + 1182.f, 0.1f, i * m_iSize + 400.f);
 
 			CObjMgr::GetInstance()->AddObject(L"StaticObject", pObject);
 		}

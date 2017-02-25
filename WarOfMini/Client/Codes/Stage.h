@@ -11,6 +11,7 @@ public:
 private:
 	HRESULT CreateSoldier(void);
 	HRESULT CreateStaticFloor(void);
+	HRESULT CreateToiletFloor(void);
 	HRESULT CreateStaticObject(void);
 public:
 	virtual HRESULT Initialize(void);

@@ -626,13 +626,79 @@ void CLogo::InitStaticMesh(void)
 		, "../Bin/Resources/StaticMesh/Mesh/"
 		, "Clock.FBX");
 
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_HandDryer"
+		, "../Bin/Resources/StaticMesh/Mesh/"
+		, "HandDryer.FBX");
+
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_Mirror"
+		, "../Bin/Resources/StaticMesh/Mesh/"
+		, "Mirror.FBX");
+
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_PaperTowelDispenser"
+		, "../Bin/Resources/StaticMesh/Mesh/"
+		, "PaperTowelDispenser.FBX");
+
+
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_Sinks"
+		, "../Bin/Resources/StaticMesh/Mesh/"
+		, "Sinks.FBX");
+
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_SoapDispenser"
+		, "../Bin/Resources/StaticMesh/Mesh/"
+		, "SoapDispenser.FBX");
+
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_Urinal"
+		, "../Bin/Resources/StaticMesh/Mesh/"
+		, "Urinal.FBX");
 
 	hr = CResourcesMgr::GetInstance()->AddMesh(
 		RESOURCE_STAGE,
 		MESH_STATIC
 		, L"Mesh_Door"
-		, "../Bin/Resources/StaticMesh/Mesh/"
-		, "Door.FBX");
+		, "../Bin/Resources/StaticMesh/Mesh/Door/"
+		, "Door1.FBX");
+
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_Door1"
+		, "../Bin/Resources/StaticMesh/Mesh/Door/"
+		, "Door2.FBX");
+
+
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_ToiletStall1"
+		, "../Bin/Resources/StaticMesh/Mesh/ToiletStall/"
+		, "ToiletStall1.FBX");
+	FAILED_CHECK_RETURN(hr, );
+
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_ToiletStall2"
+		, "../Bin/Resources/StaticMesh/Mesh/ToiletStall/"
+		, "ToiletStall2.FBX");
+	FAILED_CHECK_RETURN(hr, );
 
 
 	hr = CResourcesMgr::GetInstance()->AddMesh(
