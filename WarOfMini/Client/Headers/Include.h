@@ -8,6 +8,7 @@ using namespace std;
 #include "Value.h"
 #include "Macro.h"
 #include "Struct.h"
+#include "Typedef.h"
 
 
 //전역변수

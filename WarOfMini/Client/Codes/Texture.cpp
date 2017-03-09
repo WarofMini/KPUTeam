@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "Texture.h"
 #include "Device.h"
+#include "DirectXTex.h"
 
+using namespace DirectX;
 
 CTexture::CTexture()
 {

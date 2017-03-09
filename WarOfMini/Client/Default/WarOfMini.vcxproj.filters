@@ -318,6 +318,9 @@
     <ClInclude Include="..\Headers\Struct.h">
       <Filter>98.Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\Typedef.h">
+      <Filter>98.Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

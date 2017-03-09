@@ -23,7 +23,7 @@ CMainApp::~CMainApp()
 HRESULT CMainApp::Initialize(void)
 {
 #ifdef _DEBUG
-	cout << "ㅋㄴ솔창테스트" << endl;
+	cout << "콘솔창테스트" << endl;
 #endif
 
 	HRESULT hr = S_OK;

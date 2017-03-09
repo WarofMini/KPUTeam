@@ -86,3 +86,9 @@ typedef struct tagObjectInfo
 
 }OBJ_INFO;
 
+typedef struct Tag
+{
+	enum CLASSA{TESTA, TESTEND};
+
+	enum CLASSB{ TESTB, TESTENDTWO };
+}TAG;

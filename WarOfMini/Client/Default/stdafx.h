@@ -21,7 +21,7 @@
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.
 
 // Directx
-#include <d3d11.h>
+#include <d3d11_1.h>
 #include <d3dx11.h>
 #include <D3DX10Math.h>
 #include <d3dcompiler.h>
