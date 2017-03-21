@@ -1,25 +1,52 @@
-#pragma once
-#include "VIBuffer.h"
+#ifndef Mesh_h__
+#define Mesh_h__
 
-class CDevice;
-class CShader;
-class CMesh :
-	public CVIBuffer
+#include "Resources.h"
+
+class CTextures;
+
+class CMesh
+	: public CResource
 {
+protected:
+	explicit CMesh(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);
+	virtual ~CMesh(void);
+
 public:
-	CMesh();
-	virtual ~CMesh();
+	void Set_RootMinMax(void);
+	const _vec3* Get_Min(void);
+	const _vec3* Get_Max(void);
+
+public:
+	void Reserve_ChildSize(const _ushort& wSize);
+	void Add_Child(CMesh* pChild);
+	void Clear_NullChild(void);
+	_bool Check_Remove(void);
+
+public:
+	virtual CResource* Clone_Resource(void) PURE;
+	virtual void Render(_bool bColliderDraw = FALSE) PURE;
+	virtual void RenderInst(const vector<_matrix*>& vecObjWorld) PURE;
+	virtual void Release(void);
 
 protected:
-	CShader* m_pShader;
-	CDevice* m_pGrapicDevice;
+	virtual HRESULT Set_BoundingBox(void)	PURE;
 
-public:
-	virtual void Render();
+protected:
+	vector<CMesh*> m_vecChild;
 
-	void MakeVertexNormal(BYTE* _pVertices, WORD* _pIndices);
-	void SetNormalVectorByBasic(BYTE* _pVertices);
-	void SetNormalVectorByAverage(BYTE* _pVertices, WORD* _pIndices, int _iPrimitives, int _iOffset, bool _bStrip);
-	D3DXVECTOR3 GetTriAngleNormal(BYTE* _pVertices, USHORT _nIndex_0, USHORT _nIndex_1, USHORT _nIndex_2);
+protected:
+	CTextures*		m_pTexture;
+	ID3D11Buffer*	m_pVB;
+	ID3D11Buffer*	m_pIB;
+	_uint			m_uiVtxCnt;
+	_uint			m_uiIdxCnt;
+
+protected:
+	_vec3			m_vMin;
+	_vec3			m_vMax;
+	ID3D11Buffer*	m_pBBoxVB;
+	ID3D11Buffer*	m_pBBoxIB;
 };
 
+#endif // Mesh_h__

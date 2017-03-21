@@ -1,54 +1,43 @@
 #ifndef Camera_h__
 #define Camera_h__
 
-#include "Include.h"
-
-class CInfo;
+#include "GameObject.h"
 
 class CCamera
+	: public CGameObject
 {
-public:
-	CCamera();
-	virtual ~CCamera();
+protected:
+	explicit CCamera(ID3D11DeviceContext* pContext);
+	virtual ~CCamera(void);
 
 public:
-	DECLARE_SINGLETON(CCamera)
+	const _matrix* Get_Proj(void);
+	const _matrix* Get_View(void);
+
+protected:
+	void Set_Proj(_float fNear, _float fFar);
+	void Set_View(_vec3 vEye, _vec3 vAt);
 
 public:
-	D3DXMATRIX	m_matView;
-	D3DXMATRIX	m_matProj;
-	D3DXVECTOR3 m_vEye;
-	D3DXVECTOR3 m_vAt;
-	D3DXVECTOR3 m_vUp;
-
-
-private:
-	float m_fFovY;
-	float m_fAspect; 
-	float m_fNear;
-	float m_fFar;
-	float m_fCameraDistance;
-	float m_fCameraSpeed;
-	bool  m_bMouseFix;	
-	DWORD m_dwTime;
-	DWORD m_dwKey;
-	D3DXVECTOR3 m_vDirZ;
+	virtual HRESULT	Initialize(_float fNear, _float fFar, _vec3 vEye, _vec3 vAt);
+	virtual _int Update(const _float& fTimeDelta)	PURE;
+	virtual void Release(void);
 
 public:
-	HRESULT Initialize(void);
-	int		Update(void);
-	void	Release(void);
+	void	MakeView(void);
+	void	MakeProjection(void);
 
-public:
-	void MakeView(void);
-	void MakeProjection(void);
+protected:
+	_matrix				m_matProj;
+	_matrix				m_matView;
+	float				m_fNear;
+	float				m_fFar;
 
-private:
-	void KeyState(void);
-	void FixMouse(void);
-	void MouseMove(void);
-
-
+protected:
+	_vec3				m_vEye;
+	_vec3				m_vUp;
+	_vec3				m_vAt;
+	bool				m_bMouseFix;
 };
 
-#endif
+#endif Camera_h__

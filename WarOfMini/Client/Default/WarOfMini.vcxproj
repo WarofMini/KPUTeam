@@ -94,13 +94,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>../Headers; ../Codes; ../Bin/ShaderCode;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Headers/;../Codes/;../Bin/ShaderCode/;../ThirdParty/Vld/;../ThirdParty/FMOD/;../ThirdParty/Direct/;../ThirdParty/Font/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>dinput8.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;winmm.lib;dxgi.lib;comctl32.lib;DirectXTex.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../Library</AdditionalLibraryDirectories>
+      <AdditionalDependencies>dinput8.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;winmm.lib;dxgi.lib;comctl32.lib;DirectXTex.lib;libfbxsdk-md.lib;vldmtdll.lib;fmodex_vc.lib;FW1FontWrapper.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../Library/;../ThirdParty/Vld/;../ThirdParty/Direct/;../ThirdParty/FMOD/;../ThirdParty/Font/</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -125,7 +125,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>../Headers; ../Codes; ../Bin/ShaderCode;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Headers/;../Codes/;../Bin/ShaderCode/;../ThirdParty/Direct/;../ThirdParty/FMOD/;../ThirdParty/Font/;../ThirdParty/Vld/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -133,7 +133,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>dinput8.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;winmm.lib;comctl32.lib;DirectXTex.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../Library</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../Library/;../ThirdParty/FMOD/;../ThirdParty/Direct/;../ThirdParty/Font/;../ThirdParty/Vld/</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -157,49 +157,49 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Codes\AniBuffer.h" />
-    <ClInclude Include="..\Codes\AnimationMgr.h" />
+    <ClInclude Include="..\Codes\Animation.h" />
+    <ClInclude Include="..\Codes\AnimationInfo.h" />
     <ClInclude Include="..\Codes\Camera.h" />
-    <ClInclude Include="..\Codes\Collision.h" />
+    <ClInclude Include="..\Codes\CameraMgr.h" />
     <ClInclude Include="..\Codes\Component.h" />
-    <ClInclude Include="..\Codes\COtherSoldier.h" />
-    <ClInclude Include="..\Codes\Device.h" />
+    <ClInclude Include="..\Codes\CubeTex.h" />
+    <ClInclude Include="..\Codes\DynamicCamera.h" />
     <ClInclude Include="..\Codes\DynamicMesh.h" />
-    <ClInclude Include="..\Codes\FbxParser.h" />
-    <ClInclude Include="..\Codes\Info.h" />
+    <ClInclude Include="..\Codes\Font.h" />
+    <ClInclude Include="..\Codes\FontMgr.h" />
+    <ClInclude Include="..\Codes\Frame.h" />
+    <ClInclude Include="..\Codes\FrameMgr.h" />
+    <ClInclude Include="..\Codes\GameObject.h" />
+    <ClInclude Include="..\Codes\GraphicDev.h" />
     <ClInclude Include="..\Codes\Input.h" />
+    <ClInclude Include="..\Codes\Layer.h" />
     <ClInclude Include="..\Codes\Loading.h" />
     <ClInclude Include="..\Codes\Logo.h" />
     <ClInclude Include="..\Codes\LogoBack.h" />
     <ClInclude Include="..\Codes\MainApp.h" />
+    <ClInclude Include="..\Codes\Management.h" />
     <ClInclude Include="..\Codes\Mesh.h" />
-    <ClInclude Include="..\Codes\Object.h" />
-    <ClInclude Include="..\Codes\ObjMgr.h" />
-    <ClInclude Include="..\Codes\RcCol.h" />
+    <ClInclude Include="..\Codes\MeshMgr.h" />
     <ClInclude Include="..\Codes\RcTex.h" />
-    <ClInclude Include="..\Codes\RenderMgr.h" />
+    <ClInclude Include="..\Codes\Renderer.h" />
     <ClInclude Include="..\Codes\RenderTarget.h" />
+    <ClInclude Include="..\Codes\RenderTargetMgr.h" />
     <ClInclude Include="..\Codes\Resources.h" />
     <ClInclude Include="..\Codes\ResourcesMgr.h" />
     <ClInclude Include="..\Codes\Scene.h" />
-    <ClInclude Include="..\Codes\SceneMgr.h" />
+    <ClInclude Include="..\Codes\SceneSelector.h" />
     <ClInclude Include="..\Codes\Shader.h" />
     <ClInclude Include="..\Codes\ShaderMgr.h" />
-    <ClInclude Include="..\Codes\Soldier.h" />
-    <ClInclude Include="..\Codes\SoldierAttack.h" />
-    <ClInclude Include="..\Codes\SoldierDefine.h" />
-    <ClInclude Include="..\Codes\SoldierIdle.h" />
-    <ClInclude Include="..\Codes\SoldierMove.h" />
-    <ClInclude Include="..\Codes\SoldierState.h" />
     <ClInclude Include="..\Codes\Stage.h" />
-    <ClInclude Include="..\Codes\State.h" />
-    <ClInclude Include="..\Codes\StateMachine.h" />
     <ClInclude Include="..\Codes\StaticMesh.h" />
     <ClInclude Include="..\Codes\StaticObject.h" />
     <ClInclude Include="..\Codes\Texture.h" />
-    <ClInclude Include="..\Codes\TimeMgr.h" />
-    <ClInclude Include="..\Codes\VIBuffer.h" />
+    <ClInclude Include="..\Codes\Timer_Manager.h" />
+    <ClInclude Include="..\Codes\Timer.h" />
+    <ClInclude Include="..\Codes\Transform.h" />
     <ClInclude Include="..\Headers\Enum.h" />
+    <ClInclude Include="..\Headers\Function.h" />
+    <ClInclude Include="..\Headers\Functor.h" />
     <ClInclude Include="..\Headers\Include.h" />
     <ClInclude Include="..\Headers\Macro.h" />
     <ClInclude Include="..\Headers\Struct.h" />
@@ -214,47 +214,45 @@
     <ClInclude Include="WarOfMini.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Codes\AniBuffer.cpp" />
-    <ClCompile Include="..\Codes\AnimationMgr.cpp" />
+    <ClCompile Include="..\Codes\Animation.cpp" />
+    <ClCompile Include="..\Codes\AnimationInfo.cpp" />
     <ClCompile Include="..\Codes\Camera.cpp" />
-    <ClCompile Include="..\Codes\Collision.cpp" />
+    <ClCompile Include="..\Codes\CameraMgr.cpp" />
     <ClCompile Include="..\Codes\Component.cpp" />
-    <ClCompile Include="..\Codes\COtherSoldier.cpp" />
-    <ClCompile Include="..\Codes\Device.cpp" />
+    <ClCompile Include="..\Codes\CubeTex.cpp" />
+    <ClCompile Include="..\Codes\DynamicCamera.cpp" />
     <ClCompile Include="..\Codes\DynamicMesh.cpp" />
-    <ClCompile Include="..\Codes\FbxParser.cpp" />
-    <ClCompile Include="..\Codes\Info.cpp" />
+    <ClCompile Include="..\Codes\Font.cpp" />
+    <ClCompile Include="..\Codes\FontMgr.cpp" />
+    <ClCompile Include="..\Codes\Frame.cpp" />
+    <ClCompile Include="..\Codes\FrameMgr.cpp" />
+    <ClCompile Include="..\Codes\GameObject.cpp" />
+    <ClCompile Include="..\Codes\GraphicDev.cpp" />
     <ClCompile Include="..\Codes\Input.cpp" />
+    <ClCompile Include="..\Codes\Layer.cpp" />
     <ClCompile Include="..\Codes\Loading.cpp" />
     <ClCompile Include="..\Codes\Logo.cpp" />
     <ClCompile Include="..\Codes\LogoBack.cpp" />
     <ClCompile Include="..\Codes\MainApp.cpp" />
+    <ClCompile Include="..\Codes\Management.cpp" />
     <ClCompile Include="..\Codes\Mesh.cpp" />
-    <ClCompile Include="..\Codes\Object.cpp" />
-    <ClCompile Include="..\Codes\ObjMgr.cpp" />
-    <ClCompile Include="..\Codes\RcCol.cpp" />
+    <ClCompile Include="..\Codes\MeshMgr.cpp" />
     <ClCompile Include="..\Codes\RcTex.cpp" />
-    <ClCompile Include="..\Codes\RenderMgr.cpp" />
+    <ClCompile Include="..\Codes\Renderer.cpp" />
     <ClCompile Include="..\Codes\RenderTarget.cpp" />
+    <ClCompile Include="..\Codes\RenderTargetMgr.cpp" />
     <ClCompile Include="..\Codes\Resources.cpp" />
     <ClCompile Include="..\Codes\ResourcesMgr.cpp" />
     <ClCompile Include="..\Codes\Scene.cpp" />
-    <ClCompile Include="..\Codes\SceneMgr.cpp" />
     <ClCompile Include="..\Codes\Shader.cpp" />
     <ClCompile Include="..\Codes\ShaderMgr.cpp" />
-    <ClCompile Include="..\Codes\Soldier.cpp" />
-    <ClCompile Include="..\Codes\SoldierAttack.cpp" />
-    <ClCompile Include="..\Codes\SoldierIdle.cpp" />
-    <ClCompile Include="..\Codes\SoldierMove.cpp" />
-    <ClCompile Include="..\Codes\SoldierState.cpp" />
     <ClCompile Include="..\Codes\Stage.cpp" />
-    <ClCompile Include="..\Codes\State.cpp" />
-    <ClCompile Include="..\Codes\StateMachine.cpp" />
     <ClCompile Include="..\Codes\StaticMesh.cpp" />
     <ClCompile Include="..\Codes\StaticObject.cpp" />
     <ClCompile Include="..\Codes\Texture.cpp" />
-    <ClCompile Include="..\Codes\TimeMgr.cpp" />
-    <ClCompile Include="..\Codes\VIBuffer.cpp" />
+    <ClCompile Include="..\Codes\Timer_Manager.cpp" />
+    <ClCompile Include="..\Codes\Timer.cpp" />
+    <ClCompile Include="..\Codes\Transform.cpp" />
     <ClCompile Include="ClientClass.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -272,8 +270,31 @@
     <Image Include="WarOfMini.ico" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\Bin\Shader\Shader.fx">
+    <FxCompile Include="..\Bin\ShaderCode\Shader_Default.fx">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0_level_9_3</ShaderModel>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderCode\Shader_DynamicMesh.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderCode\Shader_FogResult.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderCode\Shader_Instancing.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderCode\Shader_Normal.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderCode\Shader_Skybox.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderCode\Shader_Terrain.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>

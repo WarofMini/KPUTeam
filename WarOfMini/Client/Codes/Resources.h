@@ -1,20 +1,28 @@
-#pragma once
+#ifndef ClientResourcess_h__
+#define ClientResourcess_h__
+
 #include "Component.h"
-class CResources :
+
+
+class CResource :
 	public CComponent
 {
-public:
-	CResources();
-	explicit CResources(CResources& rhs);
-	virtual ~CResources();
+protected:
+	explicit CResource(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);
+	virtual ~CResource(void);
 
 public:
-	virtual CResources* CloneResource(void)PURE;
-	virtual DWORD Release(void);
-	void	AddRef(void);
+	virtual CResource* Clone_Resource(void)  PURE;
+
+	virtual void Release(void);
+
+
 
 protected:
-	DWORD		m_dwRefCount;
+	_ulong*					m_dwRefCount;
+	ID3D11Device*			m_pGraphicDev;
+	ID3D11DeviceContext*	m_pContext;
 
 };
 
+#endif

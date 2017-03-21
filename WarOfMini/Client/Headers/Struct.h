@@ -1,94 +1,105 @@
-#pragma once
+#ifndef Struct_h__
+#define Struct_h__
+
+#include "Include.h"
 
 ////콘스턴트 버퍼
 struct ConstantBuffer
 {
-	D3DXMATRIX matWorld;
-	D3DXMATRIX matView;
-	D3DXMATRIX matProjection;
+	_matrix matWorld;
+	_matrix matView;
+	_matrix matProjection;
 };
 
-///////////////////////////////////////////////////////////////////정점 구조체
-typedef struct tagVertexTexture
-{
-	D3DXVECTOR3				vPos;
-	D3DXVECTOR3				vNormal;
-	D3DXVECTOR2				vTexUV;
-	//D3DXVECTOR2				vTexUV2;
-}VTXTEX;
-//const DWORD VTXFVF_TEX = D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1 | D3DFVF_TEX2;
 
-typedef struct tagVertexCubeColor
+typedef struct tagBaseShader
 {
-	D3DXVECTOR3				vPos;
-	D3DXCOLOR				dwColor;
-}VTXCOL;
-//const DWORD VTXFVF_COL = D3DFVF_XYZ | D3DFVF_DIFFUSE;
 
-typedef struct tagVertexCubeTex
+	_matrix matWorld;
+	_matrix matView;
+	_matrix matProj;
+
+}BASESHADERCB;
+
+typedef struct tagInstancingShader
 {
-	D3DXVECTOR3				vPos;
-	D3DXVECTOR3				vTex;
-}VTXCUBE;
-//const DWORD VTXFVF_CUBE = D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_TEXCOORDSIZE3(0);
+	_matrix matWorld[32];
+
+}INSTANCINGSHADERCB;
+
+
+typedef struct tagDynamicShader
+{
+	_matrix matBoneWorld[64];
+
+}DYNAMICSHADERCB;
+
 
 typedef struct tagIndex16
 {
-	WORD			_1, _2, _3;
+	_ushort			_1, _2, _3;
 }INDEX16;
 
 typedef struct tagIndex32
 {
-	UINT			_1, _2, _3;
+	_uint			_1, _2, _3;
 }INDEX32;
 
-
-struct VertexAni
+typedef struct tagVertexTexture
 {
-	D3DXVECTOR3		vPos;
-	D3DXVECTOR3		vNormal;
-	D3DXVECTOR2		vTextureUV;
+	_vec3 vPos;
+	_vec2 vTexUV;
+	_vec3 vNormal;
 
-	int				iBoneIdx[BONE_NUM];
-	float			fBoneWeight[BONE_NUM];
+}VTXTEX;
 
-	VertexAni() {}
-	VertexAni(D3DXVECTOR3 _vPos, D3DXVECTOR3 _vNormal)
-		: vPos(_vPos), vNormal(_vNormal) {}
-	VertexAni(D3DXVECTOR3 _vPos, D3DXVECTOR3 _vNormal, D3DXVECTOR2 _vTextureUV)
-		: vPos(_vPos), vNormal(_vNormal), vTextureUV(_vTextureUV) {}
+typedef struct tagVertexBone
+{
+	_vec3		vPos;
+	_vec2		vTexUV;
+	_vec3		vNormal;
+	_uint		uiBones[4];
+	_float		fWeights[4];
 
-	void SetPos(float _x, float _y, float _z) { vPos.x = _x; vPos.y = _y; vPos.z = _z; }
-	void SetNormal(float _x, float _y, float _z) { vNormal.x = _x; vNormal.y = _y; vNormal.z = _z; }
-	void AddBone(int _iIdx, float _fWeight)
-	{
-		for (int i = 0; i < BONE_NUM; ++i)
-		{
-			if (fBoneWeight[i] <= 0.0f)
-			{
-				iBoneIdx[i] = _iIdx;
-				fBoneWeight[i] = _fWeight;
-				return;
-			}
-		}
-
-		fBoneWeight[0] += _fWeight;
-	};
-
-};
+}VTXBONE;
 
 typedef struct tagObjectInfo
 {
-	TCHAR         m_szName[MAX_PATH]; //이름
-	D3DXVECTOR3      m_vAngle;         //회전값
-	D3DXVECTOR3      m_vScale;         //크기
-	D3DXVECTOR3      m_vPos;            //위치
+	TCHAR			 m_szName[MAX_PATH]; //이름
+	_vec3			 m_vAngle;          //회전값
+	_vec3			 m_vScale;          //크기
+	_vec3			 m_vPos;            //위치
 
 }OBJ_INFO;
+
+
+class CMesh;
+
+typedef struct tagMeshData
+{
+	CMesh* pMesh;
+	_bool  bAlpha;
+	_bool  bBillboard;
+
+}MESHDATA;
+
+
+typedef struct tagClusData
+{
+	_vec4 R;
+	_vec3 T;
+	_vec3 S;
+
+}CLUSDATA;
+
 
 typedef struct Tag
 {
 	enum CLASSA{TESTA, TESTEND};
 
 	enum CLASSB{ TESTB, TESTENDTWO };
+
 }TAG;
+
+
+#endif

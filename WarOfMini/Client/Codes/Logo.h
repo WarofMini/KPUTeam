@@ -1,34 +1,35 @@
-#pragma once
+#ifndef Logo_h__
+#define Logo_h__
+
 #include "Scene.h"
 
-class CShader;
-class CTexture;
-class CVIBuffer;
 class CLoading;
-class CLogo :
-	public CScene
+
+class CLogo : public CScene
 {
+private:
+	explicit CLogo(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);
+	virtual ~CLogo(void);
+
 public:
-	CLogo();
-	virtual ~CLogo();
+	static CLogo* Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);
+
+public:
+	virtual HRESULT Ready_Scene(void);
+	virtual _int Update(const _float& fTimeDelta);
+
+
+private:
+	HRESULT Ready_GameLogic(void);
+	HRESULT Ready_Environment(void);
 
 private:
 	CLoading*	m_pLoading;
-	bool		m_bDynamicLoading;
 
-private:
-	HRESULT Add_GameLogic_Layer(void);
-	//
-	HRESULT Add_Dynamic_Buffer(void);
 
 public:
-	virtual HRESULT Initialize(void);
-	virtual int Update(void);
-	virtual void Render(void);
 	virtual void Release(void);
-	void InitStaticMesh(void);
 
-public:
-	static CLogo* Create(void);
 };
 
+#endif

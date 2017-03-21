@@ -1,99 +1,8 @@
-#pragma once
-
-template <typename T> void Safe_Delete(T& pointer)
-{
-	if (NULL != pointer)
-	{
-		delete pointer;
-		pointer = NULL;
-	}
-}
-
-
-template <typename T> void Safe_Delete_Array(T& pointer)
-{
-	if (NULL != pointer)
-	{
-		delete[] pointer;
-		pointer = NULL;
-	}
-}
-
-
-template <typename T> void Safe_Release(T& pointer)
-{
-	if (NULL != pointer)
-	{
-		pointer->Release();
-		pointer = NULL;
-	}
-}
-
-template <typename T> void Safe_Single_Destory(T& pointer)
-{
-	if (NULL != pointer)
-	{
-		pointer->DestroyInstance();
-		pointer = NULL;
-	}
-}
-
-//모르겠음
-class CDeleteObj
-{
-public:
-	explicit CDeleteObj(void) {}
-	~CDeleteObj(void) {}
-public: // operator
-	template <typename T> void operator () (T& pInstance)
-	{
-		if (NULL != pInstance)
-		{
-			delete pInstance;
-			pInstance = NULL;
-		}
-	}
-};
-
-// 연관컨테이너 삭제용
-class CDeleteMap
-{
-public:
-	explicit CDeleteMap(void) {}
-	~CDeleteMap(void) {}
-public: // operator	
-	template <typename T> void operator () (T& Pair)
-	{
-		if (NULL != Pair.second)
-		{
-			delete Pair.second;
-			Pair.second = NULL;
-		}
-	}
-};
-
-class CTagFinder
-{
-public:
-	explicit CTagFinder(const TCHAR* pTag) : m_pTag(pTag) {}
-	~CTagFinder(void) {}
-public:
-	template <typename T> bool operator () (T& Pair)
-	{
-		int iResult = lstrcmp(m_pTag, Pair.first);
-
-		if (0 == iResult)
-			return true;
-		return false;
-	}
-private:
-	const TCHAR*				m_pTag;
-};
+#ifndef Macro_h__
+#define Macro_h__
 
 
 //싱글톤
-
-
 #define NO_COPY(CLASSNAME)							\
 	private:										\
 	CLASSNAME(const CLASSNAME&);					\
@@ -117,7 +26,7 @@ private:
 	}												\
 	void CLASSNAME::DestroyInstance( void ) {		\
 		if(NULL != m_pInstance)	{					\
-			delete m_pInstance;						\
+			m_pInstance->Release();					\
 			m_pInstance = NULL;						\
 		}											\
 	}
@@ -154,3 +63,6 @@ private:
 
 #define FAILED_CHECK_RETURN_MSG( _hr, _return, _message)	if( ((HRESULT)(_hr)) < 0 )	\
 { MessageBox(NULL, _message, L"System Message",MB_OK); __asm { int 3 };return _return;}
+
+
+#endif

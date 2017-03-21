@@ -1,84 +1,232 @@
-#include"stdafx.h"
-#include"RenderTarget.h"
-#include "Device.h"
+#include "stdafx.h"
+#include "RenderTarget.h"
+#include "Transform.h"
+#include "RenderTargetMgr.h"
+#include "ResourcesMgr.h"
+#include "ShaderMgr.h"
+#include "GraphicDev.h"
 
-CRenderTarget::CRenderTarget()
+CRenderTexture::CRenderTexture(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
+: m_pGraphicDev(pGraphicDev)
+, m_pContext(pContext)
+, m_pTransform(nullptr)
+, m_pRcTex(nullptr)
+, m_pRTTexture(nullptr)
+, m_pDepthStencilView(nullptr)
 {
-
 }
 
-CRenderTarget::~CRenderTarget()
+CRenderTexture::~CRenderTexture(void)
 {
-
 }
 
-HRESULT CRenderTarget::Ready_RenderTarget(const  UINT& sizeX, const  UINT& sizeY, DXGI_FORMAT format, D3DXCOLOR color)
+void CRenderTexture::Set_RenderTarget(const _uint& uiNumViews, _bool bDepthStencilView)
 {
-	// Allocate the depth stencil target
-	D3D11_TEXTURE2D_DESC dtd = {
-		sizeX, //UINT Width;
-		sizeY, //UINT Height;
-		1, //UINT MipLevels;
-		1, //UINT ArraySize;
-		format, //DXGI_FORMAT Format;
-		1, //DXGI_SAMPLE_DESC SampleDesc;
-		0,
-		D3D11_USAGE_DEFAULT,//D3D11_USAGE Usage;
-		D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE,//UINT BindFlags;
-		0,//UINT CPUAccessFlags;
-		0//UINT MiscFlags;    
-	};
+	if (bDepthStencilView)
+		m_pContext->OMSetRenderTargets(uiNumViews, m_pRTView, m_pDepthStencilView);
 
-	CDevice::GetInstance()->m_pDevice->CreateTexture2D(&dtd, nullptr, &m_pTargetRT);
+	else
+		m_pContext->OMSetRenderTargets(uiNumViews, m_pRTView, nullptr);
+}
 
-	//m_pTargetRT->SetPrivateData
+void CRenderTexture::Set_Texture(const _uint& uiSlot, const _uint uiIndex)
+{
+	m_pContext->PSSetShaderResources(uiSlot, 1, &m_pShaderResourceView[uiIndex]);
+}
 
-	// Create the render target views
+CRenderTexture* CRenderTexture::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext
+	, const DXGI_FORMAT& eFormat, const _ushort& wSizeX, const _ushort& wSizeY, _float fRenderPosX, _float fRenderPosY)
+{
+	CRenderTexture* pRenderTexture = new CRenderTexture(pGraphicDev, pContext);
 
-	D3D11_RENDER_TARGET_VIEW_DESC rtsvd =
+	if (FAILED(pRenderTexture->Ready_RenderTexture(eFormat, wSizeX, wSizeY, fRenderPosX, fRenderPosY)))
 	{
-		format,
-		D3D11_RTV_DIMENSION_TEXTURE2D
-	};
+		MSG_BOX(L"CRenderTarget Ready_RenderTexture Failed");
+		Safe_Release(pRenderTexture);
+	}
 
-	CDevice::GetInstance()->m_pDevice->CreateRenderTargetView(m_pTargetRT, &rtsvd, &m_pTagetRTV);
-	// m_pTagetRTV->SetPrivateData
+	return pRenderTexture;
+}
 
-	// Create the resource views
-	D3D11_SHADER_RESOURCE_VIEW_DESC dsrvd =
+HRESULT CRenderTexture::Ready_RenderTexture(const DXGI_FORMAT& eFormat, const _ushort& wSizeX, const _ushort& wSizeY, _float fRenderPosX, _float fRenderPosY)
+{
+	D3D11_RENDER_TARGET_VIEW_DESC tRenderTargetViewDesc;
+	D3D11_SHADER_RESOURCE_VIEW_DESC tShaderResourceViewDesc;
+
+	// Create Texture2D
+	ZeroMemory(&m_tTextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+	m_tTextureDesc.Width = wSizeX;
+	m_tTextureDesc.Height = wSizeY;
+	m_tTextureDesc.MipLevels = 1;
+	m_tTextureDesc.ArraySize = 2;
+	m_tTextureDesc.Format = eFormat;
+	m_tTextureDesc.SampleDesc.Count = 1;
+	m_tTextureDesc.Usage = D3D11_USAGE_DEFAULT;
+	m_tTextureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+
+	if (FAILED(m_pGraphicDev->CreateTexture2D(&m_tTextureDesc, NULL, &m_pRTTexture)))
 	{
-		format,
-		D3D11_SRV_DIMENSION_TEXTURE2D,
-		0,
-		0
-	};
+		MSG_BOX(L"RenderTarget - CreateTexture2D Failed");
+		return E_FAIL;
+	}
 
-	CDevice::GetInstance()->m_pDevice->CreateShaderResourceView(m_pTargetRT, &dsrvd, &m_pTagetSRV);
+	// Create RenderTargetView
+	tRenderTargetViewDesc.Format = m_tTextureDesc.Format;
+	tRenderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
+	tRenderTargetViewDesc.Texture2DArray.ArraySize = 1;
+	tRenderTargetViewDesc.Texture2DArray.MipSlice = 0;
 
-	// Create constant buffers
-	D3D11_BUFFER_DESC cbDesc;
-	ZeroMemory(&cbDesc, sizeof(cbDesc));
-	cbDesc.Usage = D3D11_USAGE_DYNAMIC;
-	cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	//cbDesc.ByteWidth = sizeof(CB_GBUFFER_UNPACK);
-	CDevice::GetInstance()->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pGBufferUnpackCB);
+	tRenderTargetViewDesc.Texture2DArray.FirstArraySlice = 0;
+	if (FAILED(m_pGraphicDev->CreateRenderTargetView(m_pRTTexture, &tRenderTargetViewDesc, &m_pRTView[0])))
+	{
+		MSG_BOX(L"RenderTarget - CreateRenderTargetView Failed");
+		return E_FAIL;
+	}
 
+	tRenderTargetViewDesc.Texture2DArray.FirstArraySlice = 1;
+	if (FAILED(m_pGraphicDev->CreateRenderTargetView(m_pRTTexture, &tRenderTargetViewDesc, &m_pRTView[1])))
+	{
+		MSG_BOX(L"RenderTarget - CreateRenderTargetView Failed");
+		return E_FAIL;
+	}
 
-	m_ClearColor = color;
+	// Create ShaderResourceView
+	tShaderResourceViewDesc.Format = m_tTextureDesc.Format;
+	tShaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+	tShaderResourceViewDesc.Texture2DArray.ArraySize = 1;
+	tShaderResourceViewDesc.Texture2DArray.MipLevels = 1;
+	tShaderResourceViewDesc.Texture2DArray.MostDetailedMip = 0;
+
+	tShaderResourceViewDesc.Texture2DArray.FirstArraySlice = 0;
+	if (FAILED(m_pGraphicDev->CreateShaderResourceView(m_pRTTexture, &tShaderResourceViewDesc, &m_pShaderResourceView[0])))
+	{
+		MSG_BOX(L"RenderTarget - CreateShaderResourceView Failed");
+		return E_FAIL;
+	}
+
+	tShaderResourceViewDesc.Texture2DArray.FirstArraySlice = 1;
+	if (FAILED(m_pGraphicDev->CreateShaderResourceView(m_pRTTexture, &tShaderResourceViewDesc, &m_pShaderResourceView[1])))
+	{
+		MSG_BOX(L"RenderTarget - CreateShaderResourceView Failed");
+		return E_FAIL;
+	}
+
+	// Depth
+	CD3D11_TEXTURE2D_DESC dtDesc;
+	dtDesc.Width = wSizeX;
+	dtDesc.Height = wSizeY;
+	dtDesc.MipLevels = 1;
+	dtDesc.ArraySize = 1;
+	dtDesc.SampleDesc.Count = 1;
+	dtDesc.SampleDesc.Quality = 0;
+	dtDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	dtDesc.Usage = D3D11_USAGE_DEFAULT;
+	dtDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	dtDesc.CPUAccessFlags = 0;
+	dtDesc.MiscFlags = 0;
+
+	ID3D11Texture2D* pDepthTex = nullptr;
+	if (FAILED(m_pGraphicDev->CreateTexture2D(&dtDesc, NULL, &pDepthTex)))
+	{
+		MSG_BOX(L"RenderTarget - CreateTexture2D Failed");
+		return E_FAIL;
+	}
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+	dsvDesc.Format = dtDesc.Format;
+	dsvDesc.Flags = 0;
+	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	dsvDesc.Texture2D.MipSlice = 0;
+	if (FAILED(m_pGraphicDev->CreateDepthStencilView(pDepthTex, &dsvDesc, &m_pDepthStencilView)))
+	{
+		MSG_BOX(L"RenderTarget - CreateDepthStencilView Failed");
+		return E_FAIL;
+	}
+
+	Safe_Release(pDepthTex);
+
+	// Render RT
+	m_pRcTex = dynamic_cast<CRcTex*>(CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, L"Buffer_RcTex"));
+	m_pTransform = CTransform::Create();
+
+	m_pTransform->m_vPos = _vec3(fRenderPosX, fRenderPosY, 0.f);
+	m_pTransform->m_vScale = _vec3(0.3f, 0.3f, 0.f);
+
+	m_pTransform->Update(0.f);
 
 	return S_OK;
 }
 
-CRenderTarget* CRenderTarget::Create(const  UINT& sizeX, const  UINT& sizeY, DXGI_FORMAT format, D3DXCOLOR color)
+void CRenderTexture::Render(void)
 {
-	CRenderTarget*	pInstance = new CRenderTarget();
+	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Default"));
 
-	if (FAILED(pInstance->Ready_RenderTarget(sizeX, sizeY, format, color)))
-	{
-		MessageBox(NULL,  L"System Message", L"RenderTarget Created Failed", MB_OK);
-		Safe_Delete(pInstance);
-	}
+	ID3D11Buffer* pConstantBuffer = CGraphicDev::GetInstance()->GetBaseShaderCB();
+	ID3D11SamplerState* pBaseSampler = CGraphicDev::GetInstance()->GetBaseSampler();
 
-	return pInstance;
+	BASESHADERCB tConstantBuffer;
+
+	tConstantBuffer.matWorld = m_pTransform->m_matWorld;
+	
+	D3DXMatrixIdentity(&tConstantBuffer.matView);
+	D3DXMatrixIdentity(&tConstantBuffer.matProj);
+
+
+	m_pContext->UpdateSubresource(pConstantBuffer, 0, NULL, &tConstantBuffer, 0, 0);
+
+	m_pContext->VSSetShader(CShaderMgr::GetInstance()->Get_VertexShader(L"Shader_Default"), NULL, 0);
+	m_pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer);
+	m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_Default"), NULL, 0);
+	m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
+
+	// Target1
+	m_pContext->PSSetShaderResources(0, 1, &m_pShaderResourceView[0]);	// RT Texture
+	m_pRcTex->Render();
+
+	// Target2
+	m_pTransform->m_matWorld._42 -= 0.3f;
+	tConstantBuffer.matWorld = m_pTransform->m_matWorld;
+	m_pContext->UpdateSubresource(pConstantBuffer, 0, NULL, &tConstantBuffer, 0, 0);
+
+	m_pContext->PSSetShaderResources(0, 1, &m_pShaderResourceView[1]);	// RT Texture
+	m_pRcTex->Render();
+
+	m_pTransform->m_matWorld._42 += 0.3f;
+}
+
+void CRenderTexture::Release(void)
+{
+	Safe_Release(m_pRcTex);
+	Safe_Release(m_pTransform);
+
+	if (Safe_Com_Release(m_pRTTexture))
+		MSG_BOX(L"m_pRTTexture Release Failed");
+
+	if (Safe_Com_Release(m_pRTView[0]))
+		MSG_BOX(L"m_pRTView Release Failed");
+
+	if (Safe_Com_Release(m_pRTView[1]))
+		MSG_BOX(L"m_pRTView Release Failed");
+
+	if (Safe_Com_Release(m_pShaderResourceView[0]))
+		MSG_BOX(L"m_pShaderResourceView Release Failed");
+
+	if (Safe_Com_Release(m_pShaderResourceView[1]))
+		MSG_BOX(L"m_pShaderResourceView Release Failed");
+
+	if (Safe_Com_Release(m_pDepthStencilView))
+		MSG_BOX(L"m_pDepthStencilView Release Failed");
+
+	delete this;
+}
+
+ID3D11RenderTargetView** CRenderTexture::Get_RanderTargetView(void)
+{
+	return m_pRTView;
+}
+
+ID3D11DepthStencilView* CRenderTexture::Get_DepthStencilView(void)
+{
+	return m_pDepthStencilView;
 }

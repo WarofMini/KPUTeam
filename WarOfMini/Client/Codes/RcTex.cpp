@@ -1,123 +1,123 @@
 #include "stdafx.h"
 #include "RcTex.h"
-#include "Device.h"
 
-
-CRcTex::CRcTex()
+CRcTex::CRcTex(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
+: CResource(pGraphicDev, pContext)
+, m_pVB(NULL)
+, m_pIB(NULL)
 {
 }
 
-CRcTex::CRcTex(CRcTex * rhs)
-{
-
-}
-
-CRcTex::~CRcTex()
+CRcTex::~CRcTex(void)
 {
 }
 
-HRESULT CRcTex::CreateBuffer(void)
+CRcTex* CRcTex::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
+{
+	CRcTex* pRcTex = new CRcTex(pGraphicDev, pContext);
+
+	if (FAILED(pRcTex->Create_Buffer()))
+	{
+		MSG_BOX(L"RcTex Create_Buffer Failed");
+		Safe_Release(pRcTex);
+	}
+
+	return pRcTex;
+}
+
+CRcTex* CRcTex::Clone_Resource(void)
+{
+	CRcTex* pRcTex = new CRcTex(*this);
+
+	++(*m_dwRefCount);
+
+	return pRcTex;
+}
+
+HRESULT CRcTex::Create_Buffer(void)
 {
 	HRESULT hr = E_FAIL;
-	m_iVertexStrides = sizeof(VTXTEX);
-	m_iVertexOffsets = 0;
 
-
-
-	VTXTEX Vertex[] =
+	// Vertex
+	VTXTEX pVtxTex[] =
 	{
-		/*{ D3DXVECTOR3(-1.f, 0.f, 1.f), D3DXVECTOR2(0.f, 0.f) },
-		{ D3DXVECTOR3(1.f, 0.f, 1.f),  D3DXVECTOR2(1.f, 0.f) },
-		{ D3DXVECTOR3(1.f, 0.f, -1.f), D3DXVECTOR2(1.f, 1.f) },
-		{ D3DXVECTOR3(-1.f, 0.f, -1.f), D3DXVECTOR2(0.f, 1.f) }*/
-
-		{ D3DXVECTOR3(-1.f, 1.f, 0.f),D3DXVECTOR3(0.f, 1.f, 0.f) , D3DXVECTOR2(0.f, 0.f) },
-		{ D3DXVECTOR3(1.f, 1.f, 0.f), D3DXVECTOR3(0.f, 1.f, 0.f), D3DXVECTOR2(1.f, 0.f) },
-		{ D3DXVECTOR3(1.f, -1.f, 0.f), D3DXVECTOR3(0.f, 1.f, 0.f), D3DXVECTOR2(1.f, 1.f) },
-		{ D3DXVECTOR3(-1.f, -1.f, 0.f), D3DXVECTOR3(0.f, 1.f, 0.f), D3DXVECTOR2(0.f, 1.f) }
+		// Pos							TexUV					Normal
+		{ _vec3(-0.5f, 0.5f, 0.f),	_vec2(0.f, 0.f), _vec3(0.f, 0.f, -1.f) },
+		{ _vec3(0.5f, 0.5f, 0.f),	_vec2(1.f, 0.f), _vec3(0.f, 0.f, -1.f) },
+		{ _vec3(0.5f, -0.5f, 0.f),	_vec2(1.f, 1.f), _vec3(0.f, 0.f, -1.f) },
+		{ _vec3(-0.5f, -0.5f, 0.f),	_vec2(0.f, 1.f), _vec3(0.f, 0.f, -1.f) }
 	};
 
-	D3D11_BUFFER_DESC vbd;
-	ZeroMemory(&vbd, sizeof(vbd));
-	vbd.Usage = D3D11_USAGE_DEFAULT;
-	vbd.ByteWidth = sizeof(VTXTEX) * 4;
-	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vbd.CPUAccessFlags = 0;
-	vbd.MiscFlags = 0;
-	vbd.StructureByteStride = 0;
+	_uint uiVtxCnt = ARRAYSIZE(pVtxTex);
 
-	D3D11_SUBRESOURCE_DATA vBufferData;
-	ZeroMemory(&vBufferData, sizeof(D3D11_SUBRESOURCE_DATA));
-	vBufferData.pSysMem = Vertex;
-	hr = CDevice::GetInstance()->m_pDevice->CreateBuffer(&vbd, &vBufferData, &m_VertexBuffer);
+	D3D11_BUFFER_DESC tBufferDesc;
 
-	if (FAILED(hr))
+	ZeroMemory(&tBufferDesc, sizeof(D3D11_BUFFER_DESC));
+
+	tBufferDesc.ByteWidth = sizeof(VTXTEX) * uiVtxCnt;
+	tBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+	tBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	tBufferDesc.CPUAccessFlags = 0;	// CPU가 갱신하지 않음
+
+	D3D11_SUBRESOURCE_DATA tSubData;
+
+	ZeroMemory(&tSubData, sizeof(D3D11_SUBRESOURCE_DATA));
+
+	tSubData.pSysMem = pVtxTex;
+
+	hr = m_pGraphicDev->CreateBuffer(&tBufferDesc, &tSubData, &m_pVB);
+
+	if (FAILED(hr) == TRUE)
+	{
+		MSG_BOX(L"RcTex VB CreateBuffer Failed");
 		return E_FAIL;
+	}
 
-	UINT Index[] =
+	// Index
+	_uint pIndex[] =
 	{
 		0, 1, 2,
 		0, 2, 3
 	};
 
-	m_iIndex = 6;
+	_uint uiIdxCnt = ARRAYSIZE(pIndex);
 
-	D3D11_BUFFER_DESC ibd;
-	ibd.Usage = D3D11_USAGE_DEFAULT;
-	ibd.ByteWidth = sizeof(UINT) * 6;
-	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	ibd.CPUAccessFlags = 0;
-	ibd.MiscFlags = 0;
-	ibd.StructureByteStride = 0;
-	D3D11_SUBRESOURCE_DATA iinitData;
-	iinitData.pSysMem = Index;
-	hr = CDevice::GetInstance()->m_pDevice->CreateBuffer(&ibd, &iinitData, &m_IndexBuffer);
+	tBufferDesc.ByteWidth = sizeof(_uint) * uiIdxCnt;
+	tBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
-	if (FAILED(hr))
-		return E_FAIL;
+	tSubData.pSysMem = pIndex;
 
+	hr = m_pGraphicDev->CreateBuffer(&tBufferDesc, &tSubData, &m_pIB);
 
-	D3D11_BUFFER_DESC cbd;
-	ZeroMemory(&cbd, sizeof(cbd));
-	cbd.Usage = D3D11_USAGE_DEFAULT;
-	cbd.ByteWidth = sizeof(ConstantBuffer);
-	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	hr = CDevice::GetInstance()->m_pDevice->CreateBuffer(&cbd, NULL, &m_ConstantBuffer);
-	//D3D11_BUFFER_DESC bd;
-	//ZeroMemory(&bd, sizeof(bd));
-	//bd.Usage = D3D11_USAGE_DYNAMIC;
-	//bd.ByteWidth = sizeof(ConstantBuffer);
-	//bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	//bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	//CDevice::GetInstance()->m_pDevice->CreateBuffer(&bd, NULL, &m_ConstantBuffer);
-	
-
-	if (FAILED(hr))
+	if (FAILED(hr) == TRUE)
 	{
-		MessageBox(NULL, L"System Message", L"Constant Buffer Error", MB_OK);
-		return hr;
-
+		MSG_BOX(L"RcTex IB CreateBuffer Failed");
+		return E_FAIL;
 	}
 
 	return S_OK;
 }
 
-CRcTex * CRcTex::Create(void)
+void CRcTex::Render(void)
 {
-	CRcTex* pRcTex = new CRcTex;
+	_uint uiStride = sizeof(VTXTEX);
+	_uint uiOffset = 0;
 
-	if (FAILED(pRcTex->CreateBuffer()))
-	{
-		::Safe_Delete(pRcTex);
-	}
-	return pRcTex;
+	m_pContext->IASetVertexBuffers(0, 1, &m_pVB, &uiStride, &uiOffset);
+	m_pContext->IASetIndexBuffer(m_pIB, DXGI_FORMAT_R32_UINT, 0);
+
+	m_pContext->DrawIndexed(6, 0, 0);
 }
 
-CResources * CRcTex::CloneResource(void)
+void CRcTex::Release(void)
 {
-	CResources* pResource = this;
+	CResource::Release();
 
-	pResource->AddRef();
+	if (m_dwRefCount == NULL)
+	{
+		Safe_Release(m_pVB);
+		Safe_Release(m_pIB);
+	}
 
-	return pResource;
+	delete this;
 }

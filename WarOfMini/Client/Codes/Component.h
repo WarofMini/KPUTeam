@@ -1,13 +1,17 @@
-#pragma once
+#ifndef Component_h__
+#define Component_h__
+
 #include "Include.h"
+
 class CComponent
 {
 public:
-	CComponent();
-	virtual ~CComponent();
+	explicit CComponent(void);
+	virtual ~CComponent(void);
 
 public:
-	virtual	int  Update(void);
-	virtual	DWORD Release(void) PURE;
+	virtual	_int  Update(const _float& fTime);
+	virtual	void  Release(void) PURE;
 };
 
+#endif

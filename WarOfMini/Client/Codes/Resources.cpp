@@ -1,29 +1,25 @@
 #include "stdafx.h"
 #include "Resources.h"
 
-
-CResources::CResources()
-{
-	m_dwRefCount = 1;
-}
-
-CResources::CResources(CResources& rhs)
-{
-	m_dwRefCount = rhs.m_dwRefCount;
-
-}
-
-
-CResources::~CResources()
+CResource::CResource(ID3D11Device * pGraphicDev, ID3D11DeviceContext * pContext)
+: m_dwRefCount(new _ulong(0))
+, m_pGraphicDev(pGraphicDev)
+, m_pContext(pContext)
 {
 }
 
-DWORD CResources::Release(void)
+CResource::~CResource(void)
 {
-	return 0;
 }
 
-void CResources::AddRef(void)
+void CResource::Release(void)
 {
-	++m_dwRefCount;
+	CComponent::Release();
+
+	if ((*m_dwRefCount) == 0)
+		Safe_Delete(m_dwRefCount);
+
+	else
+		--(*m_dwRefCount);
+
 }

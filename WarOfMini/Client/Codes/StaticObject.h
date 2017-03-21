@@ -1,62 +1,36 @@
 #ifndef StaticObject_h__
 #define StaticObject_h__
 
-#include "Object.h"
 
-class CShader;
-class CVIBuffer;
-class CTexture;
+#include "GameObject.h"
 
-class CStaticObject :
-	public CObject
+class CTransform;
+
+class CStaticObject : public CGameObject
 {
+private:
+	explicit CStaticObject(ID3D11DeviceContext* pContext);
+	virtual ~CStaticObject(void);
+
 public:
-	explicit CStaticObject();
-	virtual  ~CStaticObject();
+	static CStaticObject* Create(ID3D11DeviceContext* pContext);
+
 
 private:
-	CVIBuffer*		m_pBuffer;
-	CShader*		m_pVertexShader;
-	CShader*		m_pPixelShader;
-	CTexture*		m_pTexture;
-	OBJ_INFO		m_tInfo;
-	wstring			m_strName;
-
-	CVIBuffer*		m_pBoundingBox;
-
+	_uint			m_uiObjNum;
+	CTransform*		m_pTransform;
 
 
 public:
-	virtual HRESULT Initialize(void);
-	virtual int		Update(void);
-	virtual void	Render(void);
-
-public:
-	static			CStaticObject* Create(wstring strName);
-	void			Release(void);
+	virtual HRESULT		Initialize(void);
+	virtual	_int		Update(const _float& fTimeDelta);
+	virtual void		Render(void);
+	virtual void		Release(void);
 
 private:
-	HRESULT			AddComponent(void);
-
-public:
-	void			SetStrName(wstring _strName);
-	wstring			GetStrName(void);
-
-	CVIBuffer*		 GetBuffer(void);
-
-
-	OBJ_INFO*		 GetObjInfo(void);
-
-	void			 SetObjInfo(OBJ_INFO* pInfo);
-
-	void			 ObjInfoSetting(void);
-
-
-	void			 InfoSetting(void);
+	virtual HRESULT Ready_Component(void);
 
 };
-
-
 
 
 #endif

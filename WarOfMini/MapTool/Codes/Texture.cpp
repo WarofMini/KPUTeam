@@ -19,10 +19,14 @@ CTexture::CTexture(const CTexture & rhs)
 	++m_dwRefCount;
 }
 
+
+
 CTexture::~CTexture()
 {
 	Release();
 }
+
+
 
 HRESULT CTexture::CreateTexture(LPCWSTR szFileFath)
 {

@@ -1,166 +1,101 @@
 #include "stdafx.h"
 #include "StaticObject.h"
-#include "StaticMesh.h"
-#include "Texture.h"
-#include "Info.h"
-#include "VIBuffer.h"
+#include "Transform.h"
+#include "Management.h"
 #include "ShaderMgr.h"
-#include "Camera.h"
-#include "ObjMgr.h"
-#include "Shader.h"
-#include "Device.h"
-#include "RenderMgr.h"
-#include "ResourcesMgr.h"
-#include "Input.h"
-#include "TimeMgr.h"
+#include "GraphicDev.h"
+#include "CameraMgr.h"
+#include "MeshMgr.h"
 
-
-CStaticObject::CStaticObject()
+CStaticObject::CStaticObject(ID3D11DeviceContext * pContext)
+: CGameObject(pContext)
+, m_uiObjNum(0)
+, m_pTransform(NULL)
 {
-	m_pBuffer = NULL;
-	m_pVertexShader = NULL;
-	m_pPixelShader = NULL;
-	m_pTexture = NULL;
-
-	ZeroMemory(&m_tInfo, sizeof(OBJ_INFO));
 }
 
-CStaticObject::~CStaticObject()
+CStaticObject::~CStaticObject(void)
 {
-	Release();
+}
+
+CStaticObject * CStaticObject::Create(ID3D11DeviceContext * pContext)
+{
+	CStaticObject* pObject = new CStaticObject(pContext);
+
+	if (FAILED(pObject->Initialize()))
+		Safe_Release(pObject);
+
+	return pObject;
 }
 
 HRESULT CStaticObject::Initialize(void)
 {
-	if (FAILED(AddComponent()))
+	if (FAILED(Ready_Component()))
 		return E_FAIL;
 
-	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, this);
+	m_uiObjNum = 1;
 
+	m_pTransform->m_vPos = _vec3(0.f, 0.f, 0.f);
+	m_pTransform->m_vScale = _vec3(100.f, 100.f, 100.f);
+	m_pTransform->m_vAngle = _vec3(0.f, 0.f, 0.f);
 
 	return S_OK;
 }
 
-int CStaticObject::Update(void)
+_int CStaticObject::Update(const _float & fTimeDelta)
 {
-	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
+	CGameObject::Update(fTimeDelta);
 
-	CObject::Update();
+	CManagement::GetInstance()->Add_RenderInstGroup(CRenderer::RENDER_INST, m_uiObjNum, &m_pTransform->m_matWorld);
 
 	return 0;
 }
 
 void CStaticObject::Render(void)
 {
-	ConstantBuffer cb;
-	D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
-	D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
-	D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
-	m_pGrapicDevice->m_pDeviceContext->UpdateSubresource(m_pBuffer->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
+	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Default"));
 
-	m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
-	m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pBuffer->m_ConstantBuffer);
+	ID3D11Buffer* pBaseShaderCB = CGraphicDev::GetInstance()->GetBaseShaderCB();
+	ID3D11SamplerState* pBaseSampler = CGraphicDev::GetInstance()->GetBaseSampler();
 
-	//////////////////
-	m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
-	m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
-	m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
+	BASESHADERCB tBaseShaderCB;
 
-	m_pBuffer->Render();
-}
+	_matrix  matView, matProj;
+	D3DXMatrixIdentity(&matView);
+	D3DXMatrixIdentity(&matProj);
 
-CStaticObject * CStaticObject::Create(wstring strName)
-{
-	CStaticObject* pObj = new CStaticObject;
+	tBaseShaderCB.matWorld = m_pTransform->m_matWorld;
+	tBaseShaderCB.matView = (*CCameraMgr::GetInstance()->Get_CurCameraView());
+	tBaseShaderCB.matProj = (*CCameraMgr::GetInstance()->Get_CurCameraProj());
 
-	pObj->SetStrName(strName);
 
-	if (FAILED(pObj->Initialize()))
-		::Safe_Delete(pObj);
 
-	return pObj;
+	m_pContext->UpdateSubresource(pBaseShaderCB, 0, NULL, &tBaseShaderCB, 0, 0);
+
+	m_pContext->VSSetShader(CShaderMgr::GetInstance()->Get_VertexShader(L"Shader_Default"), NULL, 0);
+	m_pContext->VSSetConstantBuffers(0, 1, &pBaseShaderCB);
+	m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_Default"), NULL, 0);
+	m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
+
+	CMeshMgr::GetInstance()->Render_MeshMgr(m_uiObjNum, FALSE);
 }
 
 void CStaticObject::Release(void)
 {
-	//::Safe_Delete(m_pBuffer);
-	//::Safe_Delete(m_pInfo);
-	//::Safe_Delete(m_pTexture);
+	CGameObject::Release();
+	delete this;
 }
 
-HRESULT CStaticObject::AddComponent(void)
+HRESULT CStaticObject::Ready_Component(void)
 {
 	CComponent* pComponent = NULL;
 
-	//TransForm
-	pComponent = m_pInfo = CInfo::Create(g_vLook);
-	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Transform", pComponent));
+	// Transform
+	pComponent = CTransform::Create();
+	m_pTransform = dynamic_cast<CTransform*>(pComponent);
+	if (pComponent == NULL) return E_FAIL;
+	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Transform", pComponent));
 
-
-	//StaticMesh
-	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, m_strName.c_str());
-	m_pBuffer = dynamic_cast<CStaticMesh*>(pComponent);
-	NULL_CHECK_RETURN(m_pBuffer, E_FAIL);
-	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Mesh", pComponent));
-
-	//Texture
-	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Texture_Couch");
-	m_pTexture = dynamic_cast<CTexture*>(pComponent);
-	NULL_CHECK_RETURN(m_pTexture, E_FAIL);
-	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Texture", pComponent));
-
-	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS");
-	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");
 
 	return S_OK;
-}
-
-void CStaticObject::SetStrName(wstring _strName)
-{
-	m_strName = _strName;
-}
-
-wstring CStaticObject::GetStrName(void)
-{
-	return m_strName;
-}
-
-CVIBuffer * CStaticObject::GetBuffer(void)
-{
-	return m_pBuffer;
-}
-
-OBJ_INFO * CStaticObject::GetObjInfo(void)
-{
-	return &m_tInfo;
-}
-
-void CStaticObject::SetObjInfo(OBJ_INFO * pInfo)
-{
-	memcpy(&m_tInfo, pInfo, sizeof(OBJ_INFO));
-}
-
-void CStaticObject::ObjInfoSetting(void)
-{
-	//위치값
-	m_tInfo.m_vPos = m_pInfo->m_vPos;
-	//이름
-	lstrcpy(m_tInfo.m_szName, m_strName.c_str());
-	//크기
-	m_tInfo.m_vScale = m_pInfo->m_vScale;
-	//회전값
-	m_tInfo.m_vAngle.x = (float)D3DXToDegree(m_pInfo->m_fAngle[ANGLE_X]);
-	m_tInfo.m_vAngle.y = (float)D3DXToDegree(m_pInfo->m_fAngle[ANGLE_Y]);
-	m_tInfo.m_vAngle.z = (float)D3DXToDegree(m_pInfo->m_fAngle[ANGLE_Z]);
-}
-
-void CStaticObject::InfoSetting(void)
-{
-	m_pInfo->m_vPos = m_tInfo.m_vPos;
-	m_pInfo->m_vScale = m_tInfo.m_vScale;
-
-	m_pInfo->m_fAngle[ANGLE_X] = (float)D3DXToRadian(m_tInfo.m_vAngle.x);
-	m_pInfo->m_fAngle[ANGLE_Y] = (float)D3DXToRadian(m_tInfo.m_vAngle.y);
-	m_pInfo->m_fAngle[ANGLE_Z] = (float)D3DXToRadian(m_tInfo.m_vAngle.z);
 }

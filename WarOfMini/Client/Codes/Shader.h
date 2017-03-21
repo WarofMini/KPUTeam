@@ -1,32 +1,35 @@
-#pragma once
-#include "Component.h"
+#ifndef Shader_h__
+#define Shader_h__
 
-class CShader : public CComponent
+#include "Include.h"
+
+class CShader
 {
 private:
-	explicit CShader();
-	explicit CShader(const CShader& rhs);
-public:
-	virtual ~CShader();
+	explicit CShader(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);
+	virtual ~CShader(void);
 
 public:
-	ID3D11VertexShader*     m_pVertexShader;
-	ID3D11PixelShader*      m_pPixelShader; // 이 둘은 LPD3DXEFFECT를 반으로 쪼개놓은 형태이다
-	ID3D11InputLayout*      m_pVertexLayout; // 다이렉트9의 FVF를 대신한다
+	ID3D11VertexShader* Get_VertexShader(void);
+	ID3D11InputLayout* Get_InputLayout(void);
+	ID3D11PixelShader* Get_PixelShader(void);
+
+public:
+	static CShader* Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, _tchar* szFileName, _ubyte byLayoutFlag);
 
 private:
-	DWORD m_dwRefCount;
-
-private:
-	HRESULT Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, LPCSTR wstrShaderVersion, ShaderType _SType);
-	
-
+	HRESULT Ready_Shader(_tchar* szFileName, _ubyte byLayoutFlag);
+	HRESULT Load_ShaderFromFile(_tchar* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
 
 public:
-	static CShader*	Create(wstring wstrFilePath, LPCSTR wstrShaderName, LPCSTR wstrShaderVersion, ShaderType _SType);
-	CShader*	CloneShader(void);
-	DWORD	Release(void);
+	virtual void Release(void);
 
-
+private:
+	ID3D11Device*			m_pGraphicDev;
+	ID3D11DeviceContext*	m_pContext;
+	ID3D11VertexShader*		m_pVertexShader;
+	ID3D11InputLayout*		m_pVertexLayout;
+	ID3D11PixelShader*		m_pPixelShader;
 };
 
+#endif // Shader_h__

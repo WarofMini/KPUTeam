@@ -1,48 +1,70 @@
-#pragma once
+#ifndef ResourcesMgr_h__
+#define ResourcesMgr_h__
 
 #include "Include.h"
+#include "RcTex.h"
+#include "CubeTex.h"
+#include "StaticMesh.h"
+#include "DynamicMesh.h"
+#include "Texture.h"
 
-class CVIBuffer;
-class CResources;
 class CResourcesMgr
 {
-private:
-	CResourcesMgr();
-	virtual ~CResourcesMgr();
-
-public:
 	DECLARE_SINGLETON(CResourcesMgr)
 
+public:
+	enum BUFFERTYPE { BUFFER_RCTEX, BUFFER_CUBE, BUFFER_TERRAIN, BUFFER_END };
+	enum MESHTYPE { MESH_STATIC, MESH_DYNAMIC, MESH_END };
+
 private:
-	map<wstring, CResources*>*		m_pmapResource;
-	WORD							m_wReservedSize;
+	CResourcesMgr(void);
+	~CResourcesMgr(void);
 
 public:
-	CResources* FindResources(const WORD& wContainerIndex, const wstring strResourceKey);
-	CResources* CloneResource(const WORD& wContainerIndex, const wstring strResourceKey);
+	CResource* Clone_ResourceMgr(const _ushort& wContainerIdx, const _tchar* pResourceKey);
+	HRESULT Reserve_ContainerSize(const _ushort& wSize);
 
 public:
-	HRESULT ReserveContainerSize(const WORD& wSize);
+	HRESULT Ready_Buffer(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext
+		, const _ushort& wContainerIdx, BUFFERTYPE eBufferType, const _tchar* pResourceKey
+		, const _ushort& wCntX = 0, const _ushort& wCntZ = 0, const _ushort& wItv = 0);
 
+	HRESULT Ready_Texture(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext
+		, const _ushort& wContainerIdx, const _tchar* pResourceKey, CTextures::TEXTURETYPE eTextureType
+		, const _tchar* pFilePath, const _ushort& wCnt = 0);
+
+	HRESULT Ready_Mesh(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext
+		, const _ushort& wContainerIdx, MESHTYPE eMeshType, const _tchar* pResourceKey, const _tchar* pFilePath);
+
+private:
+	void Ready_FbxSdkMgr(void);
+	void Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, FbxNode* pNode, CStaticMesh* pParent);
+	void Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, FbxNode* pNode, CDynaicMesh* pParent
+		, FbxScene* pFbxScene, FbxArray<FbxString*>& arrAniName, vector<pair<_ushort, _ushort>>& vecFrameCnt);
+			CResource* Find_Resource(const _ushort& wContainerIdx, const _tchar* pResourceKey);
+
+private:
+	void Load_FrameData(const _tchar* pResourceKey, vector<pair<_ushort, _ushort>>& vecFrameCnt);
+	FbxAMatrix GetGlobalPosition(FbxNode* pNode, const FbxTime& pTime, FbxPose* pPose = NULL, FbxAMatrix* pParentGlobalPosition = NULL);
+	FbxAMatrix GetPoseMatrix(FbxPose* pPose, int pNodeIndex);
+	FbxAMatrix GetGeometry(FbxNode* pNode);
 
 public:
-	HRESULT AddBuffer(const WORD& wContainerIndex, BUFFERTYPE  eBufferType, const wstring wstrResourceKey, const WORD& wCountX = 0, const WORD& wCountZ = 0,	const WORD& wInterval = 1);
-	HRESULT AddTexture(	const WORD& wContainerIndex,
-						LPCWSTR wstrResourceKey,
-						LPCWSTR wstrFilePath,
-						const WORD& wConut = 1);
-	HRESULT AddMesh(const WORD& wContainerIdx
-		, MESHTYPE eMeshType
-		, const TCHAR* pMeshKey
-		, const char* pFilePath
-		, const char* pFileName
-		, vector<string> _vecAniName = vector<string>());//Static은 Vector인자를 NULL로, Dynamic은 pFilename을 NULL로 받을것
-
-public:
-	void ResourceReset(const WORD& wContainerIndex);
+	void Reset_Resource(const _ushort& wContainerIdx);
 	void Release(void);
 
-	
+private:
 
+	typedef map<const _tchar*, CResource*>  MAPRESOURCE;
+	MAPRESOURCE*						m_pmapResource;
+	_ushort								m_wReservedSize;
+
+private:
+	CResource*		m_pRootMeshStore;
+	FbxManager*		m_pFbxSdkMgr;
+
+private:
+	list<wstring*> m_ResourceNameList;
 };
 
+#endif // ResourceMgr_h__

@@ -2,16 +2,20 @@
 #include "Component.h"
 
 
-CComponent::CComponent()
+CComponent::CComponent(void)
 {
 }
 
 
-CComponent::~CComponent()
+CComponent::~CComponent(void)
 {
 }
 
-int CComponent::Update(void)
+_int CComponent::Update(const _float& fTime)
 {
 	return 0;
+}
+
+void CComponent::Release(void)
+{
 }

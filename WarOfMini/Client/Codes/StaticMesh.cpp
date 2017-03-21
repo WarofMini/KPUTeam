@@ -1,305 +1,301 @@
 #include "stdafx.h"
 #include "StaticMesh.h"
-#include "Device.h"
-#include <assert.h>
+#include "Texture.h"
+#include "ResourcesMgr.h"
+#include "ShaderMgr.h"
+#include "GraphicDev.h"
+#include "CameraMgr.h"
 
-CStaticMesh::CStaticMesh()
+CStaticMesh::CStaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
+: CMesh(pGraphicDev, pContext)
 {
 }
 
-
-CStaticMesh::~CStaticMesh()
+CStaticMesh::~CStaticMesh(void)
 {
 }
 
-CStaticMesh * CStaticMesh::Create(const char * szFilePath, const char * szFileName)
+CStaticMesh* CStaticMesh::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, const VTXTEX* pVB, const _uint& uiVtxCnt
+	, const _uint* pIB, const _uint& uiIdxCnt, const _vec3& vMin, const _vec3& vMax, _tchar* pTexName)
 {
-	CStaticMesh* pStaticMesh = new CStaticMesh;
+	CStaticMesh* pMesh = new CStaticMesh(pGraphicDev, pContext);
 
-	if (FAILED(pStaticMesh->Initalize(szFilePath, szFileName)))
+	if (FAILED(pMesh->Create_Buffer(pVB, uiVtxCnt, pIB, uiIdxCnt, vMin, vMax, pTexName)))
 	{
-		::Safe_Delete(pStaticMesh);
+		MSG_BOX(L"CStaticMesh Create_Buffer Failed");
+		Safe_Release(pMesh);
 	}
 
-	return pStaticMesh;
+	return pMesh;
 }
 
-CResources * CStaticMesh::CloneResource()
+HRESULT CStaticMesh::Create_Buffer(const VTXTEX* pVB, const _uint& uiVtxCnt, const _uint* pIB, const _uint& uiIdxCnt
+	, const _vec3& vMin, const _vec3& vMax, _tchar* pTexName)
 {
-	CResources* pResource = this;
+	m_vMin = vMin;
+	m_vMax = vMax;
 
-	pResource->AddRef();
+	m_uiVtxCnt = uiVtxCnt;
+	m_uiIdxCnt = uiIdxCnt;
 
-	return pResource;
-}
-
-HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,const char* szFileName, FbxManager* _pFBXManager, FbxIOSettings* _pIOsettings, FbxScene* _pFBXScene, FbxImporter* _pImporter)
-{
 	HRESULT hr = E_FAIL;
 
-	vector<UINT> vecIndeces;
-
-	string	strFullPath;
-
-	strFullPath.clear();
-	strFullPath = szFilePath;
-	strFullPath += szFileName;//경로에 파일이름 추가
-
-	if (!(_pImporter->Initialize(strFullPath.c_str(), -1, _pFBXManager->GetIOSettings())))
-		FAILED_CHECK_MSG(E_FAIL, L"Static Mesh Init Failed");
-	if (!(_pImporter->Import(_pFBXScene)))
-		FAILED_CHECK_MSG(E_FAIL, L"Static Mesh Import Failed");
-
-	FbxGeometryConverter clsConverter(_pFBXManager);
-	clsConverter.Triangulate(_pFBXScene, false);
-	FbxNode* pRootNode = _pFBXScene->GetRootNode();
-
-	if (!pRootNode)
-		return E_FAIL;
-
-	vector<VTXTEX> vecVTXTEX;
-
-	for (int i = 0; i < pRootNode->GetChildCount(); ++i)
+	if (m_uiVtxCnt && m_uiIdxCnt)
 	{
-		FbxNode* pChildNode = pRootNode->GetChild(i);
+		D3D11_BUFFER_DESC tBufferDesc;
 
-		if (pChildNode->GetNodeAttribute() == NULL)
-			continue;
+		ZeroMemory(&tBufferDesc, sizeof(D3D11_BUFFER_DESC));
 
-		FbxNodeAttribute::EType AttributeType = pChildNode->GetNodeAttribute()->GetAttributeType();
+		tBufferDesc.ByteWidth = sizeof(VTXTEX) * m_uiVtxCnt;
+		tBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+		tBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
-		if (AttributeType != FbxNodeAttribute::eMesh)
-			continue;
+		D3D11_SUBRESOURCE_DATA tSubData;
 
-		FbxMesh* pMesh = (FbxMesh*)pChildNode->GetNodeAttribute();  // 임폴트 하려는 메쉬의 데이터
-		D3DXVECTOR3 vPos;
-		D3DXVECTOR2 vOutUV;
-		D3DXVECTOR3 vOutNormal;
-		FbxVector4* mControlPoints = pMesh->GetControlPoints();
-		int iVTXCounter = 0;
+		ZeroMemory(&tSubData, sizeof(D3D11_SUBRESOURCE_DATA));
 
+		tSubData.pSysMem = pVB;
 
+		hr = m_pGraphicDev->CreateBuffer(&tBufferDesc, &tSubData, &m_pVB);
 
-		for (int j = 0; j < pMesh->GetPolygonCount(); j++) // 폴리곤의 인덱스
+		if (FAILED(hr) == TRUE)
 		{
-			int iNumVertices = pMesh->GetPolygonSize(j);
-			assert(iNumVertices == 3);
-			FbxGeometryElementUV* VtxUV = pMesh->GetElementUV(0);
-			FbxGeometryElementNormal* VtxNormal = pMesh->GetElementNormal(0);
-
-
-
-			for (int k = 0; k < iNumVertices; k++) // 폴리곤을 구성하는 버텍스의 인덱스
-			{
-				//정점 데이터 얻는곳
-				int iControlPointIndex = pMesh->GetPolygonVertex(j, k); // 컨트롤 포인트 = 하나의 버텍스
-				int iTextureUVIndex = pMesh->GetTextureUVIndex(j, k);  // Control = Vertex
-				//int iNormalIndex = pMesh->GetPolygonVertexIndex(j, k);
-				++iVTXCounter;
-
-				vPos.x = (float)mControlPoints[iControlPointIndex].mData[0];
-				vPos.y = (float)mControlPoints[iControlPointIndex].mData[1];
-				vPos.z = (float)mControlPoints[iControlPointIndex].mData[2];
-
-				//uv 얻기
-				switch (VtxUV->GetMappingMode()) // UV값 추출
-				{
-				case FbxGeometryElement::eByControlPoint: // 하나의 컨트롤 포인트가 하나의 노멀벡터를 가질때
-
-					switch (VtxUV->GetReferenceMode())
-					{
-					case FbxGeometryElement::eDirect:
-					{
-						vOutUV.x = static_cast<float>(VtxUV->GetDirectArray().GetAt(iControlPointIndex).mData[0]);
-						vOutUV.y = 1.f - static_cast<float>(VtxUV->GetDirectArray().GetAt(iControlPointIndex).mData[1]);
-					}
-					break;
-					case FbxGeometryElement::eIndexToDirect:
-					{
-						int index = VtxUV->GetIndexArray().GetAt(iControlPointIndex);
-						vOutUV.x = static_cast<float>(VtxUV->GetDirectArray().GetAt(index).mData[0]);
-						vOutUV.y = 1 - static_cast<float>(VtxUV->GetDirectArray().GetAt(index).mData[1]);
-					}
-					break;
-
-					default:
-						throw std::exception("Invalid Reference");
-					}
-
-
-					break;
-
-
-				case FbxGeometryElement::eByPolygonVertex:  // Sharp Edge 포인트가 존재할때 고로 우리가 실질적으로 쓰는곳
-					switch (VtxUV->GetReferenceMode())
-					{
-					case FbxGeometryElement::eDirect:
-					{
-						vOutUV.x = static_cast<float>(VtxUV->GetDirectArray().GetAt(iTextureUVIndex).mData[0]);
-						vOutUV.y = 1 - static_cast<float>(VtxUV->GetDirectArray().GetAt(iTextureUVIndex).mData[1]);
-					}
-					case FbxGeometryElement::eIndexToDirect:
-					{
-
-						vOutUV.x = static_cast<float>(VtxUV->GetDirectArray().GetAt(iTextureUVIndex).mData[0]);
-						vOutUV.y = 1 - static_cast<float>(VtxUV->GetDirectArray().GetAt(iTextureUVIndex).mData[1]);
-					}
-					break;
-					default:
-						throw std::exception("invalid Reference");
-					}
-					break;
-				default:
-					throw std::exception("Invalid Reference");
-					break;
-				}
-
-				//노멀얻기
-				switch (VtxNormal->GetMappingMode()) // 노멀값 추출
-				{
-				case FbxGeometryElement::eByControlPoint: // 하나의 컨트롤 포인트가 하나의 노멀벡터를 가질때
-
-					switch (VtxNormal->GetReferenceMode())
-					{
-					case FbxGeometryElement::eDirect:
-					{
-						vOutNormal.x = static_cast<float>(VtxNormal->GetDirectArray().GetAt(iControlPointIndex).mData[0]);
-						vOutNormal.y = static_cast<float>(VtxNormal->GetDirectArray().GetAt(iControlPointIndex).mData[1]);
-						vOutNormal.z = static_cast<float>(VtxNormal->GetDirectArray().GetAt(iControlPointIndex).mData[2]);
-					}
-					break;
-					case FbxGeometryElement::eIndexToDirect:
-					{
-						int index = VtxNormal->GetIndexArray().GetAt(iControlPointIndex);
-						vOutNormal.x = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[0]);
-						vOutNormal.y = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[1]);
-						vOutNormal.z = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[2]);
-					}
-					break;
-
-					default:
-						throw std::exception("Invalid Reference");
-					}
-
-
-					break;
-
-
-				case FbxGeometryElement::eByPolygonVertex:  // Sharp Edge 포인트가 존재할때 고로 우리가 실질적으로 쓰는곳
-					switch (VtxNormal->GetReferenceMode())
-					{
-					case FbxGeometryElement::eDirect:
-					{
-						int index = VtxNormal->GetIndexArray().GetAt(iVTXCounter);
-						vOutNormal.x = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[0]);
-						vOutNormal.y = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[1]);
-						vOutNormal.z = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[2]);
-					}
-					case FbxGeometryElement::eIndexToDirect:
-					{
-						int index = VtxNormal->GetIndexArray().GetAt(iVTXCounter);
-						vOutNormal.x = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[0]);
-						vOutNormal.y = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[1]);
-						vOutNormal.z = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[2]);
-					}
-					break;
-					default:
-						throw std::exception("invalid Reference");
-					}
-					break;
-				default:
-					throw std::exception("Invalid Reference");
-					break;
-				}
-
-
-				VTXTEX vtxtex;
-				vtxtex.vPos = vPos;
-				vtxtex.vNormal = vOutNormal;
-				vtxtex.vTexUV = vOutUV;
-				vecVTXTEX.push_back(vtxtex);
-
-
-				//int index = VtxUV->GetIndexArray().GetAt(iTextureUVIndex);
-				vecIndeces.push_back(VtxUV->GetIndexArray().GetAt(iTextureUVIndex));
-			}
+			MSG_BOX(L"CMesh VB CreateBuffer Failed");
+			return E_FAIL;
 		}
+
+		tBufferDesc.ByteWidth = sizeof(_uint) * m_uiIdxCnt;
+		tBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+
+		tSubData.pSysMem = pIB;
+
+		hr = m_pGraphicDev->CreateBuffer(&tBufferDesc, &tSubData, &m_pIB);
+
+		if (FAILED(hr) == TRUE)
+		{
+			MSG_BOX(L"CMesh IB CreateBuffer Failed");
+			return E_FAIL;
+		}
+
+		wstring wstrTexName = L"Texture_";
+		wstrTexName += pTexName;
+
+		if (wstrTexName != L"Texture_")
+			m_pTexture = dynamic_cast<CTextures*>(CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, wstrTexName.c_str()));
 	}
 
-	unsigned int n = vecVTXTEX.size();
-	VTXTEX* pVTXTex = new VTXTEX[n];
-	for (unsigned int i = 0; i < vecVTXTEX.size(); ++i)
+	hr = Set_BoundingBox();
+
+	if (FAILED(hr) == TRUE)
 	{
-		pVTXTex[i].vPos = vecVTXTEX[i].vPos;
-		pVTXTex[i].vNormal = vecVTXTEX[i].vNormal;
-		pVTXTex[i].vTexUV = vecVTXTEX[i].vTexUV;
-	}
-
-	m_iVertices = vecVTXTEX.size();
-	m_iVertexStrides = sizeof(VTXTEX);
-	m_iVertexOffsets = 0;
-
-	MakeVertexNormal((BYTE*)pVTXTex, NULL);
-
-	D3D11_BUFFER_DESC tBufferDesc;
-	ZeroMemory(&tBufferDesc, sizeof(D3D11_BUFFER_DESC));
-	tBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	tBufferDesc.ByteWidth = m_iVertexStrides * m_iVertices;
-	tBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	tBufferDesc.CPUAccessFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA tData;
-	ZeroMemory(&tData, sizeof(D3D11_SUBRESOURCE_DATA));
-	tData.pSysMem = pVTXTex;
-	hr = CDevice::GetInstance()->m_pDevice->CreateBuffer(&tBufferDesc, &tData, &m_VertexBuffer);
-
-	if (FAILED(hr))
+		MSG_BOX(L"CMesh Set_BoundingBox Failed");
 		return E_FAIL;
-
-
-	D3D11_BUFFER_DESC cbd;
-	cbd.Usage = D3D11_USAGE_DEFAULT;
-	cbd.ByteWidth = sizeof(ConstantBuffer);
-	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cbd.CPUAccessFlags = 0;
-	cbd.MiscFlags = 0;
-	cbd.StructureByteStride = 0;
-	hr = CDevice::GetInstance()->m_pDevice->CreateBuffer(&cbd, NULL, &m_ConstantBuffer);
-
-	if (FAILED(hr))
-	{
-		MessageBox(NULL, L"System Message", L"Constant Buffer Error", MB_OK);
-		return hr;
 	}
-
 
 	return S_OK;
 }
 
-HRESULT CStaticMesh::Initalize(const char * szFilePath, const char * szFileName)
+CResource* CStaticMesh::Clone_Resource(void)
 {
+	CStaticMesh* pMesh = new CStaticMesh(*this);
 
-	m_eDrawType = DRAW_VERTEX;
-	FbxManager* pFBXManager = FbxManager::Create();
-	FbxIOSettings* pIOsettings = FbxIOSettings::Create(pFBXManager, IOSROOT);
-	pFBXManager->SetIOSettings(pIOsettings);
-	FbxScene* pFBXScene = FbxScene::Create(pFBXManager, "");
+	++(*m_dwRefCount);
 
-	FbxImporter* pImporter = FbxImporter::Create(pFBXManager, "");
+	return pMesh;
+}
+
+void CStaticMesh::Render(_bool bColliderDraw)
+{
+	{
+		_uint uiStride = sizeof(VTXTEX);
+		_uint uiOffset = 0;
+
+		if (m_uiVtxCnt != 0)
+		{
+			// Texture
+			if (m_pTexture) 
+				m_pTexture->Render(0, 0);
+
+			// Mesh
+			m_pContext->IASetVertexBuffers(0, 1, &m_pVB, &uiStride, &uiOffset);
+			m_pContext->IASetIndexBuffer(m_pIB, DXGI_FORMAT_R32_UINT, 0);
+
+			m_pContext->DrawIndexed(m_uiIdxCnt, 0, 0);
+		}
+
+		// Bounding Box
+		if (bColliderDraw == TRUE)
+		{
+			CGraphicDev::GetInstance()->SetWireFrame(TRUE);
+
+			m_pContext->IASetVertexBuffers(0, 1, &m_pBBoxVB, &uiStride, &uiOffset);
+			m_pContext->IASetIndexBuffer(m_pBBoxIB, DXGI_FORMAT_R32_UINT, 0);
+
+			m_pContext->DrawIndexed(36, 0, 0);
+
+			CGraphicDev::GetInstance()->SetWireFrame(FALSE);
+		}
+	}
+
+	for (_uint uiSize = 0; uiSize < m_vecChild.size(); ++uiSize)
+		m_vecChild[uiSize]->Render(bColliderDraw);
+}
+
+void CStaticMesh::RenderInst(const vector<_matrix*>& vecObjWorld)
+{
+	_uint uiStride = sizeof(VTXTEX);
+	_uint uiOffset = 0;
+
+	if (m_uiVtxCnt != 0)
+	{
+		m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Instancing") );
 
 
-	if (FAILED(Load_StaticMesh(szFilePath, szFileName, pFBXManager, pIOsettings, pFBXScene, pImporter)))
+		ID3D11Buffer* pBaseShaderCB = CGraphicDev::GetInstance()->GetBaseShaderCB();
+		ID3D11Buffer* pInstShaderCB = CGraphicDev::GetInstance()->GetInstShaderCB();
+
+		ID3D11SamplerState* pBaseSampler = CGraphicDev::GetInstance()->GetBaseSampler();
+
+		// Shader Set
+		m_pContext->VSSetShader( CShaderMgr::GetInstance()->Get_VertexShader(L"Shader_Instancing"), NULL, 0);
+		m_pContext->VSSetConstantBuffers(0, 1, &pBaseShaderCB);
+		m_pContext->VSSetConstantBuffers(1, 1, &pInstShaderCB);
+		m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_Instancing"), NULL, 0);
+		m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
+
+		//Texture
+		if (m_pTexture) 
+			m_pTexture->Render(0, 0);
+
+		// Mesh
+		m_pContext->IASetVertexBuffers(0, 1, &m_pVB, &uiStride, &uiOffset);
+		m_pContext->IASetIndexBuffer(m_pIB, DXGI_FORMAT_R32_UINT, 0);
+
+		// Base
+		BASESHADERCB tBaseShaderCB;
+
+		_matrix matWorld;
+
+
+		D3DXMatrixIdentity(&matWorld);
+
+		//나중에 카메라 만들면 다시 주석 풀어야함
+		tBaseShaderCB.matWorld = matWorld;
+		tBaseShaderCB.matView = (*CCameraMgr::GetInstance()->Get_CurCameraView());
+		tBaseShaderCB.matProj = (*CCameraMgr::GetInstance()->Get_CurCameraProj());
+
+
+		m_pContext->UpdateSubresource(pBaseShaderCB, 0, NULL, &tBaseShaderCB, 0, 0);
+
+		_uint uiCnt = _uint(vecObjWorld.size() / INSTCNT) + 1;
+
+		// Instancing
+		for (_uint uiDrawCnt = 0; uiDrawCnt < _uint(vecObjWorld.size() / INSTCNT) + 1; ++uiDrawCnt)
+		{
+			INSTANCINGSHADERCB tInstShaderCB;
+			
+			_uint uiInstSize = vecObjWorld.size() - (uiDrawCnt * INSTCNT);
+
+			if (uiInstSize > INSTCNT)
+				uiInstSize = INSTCNT;
+
+			for (_uint uiIndex = 0; uiIndex < uiInstSize; ++uiIndex)
+				tInstShaderCB.matWorld[uiIndex] = *(vecObjWorld[uiIndex + (uiDrawCnt * INSTCNT)]); //체크
+
+			m_pContext->UpdateSubresource(pInstShaderCB, 0, NULL, &tInstShaderCB, 0, 0);
+
+			// Draw
+			m_pContext->DrawIndexedInstanced(m_uiIdxCnt, uiInstSize, 0, 0, 0);
+
+		}
+	}
+
+	for (_uint uiSize = 0; uiSize < m_vecChild.size(); ++uiSize)
+		m_vecChild[uiSize]->RenderInst(vecObjWorld);
+}
+
+void CStaticMesh::Release(void)
+{
+	CMesh::Release();
+
+	if (m_dwRefCount == NULL)
+	{
+	}
+
+	delete this;
+}
+
+HRESULT CStaticMesh::Set_BoundingBox(void)
+{
+	// Vertex
+	VTXTEX pVtxTex[] =
+	{
+		// Pos										TexUV				Normal
+		{ _vec3(m_vMin.x, m_vMax.y, m_vMin.z), _vec2(0.f, 0.f), _vec3(0.f, 0.f, 0.f) },
+		{ _vec3(m_vMax.x, m_vMax.y, m_vMin.z), _vec2(0.f, 0.f), _vec3(0.f, 0.f, 0.f) },
+		{ _vec3(m_vMax.x, m_vMin.y, m_vMin.z), _vec2(0.f, 0.f), _vec3(0.f, 0.f, 0.f) },
+		{ _vec3(m_vMin.x, m_vMin.y, m_vMin.z), _vec2(0.f, 0.f), _vec3(0.f, 0.f, 0.f) },
+		{ _vec3(m_vMin.x, m_vMax.y, m_vMax.z), _vec2(0.f, 0.f), _vec3(0.f, 0.f, 0.f) },
+		{ _vec3(m_vMax.x, m_vMax.y, m_vMax.z), _vec2(0.f, 0.f), _vec3(0.f, 0.f, 0.f) },
+		{ _vec3(m_vMax.x, m_vMin.y, m_vMax.z), _vec2(0.f, 0.f), _vec3(0.f, 0.f, 0.f) },
+		{ _vec3(m_vMin.x, m_vMin.y, m_vMax.z), _vec2(0.f, 0.f), _vec3(0.f, 0.f, 0.f) }
+	};
+
+	_uint uiVtxCnt = ARRAYSIZE(pVtxTex);
+
+	D3D11_BUFFER_DESC tBufferDesc;
+
+	ZeroMemory(&tBufferDesc, sizeof(D3D11_BUFFER_DESC));
+
+	tBufferDesc.ByteWidth = sizeof(VTXTEX) * uiVtxCnt;
+	tBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+	tBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+	D3D11_SUBRESOURCE_DATA tSubData;
+
+	ZeroMemory(&tSubData, sizeof(D3D11_SUBRESOURCE_DATA));
+
+	tSubData.pSysMem = pVtxTex;
+
+	HRESULT hr = m_pGraphicDev->CreateBuffer(&tBufferDesc, &tSubData, &m_pBBoxVB);
+
+	if (FAILED(hr) == TRUE)
+	{
+		MSG_BOX(L"Bouding Box VB CreateBuffer Failed");
 		return E_FAIL;
+	}
 
+	// Index
+	_uint pIndex[] =
+	{
+		1, 5, 6,
+		1, 6, 2,
+		4, 0, 3,
+		4, 3, 7,
+		4, 5, 1,
+		4, 1, 0,
+		3, 2, 6,
+		3, 6, 7,
+		7, 6, 5,
+		7, 5, 4,
+		0, 1, 2,
+		0, 2, 3
+	};
 
-	CMesh::CreateRasterizerState();
-	//Init_Shader();
+	_uint uiIdxCnt = ARRAYSIZE(pIndex);
 
-	pFBXScene->Destroy();
-	pImporter->Destroy();
-	pIOsettings->Destroy();
-	pFBXManager->Destroy();
+	tBufferDesc.ByteWidth = sizeof(_uint) * uiIdxCnt;
+	tBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
+	tSubData.pSysMem = pIndex;
+
+	hr = m_pGraphicDev->CreateBuffer(&tBufferDesc, &tSubData, &m_pBBoxIB);
+
+	if (FAILED(hr) == TRUE)
+	{
+		MSG_BOX(L"Bounding Box IB CreateBuffer Failed");
+		return E_FAIL;
+	}
 
 	return S_OK;
 }

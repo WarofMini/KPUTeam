@@ -1,28 +1,39 @@
 #ifndef MainApp_h__
 #define MainApp_h__
 
-class CDevice;
-class CScene;
+#include "Include.h"
 
 class CMainApp
 {
-public:
-	explicit CMainApp();
-	virtual ~CMainApp();
-
 private:
- 	CDevice*	m_pGrapicDevcie;
+	explicit CMainApp(void);
+	virtual ~CMainApp(void);
 
-private:
-	HRESULT Add_ShaderFile(void);
+
 public:
 	HRESULT Initialize(void);
-	int		Update(void);
-	void	Render(void);
-	void	Release(void);
+	_int Update(const _float& fTimeDelta);
+	void Render(void);
 
 public:
 	static CMainApp* Create(void);
+
+private:
+	_ulong							m_dwRenderCnt;
+	_tchar							m_szFPS[128];
+	_float							m_fTime;
+
+
+
+public:
+	void Release(void);
+
+private:
+	void Ready_TextureFromFile(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);
+
+public:
+	void Render_FPS(void);
+	void Render_CurrentScene(void);
 };
 
 #endif // MainApp_h__

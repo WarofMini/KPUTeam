@@ -1,34 +1,37 @@
-#pragma once
-#include "Include.h"
-#include "Object.h"
+#ifndef LogoBack_h__
+#define LogoBack_h__
 
-class CShader;
-class CVIBuffer;
-class CTexture;
-class CLogoBack :
-	public CObject
+#include "Include.h"
+#include "GameObject.h"
+
+class CTextures;
+class CRcTex;
+class CTransform;
+
+class CLogoBack : public CGameObject
 {
+private:
+	explicit CLogoBack(ID3D11DeviceContext* pContext);
+	virtual ~CLogoBack(void);
+
 public:
-	CLogoBack();
-	virtual ~CLogoBack();
+	static CLogoBack* Create(ID3D11DeviceContext* pContext);
 
 private:
-	CShader*	m_pVertexShader;
-	CShader*	m_pPixelShader;
-	CTexture*	m_pTexture;
-	CVIBuffer*	m_pPolygon;
-	CInfo*		m_pInfo;
+	CTransform*		m_pTransform;
+	CRcTex*			m_pBuffer;
+	CTextures*		m_pTexture;
+
+private:
+	virtual HRESULT Ready_Component(void);
 
 public:
-	virtual HRESULT Initialize(void);
-	virtual int Update(void);
+	virtual HRESULT	Initialize(void);
+	virtual _int Update(const _float& fTimeDelta);
 	virtual void Render(void);
 	virtual void Release(void);
 
-public:
-	static CLogoBack* Create(void);
 
-private:
-	HRESULT	AddBuffer(void);
 };
 
+#endif

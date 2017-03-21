@@ -1,9 +1,10 @@
-#pragma once
+#ifndef Loading_h__
+#define Loading_h__
 
 class CLoading
 {
 public:
-	enum LOADINGID { LOADING_STAGE, LOADING_END };
+	enum LOADINGID { LOADING_LOGO, LOADING_STAGE, LOADING_END };
 
 public:
 	explicit CLoading(LOADINGID eLoadID);
@@ -15,9 +16,9 @@ public:
 
 public:
 	HRESULT InitLoading(void);
-	void StageLoading(void);
+	void	LogoLoading(void);
+	void	StageLoading(void);
 
-	HRESULT Load_Soldier(void);
 
 public:
 	static CLoading* Create(LOADINGID eLoadID);
@@ -31,10 +32,24 @@ private:
 	CRITICAL_SECTION		m_CSKey;
 	HANDLE					m_hThread;
 	bool					m_bServerConnected;
-
+	ID3D11Device*			pGraphicDev;
+	ID3D11DeviceContext*	pContext;
 
 private:
 	TCHAR		m_szLoadMessage[128];
 	bool		m_bComplete;
 	bool		m_serverConnected{ false };
+
+private:
+
+	void		Ready_TextureFromFile(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);
+
+	void		Ready_DynamicMeshFromFile(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);
+
+	void		Ready_StaticMeshFromFile(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);
+
+
 };
+
+
+#endif

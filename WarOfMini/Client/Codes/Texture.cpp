@@ -1,83 +1,113 @@
 #include "stdafx.h"
 #include "Texture.h"
-#include "Device.h"
 #include "DirectXTex.h"
 
 using namespace DirectX;
 
-CTexture::CTexture()
+CTextures::CTextures(ID3D11Device * pGraphicDev, ID3D11DeviceContext * pContext)
+: CResource(pGraphicDev, pContext)
+, m_sizetContainerSize(0)
 {
-	m_pTextureRV = NULL;
-	m_pSamplerLinear = NULL; 
-	m_pBlendState = NULL;
 }
 
-CTexture::CTexture(const CTexture & rhs)
+CTextures::~CTextures(void)
 {
-	m_pTextureRV = rhs.m_pTextureRV;
-	m_pSamplerLinear = rhs.m_pSamplerLinear;
-	m_pBlendState = rhs.m_pBlendState;
-	m_dwRefCount = rhs.m_dwRefCount;
-	++m_dwRefCount;
 }
 
-CTexture::~CTexture()
+CTextures * CTextures::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, TEXTURETYPE eTextureType, const _tchar* pFilePath, const _ushort& wCnt)
 {
-	Release();
-}
+	CTextures* pTexture = new CTextures(pGraphicDev, pContext);
 
-HRESULT CTexture::CreateTexture(LPCWSTR szFileFath)
-{
-	CDevice* pGrapicDev = CDevice::GetInstance();
-	HRESULT hr = NULL;
-	hr = D3DX11CreateShaderResourceViewFromFile(pGrapicDev->m_pDevice, szFileFath, NULL, NULL, &m_pTextureRV, NULL);
-	if (FAILED(hr))
-		return E_FAIL;
-
-	D3D11_SAMPLER_DESC sampDesc;
-	ZeroMemory(&sampDesc, sizeof(sampDesc));
-	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-	sampDesc.MinLOD = 0;
-	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
-	hr = pGrapicDev->m_pDevice->CreateSamplerState(&sampDesc, &m_pSamplerLinear);
-	
-	if (FAILED(hr))
-		return hr;
-
-	return S_OK;
-}
-
-CTexture * CTexture::Create(LPCWSTR szFileFath)
-{
-	CTexture* pTexture = new CTexture;
-
-	if (FAILED(pTexture->CreateTexture(szFileFath)))
+	if (FAILED(pTexture->Create_Texture(eTextureType, pFilePath, wCnt)))
 	{
-		::Safe_Delete(pTexture);
+		MSG_BOX(L"Texture Created Failed");
+		Safe_Release(pTexture);
 	}
 
 	return pTexture;
 }
 
-CResources * CTexture::CloneResource(void)
+CTextures * CTextures::Clone_Resource(void)
 {
-	return new CTexture(*this);
+	CTextures* pTexture = new CTextures(*this);
+
+	++(*m_dwRefCount);
+
+	return pTexture;
 }
 
-DWORD CTexture::Release(void)
+HRESULT CTextures::Create_Texture(TEXTURETYPE eTextureType, const _tchar* pFilePath, const _ushort& wCnt)
 {
-	if (m_dwRefCount == 1)
-	{
-		::Safe_Release(m_pTextureRV);
-		::Safe_Release(m_pSamplerLinear);
-		::Safe_Release(m_pBlendState);
-	}
-	else
-		--m_dwRefCount;
+	ID3D11ShaderResourceView* pShaderResourceView = NULL;
+	_tchar szFullPath[MAX_PATH] = L"";
+	HRESULT hr = E_FAIL;
 
-	return 0;
+	ScratchImage image;
+	TexMetadata info;
+
+	size_t iTextureCnt = 1;
+	if (wCnt > 0) iTextureCnt = wCnt;
+
+	m_vecTexture.reserve(iTextureCnt);
+
+	for (size_t i = 0; i < iTextureCnt; ++i)
+	{
+		if (wCnt == 0)	wsprintf(szFullPath, pFilePath);
+		else			wsprintf(szFullPath, pFilePath, i);
+
+		switch (eTextureType)
+		{
+		case TYPE_NORMAL:
+			hr = D3DX11CreateShaderResourceViewFromFile(m_pGraphicDev, szFullPath
+				, NULL, NULL, &pShaderResourceView, NULL);
+			break;
+
+
+		case TYPE_TGA:
+			hr = LoadFromTGAFile(szFullPath, &info, image);
+			if (FAILED(hr))	break;
+			hr = CreateShaderResourceView(m_pGraphicDev, image.GetImages(), image.GetImageCount(), info, &pShaderResourceView);
+			break;
+
+		case TYPE_DDSCUBE:
+			hr = LoadFromDDSFile(szFullPath, DDS_FLAGS_NONE, &info, image);
+			if (FAILED(hr))	break;
+
+			info.miscFlags &= ~TEX_MISC_TEXTURECUBE;
+
+			hr = CreateShaderResourceView(m_pGraphicDev, image.GetImages(), image.GetImageCount(), info, &pShaderResourceView);
+			break;
+		}
+
+		if (FAILED(hr) == TRUE)
+			return E_FAIL;
+
+		m_vecTexture.push_back(pShaderResourceView);
+	}
+
+	m_sizetContainerSize = m_vecTexture.size();
+
+	return S_OK;
+}
+
+void CTextures::Render(const _uint uiSlot, const _ulong& dwIndex)
+{
+	m_pContext->PSSetShaderResources(uiSlot, 1, &m_vecTexture[dwIndex]);
+}
+
+void CTextures::Release(void)
+{
+	CResource::Release();
+
+	if (m_dwRefCount == NULL)
+	{
+		size_t dwSize = m_vecTexture.size();
+
+		for (size_t i = 0; i < dwSize; ++i)
+			Safe_Release(m_vecTexture[i]);
+
+		m_vecTexture.clear();
+	}
+
+	delete this;
 }

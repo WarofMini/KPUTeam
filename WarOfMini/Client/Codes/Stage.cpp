@@ -1,183 +1,93 @@
 #include "stdafx.h"
 #include "Stage.h"
-#include "Include.h"
-#include "Object.h"
-#include "Soldier.h"
-#include "ObjMgr.h"
-#include "TimeMgr.h"
-#include "RenderMgr.h"
-#include "Camera.h"
+#include "RenderTargetMgr.h"
+#include "CameraMgr.h"
+#include "FontMgr.h"
+#include "LogoBack.h"
 #include "StaticObject.h"
-#include "Info.h"
 
-CStage::CStage()
+CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
+: CScene(pGraphicDev, pContext)
 {
 }
 
-
-CStage::~CStage()
+CStage::~CStage(void)
 {
 }
 
-HRESULT CStage::Initialize(void)
+CStage* CStage::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
 {
-#ifdef _DEBUG
-	cout << "Stage테스트" << endl;
-#endif
+	//SetCursor(NULL);
+	//ShowCursor(FALSE);
 
-	if (FAILED(CCamera::GetInstance()->Initialize()))
+	CStage* pScene = new CStage(pGraphicDev, pContext);
+
+	if (FAILED(pScene->Ready_Scene()))
 	{
-		MessageBox(NULL, L"System Message", L"Camera Initialize Failed", MB_OK);
+		MSG_BOX(L"StageScene Create Failed");
+		Safe_Release(pScene);
 	}
 
-	if (FAILED(CreateSoldier()))
-		return E_FAIL;
+	return pScene;
+}
 
-	if (FAILED(CreateStaticFloor()))
-		return E_FAIL;
-
-	if (FAILED(CreateToiletFloor()))
-		return E_FAIL;
-
-	if (FAILED(CreateStaticObject()))
-		return E_FAIL;
+HRESULT CStage::Ready_Scene(void)
+{
+	if (FAILED(Ready_Environment()))	return E_FAIL;
+	if (FAILED(Ready_GameLogic()))		return E_FAIL;
 
 	return S_OK;
 }
 
-int CStage::Update(void)
+_int CStage::Update(const _float& fTimeDelta)
 {
-	CCamera::GetInstance()->Update();
-	CObjMgr::GetInstance()->Update();
+	CScene::Update(fTimeDelta);
+	CCameraMgr::GetInstance()->Update_CurCamera(fTimeDelta);
 
 	return 0;
 }
 
-void CStage::Render(void)
+HRESULT CStage::Ready_GameLogic(void)
 {
-	float fTime = CTimeMgr::GetInstance()->GetTime();
-	CRenderMgr::GetInstance()->Render(fTime);
-}
+	CLayer* pLayer = CLayer::Create();
+	CGameObject* pGameObject = NULL;
 
-HRESULT CStage::CreateSoldier(void)
-{
-	CObject* pObject = NULL;
-	pObject = CSoldier::Create();
-	if (pObject == NULL)
+
+
+	//StatocObject
+	pGameObject = CStaticObject::Create(m_pContext);
+
+	if (NULL == pGameObject)
 		return E_FAIL;
 
-	CObjMgr::GetInstance()->AddObject(L"Soldier", pObject);
+	pLayer->Ready_Object(L"Object", pGameObject);
+
+
+	m_mapLayer.insert(MAPLAYER::value_type(L"Layer_GameLogic", pLayer));
 
 	return S_OK;
 }
 
-HRESULT CStage::CreateStaticFloor(void)
+HRESULT CStage::Ready_Environment(void)
 {
-	wstring strName = L"Mesh_Floor1";
+	CLayer* pLayer = CLayer::Create();
+	CGameObject* pGameObject = NULL;
 
-	float m_iSize = 500.f;
-	float m_fSize = 0.4f;
-
-	m_iSize *= m_fSize;
-
-	for (int i = 0; i < 8; ++i)
-	{
-		for (int j = 0; j < 6; ++j)
-		{
-			CStaticObject* pObject = NULL;
-
-			pObject = CStaticObject::Create(strName);
-
-			pObject->GetInfo()->m_fAngle[ANGLE_X] += (float)(D3DXToRadian(90.f));
-			pObject->GetInfo()->m_vScale = D3DXVECTOR3(m_fSize, m_fSize, m_fSize);
-
-			pObject->GetInfo()->m_vPos = D3DXVECTOR3((j % 6) * m_iSize, 0.f, i * m_iSize);
-
-			CObjMgr::GetInstance()->AddObject(L"StaticObject", pObject);
-		}
-	}
-
-	return S_OK;
-}
-
-HRESULT CStage::CreateToiletFloor(void)
-{
-	wstring strName = L"Mesh_Floor2";
-
-	float m_iSize = 500.f;
-	float m_fSize = 0.4f;
-
-	m_iSize *= m_fSize;
-
-	for (int i = 0; i < 4; ++i)
-	{
-		for (int j = 0; j < 4; ++j)
-		{
-			CStaticObject* pObject = NULL;
-
-			pObject = CStaticObject::Create(strName);
-
-			pObject->GetInfo()->m_fAngle[ANGLE_X] += (float)(D3DXToRadian(90.f));
-			pObject->GetInfo()->m_vScale = D3DXVECTOR3(m_fSize, m_fSize, m_fSize);
-
-			pObject->GetInfo()->m_vPos = D3DXVECTOR3((j % 4) * m_iSize + 1182.f, 0.1f, i * m_iSize + 400.f);
-
-			CObjMgr::GetInstance()->AddObject(L"StaticObject", pObject);
-		}
-	}
-
-	return S_OK;
-}
+	//다이나믹 카메라 적용
+	CCameraMgr::GetInstance()->Ready_DynamicCamera(m_pContext, CCameraMgr::CAMERA_DYNAMIC, 0.1f, 1000.f, _vec3(0.f, 5.f, -10.f), _vec3(0.f, 0.f, 0.f));
 
 
-//Load Static Object Data
-HRESULT CStage::CreateStaticObject(void)
-{
-	TCHAR*	tPath = L"../Bin/Data/MapObj.dat";
+	// RenderTarget
+	//CRenderTargetMgr::GetInstance()->Ready_RenderTarget(m_pGraphicDev, m_pContext, L"RT_Blend", DXGI_FORMAT_R8G8B8A8_UNORM, WINCX, WINCY, -0.8f, 0.8f);
 
-	HANDLE	hFile = CreateFile(tPath, GENERIC_READ, 0, NULL,
-		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-
-	DWORD	dwByte = 0;
-
-	while (true)
-	{
-		OBJ_INFO   tInfo;
-
-		ReadFile(hFile, &tInfo, sizeof(OBJ_INFO), &dwByte, NULL);
-
-		if (dwByte == 0)
-		{
-			CloseHandle(hFile);
-			break;
-		}
-
-		CObject* pObject = NULL;
-
-		wstring strName = tInfo.m_szName;
-
-		pObject = CStaticObject::Create(strName);
-		((CStaticObject*)(pObject))->SetObjInfo(&tInfo);
-		((CStaticObject*)(pObject))->InfoSetting();
-		CObjMgr::GetInstance()->AddObject(L"StaticObject", pObject);
-
-	}
+	m_mapLayer.insert(MAPLAYER::value_type(L"Layer_Environment", pLayer));
 
 	return S_OK;
 }
 
 void CStage::Release(void)
 {
-	CCamera::GetInstance()->DestroyInstance();
-}
+	CScene::Release();
 
-CStage * CStage::Create(void)
-{
-	CStage* pStage = new CStage;
-	if (FAILED(pStage->Initialize()))
-	{
-		::Safe_Delete(pStage);
-
-	}
-	return pStage;
+	delete this;
 }

@@ -1,103 +1,112 @@
 #include "stdafx.h"
 #include "LogoBack.h"
-#include "RcTex.h"
-#include "Texture.h"
-#include "Shader.h"
-
-#include "ShaderMgr.h"
-#include "SceneMgr.h"
-#include "Device.h"
+#include "Transform.h"
+#include "Management.h"
 #include "ResourcesMgr.h"
-#include "Info.h"
-#include "RenderMgr.h"
+#include "ShaderMgr.h"
+#include "GraphicDev.h"
+#include "CameraMgr.h"
 
-CLogoBack::CLogoBack()
-	:m_pPolygon(NULL),
-	m_pVertexShader(NULL),
-	m_pPixelShader(NULL),
-	m_pTexture(NULL),
-	m_pInfo(NULL)
-{
-
-}
-
-
-CLogoBack::~CLogoBack()
+CLogoBack::CLogoBack(ID3D11DeviceContext * pContext)
+: CGameObject(pContext)
+, m_pTransform(NULL)
+, m_pBuffer(NULL)
+, m_pTexture(NULL)
 {
 }
 
-HRESULT CLogoBack::Initialize(void)
+CLogoBack::~CLogoBack(void)
 {
-	HRESULT hr = NULL;
+}
 
-	hr = AddBuffer();
+CLogoBack * CLogoBack::Create(ID3D11DeviceContext * pContext)
+{
+	CLogoBack* pLogoBack = new CLogoBack(pContext);
 
-	if (FAILED(hr))
-		return E_FAIL;
+	if (FAILED(pLogoBack->Initialize()))
+		Safe_Release(pLogoBack);
 
-	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, this);
+	return pLogoBack;
+}
+
+HRESULT CLogoBack::Ready_Component(void)
+{
+	CComponent* pComponent = NULL;
+
+	// Transform
+	pComponent = CTransform::Create();
+	m_pTransform = dynamic_cast<CTransform*>(pComponent);
+	if (pComponent == NULL) return E_FAIL;
+	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Transform", pComponent));
+
+
+	// Buffer
+	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, L"Buffer_RcTex");
+	m_pBuffer = dynamic_cast<CRcTex*>(pComponent);
+	if (pComponent == NULL) return E_FAIL;
+	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Buffer", pComponent));
+
+	// Texture
+	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, L"Texture_LogoBack");
+	m_pTexture = dynamic_cast<CTextures*>(pComponent);
+	if (pComponent == NULL) return E_FAIL;
+	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Texture", pComponent));
 
 	return S_OK;
 }
 
-int CLogoBack::Update(void)
+HRESULT CLogoBack::Initialize(void)
 {
+	if (FAILED(Ready_Component()))
+		return E_FAIL;
+
+	m_pTransform->m_vScale = _vec3(2.0f, 2.0f, 2.f);
+
+	return S_OK;
+}
+
+_int CLogoBack::Update(const _float & fTimeDelta)
+{
+	CGameObject::Update(fTimeDelta);
+
+	
+	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
+
 	return 0;
 }
 
 void CLogoBack::Render(void)
 {
-	CDevice::GetInstance()->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
-	CDevice::GetInstance()->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pPolygon->m_ConstantBuffer);
-	//////////////////
-	CDevice::GetInstance()->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
-	CDevice::GetInstance()->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
-	CDevice::GetInstance()->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
+	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Default"));
 
-	m_pPolygon->Render();
+	ID3D11Buffer* pBaseShaderCB = CGraphicDev::GetInstance()->GetBaseShaderCB();
+	ID3D11SamplerState* pBaseSampler = CGraphicDev::GetInstance()->GetBaseSampler();
+
+	
+	BASESHADERCB tBaseShaderCB;
+
+	_matrix  matView, matProj;
+	D3DXMatrixIdentity(&matView);
+	D3DXMatrixIdentity(&matProj);
+	
+	tBaseShaderCB.matWorld = m_pTransform->m_matWorld;
+	tBaseShaderCB.matView = matView;
+	tBaseShaderCB.matProj = matProj;
+
+	m_pContext->UpdateSubresource(pBaseShaderCB, 0, NULL, &tBaseShaderCB, 0, 0);
+
+	m_pContext->VSSetShader(CShaderMgr::GetInstance()->Get_VertexShader(L"Shader_Default"), NULL, 0);
+	m_pContext->VSSetConstantBuffers(0, 1, &pBaseShaderCB);
+	m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_Default"), NULL, 0);
+	m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
+
+
+	m_pTexture->Render(0, 0);
+	m_pBuffer->Render();
 }
 
 void CLogoBack::Release(void)
 {
-	::Safe_Release(m_pPolygon);
-}
-
-CLogoBack * CLogoBack::Create(void)
-{
-	CLogoBack* pLogoBack = new CLogoBack;
-	if (FAILED(pLogoBack->Initialize()))
-	{
-		::Safe_Delete(pLogoBack);
-
-	}
-	return pLogoBack;
-}
-
-HRESULT CLogoBack::AddBuffer(void)
-{
-
-	CComponent*		pComponent = NULL;
-
-	//Transform
-	pComponent = m_pInfo = CInfo::Create(g_vLook);
-	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Transform", pComponent));
-
-	//Buffer
-	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STATIC, L"Buffer_RcTex");
-	m_pPolygon = dynamic_cast<CVIBuffer*>(pComponent);
-	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Buffer", pComponent));
-
-	//Texture
-	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_LOGO, L"Texture_Logo");
-	m_pTexture = dynamic_cast<CTexture*>(pComponent);
-	NULL_CHECK_RETURN(pComponent, E_FAIL);
-
-	//m_pPolygon = CRcTex::Create();
-	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS_Logo");
-	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");
-	//m_pTexture = CTexture::Create(L"../Resource/Logo.jpg");
-
-	return S_OK;
+	CGameObject::Release();
+	delete this;
 }

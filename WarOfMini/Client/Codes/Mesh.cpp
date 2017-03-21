@@ -1,93 +1,119 @@
 #include "stdafx.h"
 #include "Mesh.h"
-#include "Shader.h"
-#include "Device.h"
+#include "Texture.h"
 
-
-CMesh::CMesh()
-	: m_pShader(NULL),
-	m_pGrapicDevice(CDevice::GetInstance())
+CMesh::CMesh(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
+: CResource(pGraphicDev, pContext)
+, m_pTexture(NULL)
+, m_pVB(NULL)
+, m_pIB(NULL)
+, m_uiVtxCnt(0)
+, m_uiIdxCnt(0)
+, m_vMin(_vec3(0.f, 0.f, 0.f))
+, m_vMax(_vec3(0.f, 0.f, 0.f))
+, m_pBBoxVB(NULL)
+, m_pBBoxIB(NULL)
 {
 }
 
-
-CMesh::~CMesh()
+CMesh::~CMesh(void)
 {
 }
 
-void CMesh::Render()
+void CMesh::Reserve_ChildSize(const _ushort& wSize)
 {
-	CVIBuffer::Render();
+	m_vecChild.reserve(wSize);
 }
 
-void CMesh::MakeVertexNormal(BYTE * _pVertices, WORD * _pIndices)
+void CMesh::Add_Child(CMesh* pChild)
 {
-	if (!_pIndices)
-		SetNormalVectorByBasic(_pVertices);
-	else
-		SetNormalVectorByAverage(_pVertices, _pIndices, (m_iIndex / 3), 3, false);
+	m_vecChild.push_back(pChild);
 }
 
-void CMesh::SetNormalVectorByBasic(BYTE * _pVertices)
+void CMesh::Clear_NullChild(void)
 {
-	D3DXVECTOR3		vNormal;
-	VTXTEX*	pVertex = NULL;
+	_uint uiRealSize = m_vecChild.size();
 
-	int nPrimitives = m_iVertices / 3;
-	for (int i = 0; i < nPrimitives; ++i)
+	vector<CMesh*> vecStoreChile;
+	vecStoreChile.reserve(uiRealSize);
+
+	for (_uint uiSize = 0; uiSize < m_vecChild.size(); ++uiSize)
 	{
-		vNormal = GetTriAngleNormal(_pVertices, (i * 3 + 0), (i * 3 + 1), (i * 3 + 2));
+		m_vecChild[uiSize]->Clear_NullChild();
 
-		pVertex = (VTXTEX*)(_pVertices + ((i * 3 + 0) * m_iVertexStrides));
-		pVertex->vNormal = vNormal;
-		pVertex = (VTXTEX*)(_pVertices + ((i * 3 + 1) * m_iVertexStrides));
-		pVertex->vNormal = vNormal;
-		pVertex = (VTXTEX*)(_pVertices + ((i * 3 + 2) * m_iVertexStrides));
-		pVertex->vNormal = vNormal;
-	}
-}
-
-void CMesh::SetNormalVectorByAverage(BYTE * _pVertices, WORD * _pIndices, int _iPrimitives, int _iOffset, bool _bStrip)
-{
-	D3DXVECTOR3		vNormal(0.f, 0.f, 0.f);
-	VTXTEX*	pVertex = NULL;
-	USHORT nIndex_0, nIndex_1, nIndex_2;
-
-	for (int i = 0; i < m_iVertices; ++i)
-	{
-		vNormal = D3DXVECTOR3(0.f, 0.f, 0.f);
-
-		for (int j = 0; j < _iPrimitives; j++)
+		if (m_vecChild[uiSize]->Check_Remove())
 		{
-			nIndex_0 = (_bStrip) ? (((j % 2) == 0) ? (j * _iOffset + 0) : (j * _iOffset + 1)) : (j * _iOffset + 0);
-			if (_pIndices) nIndex_0 = _pIndices[nIndex_0];
-
-			nIndex_1 = (_bStrip) ? (((j % 2) == 0) ? (j * _iOffset + 1) : (j * _iOffset + 0)) : (j * _iOffset + 1);
-			if (_pIndices) nIndex_1 = _pIndices[nIndex_1];
-
-			nIndex_2 = (_pIndices) ? _pIndices[j * _iOffset + 2] : (j * _iOffset + 2);
-
-			if ((nIndex_0 == i) || (nIndex_1 == i) || (nIndex_2 == i))
-				vNormal += GetTriAngleNormal(_pVertices, nIndex_0, nIndex_1, nIndex_2);
+			Safe_Release(m_vecChild[uiSize]);
+			--uiRealSize;
 		}
-		D3DXVec3Normalize(&vNormal, &vNormal);
-		pVertex = (VTXTEX *)(_pVertices + (i * m_iVertexStrides));
-		pVertex->vNormal = vNormal;
+	}
+
+	vecStoreChile = m_vecChild;
+
+	m_vecChild.clear();
+	m_vecChild.reserve(uiRealSize);
+
+	for (_uint uiSize = 0; uiSize < vecStoreChile.size(); ++uiSize)
+	{
+		if (vecStoreChile[uiSize])
+			m_vecChild.push_back(vecStoreChile[uiSize]);
+	}
+
+	vecStoreChile.clear();
+}
+_bool CMesh::Check_Remove(void)
+{
+	if (m_vecChild.size()) 
+		return FALSE;
+	if (m_uiVtxCnt) 
+		return FALSE;
+
+	return TRUE;
+}
+
+void CMesh::Set_RootMinMax(void)
+{
+	_vec3 vTempMin, vTempMax;
+
+	for (_uint uiSize = 0; uiSize < m_vecChild.size(); ++uiSize)
+	{
+		vTempMin = *m_vecChild[uiSize]->Get_Min();
+		vTempMax = *m_vecChild[uiSize]->Get_Max();
+
+		if (vTempMin.x < m_vMin.x)	m_vMin.x = vTempMin.x;
+		if (vTempMin.y < m_vMin.y)	m_vMin.y = vTempMin.y;
+		if (vTempMin.z < m_vMin.z)	m_vMin.z = vTempMin.z;
+		if (vTempMax.x > m_vMax.x)	m_vMax.x = vTempMax.x;
+		if (vTempMax.y > m_vMax.y)	m_vMax.y = vTempMax.y;
+		if (vTempMax.z > m_vMax.z)	m_vMax.z = vTempMax.z;
 	}
 }
 
-D3DXVECTOR3 CMesh::GetTriAngleNormal(BYTE * _pVertices, USHORT _nIndex_0, USHORT _nIndex_1, USHORT _nIndex_2)
+const _vec3* CMesh::Get_Min(void)
 {
-	D3DXVECTOR3 vNormal(0.f, 0.f, 0.f);
-	D3DXVECTOR3 vP_0 = *((D3DXVECTOR3 *)(_pVertices + (m_iVertexStrides * _nIndex_0)));
-	D3DXVECTOR3 vP_1 = *((D3DXVECTOR3 *)(_pVertices + (m_iVertexStrides * _nIndex_1)));
-	D3DXVECTOR3 vP_2 = *((D3DXVECTOR3 *)(_pVertices + (m_iVertexStrides * _nIndex_2)));
+	return &m_vMin;
+}
 
-	D3DXVECTOR3 vEdge_0 = vP_1 - vP_0;
-	D3DXVECTOR3 vEdge_1 = vP_2 - vP_0;
+const _vec3* CMesh::Get_Max(void)
+{
+	return &m_vMax;
+}
 
-	D3DXVec3Cross(&vNormal, &vEdge_0, &vEdge_1);
-	D3DXVec3Normalize(&vNormal, &vNormal);
+void CMesh::Release(void)
+{
+	CResource::Release();
 
-	return vNormal;
+	if (m_dwRefCount == NULL)
+	{
+		Safe_Release(m_pTexture);
+		Safe_Release(m_pVB);
+		Safe_Release(m_pIB);
+		Safe_Release(m_pBBoxVB);
+		Safe_Release(m_pBBoxIB);
+
+		for (_uint uiSize = 0; uiSize < m_vecChild.size(); ++uiSize)
+			m_vecChild[uiSize]->Release();
+
+		m_vecChild.clear();
+	}
 }

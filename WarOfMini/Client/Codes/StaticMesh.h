@@ -1,21 +1,31 @@
-#pragma once
+#ifndef StaticMesh_h__
+#define StaticMesh_h__
 
 #include "Mesh.h"
-class CStaticMesh :
-	public CMesh
+
+class CStaticMesh
+	: public CMesh
 {
-public:
-	CStaticMesh();
-	virtual ~CStaticMesh();
+private:
+	explicit CStaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);
+	virtual ~CStaticMesh(void);
 
 public:
-	static CStaticMesh* Create(const char* szFilePath, const char* szFileName);
-	virtual CResources* CloneResource();
+	static CStaticMesh* Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, const VTXTEX* pVB, const _uint& uiVtxCnt
+		, const _uint* pIB, const _uint& uiIdxCnt, const _vec3& vMin, const _vec3& vMax, _tchar* pTexName);
 
 public:
-	virtual HRESULT Load_StaticMesh(const char* szFilePath, const char* szFileName, FbxManager* _pFBXManager, FbxIOSettings* _pIOsettings, FbxScene* _pFBXScene, FbxImporter* _pImporter);
-public:
-	virtual HRESULT Initalize(const char* szFilePath, const char* szFileName);
+	virtual CResource* Clone_Resource(void);
+	virtual void Render(_bool bColliderDraw = FALSE);
+	virtual void RenderInst(const vector<_matrix*>& vecObjWorld);
+	virtual void Release(void);
 
+private:
+	HRESULT Create_Buffer(const VTXTEX* pVB, const _uint& uiVtxCnt, const _uint* pIB, const _uint& uiIdxCnt
+		, const _vec3& vMin, const _vec3& vMax, _tchar* pTexName);
+
+private:
+	virtual HRESULT Set_BoundingBox(void);
 };
 
+#endif // StaticMesh_h__

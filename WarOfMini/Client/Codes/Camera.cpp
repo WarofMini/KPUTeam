@@ -1,63 +1,40 @@
 #include "stdafx.h"
 #include "Camera.h"
-#include "TimeMgr.h"
-#include "Input.h"
-#include "SceneMgr.h"
 
-IMPLEMENT_SINGLETON(CCamera)
-
-CCamera::CCamera(void)
+CCamera::CCamera(ID3D11DeviceContext* pContext)
+	: CGameObject(pContext)
+	, m_fNear(0.0f)
+	, m_fFar(0.0f)
+	, m_bMouseFix(false)
 {
 	D3DXMatrixIdentity(&m_matView);
 	D3DXMatrixIdentity(&m_matProj);
-	m_fCameraSpeed = 0.0f;
-
 }
-
 
 CCamera::~CCamera(void)
 {
-
 }
 
-HRESULT CCamera::Initialize(void)
+HRESULT CCamera::Initialize(_float fNear, _float fFar, _vec3 vEye, _vec3 vAt)
 {
-	m_vEye = D3DXVECTOR3(0.0f, 0.f, -20.0f);
-	m_vAt = D3DXVECTOR3(0.f, 0.f, 0.f);
-	m_vUp = D3DXVECTOR3(0.f, 1.f, 0.f);
+	m_fNear = fNear;
+	m_fFar = fFar;
 
-	m_vDirZ = D3DXVECTOR3(0.f, 0.f, -1.f);
+	m_vEye = vEye;
+	m_vAt = vAt;
+	m_vUp = _vec3(0.0f, 1.0f, 0.0f);
 
 
-	m_dwTime = GetTickCount();
-	m_dwTime = GetTickCount();
 
-	m_bMouseFix = true;
-	
-	m_fFovY = (float)D3DXToRadian(45.f);
-	m_fAspect = float(WINCX) / float(WINCY);
-	m_fNear = 1.f;
-	m_fFar = 5000.f;
-	MakeView();
-	MakeProjection();
+	Set_Proj(fNear, fFar);
+	Set_View(vEye, vAt);
 
-	m_fCameraDistance = 10.f;
-	m_fCameraSpeed = 70.f;
-	
 	return S_OK;
 }
 
-int CCamera::Update(void)
+void CCamera::Release(void)
 {
-
-	KeyState();
-	MouseMove();
-	FixMouse();
-
-	MakeView();
-	MakeProjection();
-
-	return 0;
+	CGameObject::Release();
 }
 
 void CCamera::MakeView(void)
@@ -67,131 +44,32 @@ void CCamera::MakeView(void)
 
 void CCamera::MakeProjection(void)
 {
-	D3DXMatrixPerspectiveFovLH(&m_matProj, m_fFovY, m_fAspect, m_fNear, m_fFar);
+	D3DXMatrixPerspectiveFovLH(&m_matProj, (_float)D3DXToRadian(45.f), _float(WINCX) / _float(WINCY), m_fNear, m_fFar);
 }
 
-void CCamera::Release(void)
+const _matrix* CCamera::Get_Proj(void)
 {
-
+	return &m_matProj;
 }
 
-void CCamera::KeyState(void)
+const _matrix* CCamera::Get_View(void)
 {
-	float fTime = CTimeMgr::GetInstance()->GetTime();
-
-
-	D3DXMATRIX			matWorld;
-	D3DXMatrixInverse(&matWorld, NULL, &m_matView);
-
-	if (CInput::GetInstance()->GetDIKeyState(DIK_W) & 0x80)
-	{ 
-		D3DXVECTOR3 vLook;
-		memcpy(&vLook, &matWorld.m[2][0], sizeof(D3DXVECTOR3));
-
-		D3DXVECTOR3	vLength = *D3DXVec3Normalize(&vLook, &vLook) * m_fCameraSpeed * fTime;
-
-		m_vEye += vLength;
-		m_vAt += vLength;
-
-	}
-
-	if (CInput::GetInstance()->GetDIKeyState(DIK_S) & 0x80)
-	{
-		D3DXVECTOR3		vLook;
-		memcpy(&vLook, &matWorld.m[2][0], sizeof(D3DXVECTOR3));
-
-		D3DXVECTOR3	vLength = *D3DXVec3Normalize(&vLook, &vLook) * m_fCameraSpeed * fTime;
-
-		m_vEye -= vLength;
-		m_vAt  -= vLength;
-	}
-
-	if (CInput::GetInstance()->GetDIKeyState(DIK_A) & 0x80)
-	{
-		D3DXVECTOR3	   vLook;
-		memcpy(&vLook, &matWorld.m[0][0], sizeof(D3DXVECTOR3));
-
-		D3DXVECTOR3		vLength = *D3DXVec3Normalize(&vLook, &vLook) * m_fCameraSpeed * fTime;
-
-		m_vEye -= vLength;
-		m_vAt -= vLength;
-	}
-
-	if (CInput::GetInstance()->GetDIKeyState(DIK_D) & 0x80)
-	{
-		D3DXVECTOR3			vLook;
-		memcpy(&vLook, &matWorld.m[0][0], sizeof(D3DXVECTOR3));
-
-		D3DXVECTOR3			vLength = *D3DXVec3Normalize(&vLook, &vLook) * m_fCameraSpeed * fTime;
-
-		m_vEye += vLength;
-		m_vAt += vLength;
-	}
-	//Mouse Fix
-	if (GetAsyncKeyState('Q') & 1)
-	{
-		if (m_bMouseFix == true)
-			m_bMouseFix = false;
-		else
-			m_bMouseFix = true;
-	}
+	return &m_matView;
 }
 
-void CCamera::FixMouse(void)
+void CCamera::Set_Proj(_float fNear, _float fFar)
 {
-	POINT ptMouse;
-	ZeroMemory(&ptMouse, sizeof(POINT));
+	m_fNear = fNear;
+	m_fFar = fFar;
 
-	ptMouse = { WINCX >> 1, WINCY >> 1 };
-
-	ClientToScreen(g_hWnd, &ptMouse);
-
-	if (m_bMouseFix == true)
-		SetCursorPos(ptMouse.x, ptMouse.y);
+	D3DXMatrixPerspectiveFovLH(&m_matProj, (_float)D3DXToRadian(45.f), _float(WINCX) / _float(WINCY), fNear, fFar);
 }
 
-void CCamera::MouseMove(void)
+void CCamera::Set_View(_vec3 vEye, _vec3 vAt)
 {
-	if (m_bMouseFix == false)
-		return;
+	m_vEye = vEye;
+	m_vAt = vAt;
 
-	long dwMouseMove = 0;
-	float	fTime = CTimeMgr::GetInstance()->GetTime();
+	D3DXMatrixLookAtLH(&m_matView, &m_vEye, &m_vAt, &m_vUp);
 
-	D3DXMATRIX			matWorld;
-	D3DXMatrixInverse(&matWorld, NULL, &m_matView);
-
-	//R Btn
-	if (CInput::GetInstance()->GetDIMouseState(CInput::DIM_RBUTTON))
-	{
-		if (dwMouseMove = CInput::GetInstance()->GetDIMouseMove(CInput::DIM_Y))
-		{
-			D3DXVECTOR3		vRight;
-			memcpy(&vRight, &matWorld.m[0][0], sizeof(D3DXVECTOR3));
-			D3DXVECTOR3			vLook = m_vAt - m_vEye;
-
-			D3DXMATRIX			matRot;
-			D3DXMatrixRotationAxis(&matRot, &vRight, (float)D3DXToRadian(dwMouseMove / 10.0f));
-
-			D3DXVec3TransformNormal(&vLook, &vLook, &matRot);
-
-			m_vAt = m_vEye + vLook;
-		}
-
-		if (dwMouseMove = CInput::GetInstance()->GetDIMouseMove(CInput::DIM_X))
-		{
-			D3DXVECTOR3			vAxis = D3DXVECTOR3(0.f, 1.f, 0.f);
-
-			D3DXVECTOR3			vLook = m_vAt - m_vEye;
-
-			D3DXMATRIX			matRot;
-
-			D3DXMatrixRotationAxis(&matRot, &vAxis, (float)D3DXToRadian(dwMouseMove / 10.0f));
-
-			D3DXVec3TransformNormal(&vLook, &vLook, &matRot);
-
-			m_vAt = m_vEye + vLook;
-		}
-
-	}
 }

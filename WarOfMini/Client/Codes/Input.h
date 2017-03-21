@@ -1,36 +1,53 @@
-#pragma once
+#ifndef Input_h__
+#define Input_h__
+
 #include "Include.h"
 
 class CInput
 {
-private:
-	CInput(void);
-	~CInput(void);
-
 public:
 	DECLARE_SINGLETON(CInput)
 
+private:
+	explicit CInput(void);
+			~CInput(void);
+
 public:
-	enum MOUSECLICK { DIM_LBUTTON, DIM_RBUTTON, DIM_MBUTTON };
-	enum MOUSEMOVE { DIM_X, DIM_Y, DIM_Z };
+	enum MOUSEKEYSTATE { DIM_LB, DIM_RB, DIM_HB, DIM_END };
+	enum MOUSEMOVESTATE { DIMS_X, DIMS_Y, DIMS_Z, DIMS_END };
+
+private:
+	LPDIRECTINPUT8			m_pInput;
+	LPDIRECTINPUTDEVICE8	m_pKeyBoard;
+	LPDIRECTINPUTDEVICE8	m_pMouse;
+
+private:
+	DIMOUSESTATE				m_MouseState;
+	_ubyte						m_byKeyState[256];
+	_ubyte						m_byCheckOnce[260];
+	_ubyte						m_byIsOnce[260];
+	_ubyte						m_byIsLeave[260];
 
 
 public:
-	BYTE GetDIKeyState(BYTE KeyFlag);
-	BYTE GetDIMouseState(BYTE KeyFlag);
-	long GetDIMouseMove(MOUSEMOVE KeyFlag);
+	_ubyte GetDIKeyState(_ubyte byKeyID);
+	_ubyte GetDIMouseState(_ubyte byMouseID);
+	_long  GetDIMouseMove(MOUSEMOVESTATE byMouseMoveState);
 
-	BYTE	GetDIKeyStateOnce(BYTE KeyFlag);
-	BYTE	GetDIKeyStateLeave(BYTE KeyFlag);
-	BYTE	GetDIMouseStateOnce(BYTE KeyFlag);
-	BYTE	GetDIMouseStateLeave(BYTE KeyFlag);
+	void	SetAcquire();
+
+public:
+	_ubyte	GetDIKeyStateOnce(_ubyte KeyFlag);
+	_ubyte	GetDIKeyStateLeave(_ubyte KeyFlag);
+	_ubyte	GetDIMouseStateOnce(_ubyte KeyFlag);
+	_ubyte	GetDIMouseStateLeave(_ubyte KeyFlag);
 
 public:
 	void	SetInputState(void);
 	void	ResetInputState(void);
 	void	ResetOnce(void);
 	HRESULT	InitInputDevice(HINSTANCE hInst, HWND hWnd);
-	void	SetAcquire();
+
 
 private:
 	HRESULT	InitKeyBoard(HWND hWnd);
@@ -38,19 +55,7 @@ private:
 	void	SetInputOnce(void);
 
 private:
-	LPDIRECTINPUT8			m_pInput;
-	LPDIRECTINPUTDEVICE8	m_pKeyBoard;
-	LPDIRECTINPUTDEVICE8	m_pMouse;
-
-private:					
-	BYTE					m_byKeyState[256];
-	DIMOUSESTATE			m_MouseState;
-
-	BYTE						m_byCheckOnce[260];
-	BYTE						m_byIsOnce[260];
-	BYTE						m_byIsLeave[260];
-
-private:
 	void	Release(void);
 };
 
+#endif

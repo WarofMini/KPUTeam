@@ -1,6 +1,6 @@
-#pragma once
+#ifndef Enum_h__
+#define Enum_h__
 
-enum ANGLE {ANGLE_X, ANGLE_Y, ANGLE_Z, ANGLE_END};
 
 enum RENDERGROUP { TYPE_PRIORITY, TYPE_NONEALPHA, TYPE_ALPHA, TYPE_UI, TYPE_END };
 
@@ -14,8 +14,19 @@ enum ShaderType {SHADER_VS, SHADER_PS, SHADER_ANI, SHADER_END};
 
 enum ReleaseType {Release_Static, Release_Dynamic, Release_End};
 
-enum Scene_Tyep {SCENE_LOGO, SCENE_STAGE, SCENE_END};
+enum Scene_Type {SCENE_LOGIN, SCENE_LOGO, SCENE_STAGE, SCENE_END};
 
 enum DrawType { DRAW_INDEX, DRAW_VERTEX };
 
 enum MESHTYPE{ MESH_STATIC, MESH_DYNAMIC };
+
+enum INFO { INFO_RIGHT, INFO_UP, INFO_LOOK, INFO_POSITION, INFO_END };
+
+enum ROTATION { ROT_X, ROT_Y, ROT_Z, ROT_END };
+
+
+enum MESHNUM { MESHNUM_PLAYER, MESHNUM_END };
+
+enum ANIPLAYER { PLAYER_IDLE, PLAYER_ATTACK, PLAYER_MOVE, PLAYER_DIE };
+
+#endif

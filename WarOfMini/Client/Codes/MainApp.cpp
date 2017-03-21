@@ -1,23 +1,33 @@
 #include "stdafx.h"
 #include "MainApp.h"
-#include "Device.h"
-#include "TimeMgr.h"
-#include "Input.h"
-#include "SceneMgr.h"
+#include "SceneSelector.h"
+#include "GraphicDev.h"
 #include "ResourcesMgr.h"
+#include "Management.h"
 #include "ShaderMgr.h"
-#include "Logo.h"
-#include "ObjMgr.h"
-#include "AnimationMgr.h"
+#include "MeshMgr.h"
+#include "RenderTargetMgr.h"
+#include "CameraMgr.h"
+#include "FrameMgr.h"
+#include "Timer_Manager.h"
+#include "FontMgr.h"
+#include "Input.h"
 
-CMainApp::CMainApp()
+CMainApp::CMainApp(void)
+: m_dwRenderCnt(0)
+, m_fTime(0.0f)
 {
-
+	ZeroMemory(&m_szFPS, sizeof(_tchar) * 128);
+	//콘솔창===================================
+	/*AllocConsole();
+	freopen("CONOUT$", "wt", stdout);
+	SetConsoleTitleA("Debug");*/
+	//=========================================
 }
 
-CMainApp::~CMainApp()
+CMainApp::~CMainApp(void)
 {
-	Release();
+	//FreeConsole();
 }
 
 HRESULT CMainApp::Initialize(void)
@@ -26,125 +36,202 @@ HRESULT CMainApp::Initialize(void)
 	cout << "콘솔창테스트" << endl;
 #endif
 
-	HRESULT hr = S_OK;
+	// Graphic Device
+	ID3D11Device* pGraphicDev = NULL;
+	ID3D11DeviceContext* pContext = NULL;
 
-	hr = CDevice::GetInstance()->CreateDevice();
-	m_pGrapicDevcie = CDevice::GetInstance();
-
-	if(FAILED(hr))
+	if (FAILED(CGraphicDev::GetInstance()->Ready_GraphicDev(g_hWnd, CGraphicDev::MODE_WIN, WINCX, WINCY, pGraphicDev, pContext)))
 	{
-		MessageBox(NULL, L"GraphicDev Create Failed", L"Fail", MB_OK);
+		MSG_BOX(L"Ready_GraphicDev Failed");
 		return E_FAIL;
 	}
 
-	hr = CInput::GetInstance()->InitInputDevice(g_hInst, g_hWnd);
-	if (FAILED(hr))
+	// Resource
+	CResourcesMgr::GetInstance()->Reserve_ContainerSize(RESOURCE_END);
+
+	//텍스쳐 준비, tga, dds 모두 사용가능
+	Ready_TextureFromFile(pGraphicDev, pContext);
+
+	// Buffer
+	CResourcesMgr::GetInstance()->Ready_Buffer(pGraphicDev, pContext, RESOURCE_STAGE, CResourcesMgr::BUFFER_RCTEX, L"Buffer_RcTex");
+	CResourcesMgr::GetInstance()->Ready_Buffer(pGraphicDev, pContext, RESOURCE_STAGE, CResourcesMgr::BUFFER_CUBE, L"Buffer_CubeTex");
+
+	// Management
+	if (FAILED(CManagement::GetInstance()->Ready_Management(pGraphicDev, pContext)))
 	{
-		MessageBox(NULL, L"DInput Create Failed", L"Fail", MB_OK);
+		MSG_BOX(L"Ready_Management Failed");
 		return E_FAIL;
 	}
 
-	CTimeMgr::GetInstance()->InitTime();
-
-
-	if (FAILED(CResourcesMgr::GetInstance()->ReserveContainerSize(RESOURCE_END)))
+	// Scene
+	if (FAILED(CManagement::GetInstance()->Change_Scene(CSceneSelector(SCENE_LOGO))))
 	{
-		MessageBox(NULL, L"System Message", L"Resource Container Reserve Failed", MB_OK);
+		MSG_BOX(L"Change_Scene(SCENE_STAGE) Failed");
 		return E_FAIL;
 	}
 
-	if (FAILED(Add_ShaderFile()))
-		return E_FAIL;
+	// Input
+	if (FAILED(CInput::GetInstance()->InitInputDevice(g_hInst, g_hWnd)))
+	{
+		MSG_BOX(L"Ready_InputDev Failed");
+		return FALSE;
+	}
 
-	hr = CResourcesMgr::GetInstance()->AddBuffer(RESOURCE_STATIC, BUFFER_RCTEX, L"Buffer_RcTex");
-	FAILED_CHECK_RETURN_MSG(hr, E_FAIL, L"Buffer_RcTex 생성 실패");
 
-	CScene* pScene = NULL;
-	pScene = CLogo::Create();
-	CSceneMgr::GetInstance()->AddScene(SCENE_LOGO, pScene);
-	CSceneMgr::GetInstance()->ChangeScene(SCENE_LOGO);
+	//Ready Font
+	CFontMgr::GetInstance()->Ready_Font(pGraphicDev, pContext, L"고딕");
+
 
 	return S_OK;
 }
 
-int CMainApp::Update(void)
+INT CMainApp::Update(const _float& fTimeDelta)
 {
-	CTimeMgr::GetInstance()->SetTime();
+	m_fTime += fTimeDelta;
+
 
 	if (GetFocus() == g_hWnd)
 		CInput::GetInstance()->SetInputState();
 	else
 		CInput::GetInstance()->ResetInputState();
 
-	CSceneMgr::GetInstance()->Update();
+
+
+	return CManagement::GetInstance()->Update(fTimeDelta);
 
 	return 0;
 }
 
 void CMainApp::Render(void)
 {
-	m_pGrapicDevcie->BeginDevice();
-	CSceneMgr::GetInstance()->Render();
-	m_pGrapicDevcie->EndDevice();
-}
+	++m_dwRenderCnt;
 
-HRESULT CMainApp::Add_ShaderFile(void)
-{
-	//일반
-	HRESULT hr = E_FAIL;
-	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"VS", L"../Bin/ShaderCode/Shader.fx", "VS", "vs_5_0", SHADER_VS);
-	if (FAILED(hr))
+	if (m_fTime >= 1.f)
 	{
-		MessageBox(NULL, L"System Message", L"Vertex Shader(Default) Create Failed", MB_OK);
-		return hr;
+		wsprintf(m_szFPS, L"FPS : %d", m_dwRenderCnt);
+		//SetWindowText(g_hWnd, m_szFPS);
+		m_fTime = 0.f;
+		m_dwRenderCnt = 0;
+
 	}
 
-	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"PS", L"../Bin/ShaderCode/Shader.fx", "PS", "ps_5_0", SHADER_PS);
-	if (FAILED(hr))
-	{
-		MessageBox(NULL, L"System Message", L"PIXEL Shader(Default) Create Failed", MB_OK);
-		return hr;
-	}
-	//////////////////////////////////////////////////////////////////////////
+	CManagement::GetInstance()->Render();
 
-	//로고용
-	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"VS_Logo", L"../Bin/ShaderCode/Shader.fx", "VS_Logo", "vs_5_0", SHADER_VS);
-	if (FAILED(hr))
-	{
-		MessageBox(NULL, L"System Message", L"Vertex Shader(LOGO) Create Failed", MB_OK);
-		return hr;
-	}
-	/////////////////////////////////////////////////////////////////////////
+	Render_FPS();
 
-	//다이나믹 매쉬용
-	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"VS_ANI", L"../Bin/ShaderCode/Shader.fx", "VS_ANI", "vs_5_0", SHADER_ANI);
-	if (FAILED(hr))
-	{
-		MessageBox(NULL, L"System Message", L"Vertex Shader(Ani) Create Failed", MB_OK);
-		return hr;
-	}
-	/////////////////////////////////////////////////////////////////////////
+	Render_CurrentScene();
 
-	return S_OK;
-}
-
-void CMainApp::Release(void)
-{
-	CObjMgr::GetInstance()->DestroyInstance();
-	CTimeMgr::GetInstance()->DestroyInstance();
-	CShaderMgr::GetInstance()->DestroyInstance();
-	CInput::GetInstance()->DestroyInstance();
-	CSceneMgr::GetInstance()->DestroyInstance();
-	CDevice::GetInstance()->DestroyInstance();
+	CManagement::GetInstance()->GetRenderer()->SwapChain_Clear_RenderGroup();
 }
 
 CMainApp* CMainApp::Create(void)
 {
-	CMainApp*		pMainApp = new CMainApp;
+	CMainApp* pMainApp = new CMainApp;
+
 	if (FAILED(pMainApp->Initialize()))
 	{
-		delete pMainApp;
-		pMainApp = NULL;
+		MSG_BOX(L"CMainApp Create Failed");
+		Safe_Release(pMainApp);
 	}
+
 	return pMainApp;
+}
+
+void CMainApp::Release(void)
+{
+	CMeshMgr::GetInstance()->DestroyInstance();
+	CResourcesMgr::GetInstance()->DestroyInstance();
+
+	CCameraMgr::GetInstance()->DestroyInstance();
+	CShaderMgr::GetInstance()->DestroyInstance();
+	CRenderTargetMgr::GetInstance()->DestroyInstance();
+	CManagement::GetInstance()->DestroyInstance();
+
+	CFrameMgr::GetInstance()->DestroyInstance();
+	CTimeMgr::GetInstance()->DestroyInstance();
+	CFontMgr::GetInstance()->DestroyInstance();
+	CInput::GetInstance()->DestroyInstance();
+	CGraphicDev::GetInstance()->DestroyInstance();
+
+	delete this;
+}
+
+
+
+void CMainApp::Ready_TextureFromFile(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
+{
+	//텍스쳐이름-확장자-개수(0 단독 텍스쳐, n 여러장 텍스쳐 한번에 로드 시)
+	wstring wstrPath = L"../Bin/Data/FirstTextureInfomation.txt";
+
+	wifstream inFile;
+	inFile.open(wstrPath.c_str(), ios::in);
+
+	_tchar pFileName[MAX_NAME];
+	_tchar pFileType[4];
+	_tchar pFileNum[4];
+
+	while (!inFile.eof())
+	{
+		inFile.getline(pFileName, MAX_NAME, '-');
+		inFile.getline(pFileType, 4, '-');
+		inFile.getline(pFileNum, 4);
+
+		_ushort wTextureCnt = _wtoi(pFileNum);
+
+		wstring wstrTextureKey = L"Texture_";
+		wstrTextureKey += pFileName;
+
+		wstring wstrTexturePath = L"../Bin/Resources/Texture/";
+		wstrTexturePath += pFileName;
+		if (wTextureCnt) wstrTexturePath += L"%d.";
+		else wstrTexturePath += L".";
+		wstrTexturePath += pFileType;
+
+		CTextures::TEXTURETYPE eTextureType = CTextures::TYPE_NORMAL;
+
+		if (!lstrcmp(pFileType, L"tga"))
+			eTextureType = CTextures::TYPE_TGA;
+
+		else if (!lstrcmp(pFileType, L"dds"))
+			eTextureType = CTextures::TYPE_DDSCUBE;
+
+		CResourcesMgr::GetInstance()->Ready_Texture(pGraphicDev, pContext, RESOURCE_STAGE, wstrTextureKey.c_str(), eTextureType, wstrTexturePath.c_str(), wTextureCnt);
+	}
+
+	inFile.close();
+}
+
+
+void CMainApp::Render_FPS(void)
+{
+	////Render Font
+	CFontMgr::GetInstance()->Render_Font(L"고딕", L"<Debug Information>", 20.f, 10.f, 0.f, D3DXCOLOR(0.0f, 0.f, 1.f, 1.f));
+	CFontMgr::GetInstance()->Render_Font(L"고딕", m_szFPS, 20.f, 10.f, 30.f, D3DXCOLOR(0.0f, 1.f, 0.f, 1.f));
+}
+
+void CMainApp::Render_CurrentScene(void)
+{
+	switch (m_eSceneID)
+	{
+	case SCENE_LOGO:
+		CFontMgr::GetInstance()->Render_Font(L"고딕", L"Current Scene : Logo", 20.f, 10.f, 50.f, D3DXCOLOR(0.0f, 1.f, 0.f, 1.f));
+
+		if (m_bLogoLoading == TRUE)
+		{
+			CFontMgr::GetInstance()->Render_Font(L"고딕", L"LoadingState : END", 20.f, 10.f, 75.f, D3DXCOLOR(1.0f, 1.f, 0.f, 1.f));
+			CFontMgr::GetInstance()->Render_Font(L"고딕", L"Press Enter Key", 20.f, 10.f, 100.f, D3DXCOLOR(1.0f, 1.f, 0.f, 1.f));
+		}
+		else
+			CFontMgr::GetInstance()->Render_Font(L"고딕", L"LoadingState : ING", 20.f, 10.f, 75.f, D3DXCOLOR(0.0f, 0.f, 1.f, 1.f));
+
+		break;
+
+
+	case SCENE_STAGE:
+		CFontMgr::GetInstance()->Render_Font(L"고딕", L"Current Scene : Stage", 20.f, 10.f, 50.f, D3DXCOLOR(0.0f, 1.f, 0.f, 1.f));
+
+		CFontMgr::GetInstance()->Render_Font(L"고딕", L"단축키 모음", 20.f, 10.f, 80.f, D3DXCOLOR(0.1f, 1.f, 0.f, 1.f));
+		CFontMgr::GetInstance()->Render_Font(L"고딕", L"Q : Mouse Fix(ON/OFF)", 20.f, 10.f, 100.f, D3DXCOLOR(0.1f, 1.f, 0.f, 1.f));
+		break;
+	}
 }

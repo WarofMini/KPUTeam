@@ -5,6 +5,13 @@
 #include "WarOfMini.h"
 #include "Include.h"
 #include "MainApp.h"
+#include "Timer_Manager.h"
+#include "FrameMgr.h"
+#include "FontMgr.h"
+#include "GraphicDev.h"
+
+//릭체크
+//#include "vld.h"
 
 #define MAX_LOADSTRING 100
 
@@ -14,8 +21,8 @@ WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 
 HWND g_hWnd;
-DWORD	g_dwLightIndex = 0;
-D3DXVECTOR3 g_vLightDir = D3DXVECTOR3(1.f, -1.f, 1.f);
+Scene_Type	m_eSceneID;
+BOOL m_bLogoLoading;
 //AsynchronousClientClass g_Client;
 
 
@@ -50,6 +57,8 @@ int APIENTRY wWinMain( HINSTANCE hInstance,
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_WAROFMINI));
 
+	m_bLogoLoading = FALSE;
+
     MSG msg;
 	msg.message = WM_NULL;
 
@@ -57,33 +66,59 @@ int APIENTRY wWinMain( HINSTANCE hInstance,
 	pMainApp = CMainApp::Create();
 
 	if (NULL == pMainApp)
+	{
+		Safe_Release(pMainApp);
+		return 0;
+	}
+
+	if (FAILED(CTimeMgr::GetInstance()->Ready_Timer(L"Timer_Immediate")))
 		return FALSE;
 
+	if (FAILED(CTimeMgr::GetInstance()->Ready_Timer(L"Timer_FPS:60")))
+		return FALSE;
+
+	//프레임 매니저
+	if (FAILED(CFrameMgr::GetInstance()->Ready_Frame(L"Frame_60", 60.0f)))
+		return FALSE;
+
+
+
     // 기본 메시지 루프입니다.
-	while (msg.message != WM_QUIT)
+	while (TRUE)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
+			if (WM_QUIT == msg.message)
+				break;
 
+			if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+			{
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
+		}
 		else
 		{
-			pMainApp->Update();
-			pMainApp->Render();
+			CTimeMgr::GetInstance()->SetUp_TimeDelta(L"Timer_Immediate");
+
+			_float	fTimeDelta_Immediate = CTimeMgr::GetInstance()->Get_TimeDelta(L"Timer_Immediate");
+
+			//1초에 60번만 true를 리턴, 나머지는 false
+			if (CFrameMgr::GetInstance()->isPermit_Call(L"Frame_60", fTimeDelta_Immediate))
+			{
+				CTimeMgr::GetInstance()->SetUp_TimeDelta(L"Timer_FPS:60");
+
+				_float fTimeDelta_60 = CTimeMgr::GetInstance()->Get_TimeDelta(L"Timer_FPS:60");
+
+				pMainApp->Update(fTimeDelta_60);
+				pMainApp->Render();
+			}
+
 		}
 	}
-	delete pMainApp;
-	pMainApp = NULL;
-//     while (GetMessage(&msg, nullptr, 0, 0))
-//     {
-//         if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-//         {
-//             TranslateMessage(&msg);
-//             DispatchMessage(&msg);
-//         }
-//     }
+
+	Safe_Release(pMainApp);
+
 
     return (int) msg.wParam;
 }
