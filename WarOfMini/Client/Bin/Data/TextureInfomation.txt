@@ -1,2 +1,3 @@
 MachineGun-png-0
-Soldier1-png-0
+MachineGun1-png-0
+marauder_diffuse-png-0

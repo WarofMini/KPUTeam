@@ -7,6 +7,7 @@
 #include "SceneSelector.h"
 #include "Management.h"
 #include "ResourcesMgr.h"
+#include "CameraMgr.h"
 
 CLogo::CLogo(ID3D11Device * pGraphicDev, ID3D11DeviceContext * pContext)
 : CScene(pGraphicDev, pContext)

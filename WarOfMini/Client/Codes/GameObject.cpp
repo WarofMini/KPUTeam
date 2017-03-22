@@ -31,14 +31,14 @@ HRESULT CGameObject::Initialize(void)
 	return S_OK;
 }
 
-_int CGameObject::Update(const _float& fTime)
+_int CGameObject::Update(const _float& fTimeDelta)
 {
 	MAPCOMPONENT::iterator	iter = m_mapComponent.begin();
 	MAPCOMPONENT::iterator	iter_end = m_mapComponent.end();
 
 	for (; iter != iter_end; ++iter)
 	{
-		iter->second->Update(fTime);
+		iter->second->Update(fTimeDelta);
 	}
 
 	return 0;

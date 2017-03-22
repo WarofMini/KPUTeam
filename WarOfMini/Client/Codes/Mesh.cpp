@@ -9,8 +9,8 @@ CMesh::CMesh(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
 , m_pIB(NULL)
 , m_uiVtxCnt(0)
 , m_uiIdxCnt(0)
-, m_vMin(_vec3(0.f, 0.f, 0.f))
-, m_vMax(_vec3(0.f, 0.f, 0.f))
+, m_vMin(XMFLOAT3(0.f, 0.f, 0.f))
+, m_vMax(XMFLOAT3(0.f, 0.f, 0.f))
 , m_pBBoxVB(NULL)
 , m_pBBoxIB(NULL)
 {
@@ -53,7 +53,7 @@ void CMesh::Clear_NullChild(void)
 	m_vecChild.clear();
 	m_vecChild.reserve(uiRealSize);
 
-	for (_uint uiSize = 0; uiSize < vecStoreChile.size(); ++uiSize)
+	for (UINT uiSize = 0; uiSize < vecStoreChile.size(); ++uiSize)
 	{
 		if (vecStoreChile[uiSize])
 			m_vecChild.push_back(vecStoreChile[uiSize]);
@@ -63,17 +63,15 @@ void CMesh::Clear_NullChild(void)
 }
 _bool CMesh::Check_Remove(void)
 {
-	if (m_vecChild.size()) 
-		return FALSE;
-	if (m_uiVtxCnt) 
-		return FALSE;
+	if (m_vecChild.size()) return FALSE;
+	if (m_uiVtxCnt) return FALSE;
 
 	return TRUE;
 }
 
 void CMesh::Set_RootMinMax(void)
 {
-	_vec3 vTempMin, vTempMax;
+	XMFLOAT3 vTempMin, vTempMax;
 
 	for (_uint uiSize = 0; uiSize < m_vecChild.size(); ++uiSize)
 	{
@@ -89,12 +87,12 @@ void CMesh::Set_RootMinMax(void)
 	}
 }
 
-const _vec3* CMesh::Get_Min(void)
+const XMFLOAT3* CMesh::Get_Min(void)
 {
 	return &m_vMin;
 }
 
-const _vec3* CMesh::Get_Max(void)
+const XMFLOAT3* CMesh::Get_Max(void)
 {
 	return &m_vMax;
 }

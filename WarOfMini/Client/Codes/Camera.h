@@ -11,33 +11,25 @@ protected:
 	virtual ~CCamera(void);
 
 public:
-	const _matrix* Get_Proj(void);
-	const _matrix* Get_View(void);
+	const XMFLOAT4X4* Get_Proj(void);
+	const XMFLOAT4X4* Get_View(void);
 
 protected:
 	void Set_Proj(_float fNear, _float fFar);
-	void Set_View(_vec3 vEye, _vec3 vAt);
+	void Set_View(XMFLOAT3 vPos, XMFLOAT3 vTarget);
 
 public:
-	virtual HRESULT	Initialize(_float fNear, _float fFar, _vec3 vEye, _vec3 vAt);
+	virtual HRESULT	Initialize(_float fNear, _float fFar, XMFLOAT3 vPos, XMFLOAT3 vTarget);
 	virtual _int Update(const _float& fTimeDelta)	PURE;
 	virtual void Release(void);
 
-public:
-	void	MakeView(void);
-	void	MakeProjection(void);
+protected:
+	XMFLOAT4X4*				m_pProj;
+	XMFLOAT4X4*				m_pView;
 
 protected:
-	_matrix				m_matProj;
-	_matrix				m_matView;
-	float				m_fNear;
-	float				m_fFar;
-
-protected:
-	_vec3				m_vEye;
-	_vec3				m_vUp;
-	_vec3				m_vAt;
-	bool				m_bMouseFix;
+	XMFLOAT3*				m_pPos;
+	XMFLOAT3*				m_pTarget;
 };
 
 #endif Camera_h__

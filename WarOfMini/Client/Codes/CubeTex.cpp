@@ -42,20 +42,20 @@ HRESULT CCubeTex::Create_Buffer(void)
 	VTXTEX pVtxTex[] =
 	{
 		// Pos							TexUV					Normal
-		{ _vec3(-1.f, 1.f, -1.f),		_vec2(0.25f, 0.25f),	_vec3(0.f, 0.f, 0.f) },			// Back, Left, Front, Right
-		{ _vec3(1.f, 1.f, -1.f),		_vec2(0.f, 0.25f),		_vec3(0.f, 0.f, 0.f) },
-		{ _vec3(1.f, -1.f, -1.f),		_vec2(0.f, 0.5f),		_vec3(0.f, 0.f, 0.f) },
-		{ _vec3(-1.f, -1.f, -1.f),		_vec2(0.25f, 0.5f),		_vec3(0.f, 0.f, 0.f) },
-		{ _vec3(-1.f, 1.f, 1.f),		_vec2(0.5f,	0.25f),		_vec3(0.f, 0.f, 0.f) },
-		{ _vec3(1.f, 1.f, 1.f),			_vec2(0.75f, 0.25f),	_vec3(0.f, 0.f, 0.f) },
-		{ _vec3(1.f, -1.f, 1.f),		_vec2(0.75f, 0.5f),		_vec3(0.f, 0.f, 0.f) },
-		{ _vec3(-1.f, -1.f, 1.f),		_vec2(0.5f,	0.5f),		_vec3(0.f, 0.f, 0.f) },
-		{ _vec3(-1.f, 1.f, -1.f),		_vec2(0.5f, 0.f),		_vec3(0.f, 0.f, 0.f) },				// Top, Right, Bottom
-		{ _vec3(1.f, 1.f, -1.f),		_vec2(0.75f, 0.f),		_vec3(0.f, 0.f, 0.f) },
-		{ _vec3(1.f, 1.f, -1.f),		_vec2(1.f, 0.25f),		_vec3(0.f, 0.f, 0.f) },
-		{ _vec3(1.f, -1.f, -1.f),		_vec2(1.f, 0.5f),		_vec3(0.f, 0.f, 0.f) },
-		{ _vec3(1.f, -1.f, -1.f),		_vec2(0.75f, 0.75f),	_vec3(0.f, 0.f, 0.f) },
-		{ _vec3(-1.f, -1.f, -1.f),		_vec2(0.5f, 0.75f),		_vec3(0.f, 0.f, 0.f) }
+		{ XMFLOAT3(-1.f, 1.f, -1.f),		XMFLOAT2(0.25f, 0.25f),		XMFLOAT3(0.f, 0.f, 0.f) },			// Back, Left, Front, Right
+		{ XMFLOAT3(1.f, 1.f, -1.f),			XMFLOAT2(0.f, 0.25f),		XMFLOAT3(0.f, 0.f, 0.f) },
+		{ XMFLOAT3(1.f, -1.f, -1.f),		XMFLOAT2(0.f, 0.5f),		XMFLOAT3(0.f, 0.f, 0.f) },
+		{ XMFLOAT3(-1.f, -1.f, -1.f),		XMFLOAT2(0.25f, 0.5f),		XMFLOAT3(0.f, 0.f, 0.f) },
+		{ XMFLOAT3(-1.f, 1.f, 1.f),			XMFLOAT2(0.5f,	0.25f),		XMFLOAT3(0.f, 0.f, 0.f) },
+		{ XMFLOAT3(1.f, 1.f, 1.f),			XMFLOAT2(0.75f, 0.25f),		XMFLOAT3(0.f, 0.f, 0.f) },
+		{ XMFLOAT3(1.f, -1.f, 1.f),			XMFLOAT2(0.75f, 0.5f),		XMFLOAT3(0.f, 0.f, 0.f) },
+		{ XMFLOAT3(-1.f, -1.f, 1.f),		XMFLOAT2(0.5f,	0.5f),		XMFLOAT3(0.f, 0.f, 0.f) },
+		{ XMFLOAT3(-1.f, 1.f, -1.f),		XMFLOAT2(0.5f, 0.f),		XMFLOAT3(0.f, 0.f, 0.f) },				// Top, Right, Bottom
+		{ XMFLOAT3(1.f, 1.f, -1.f),			XMFLOAT2(0.75f, 0.f),		XMFLOAT3(0.f, 0.f, 0.f) },
+		{ XMFLOAT3(1.f, 1.f, -1.f),			XMFLOAT2(1.f, 0.25f),		XMFLOAT3(0.f, 0.f, 0.f) },
+		{ XMFLOAT3(1.f, -1.f, -1.f),		XMFLOAT2(1.f, 0.5f),		XMFLOAT3(0.f, 0.f, 0.f) },
+		{ XMFLOAT3(1.f, -1.f, -1.f),		XMFLOAT2(0.75f, 0.75f),		XMFLOAT3(0.f, 0.f, 0.f) },
+		{ XMFLOAT3(-1.f, -1.f, -1.f),		XMFLOAT2(0.5f, 0.75f),		XMFLOAT3(0.f, 0.f, 0.f) }
 	};
 
 	_uint uiVtxCnt = ARRAYSIZE(pVtxTex);

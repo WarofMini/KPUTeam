@@ -17,72 +17,50 @@ void CAnimation::Push_AnimData(ANIMDATA& tAniData)
 	m_vecAnimData.push_back(tAniData);
 }
 
-void CAnimation::UpdateSubresource(CAnimationInfo* pAnimInfo, _matrix* pBoneWorld)
+void CAnimation::UpdateSubresource(CAnimationInfo* pAnimInfo, XMFLOAT4X4* pBoneWorld)
 {
-	_matrix matBoneReturn;
-	_matrix matBoneWorld[MAX_BONE_MATRICES];
+	if (m_vecAnimData.empty())
+		return;
 
-	for (_int i = 0; i < MAX_BONE_MATRICES; ++i)
+	XMFLOAT4X4 matBoneWorld[MAX_BONE_MATRICES];
+
+	for (int i = 0; i < MAX_BONE_MATRICES; ++i)
+		XMStoreFloat4x4(&matBoneWorld[i], XMMatrixIdentity());
+
+	if (pAnimInfo != nullptr)
 	{
-
-		D3DXMatrixIdentity(&matBoneWorld[i]);
-
-		if (pBoneWorld)
-			D3DXMatrixIdentity(&pBoneWorld[i]);
-	}
-
-	if (pAnimInfo != NULL)
-	{
-		const _ushort& wCurKey = pAnimInfo->Get_CurKey();
-		const _ushort& wNextKey = pAnimInfo->Get_NextKey();
-		const _ushort& wCurFrame = pAnimInfo->Get_CurFrame();
-		const _ushort& wNextFrame = pAnimInfo->Get_NextFrame();
-		const _float& fRatio = pAnimInfo->Get_Ratio();
+		const WORD& wCurKey = pAnimInfo->Get_CurKey();
+		const WORD& wNextKey = pAnimInfo->Get_NextKey();
+		const WORD& wCurFrame = pAnimInfo->Get_CurFrame();
+		const WORD& wNextFrame = pAnimInfo->Get_NextFrame();
+		const FLOAT& fRatio = pAnimInfo->Get_Ratio();
 
 		size_t uiClusterSize = m_vecAnimData[wCurKey][wCurFrame].size();
 
 		for (size_t iCluster = 0; iCluster < uiClusterSize; ++iCluster)
 		{
-			_matrix matRot, matRot2;
-			_matrix matTrans, matTrans2;
-			_matrix matScale, matScale2;
-			
-			D3DXMatrixRotationQuaternion(&matRot, &(D3DXQUATERNION)m_vecAnimData[wCurKey][wCurFrame][iCluster].R);
-			D3DXMatrixRotationQuaternion(&matRot2, &(D3DXQUATERNION)m_vecAnimData[wCurKey][wNextFrame][iCluster].R);
+			XMMATRIX matRot = XMMatrixRotationQuaternion(XMLoadFloat4(&m_vecAnimData[wCurKey][wCurFrame][iCluster].R));
+			XMMATRIX matRot2 = XMMatrixRotationQuaternion(XMLoadFloat4(&m_vecAnimData[wNextKey][wNextFrame][iCluster].R));
 
 
-			D3DXMatrixTranslation(&matTrans, m_vecAnimData[wCurKey][wCurFrame][iCluster].T.x, 
-											 m_vecAnimData[wCurKey][wCurFrame][iCluster].T.y,
-											 m_vecAnimData[wCurKey][wCurFrame][iCluster].T.z);
+			XMMATRIX matTrans = XMMatrixTranslationFromVector(XMLoadFloat3(&m_vecAnimData[wCurKey][wCurFrame][iCluster].T));
+			XMMATRIX matTrans2 = XMMatrixTranslationFromVector(XMLoadFloat3(&m_vecAnimData[wNextKey][wNextFrame][iCluster].T));
 
-			D3DXMatrixTranslation(&matTrans2, m_vecAnimData[wCurKey][wNextFrame][iCluster].T.x,
-											  m_vecAnimData[wCurKey][wNextFrame][iCluster].T.y,
-											  m_vecAnimData[wCurKey][wNextFrame][iCluster].T.z);
+			XMMATRIX matScale = XMMatrixScalingFromVector(XMLoadFloat3(&m_vecAnimData[wCurKey][wCurFrame][iCluster].S));
+			XMMATRIX matScale2 = XMMatrixScalingFromVector(XMLoadFloat3(&m_vecAnimData[wNextKey][wNextFrame][iCluster].S));
 
-
-			D3DXMatrixScaling(&matScale, m_vecAnimData[wCurKey][wCurFrame][iCluster].S.x,
-										 m_vecAnimData[wCurKey][wCurFrame][iCluster].S.y,
-										 m_vecAnimData[wCurKey][wCurFrame][iCluster].S.z);
-
-
-			D3DXMatrixScaling(&matScale2, m_vecAnimData[wCurKey][wNextFrame][iCluster].S.x,
-										  m_vecAnimData[wCurKey][wNextFrame][iCluster].S.y,
-										  m_vecAnimData[wCurKey][wNextFrame][iCluster].S.z);
-
-
-			for (int iRow = 0; iRow < 4; ++iRow)
+			for (_int iRow = 0; iRow < 4; ++iRow)
 			{
-				for (int iColumn = 0; iColumn < 4; ++iColumn)
+				for (_int iColumn = 0; iColumn < 4; ++iColumn)
 				{
 					matTrans.m[iRow][iColumn] = (matTrans.m[iRow][iColumn] * (1.f - fRatio)) + (matTrans2.m[iRow][iColumn] * fRatio);
 					matScale.m[iRow][iColumn] = (matScale.m[iRow][iColumn] * (1.f - fRatio)) + (matScale2.m[iRow][iColumn] * fRatio);
-
 					matRot.m[iRow][iColumn] = (matRot.m[iRow][iColumn] * (1.f - fRatio)) + (matRot2.m[iRow][iColumn] * fRatio);
 				}
 			}
 
-			matBoneWorld[iCluster] = matScale * matRot * matTrans;
-			pBoneWorld[iCluster] = matScale * matRot * matTrans;
+			XMStoreFloat4x4(&matBoneWorld[iCluster], XMMatrixTranspose(matScale * matRot * matTrans));
+			XMStoreFloat4x4(&pBoneWorld[iCluster], matScale * matRot * matTrans);
 		}
 	}
 

@@ -34,12 +34,6 @@
     <Filter Include="Server">
       <UniqueIdentifier>{ecd47a3a-d1fb-47e3-ac8f-604a13a13bcc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\02.StaticObject">
-      <UniqueIdentifier>{56b0656f-7a5e-406f-bdb8-104fe43d211c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Object\03.OtherPlayer">
-      <UniqueIdentifier>{fad12007-0f63-4ee3-8179-ca0887e6da13}</UniqueIdentifier>
-    </Filter>
     <Filter Include="95.Engine">
       <UniqueIdentifier>{9753e9d1-c976-408b-958d-309e5939c842}</UniqueIdentifier>
     </Filter>
@@ -168,6 +162,27 @@
     </Filter>
     <Filter Include="95.Engine\00.Utility\05.Shader\01.ShaderCode">
       <UniqueIdentifier>{13b69945-6c4c-4fe3-8cc0-c8dcda34b729}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.Engine\00.Utility\06.GameObject\00.DynamicObject">
+      <UniqueIdentifier>{8447b03c-bd9f-4940-bf1f-56e310850b7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.Engine\00.Utility\06.GameObject\01.StaticObject">
+      <UniqueIdentifier>{cb7c1add-10ae-40fd-891a-6e890b284a6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\04.Equipment">
+      <UniqueIdentifier>{8c439ebf-5628-4572-abc6-2e00978b34a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\04.Equipment\00.Gun">
+      <UniqueIdentifier>{018484a4-70a3-43f0-9577-f6ff8cd80dd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\01.Soldier\00.SoldierMain">
+      <UniqueIdentifier>{2b36e40c-3b66-41d3-b555-373e81f51a83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\02.OtherPlayer">
+      <UniqueIdentifier>{fad12007-0f63-4ee3-8179-ca0887e6da13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\03.DefaultObject">
+      <UniqueIdentifier>{dd822835-712c-4a67-8648-e119dfaf53d2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -321,20 +336,38 @@
     <ClInclude Include="Protocol.h">
       <Filter>Server</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\LogoBack.h">
-      <Filter>02.Object\99.LogoBack</Filter>
-    </ClInclude>
     <ClInclude Include="..\Codes\Logo.h">
       <Filter>01.Scene\00.Logo</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Loading.h">
       <Filter>01.Scene\99.Loading</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\StaticObject.h">
-      <Filter>02.Object\02.StaticObject</Filter>
-    </ClInclude>
     <ClInclude Include="..\Codes\MainApp.h">
       <Filter>00.MainApp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\DynamicObject.h">
+      <Filter>95.Engine\00.Utility\06.GameObject\00.DynamicObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\StaticObject.h">
+      <Filter>95.Engine\00.Utility\06.GameObject\01.StaticObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Equipment.h">
+      <Filter>02.Object\04.Equipment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Gun.h">
+      <Filter>02.Object\04.Equipment\00.Gun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\PlayerMain.h">
+      <Filter>02.Object\01.Soldier\00.SoldierMain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Player.h">
+      <Filter>02.Object\01.Soldier</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\DefaultObject.h">
+      <Filter>02.Object\03.DefaultObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\LogoBack.h">
+      <Filter>02.Object\99.LogoBack</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -449,20 +482,38 @@
     <ClCompile Include="ClientClass.cpp">
       <Filter>Server</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\LogoBack.cpp">
-      <Filter>02.Object\99.LogoBack</Filter>
-    </ClCompile>
     <ClCompile Include="..\Codes\Logo.cpp">
       <Filter>01.Scene\00.Logo</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Loading.cpp">
       <Filter>01.Scene\99.Loading</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\StaticObject.cpp">
-      <Filter>02.Object\02.StaticObject</Filter>
-    </ClCompile>
     <ClCompile Include="..\Codes\MainApp.cpp">
       <Filter>00.MainApp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\StaticObject.cpp">
+      <Filter>95.Engine\00.Utility\06.GameObject\01.StaticObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\DynamicObject.cpp">
+      <Filter>95.Engine\00.Utility\06.GameObject\00.DynamicObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Equipment.cpp">
+      <Filter>02.Object\04.Equipment</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Gun.cpp">
+      <Filter>02.Object\04.Equipment\00.Gun</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\PlayerMain.cpp">
+      <Filter>02.Object\01.Soldier\00.SoldierMain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Player.cpp">
+      <Filter>02.Object\01.Soldier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\DefaultObject.cpp">
+      <Filter>02.Object\03.DefaultObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\LogoBack.cpp">
+      <Filter>02.Object\99.LogoBack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

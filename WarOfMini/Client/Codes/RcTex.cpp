@@ -42,10 +42,10 @@ HRESULT CRcTex::Create_Buffer(void)
 	VTXTEX pVtxTex[] =
 	{
 		// Pos							TexUV					Normal
-		{ _vec3(-0.5f, 0.5f, 0.f),	_vec2(0.f, 0.f), _vec3(0.f, 0.f, -1.f) },
-		{ _vec3(0.5f, 0.5f, 0.f),	_vec2(1.f, 0.f), _vec3(0.f, 0.f, -1.f) },
-		{ _vec3(0.5f, -0.5f, 0.f),	_vec2(1.f, 1.f), _vec3(0.f, 0.f, -1.f) },
-		{ _vec3(-0.5f, -0.5f, 0.f),	_vec2(0.f, 1.f), _vec3(0.f, 0.f, -1.f) }
+		{ XMFLOAT3(-0.5f, 0.5f, 0.f),	XMFLOAT2(0.f, 0.f), XMFLOAT3(0.f, 0.f, -1.f) },
+		{ XMFLOAT3(0.5f, 0.5f, 0.f),	XMFLOAT2(1.f, 0.f), XMFLOAT3(0.f, 0.f, -1.f) },
+		{ XMFLOAT3(0.5f, -0.5f, 0.f),	XMFLOAT2(1.f, 1.f), XMFLOAT3(0.f, 0.f, -1.f) },
+		{ XMFLOAT3(-0.5f, -0.5f, 0.f),	XMFLOAT2(0.f, 1.f), XMFLOAT3(0.f, 0.f, -1.f) }
 	};
 
 	_uint uiVtxCnt = ARRAYSIZE(pVtxTex);

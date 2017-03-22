@@ -25,6 +25,7 @@ CResource* CResourcesMgr::Clone_ResourceMgr(const _ushort& wContainerIdx, const 
 
 	if (NULL == pResource)
 	{
+		//MSG_BOX(L"Clone Resource Failed");
 		return NULL;
 	}
 
@@ -161,7 +162,8 @@ HRESULT CResourcesMgr::Ready_Mesh(ID3D11Device* pGraphicDev, ID3D11DeviceContext
 	FbxGeometryConverter lGeomConverter(m_pFbxSdkMgr);
 	bSuccess = lGeomConverter.Triangulate(pFbxScene, /* Replace */ true);
 	
-	if (!bSuccess) return E_FAIL;
+	if (!bSuccess)
+		return E_FAIL;
 
 	pImporter->Destroy();
 
@@ -187,6 +189,7 @@ HRESULT CResourcesMgr::Ready_Mesh(ID3D11Device* pGraphicDev, ID3D11DeviceContext
 
 		// Release
 		size_t iAnimStackNameSize = AnimStackNameArray.Size();
+		
 		for (size_t i = 0; i < iAnimStackNameSize; ++i)
 			Safe_Delete(AnimStackNameArray[i]);
 
@@ -216,8 +219,8 @@ void CResourcesMgr::Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 	VTXTEX* pVtxTex = nullptr;
 	_uint* pIndex = nullptr;
 
-	_vec3 vMin = _vec3(0.f, 0.f, 0.f);
-	_vec3 vMax = _vec3(0.f, 0.f, 0.f);
+	XMFLOAT3 vMin = XMFLOAT3(0.f, 0.f, 0.f);
+	XMFLOAT3 vMax = XMFLOAT3(0.f, 0.f, 0.f);
 
 	_tchar wstrTextureName[MAX_PATH];
 	ZeroMemory(wstrTextureName, sizeof(_tchar) * MAX_PATH);
@@ -227,7 +230,8 @@ void CResourcesMgr::Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 		FbxMesh* pMesh = (FbxMesh*)pNode->GetNodeAttribute();
 
 		// Get Transform
-		_matrix matWorld;
+		// Get Transform
+		XMFLOAT4X4 matWorld;
 		FbxMatrix matFbxWorld = pNode->EvaluateGlobalTransform();
 
 		for (int i = 0; i < 4; ++i)
@@ -238,13 +242,13 @@ void CResourcesMgr::Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 		pMesh->ComputeBBox();
 
 		FbxDouble3 min = pMesh->BBoxMin.Get();
-		vMin = _vec3((_float)min.mData[0], (_float)min.mData[1], (_float)min.mData[2]);
+		vMin = XMFLOAT3((FLOAT)min.mData[0], (FLOAT)min.mData[1], (FLOAT)min.mData[2]);
 		FbxDouble3 max = pMesh->BBoxMax.Get();
-		vMax = _vec3((_float)max.mData[0], (_float)max.mData[1], (_float)max.mData[2]);
+		vMax = XMFLOAT3((FLOAT)max.mData[0], (FLOAT)max.mData[1], (FLOAT)max.mData[2]);
 
-		D3DXVec3TransformCoord(&vMin, &vMin, &matWorld);
+		XMStoreFloat3(&vMin, XMVector3TransformCoord(XMLoadFloat3(&vMin), XMLoadFloat4x4(&matWorld)));
+		XMStoreFloat3(&vMax, XMVector3TransformCoord(XMLoadFloat3(&vMax), XMLoadFloat4x4(&matWorld)));
 
-		D3DXVec3TransformCoord(&vMax, &vMax, &matWorld);
 
 
 		if (vMin.x > vMax.x) 
@@ -264,37 +268,36 @@ void CResourcesMgr::Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 		FbxVector2 vFbxUV(0, 0);
 
 		// Vertex
-		for (_uint i = 0; i < uiVtxCnt; ++i)
+		for (UINT i = 0; i < uiVtxCnt; ++i)
 		{
-			pVtxTex[i].vPos = _vec3((_float)pVertices[i].mData[0], (_float)pVertices[i].mData[1], (_float)pVertices[i].mData[2]);
-
-			D3DXVec3TransformCoord(&pVtxTex[i].vPos, &pVtxTex[i].vPos, &matWorld);
+			pVtxTex[i].vPos = XMFLOAT3((FLOAT)pVertices[i].mData[0], (FLOAT)pVertices[i].mData[1], (FLOAT)pVertices[i].mData[2]);
+			XMStoreFloat3(&pVtxTex[i].vPos, XMVector3TransformCoord(XMLoadFloat3(&pVtxTex[i].vPos), XMLoadFloat4x4(&matWorld)));
 		}
 
 		// UV
 		FbxStringList UVNames;
 		pMesh->GetUVSetNames(UVNames);
 
-		_uint uiPolygonCount = pMesh->GetPolygonCount();
+		UINT uiPolygonCount = pMesh->GetPolygonCount();
 
-		for (_uint uiPolygonIndex = 0; uiPolygonIndex < uiPolygonCount; ++uiPolygonIndex)
+		for (UINT uiPolygonIndex = 0; uiPolygonIndex < uiPolygonCount; ++uiPolygonIndex)
 		{
-			_uint uiVerticeCount = pMesh->GetPolygonSize(uiPolygonIndex);
+			UINT uiVerticeCount = pMesh->GetPolygonSize(uiPolygonIndex);
 
-			for (_uint uiVerticeIndex = 0; uiVerticeIndex < uiVerticeCount; ++uiVerticeIndex)
+			for (UINT uiVerticeIndex = 0; uiVerticeIndex < uiVerticeCount; ++uiVerticeIndex)
 			{
-				_uint uiIndex = pMesh->GetPolygonVertex(uiPolygonIndex, uiVerticeIndex);
+				UINT uiIndex = pMesh->GetPolygonVertex(uiPolygonIndex, uiVerticeIndex);
 
 				FbxVector4 vNormal;
 
 				pMesh->GetPolygonVertexNormal(uiPolygonIndex, uiVerticeIndex, vNormal);
 
-				pVtxTex[uiIndex].vNormal = _vec3((_float)vNormal.Buffer()[0],
-												(_float)vNormal.Buffer()[1],
-												(_float)vNormal.Buffer()[2]);
+				pVtxTex[uiIndex].vNormal = XMFLOAT3((FLOAT)vNormal.Buffer()[0],
+					(FLOAT)vNormal.Buffer()[1],
+					(FLOAT)vNormal.Buffer()[2]);
 
 				FbxVector2 vUV;
-				_bool bUnmappedUV;
+				bool bUnmappedUV;
 
 				if (UVNames.GetCount())
 				{
@@ -302,32 +305,31 @@ void CResourcesMgr::Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 					pUVName = UVNames[0];
 
 					pMesh->GetPolygonVertexUV(uiPolygonIndex, uiVerticeIndex, pUVName, vUV, bUnmappedUV);
-					pVtxTex[uiIndex].vTexUV = _vec2((_float)vUV.Buffer()[0], -(_float)vUV.Buffer()[1]);
+					pVtxTex[uiIndex].vTexUV = XMFLOAT2((FLOAT)vUV.Buffer()[0], -(FLOAT)vUV.Buffer()[1]);
 				}
 			}
 		}
 
 		// Index
-		_uint index = 0;
+		UINT index = 0;
 
-		for (_uint uiPolygonIndex = 0; uiPolygonIndex < uiPolygonCount; ++uiPolygonIndex)
+		for (UINT uiPolygonIndex = 0; uiPolygonIndex < uiPolygonCount; ++uiPolygonIndex)
 		{
-			_uint uiVerticeCount = pMesh->GetPolygonSize(uiPolygonIndex);
-			for (_uint uiVerticeIndex = 0; uiVerticeIndex < uiVerticeCount; ++uiVerticeIndex)
+			UINT uiVerticeCount = pMesh->GetPolygonSize(uiPolygonIndex);
+			for (UINT uiVerticeIndex = 0; uiVerticeIndex < uiVerticeCount; ++uiVerticeIndex)
 				++index;
 		}
 
 		uiIdxCnt = index;
-		pIndex = new _uint[uiIdxCnt];
-		ZeroMemory(pIndex, sizeof(_uint) * uiIdxCnt);
+		pIndex = new UINT[uiIdxCnt];
+		ZeroMemory(pIndex, sizeof(UINT) * uiIdxCnt);
 
-		for (_uint uiPolygonIndex = 0, uiCuridx = 0; uiPolygonIndex < uiPolygonCount; ++uiPolygonIndex)
+		for (UINT uiPolygonIndex = 0, uiCuridx = 0; uiPolygonIndex < uiPolygonCount; ++uiPolygonIndex)
 		{
-			_uint uiVerticeCount = pMesh->GetPolygonSize(uiPolygonIndex);
-
-			for (_uint uiVerticeIndex = 0; uiVerticeIndex < uiVerticeCount; ++uiVerticeIndex)
+			UINT uiVerticeCount = pMesh->GetPolygonSize(uiPolygonIndex);
+			for (UINT uiVerticeIndex = 0; uiVerticeIndex < uiVerticeCount; ++uiVerticeIndex)
 			{
-				_uint uiIndex = pMesh->GetPolygonVertex(uiPolygonIndex, uiVerticeIndex);
+				UINT uiIndex = pMesh->GetPolygonVertex(uiPolygonIndex, uiVerticeIndex);
 				pIndex[uiCuridx] = uiIndex;
 				++uiCuridx;
 			}
@@ -347,7 +349,7 @@ void CResourcesMgr::Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 				if (pTexture)
 				{
 					const FbxString strFileName = pTexture->GetFileName();
-					_uint uiFileLength = 0;
+					UINT uiFileLength = 0;
 					for (int i = strFileName.Size(); i > 0; --i)
 					{
 						if (strFileName.Buffer()[i] == '/' || strFileName.Buffer()[i] == 92)
@@ -376,10 +378,10 @@ void CResourcesMgr::Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 	else
 		pParent->Add_Child(pStaticMesh);
 
-	_uint uiNodeChild = pNode->GetChildCount();
+	UINT uiNodeChild = pNode->GetChildCount();
 	pStaticMesh->Reserve_ChildSize(uiNodeChild);
 
-	for (_uint uiCnt = 0; uiCnt < uiNodeChild; uiCnt++)
+	for (UINT uiCnt = 0; uiCnt < uiNodeChild; uiCnt++)
 	{
 		FbxNode *pChildNode = pNode->GetChild(uiCnt);
 		Load_StaticMesh(pGraphicDev, pContext, pChildNode, pStaticMesh);
@@ -391,32 +393,32 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 {
 	FbxNodeAttribute *pFbxNodeAttribute = pNode->GetNodeAttribute();
 
-	_uint uiVtxCnt = 0;
-	_uint uiIdxCnt = 0;
+	UINT uiVtxCnt = 0;
+	UINT uiIdxCnt = 0;
 
 	VTXBONE* pVtxBone = nullptr;
-	_uint* pIndex = nullptr;
+	UINT* pIndex = nullptr;
 
 	CAnimation* pAnimation = nullptr;
 
-	_vec3 vMin = _vec3(0.f, 0.f, 0.f);
-	_vec3 vMax = _vec3(0.f, 0.f, 0.f);
+	XMFLOAT3 vMin = XMFLOAT3(0.f, 0.f, 0.f);
+	XMFLOAT3 vMax = XMFLOAT3(0.f, 0.f, 0.f);
 
-	_tchar wstrTextureName[MAX_PATH];
-	ZeroMemory(wstrTextureName, sizeof(_tchar) * MAX_PATH);
+	TCHAR wstrTextureName[MAX_PATH];
+	ZeroMemory(wstrTextureName, sizeof(TCHAR) * MAX_PATH);
 
 	if (pFbxNodeAttribute != nullptr && pFbxNodeAttribute->GetAttributeType() == FbxNodeAttribute::eMesh)
 	{
 		FbxMesh* pMesh = (FbxMesh*)pNode->GetNodeAttribute();
 
 		// Get Transform
-		_matrix matWorld;
+		XMFLOAT4X4 matWorld;
 		{
 			FbxMatrix matFbxWorld = pNode->EvaluateGlobalTransform();
 
 			for (int i = 0; i < 4; ++i)
 				for (int j = 0; j < 4; ++j)
-					matWorld.m[i][j] = (_float)matFbxWorld.Get(i, j);
+					matWorld.m[i][j] = (FLOAT)matFbxWorld.Get(i, j);
 		}
 
 		// Compute Bounding Box
@@ -424,23 +426,16 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 			pMesh->ComputeBBox();
 
 			FbxDouble3 min = pMesh->BBoxMin.Get();
-			vMin = _vec3((_float)min.mData[0], (_float)min.mData[1], (_float)min.mData[2]);
+			vMin = XMFLOAT3((FLOAT)min.mData[0], (FLOAT)min.mData[1], (FLOAT)min.mData[2]);
 			FbxDouble3 max = pMesh->BBoxMax.Get();
-			vMax = _vec3((_float)max.mData[0], (_float)max.mData[1], (_float)max.mData[2]);
+			vMax = XMFLOAT3((FLOAT)max.mData[0], (FLOAT)max.mData[1], (FLOAT)max.mData[2]);
 
+			XMStoreFloat3(&vMin, XMVector3TransformCoord(XMLoadFloat3(&vMin), XMLoadFloat4x4(&matWorld)));
+			XMStoreFloat3(&vMax, XMVector3TransformCoord(XMLoadFloat3(&vMax), XMLoadFloat4x4(&matWorld)));
 
-			D3DXVec3TransformCoord(&vMin, &vMin, &matWorld);
-			D3DXVec3TransformCoord(&vMax, &vMax, &matWorld);
-
-
-			if (vMin.x > vMax.x) 
-				swap(vMin.x, vMax.x);
-
-			if (vMin.y > vMax.y) 
-				swap(vMin.y, vMax.y);
-
-			if (vMin.z > vMax.z) 
-				swap(vMin.z, vMax.z);
+			if (vMin.x > vMax.x) swap(vMin.x, vMax.x);
+			if (vMin.y > vMax.y) swap(vMin.y, vMax.y);
+			if (vMin.z > vMax.z) swap(vMin.z, vMax.z);
 		}
 
 		// Get Vertex, UV, Normal, Index, Texture
@@ -454,14 +449,12 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 		{
 			FbxVector4* pVertices = pMesh->GetControlPoints();
 
-			for (_uint i = 0; i < uiVtxCnt; ++i)
+			for (UINT i = 0; i < uiVtxCnt; ++i)
 			{
-				pVtxBone[i].vPos = _vec3((_float)pVertices[i].mData[0], (_float)pVertices[i].mData[1], (_float)pVertices[i].mData[2]);
+				pVtxBone[i].vPos = XMFLOAT3((FLOAT)pVertices[i].mData[0], (FLOAT)pVertices[i].mData[1], (FLOAT)pVertices[i].mData[2]);
+				XMStoreFloat3(&pVtxBone[i].vPos, XMVector3TransformCoord(XMLoadFloat3(&pVtxBone[i].vPos), XMLoadFloat4x4(&matWorld)));
 
-				D3DXVec3TransformCoord(&pVtxBone[i].vPos, &pVtxBone[i].vPos, &matWorld);
-
-
-				for (_int boneindex = 0; boneindex < 4; ++boneindex)
+				for (int boneindex = 0; boneindex < 4; ++boneindex)
 				{
 					pVtxBone[i].uiBones[boneindex] = MAX_BONE_MATRICES - 1;
 					pVtxBone[i].fWeights[boneindex] = 0.f;
@@ -471,23 +464,23 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 
 		// Index, UV
 		{
-			_uint uiPolygonCount = pMesh->GetPolygonCount();
+			UINT uiPolygonCount = pMesh->GetPolygonCount();
 
 			uiIdxCnt = uiPolygonCount * 3;
-			pIndex = new _uint[uiIdxCnt];
-			ZeroMemory(pIndex, sizeof(_uint) * uiIdxCnt);
-			_uint uiIdxArrIndex = 0;
+			pIndex = new UINT[uiIdxCnt];
+			ZeroMemory(pIndex, sizeof(UINT) * uiIdxCnt);
+			UINT uiIdxArrIndex = 0;
 
 			FbxStringList UVNames;
 			pMesh->GetUVSetNames(UVNames);
 
-			for (_uint uiPolygonIndex = 0; uiPolygonIndex < uiPolygonCount; ++uiPolygonIndex)
+			for (UINT uiPolygonIndex = 0; uiPolygonIndex < uiPolygonCount; ++uiPolygonIndex)
 			{
-				_uint uiVerticeCount = pMesh->GetPolygonSize(uiPolygonIndex);
+				UINT uiVerticeCount = pMesh->GetPolygonSize(uiPolygonIndex);
 
-				for (_uint uiVerticeIndex = 0; uiVerticeIndex < uiVerticeCount; ++uiVerticeIndex)
+				for (UINT uiVerticeIndex = 0; uiVerticeIndex < uiVerticeCount; ++uiVerticeIndex)
 				{
-					_uint uiIndex = pMesh->GetPolygonVertex(uiPolygonIndex, uiVerticeIndex);
+					UINT uiIndex = pMesh->GetPolygonVertex(uiPolygonIndex, uiVerticeIndex);
 
 					pIndex[uiIdxArrIndex] = uiIndex;
 					++uiIdxArrIndex;
@@ -496,12 +489,12 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 
 					pMesh->GetPolygonVertexNormal(uiPolygonIndex, uiVerticeIndex, vNormal);
 
-					pVtxBone[uiIndex].vNormal = _vec3((_float)vNormal.Buffer()[0],
-						(_float)vNormal.Buffer()[1],
-						(_float)vNormal.Buffer()[2]);
+					pVtxBone[uiIndex].vNormal = XMFLOAT3((FLOAT)vNormal.Buffer()[0],
+						(FLOAT)vNormal.Buffer()[1],
+						(FLOAT)vNormal.Buffer()[2]);
 
 					FbxVector2 vUV;
-					_bool bUnmappedUV;
+					bool bUnmappedUV;
 
 					if (UVNames.GetCount())
 					{
@@ -509,7 +502,7 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 						pUVName = UVNames[0];
 
 						pMesh->GetPolygonVertexUV(uiPolygonIndex, uiVerticeIndex, pUVName, vUV, bUnmappedUV);
-						pVtxBone[uiIndex].vTexUV = _vec2((_float)vUV.Buffer()[0], -(_float)vUV.Buffer()[1]);
+						pVtxBone[uiIndex].vTexUV = XMFLOAT2((FLOAT)vUV.Buffer()[0], -(FLOAT)vUV.Buffer()[1]);
 					}
 				}
 			}
@@ -530,8 +523,8 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 					{
 						const FbxString strFileName = pTexture->GetFileName();
 
-						_uint uiFileLength = 0;
-						for (_int i = strFileName.Size(); i > 0; --i)
+						UINT uiFileLength = 0;
+						for (int i = strFileName.Size(); i > 0; --i)
 						{
 							if (strFileName.Buffer()[i] == '/' || strFileName.Buffer()[i] == 92)
 							{
@@ -550,140 +543,125 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 
 		// Bones & Weights & Animation
 		FbxSkin* pSkinDeformer = (FbxSkin*)pMesh->GetDeformer(0, FbxDeformer::eSkin);
-		_uint uiClusterCount = pSkinDeformer->GetClusterCount();
 
-		if (pMesh->GetDeformerCount(FbxDeformer::eSkin) && uiClusterCount)
+		if (pSkinDeformer != nullptr)
 		{
-			// Bones & Weights
+			UINT uiClusterCount = pSkinDeformer->GetClusterCount();
+
+			if (pMesh->GetDeformerCount(FbxDeformer::eSkin) && uiClusterCount)
 			{
-				_uint* bonecount = new _uint[uiVtxCnt];
-				ZeroMemory(bonecount, sizeof(_uint) * uiVtxCnt);
-
-				for (_uint i = 0; i < uiClusterCount; ++i)
+				// Bones & Weights
 				{
-					FbxCluster* pCluster = pSkinDeformer->GetCluster(i);
-					_uint uiVertexIndexCount = pCluster->GetControlPointIndicesCount();
+					UINT* bonecount = new UINT[uiVtxCnt];
+					ZeroMemory(bonecount, sizeof(UINT) * uiVtxCnt);
 
-					for (_uint j = 0; j < uiVertexIndexCount; j++)
+					for (UINT i = 0; i < uiClusterCount; ++i)
 					{
-						_uint uiVectexIndex = pCluster->GetControlPointIndices()[j];
+						FbxCluster* pCluster = pSkinDeformer->GetCluster(i);
+						UINT uiVertexIndexCount = pCluster->GetControlPointIndicesCount();
 
-						if (pVtxBone[uiVectexIndex].fWeights[bonecount[uiVectexIndex]] == 0.f)
+						for (UINT j = 0; j < uiVertexIndexCount; ++j)
 						{
-							pVtxBone[uiVectexIndex].uiBones[bonecount[uiVectexIndex]] = i;
-							pVtxBone[uiVectexIndex].fWeights[bonecount[uiVectexIndex]] = (_float)pCluster->GetControlPointWeights()[j];
-						}
+							UINT uiVectexIndex = pCluster->GetControlPointIndices()[j];
 
-						bonecount[uiVectexIndex] += 1;
-					}
-				}
-
-				for (_uint i = 0; i < uiVtxCnt; ++i)
-				{
-					float fullWeights = pVtxBone[i].fWeights[0] + pVtxBone[i].fWeights[1] + pVtxBone[i].fWeights[2] + pVtxBone[i].fWeights[3];
-					
-					if (fullWeights < 1.0f)
-						pVtxBone[i].fWeights[3] = 1.0f - fullWeights;
-				}
-
-				Safe_Delete_Array(bonecount);
-			}
-
-			// Animation
-			{
-				pAnimation = CAnimation::Create(pContext);
-
-				// Time
-				FbxAnimStack* pAnimStack = pFbxScene->FindMember<FbxAnimStack>(arrAniName[0]->Buffer());
-				
-				pFbxScene->SetCurrentAnimationStack(pAnimStack);
-
-				FbxTakeInfo* pTakeInfo = pFbxScene->GetTakeInfo(*(arrAniName[0]));
-
-				FbxTime stopTime = pTakeInfo->mLocalTimeSpan.GetStop();
-
-
-				FbxLongLong frameCnt = stopTime.GetFrameCount();
-
-				if (frameCnt == 0) 
-					frameCnt = 1;
-
-				FbxLongLong stop = stopTime.Get();
-				FbxLongLong unit = stop / frameCnt;
-
-				FbxAMatrix matGlobalPosition;
-				matGlobalPosition.SetIdentity();
-
-				for (_uint uiDataIdx = 0; uiDataIdx < vecFrameCnt.size(); ++uiDataIdx)
-				{
-					CAnimation::ANIMDATA tAnimData;
-
-					for (WORD wFrame = vecFrameCnt[uiDataIdx].first; wFrame <= vecFrameCnt[uiDataIdx].second; ++wFrame)
-					{
-						CAnimation::FRAME vecAniMatrix;
-
-						// Matrix
-						if (pFbxScene->GetPoseCount())
-						{
-							FbxPose* pPose = pFbxScene->GetPose(pFbxScene->GetPoseCount() + 1);
-
-							for (_uint uiClusterIndex = 0; uiClusterIndex < uiClusterCount; ++uiClusterIndex)
+							if (pVtxBone[uiVectexIndex].fWeights[bonecount[uiVectexIndex]] == 0.f)
 							{
-								FbxAMatrix matVertexTransform, matGlobalPosition;
-								matVertexTransform.SetIdentity();
-								matGlobalPosition.SetIdentity();
-
-								FbxCluster* pCluster = pSkinDeformer->GetCluster(uiClusterIndex);
-								FbxTime pTime = unit * wFrame;
-
-								if (pCluster->GetLink())
-								{
-									FbxAMatrix lRefGlobalInitPos, lRefGlobalCurrentPos;
-									FbxAMatrix lClusterGlobalInitPos, lClusterGlobalCurPos;
-									FbxAMatrix lRefGeometry;
-									FbxAMatrix lClusterRelativeInitPos, lClusterRelativeCurPosInv;
-
-
-									pCluster->GetTransformMatrix(lRefGlobalInitPos);
-
-									//링크의 매트릭스
-									pCluster->GetTransformLinkMatrix(lClusterGlobalInitPos);
-
-									//단위행렬 값을 넣어준다.
-									lRefGlobalCurrentPos = matGlobalPosition;
-
-									lRefGeometry = GetGeometry(pMesh->GetNode());
-
-
-									//해당 노드의 EvaluateGlobalTransform 값 반환
-									lClusterGlobalCurPos = GetGlobalPosition(pCluster->GetLink(), pTime, pPose);
-									//=====================================================================
-
-									lClusterRelativeInitPos = lClusterGlobalInitPos.Inverse() * lRefGeometry;
-
-									lClusterRelativeCurPosInv = lClusterGlobalCurPos;
-
-
-									matVertexTransform = lRefGlobalInitPos * lClusterRelativeCurPosInv * lClusterRelativeInitPos;
-								}
-
-								FbxQuaternion vQ = matVertexTransform.GetQ();
-								FbxVector4 vT = matVertexTransform.GetT();
-								FbxVector4 vS = matVertexTransform.GetS();
-
-								CLUSDATA tClusData;
-
-								tClusData.R = _vec4((_float)vQ.mData[0], (_float)vQ.mData[1], (_float)vQ.mData[2], (_float)vQ.mData[3]);
-								tClusData.T = _vec3((_float)vT.mData[0], (_float)vT.mData[1], (_float)vT.mData[2]);
-								tClusData.S = _vec3((_float)vS.mData[0], (_float)vS.mData[1], (_float)vS.mData[2]);
-								vecAniMatrix.push_back(tClusData);
+								pVtxBone[uiVectexIndex].uiBones[bonecount[uiVectexIndex]] = i;
+								pVtxBone[uiVectexIndex].fWeights[bonecount[uiVectexIndex]] = (float)pCluster->GetControlPointWeights()[j];
 							}
-						}
 
-						tAnimData.push_back(vecAniMatrix);
+							bonecount[uiVectexIndex] += 1;
+						}
 					}
 
-					pAnimation->Push_AnimData(tAnimData);
+					for (UINT i = 0; i < uiVtxCnt; ++i)
+					{
+						float fullWeights = pVtxBone[i].fWeights[0] + pVtxBone[i].fWeights[1] + pVtxBone[i].fWeights[2] + pVtxBone[i].fWeights[3];
+						if (fullWeights < 1.0f)
+							pVtxBone[i].fWeights[3] = 1.0f - fullWeights;
+					}
+
+					Safe_Delete_Array(bonecount);
+				}
+
+				// Animation
+				{
+					pAnimation = CAnimation::Create(pContext);
+
+					// Time
+					FbxAnimStack* pAnimStack = pFbxScene->FindMember<FbxAnimStack>(arrAniName[0]->Buffer());
+					pFbxScene->SetCurrentAnimationStack(pAnimStack);
+
+					FbxTakeInfo* pTakeInfo = pFbxScene->GetTakeInfo(*(arrAniName[0]));
+
+					FbxTime stopTime = pTakeInfo->mLocalTimeSpan.GetStop();
+					FbxLongLong frameCnt = stopTime.GetFrameCount();
+					if (frameCnt == 0) frameCnt = 1;
+
+					FbxLongLong stop = stopTime.Get();
+					FbxLongLong unit = stop / frameCnt;
+
+					FbxAMatrix matGlobalPosition;
+					matGlobalPosition.SetIdentity();
+
+					for (UINT uiDataIdx = 0; uiDataIdx < vecFrameCnt.size(); ++uiDataIdx)
+					{
+						CAnimation::ANIMDATA tAnimData;
+
+						for (WORD wFrame = vecFrameCnt[uiDataIdx].first; wFrame <= vecFrameCnt[uiDataIdx].second; ++wFrame)
+						{
+							CAnimation::FRAME vecAniMatrix;
+
+							// Matrix
+							if (pFbxScene->GetPoseCount())
+							{
+								FbxPose* pPose = pFbxScene->GetPose(pFbxScene->GetPoseCount() + 1);
+
+								for (UINT uiClusterIndex = 0; uiClusterIndex < uiClusterCount; ++uiClusterIndex)
+								{
+									FbxAMatrix matVertexTransform, matGlobalPosition;
+									matVertexTransform.SetIdentity();
+									matGlobalPosition.SetIdentity();
+
+									FbxCluster* pCluster = pSkinDeformer->GetCluster(uiClusterIndex);
+									FbxTime pTime = unit * wFrame;
+
+									if (pCluster->GetLink())
+									{
+										FbxAMatrix lRefGlobalInitPos, lRefGlobalCurrentPos;
+										FbxAMatrix lClusterGlobalInitPos, lClusterGlobalCurPos;
+										FbxAMatrix lRefGeometry;
+										FbxAMatrix lClusterRelativeInitPos, lClusterRelativeCurPosInv;
+										pCluster->GetTransformMatrix(lRefGlobalInitPos);
+										lRefGlobalCurrentPos = matGlobalPosition;
+										lRefGeometry = GetGeometry(pMesh->GetNode());
+										lRefGlobalInitPos *= lRefGeometry;
+
+										pCluster->GetTransformLinkMatrix(lClusterGlobalInitPos);
+										lClusterGlobalCurPos = GetGlobalPosition(pCluster->GetLink(), pTime, pPose);
+										lClusterRelativeInitPos = lClusterGlobalInitPos.Inverse() * lRefGeometry;
+										lClusterRelativeCurPosInv = lRefGlobalCurrentPos.Inverse() * lClusterGlobalCurPos;
+
+										matVertexTransform = lRefGlobalInitPos * lClusterRelativeCurPosInv * lClusterRelativeInitPos;
+									}
+
+									FbxQuaternion vQ = matVertexTransform.GetQ();
+									FbxVector4 vT = matVertexTransform.GetT();
+									FbxVector4 vS = matVertexTransform.GetS();
+
+									CLUSDATA tClusData;
+									tClusData.R = XMFLOAT4((FLOAT)vQ.mData[0], (FLOAT)vQ.mData[1], (FLOAT)vQ.mData[2], (FLOAT)vQ.mData[3]);
+									tClusData.T = XMFLOAT3((FLOAT)vT.mData[0], (FLOAT)vT.mData[1], (FLOAT)vT.mData[2]);
+									tClusData.S = XMFLOAT3((FLOAT)vS.mData[0], (FLOAT)vS.mData[1], (FLOAT)vS.mData[2]);
+									vecAniMatrix.push_back(tClusData);
+								}
+							}
+
+							tAnimData.push_back(vecAniMatrix);
+						}
+
+						pAnimation->Push_AnimData(tAnimData);
+					}
 				}
 			}
 		}
@@ -701,10 +679,10 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 	else
 		pParent->Add_Child(pDynamicMesh);
 
-	_uint uiNodeChild = pNode->GetChildCount();
+	UINT uiNodeChild = pNode->GetChildCount();
 	pDynamicMesh->Reserve_ChildSize(uiNodeChild);
 
-	for (_uint uiCnt = 0; uiCnt < uiNodeChild; uiCnt++)
+	for (UINT uiCnt = 0; uiCnt < uiNodeChild; uiCnt++)
 	{
 		FbxNode *pChildNode = pNode->GetChild(uiCnt);
 		Load_DynamicMesh(pGraphicDev, pContext, pChildNode, pDynamicMesh, pFbxScene, arrAniName, vecFrameCnt);
@@ -759,7 +737,7 @@ void CResourcesMgr::Load_FrameData(const _tchar* pResourceKey, vector<pair<_usho
 {
 	pair<_ushort, _ushort> pairFrame;						// -> StartFrame & EndFrame
 	CAnimationInfo::VECFRAMEINFO vecFrameInfo;		// -> KeyName & KeyInex & FrameCnt & FrameSpeed
-	CAnimationInfo::FRAMEINFO tFrameInfo;
+	FRAMEINFO tFrameInfo;
 
 	vecFrameCnt.reserve(10);
 

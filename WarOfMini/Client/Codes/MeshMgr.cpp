@@ -7,6 +7,7 @@
 
 IMPLEMENT_SINGLETON(CMeshMgr)
 
+
 CMeshMgr::CMeshMgr(void)
 {
 }
@@ -15,29 +16,35 @@ CMeshMgr::~CMeshMgr(void)
 {
 }
 
-void CMeshMgr::Add_ObbCheckList(_uint uiObjNum, const _matrix* pWorld, const CGameObject* pObj)
+void CMeshMgr::CreateBoneNode(_uint uiObjNum, MATNODE* pMatNode)
 {
-	dynamic_cast<CDynaicMesh*>(m_vecMeshData[uiObjNum]->pMesh)->Add_ObbCheckList(pWorld, pObj);
-}
-
-_matrix CMeshMgr::Get_TransMeshBone(_uint uiObjNum, _int iSubsetIdx)
-{
-	_matrix matBone;
-
-	D3DXMatrixIdentity(&matBone);
-
 	if (dynamic_cast<CDynaicMesh*>(m_vecMeshData[uiObjNum]->pMesh))
-		return dynamic_cast<CDynaicMesh*>(m_vecMeshData[uiObjNum]->pMesh)->Get_TransBoneMatrix(iSubsetIdx);
-	else
-		return matBone;
+		dynamic_cast<CDynaicMesh*>(m_vecMeshData[uiObjNum]->pMesh)->CreateBoneNode(pMatNode);
 }
 
-const _vec3* CMeshMgr::Get_MeshMin(_uint uiObjNum)
+
+void CMeshMgr::Add_ObbCheckList(_uint uiObjNum, const XMFLOAT4X4* pWorld, const CGameObject* pObj, MATNODE* pMatNode)
+{
+	dynamic_cast<CDynaicMesh*>(m_vecMeshData[uiObjNum]->pMesh)->Add_ObbCheckList(pWorld, pObj, pMatNode);
+}
+
+
+XMFLOAT4X4 CMeshMgr::Get_TransMeshBone(_uint uiObjNum, _int iSubsetIdx, _int iIndex2, MATNODE* pMatNode)
+{
+	if (dynamic_cast<CDynaicMesh*>(m_vecMeshData[uiObjNum]->pMesh))
+		return dynamic_cast<CDynaicMesh*>(m_vecMeshData[uiObjNum]->pMesh)->Get_TransBoneMatrix(iSubsetIdx, iIndex2, pMatNode);
+
+	else
+		return nullptr;
+}
+
+
+const XMFLOAT3* CMeshMgr::Get_MeshMin(_uint uiObjNum)
 {
 	return m_vecMeshData[uiObjNum]->pMesh->Get_Min();
 }
 
-const _vec3* CMeshMgr::Get_MeshMax(_uint uiObjNum)
+const XMFLOAT3* CMeshMgr::Get_MeshMax(_uint uiObjNum)
 {
 	return m_vecMeshData[uiObjNum]->pMesh->Get_Max();
 }
@@ -57,28 +64,42 @@ void CMeshMgr::Render_MeshMgr(_uint uiObjNum, _bool bColliderDraw)
 	if (m_vecMeshData[uiObjNum]->bBillboard)
 		CGraphicDev::GetInstance()->SetCullEnable(FALSE);
 
+	if (m_vecMeshData[uiObjNum]->bAlpha)
+		CGraphicDev::GetInstance()->SetAlphaEnable(TRUE);
+
 	m_vecMeshData[uiObjNum]->pMesh->Render(bColliderDraw);
 
 	if (m_vecMeshData[uiObjNum]->bBillboard)
 		CGraphicDev::GetInstance()->SetCullEnable(TRUE);
+
+	if (m_vecMeshData[uiObjNum]->bAlpha)
+		CGraphicDev::GetInstance()->SetAlphaEnable(FALSE);
 }
 
-void CMeshMgr::RenderAnim_MeshMgr(_uint uiObjNum, CAnimationInfo* pAnimInfo, _bool bColliderDraw /*= FALSE*/)
+void CMeshMgr::RenderAnim_MeshMgr(_uint uiObjNum, CAnimationInfo* pAnimInfo, MATNODE* pMatNode, _ubyte byColor /*=0*/, _bool bColliderDraw /*= FALSE*/)
 {
 	if (dynamic_cast<CDynaicMesh*>(m_vecMeshData[uiObjNum]->pMesh))
-		dynamic_cast<CDynaicMesh*>(m_vecMeshData[uiObjNum]->pMesh)->RenderAnim(pAnimInfo, bColliderDraw);
+		dynamic_cast<CDynaicMesh*>(m_vecMeshData[uiObjNum]->pMesh)->RenderAnim(pAnimInfo, pMatNode, byColor, bColliderDraw);
 }
 
-void CMeshMgr::RenderInst_MeshMgr(_uint uiObjNum, const vector<_matrix*>& vecObjWorld)
+void CMeshMgr::RenderInst_MeshMgr(_uint uiObjNum, const vector<XMFLOAT4X4*>& vecObjWorld)
 {
 	if (m_vecMeshData[uiObjNum]->bBillboard)
 		CGraphicDev::GetInstance()->SetCullEnable(FALSE);
+
+	if (m_vecMeshData[uiObjNum]->bAlpha)
+		CGraphicDev::GetInstance()->SetAlphaEnable(TRUE);
 
 	m_vecMeshData[uiObjNum]->pMesh->RenderInst(vecObjWorld);
 
 	if (m_vecMeshData[uiObjNum]->bBillboard)
 		CGraphicDev::GetInstance()->SetCullEnable(TRUE);
+
+	if (m_vecMeshData[uiObjNum]->bAlpha)
+		CGraphicDev::GetInstance()->SetAlphaEnable(FALSE);
 }
+
+
 
 void CMeshMgr::Release(void)
 {

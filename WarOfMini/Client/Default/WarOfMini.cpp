@@ -59,6 +59,7 @@ int APIENTRY wWinMain( HINSTANCE hInstance,
 
 	m_bLogoLoading = FALSE;
 
+
     MSG msg;
 	msg.message = WM_NULL;
 

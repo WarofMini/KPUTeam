@@ -22,7 +22,7 @@ void CManagement::Add_RenderGroup(CRenderer::RENDERTYPE eType, CGameObject* pGam
 		m_pRenderer->Add_RenderGroup(eType, pGameObject, fViewZ);
 }
 
-void CManagement::Add_RenderInstGroup(CRenderer::RENDERTYPE eType, _uint uiObjNum, _matrix* pMatWorld)
+void CManagement::Add_RenderInstGroup(CRenderer::RENDERTYPE eType, UINT uiObjNum, XMFLOAT4X4* pMatWorld)
 {
 	if (m_pRenderer != NULL)
 		m_pRenderer->Add_RenderInstGroup(eType, uiObjNum, pMatWorld);

@@ -2,32 +2,30 @@
 #include "Camera.h"
 
 CCamera::CCamera(ID3D11DeviceContext* pContext)
-	: CGameObject(pContext)
-	, m_fNear(0.0f)
-	, m_fFar(0.0f)
-	, m_bMouseFix(false)
+: CGameObject(pContext)
+, m_pProj(nullptr)
+, m_pView(nullptr)
+, m_pPos(nullptr)
+, m_pTarget(nullptr)
 {
-	D3DXMatrixIdentity(&m_matView);
-	D3DXMatrixIdentity(&m_matProj);
 }
 
 CCamera::~CCamera(void)
 {
 }
 
-HRESULT CCamera::Initialize(_float fNear, _float fFar, _vec3 vEye, _vec3 vAt)
+HRESULT CCamera::Initialize(_float fNear, _float fFar, XMFLOAT3 vPos, XMFLOAT3 vTarget)
 {
-	m_fNear = fNear;
-	m_fFar = fFar;
+	m_pProj = new XMFLOAT4X4;
+	m_pView = new XMFLOAT4X4;
+	m_pPos = new XMFLOAT3(XMFLOAT3(0.f, 0.f, 0.f));
+	m_pTarget = new XMFLOAT3(XMFLOAT3(0.f, 0.f, 1.f));
 
-	m_vEye = vEye;
-	m_vAt = vAt;
-	m_vUp = _vec3(0.0f, 1.0f, 0.0f);
-
-
+	XMStoreFloat4x4(m_pProj, XMMatrixIdentity());
+	XMStoreFloat4x4(m_pView, XMMatrixIdentity());
 
 	Set_Proj(fNear, fFar);
-	Set_View(vEye, vAt);
+	Set_View(vPos, vTarget);
 
 	return S_OK;
 }
@@ -35,41 +33,34 @@ HRESULT CCamera::Initialize(_float fNear, _float fFar, _vec3 vEye, _vec3 vAt)
 void CCamera::Release(void)
 {
 	CGameObject::Release();
+
+	Safe_Delete(m_pPos);
+	Safe_Delete(m_pTarget);
+	Safe_Delete(m_pProj);
+	Safe_Delete(m_pView);
 }
 
-void CCamera::MakeView(void)
+const XMFLOAT4X4* CCamera::Get_Proj(void)
 {
-	D3DXMatrixLookAtLH(&m_matView, &m_vEye, &m_vAt, &m_vUp);
+	return m_pProj;
 }
 
-void CCamera::MakeProjection(void)
+const XMFLOAT4X4* CCamera::Get_View(void)
 {
-	D3DXMatrixPerspectiveFovLH(&m_matProj, (_float)D3DXToRadian(45.f), _float(WINCX) / _float(WINCY), m_fNear, m_fFar);
-}
-
-const _matrix* CCamera::Get_Proj(void)
-{
-	return &m_matProj;
-}
-
-const _matrix* CCamera::Get_View(void)
-{
-	return &m_matView;
+	return m_pView;
 }
 
 void CCamera::Set_Proj(_float fNear, _float fFar)
 {
-	m_fNear = fNear;
-	m_fFar = fFar;
-
-	D3DXMatrixPerspectiveFovLH(&m_matProj, (_float)D3DXToRadian(45.f), _float(WINCX) / _float(WINCY), fNear, fFar);
+	XMMATRIX matProj = XMMatrixPerspectiveFovLH(   (_float)D3DXToRadian(45.f), _float(WINCX) / _float(WINCY), fNear, fFar);
+	XMStoreFloat4x4(m_pProj, matProj);
 }
 
-void CCamera::Set_View(_vec3 vEye, _vec3 vAt)
+void CCamera::Set_View(XMFLOAT3 vPos, XMFLOAT3 vTarget)
 {
-	m_vEye = vEye;
-	m_vAt = vAt;
+	(*m_pPos) = vPos;
+	(*m_pTarget) = vTarget;
 
-	D3DXMatrixLookAtLH(&m_matView, &m_vEye, &m_vAt, &m_vUp);
-
+	XMMATRIX matView = XMMatrixLookAtLH(XMLoadFloat3(m_pPos), XMLoadFloat3(m_pTarget), XMVectorSet(0.f, 1.f, 0.f, 0.f));
+	XMStoreFloat4x4(m_pView, matView);
 }

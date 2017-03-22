@@ -1,8 +1,5 @@
 #include "stdafx.h"
-#include "Soldier.h"
 #include "Include.h"
-#include "COtherSoldier.h"
-
 
 AsynchronousClientClass::AsynchronousClientClass()
 {

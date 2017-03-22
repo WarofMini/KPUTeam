@@ -27,9 +27,9 @@ CAnimationInfo* CAnimationInfo::Create(MESHNUM eMeshNum)
 	return pAniminfo;
 }
 
-_int CAnimationInfo::Update(const _float & fTime)
+_int CAnimationInfo::Update(const _float& fTime)
 {
-	m_fRatio += (fTime * m_vecMeshFrameInfo[m_eMeshNum][m_wCurKey].wFrameSpeed);
+	m_fRatio += fTime * m_vecMeshFrameInfo[m_eMeshNum][m_wCurKey].wFrameSpeed;
 
 	if (m_fRatio > 1.f)
 	{
@@ -46,7 +46,6 @@ _int CAnimationInfo::Update(const _float & fTime)
 		{
 			m_wNextKey = m_wStoreNextKey;
 			m_wNextFrame = 0;
-
 		}
 
 		else
@@ -54,18 +53,7 @@ _int CAnimationInfo::Update(const _float & fTime)
 			++m_wNextFrame;
 
 			if (m_wNextFrame > m_vecMeshFrameInfo[m_eMeshNum][m_wCurKey].wFrameCnt - 1)
-			{
 				m_wNextFrame = 0;
-				m_wCurFrame = m_wNextFrame;
-			}
-
-		}
-
-
-		if (m_wNextFrame > m_vecMeshFrameInfo[m_eMeshNum][m_wCurKey].wFrameCnt - 1)
-		{
-			m_wNextFrame = 0;
-			m_wCurFrame = m_wNextFrame;
 		}
 	}
 
@@ -97,6 +85,11 @@ const _ushort& CAnimationInfo::Get_NextKey(void)
 	return m_wNextKey;
 }
 
+const _ushort& CAnimationInfo::Get_StoreNextKey(void)
+{
+	return m_wStoreNextKey;
+}
+
 const _ushort& CAnimationInfo::Get_CurFrame(void)
 {
 	return m_wCurFrame;
@@ -125,4 +118,22 @@ void CAnimationInfo::Set_Key(_ushort wKey)
 {
 	if (wKey < m_vecMeshFrameInfo[m_eMeshNum].size())
 		m_wStoreNextKey = wKey;
+}
+
+void CAnimationInfo::Set_KeyImm(_ushort wKey)
+{
+	if (wKey < m_vecMeshFrameInfo[m_eMeshNum].size())
+	{
+		m_wStoreNextKey = wKey;
+
+		if (m_wNextKey != m_wStoreNextKey)
+			m_wNextFrame = 0;
+
+		m_wNextKey = m_wStoreNextKey;
+	}
+}
+
+const WORD CAnimationInfo::Get_LastFrame(void)
+{
+	return m_vecMeshFrameInfo[m_eMeshNum][m_wCurKey].wFrameCnt - 2;
 }

@@ -1,76 +1,76 @@
 #ifndef Struct_h__
 #define Struct_h__
 
-#include "Include.h"
-
-////콘스턴트 버퍼
-struct ConstantBuffer
-{
-	_matrix matWorld;
-	_matrix matView;
-	_matrix matProjection;
-};
-
-
-typedef struct tagBaseShader
-{
-
-	_matrix matWorld;
-	_matrix matView;
-	_matrix matProj;
-
-}BASESHADERCB;
-
-typedef struct tagInstancingShader
-{
-	_matrix matWorld[32];
-
-}INSTANCINGSHADERCB;
-
-
-typedef struct tagDynamicShader
-{
-	_matrix matBoneWorld[64];
-
-}DYNAMICSHADERCB;
-
-
-typedef struct tagIndex16
-{
-	_ushort			_1, _2, _3;
-}INDEX16;
-
-typedef struct tagIndex32
-{
-	_uint			_1, _2, _3;
-}INDEX32;
-
 typedef struct tagVertexTexture
 {
-	_vec3 vPos;
-	_vec2 vTexUV;
-	_vec3 vNormal;
-
+	XMFLOAT3 vPos;
+	XMFLOAT2 vTexUV;
+	XMFLOAT3 vNormal;
 }VTXTEX;
 
 typedef struct tagVertexBone
 {
-	_vec3		vPos;
-	_vec2		vTexUV;
-	_vec3		vNormal;
-	_uint		uiBones[4];
-	_float		fWeights[4];
+	XMFLOAT3 vPos;
+	XMFLOAT2 vTexUV;
+	XMFLOAT3 vNormal;
+	UINT uiBones[4];
+	FLOAT fWeights[4];
 
 }VTXBONE;
 
-typedef struct tagObjectInfo
-{
-	TCHAR			 m_szName[MAX_PATH]; //이름
-	_vec3			 m_vAngle;          //회전값
-	_vec3			 m_vScale;          //크기
-	_vec3			 m_vPos;            //위치
 
-}OBJ_INFO;
+typedef struct tagFrameCnt
+{
+	_ushort  wFrameCnt;
+	_ushort  wFrameSpeed;
+
+}FRAMEINFO;
+
+typedef struct tagBaseShader_CB
+{
+	XMMATRIX matWorld;
+	XMMATRIX matView;
+	XMMATRIX matProj;
+	XMVECTOR vLightPos;
+	XMMATRIX matLightView[2];
+
+}BASESHADER_CB;
+
+typedef struct tagInstShader_CB
+{
+	XMMATRIX matWorld[INSTCNT];
+
+}INSTSHADER_CB;
+
+typedef struct tagDynamicShader_CB
+{
+	XMMATRIX matBoneWorld[MAX_BONE_MATRICES];
+
+}DYNAMICSHADER_CB;
+
+typedef struct tagTerEffect_CB
+{
+	FLOAT		fRange1;
+	FLOAT		fRange2;
+	XMVECTOR	vEffectPos1;
+	XMVECTOR	vEffectPos2;
+
+}TEREFFSHADER_CB;
+
+typedef struct tagObjData
+{
+	UINT		uiImgNum;
+	XMFLOAT3	vScale;
+	XMFLOAT3	vAngle;
+	XMFLOAT3	vPos;
+
+}OBJDATA;
+
+typedef struct tagClusData {
+	XMFLOAT4 R;
+	XMFLOAT3 T;
+	XMFLOAT3 S;
+}CLUSDATA;
 
 
 class CMesh;
@@ -78,28 +78,28 @@ class CMesh;
 typedef struct tagMeshData
 {
 	CMesh* pMesh;
-	_bool  bAlpha;
-	_bool  bBillboard;
-
+	BOOL bAlpha;
+	BOOL bBillboard;
 }MESHDATA;
 
-
-typedef struct tagClusData
+typedef struct tagMatNode
 {
-	_vec4 R;
-	_vec3 T;
-	_vec3 S;
+	XMFLOAT4X4					matBone[MAX_BONE_MATRICES];
+	std::vector<tagMatNode*>	vecNode;
 
-}CLUSDATA;
+	void Release() {
+		for (size_t iIndex = 0; iIndex < vecNode.size(); ++iIndex)
+		{
+			if (NULL != vecNode[iIndex])
+			{
+				delete vecNode[iIndex];
+				vecNode[iIndex] = NULL;
+			}
+		}
 
+		vecNode.clear();
+		delete this;
+	}
+}MATNODE;
 
-typedef struct Tag
-{
-	enum CLASSA{TESTA, TESTEND};
-
-	enum CLASSB{ TESTB, TESTENDTWO };
-
-}TAG;
-
-
-#endif
+#endif // Struct_h__

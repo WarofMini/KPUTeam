@@ -28,7 +28,7 @@ public:
 
 public:
 	virtual HRESULT	Initialize(void);
-	virtual _int  Update(const _float& fTime);
+	virtual _int  Update(const _float& fTimeDelta);
 	virtual void Render(void);
 
 

@@ -19,15 +19,15 @@ private:
 	~CCameraMgr(void);
 
 public:
-	void Ready_DynamicCamera(ID3D11DeviceContext* pContext, CAMERALIST eCameraName, _float fNear, _float fFar, _vec3& vEye, _vec3& vAt);
+	void Ready_DynamicCamera(ID3D11DeviceContext* pContext, CAMERALIST eCameraName, _float fNear, _float fFar, XMFLOAT3& vPos, XMFLOAT3& vTarget);
 	void Ready_StaticCamera(ID3D11DeviceContext* pContext, CAMERALIST eCameraName, const CTransform* pObjTrans, _float fDist, _float fHeightPivot
-		, _float fNear, _float fFar, _vec3& vEye, _vec3& vAt);
-	void Update_CurCamera(const _float& fTimeDelta);
+		, _float fNear, _float fFar, XMFLOAT3& vPos, XMFLOAT3& vTarget);
+	void Update_CurCamera(const FLOAT& fTimeDelta);
 	void Release(void);
 
 public:
-	const _matrix* Get_CurCameraProj(void);
-	const _matrix* Get_CurCameraView(void);
+	const XMFLOAT4X4* Get_CurCameraProj(void);
+	const XMFLOAT4X4* Get_CurCameraView(void);
 
 public:
 	void Set_CurCamera(CAMERALIST eCameraName);

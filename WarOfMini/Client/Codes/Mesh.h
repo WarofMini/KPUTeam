@@ -13,9 +13,9 @@ protected:
 	virtual ~CMesh(void);
 
 public:
-	void Set_RootMinMax(void);
-	const _vec3* Get_Min(void);
-	const _vec3* Get_Max(void);
+	void	Set_RootMinMax(void);
+	const XMFLOAT3* Get_Min(void);
+	const XMFLOAT3* Get_Max(void);
 
 public:
 	void Reserve_ChildSize(const _ushort& wSize);
@@ -26,7 +26,7 @@ public:
 public:
 	virtual CResource* Clone_Resource(void) PURE;
 	virtual void Render(_bool bColliderDraw = FALSE) PURE;
-	virtual void RenderInst(const vector<_matrix*>& vecObjWorld) PURE;
+	virtual void RenderInst(const vector<XMFLOAT4X4*>& vecObjWorld) PURE;
 	virtual void Release(void);
 
 protected:
@@ -43,8 +43,8 @@ protected:
 	_uint			m_uiIdxCnt;
 
 protected:
-	_vec3			m_vMin;
-	_vec3			m_vMax;
+	XMFLOAT3		m_vMin;
+	XMFLOAT3		m_vMax;
 	ID3D11Buffer*	m_pBBoxVB;
 	ID3D11Buffer*	m_pBBoxIB;
 };

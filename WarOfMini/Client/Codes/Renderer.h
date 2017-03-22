@@ -18,7 +18,7 @@ private:
 
 public:
 	void Add_RenderGroup(RENDERTYPE eType, CGameObject* pGameObject, _float fViewZ = 0);
-	void Add_RenderInstGroup(RENDERTYPE eType, _uint uiObjNum, _matrix* pMatWorld);
+	void Add_RenderInstGroup(RENDERTYPE eType, _uint uiObjNum, XMFLOAT4X4* pMatWorld);
 
 public:
 	HRESULT Ready_Renderer(void);
@@ -51,7 +51,7 @@ private:
 	typedef list<CGameObject*> RENDERLIST;
 	RENDERLIST	m_RenderGroup[RENDER_END];
 
-	typedef vector<_matrix*> VECWORLD;
+	typedef vector<XMFLOAT4X4*> VECWORLD;
 	typedef map<_uint, VECWORLD> MAPINST;
 
 	MAPINST m_mapInst;

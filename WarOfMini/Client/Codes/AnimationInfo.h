@@ -8,14 +8,7 @@ class CAnimationInfo
 	: public CComponent
 {
 public:
-	typedef struct tagFrameCnt
-	{
-		_ushort wFrameCnt;
-		_ushort wFrameSpeed;
-	}FRAMEINFO;
-
-	typedef vector<FRAMEINFO>	VECFRAMEINFO;
-
+	typedef vector<FRAMEINFO>  VECFRAMEINFO;
 
 private:
 	explicit CAnimationInfo(MESHNUM eMeshNum);
@@ -27,18 +20,21 @@ public:
 public:
 	const _ushort& Get_CurKey(void);
 	const _ushort& Get_NextKey(void);
+	const _ushort& Get_StoreNextKey(void);
 	const _ushort& Get_CurFrame(void);
 	const _ushort& Get_NextFrame(void);
+	const _ushort Get_LastFrame(void);
 	const _float& Get_Ratio(void);
 	_bool Get_Playing(void);
 
 public:
 	void Set_Key(_ushort wKey);
+	void Set_KeyImm(_ushort wKey);
 
 public:
 	static CAnimationInfo* Create(MESHNUM eMeshNum);
-	virtual _int	Update(const _float& fTime);
-	virtual void	Release(void);
+	virtual _int Update(const _float& fTime);
+	virtual void Release(void);
 
 private:
 	static vector<VECFRAMEINFO> m_vecMeshFrameInfo;
@@ -52,5 +48,6 @@ private:
 	_ushort				m_wNextFrame;
 	_float				m_fRatio;
 };
+
 
 #endif // AnimationInfo_h__

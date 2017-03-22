@@ -3,6 +3,7 @@
 
 #include "Resources.h"
 
+
 class CTextures :
 	public CResource
 {

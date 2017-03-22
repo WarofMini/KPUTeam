@@ -22,4 +22,7 @@ extern D3DXVECTOR3	g_vLightDir;
 extern Scene_Type	m_eSceneID;
 
 extern BOOL			m_bLogoLoading;
+
+extern XMFLOAT3		g_vPlayerPos;
+
 #endif

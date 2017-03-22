@@ -16,7 +16,7 @@ CStaticMesh::~CStaticMesh(void)
 }
 
 CStaticMesh* CStaticMesh::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, const VTXTEX* pVB, const _uint& uiVtxCnt
-	, const _uint* pIB, const _uint& uiIdxCnt, const _vec3& vMin, const _vec3& vMax, _tchar* pTexName)
+	, const _uint* pIB, const _uint& uiIdxCnt, const XMFLOAT3& vMin, const XMFLOAT3& vMax, _tchar* pTexName)
 {
 	CStaticMesh* pMesh = new CStaticMesh(pGraphicDev, pContext);
 
@@ -30,7 +30,7 @@ CStaticMesh* CStaticMesh::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext*
 }
 
 HRESULT CStaticMesh::Create_Buffer(const VTXTEX* pVB, const _uint& uiVtxCnt, const _uint* pIB, const _uint& uiIdxCnt
-	, const _vec3& vMin, const _vec3& vMax, _tchar* pTexName)
+	, const XMFLOAT3& vMin, const XMFLOAT3& vMax, _tchar* pTexName)
 {
 	m_vMin = vMin;
 	m_vMax = vMax;
@@ -113,8 +113,7 @@ void CStaticMesh::Render(_bool bColliderDraw)
 		if (m_uiVtxCnt != 0)
 		{
 			// Texture
-			if (m_pTexture) 
-				m_pTexture->Render(0, 0);
+			if (m_pTexture) m_pTexture->Render(0, 0);
 
 			// Mesh
 			m_pContext->IASetVertexBuffers(0, 1, &m_pVB, &uiStride, &uiOffset);
@@ -141,15 +140,14 @@ void CStaticMesh::Render(_bool bColliderDraw)
 		m_vecChild[uiSize]->Render(bColliderDraw);
 }
 
-void CStaticMesh::RenderInst(const vector<_matrix*>& vecObjWorld)
+void CStaticMesh::RenderInst(const vector<XMFLOAT4X4*>& vecObjWorld)
 {
 	_uint uiStride = sizeof(VTXTEX);
 	_uint uiOffset = 0;
 
 	if (m_uiVtxCnt != 0)
 	{
-		m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Instancing") );
-
+		m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Instancing"));
 
 		ID3D11Buffer* pBaseShaderCB = CGraphicDev::GetInstance()->GetBaseShaderCB();
 		ID3D11Buffer* pInstShaderCB = CGraphicDev::GetInstance()->GetInstShaderCB();
@@ -157,7 +155,7 @@ void CStaticMesh::RenderInst(const vector<_matrix*>& vecObjWorld)
 		ID3D11SamplerState* pBaseSampler = CGraphicDev::GetInstance()->GetBaseSampler();
 
 		// Shader Set
-		m_pContext->VSSetShader( CShaderMgr::GetInstance()->Get_VertexShader(L"Shader_Instancing"), NULL, 0);
+		m_pContext->VSSetShader(CShaderMgr::GetInstance()->Get_VertexShader(L"Shader_Instancing"), NULL, 0);
 		m_pContext->VSSetConstantBuffers(0, 1, &pBaseShaderCB);
 		m_pContext->VSSetConstantBuffers(1, 1, &pInstShaderCB);
 		m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_Instancing"), NULL, 0);
@@ -172,18 +170,17 @@ void CStaticMesh::RenderInst(const vector<_matrix*>& vecObjWorld)
 		m_pContext->IASetIndexBuffer(m_pIB, DXGI_FORMAT_R32_UINT, 0);
 
 		// Base
-		BASESHADERCB tBaseShaderCB;
+		BASESHADER_CB tBaseShaderCB;
 
-		_matrix matWorld;
+		tBaseShaderCB.matWorld = XMMatrixTranspose(XMMatrixIdentity());
+		tBaseShaderCB.matView = XMMatrixTranspose(XMLoadFloat4x4(CCameraMgr::GetInstance()->Get_CurCameraView()));
+		tBaseShaderCB.matProj = XMMatrixTranspose(XMLoadFloat4x4(CCameraMgr::GetInstance()->Get_CurCameraProj()));
+		tBaseShaderCB.vLightPos = XMLoadFloat3(&g_vLightPos) - XMLoadFloat3(&g_vPlayerPos);
 
+		XMMATRIX matView = XMMatrixLookAtLH(XMLoadFloat3(&g_vPlayerPos) - XMLoadFloat3(&g_vLightPos)
+			, XMLoadFloat3(&g_vPlayerPos), XMVectorSet(0.f, 1.f, 0.f, 0.f));
 
-		D3DXMatrixIdentity(&matWorld);
-
-		//나중에 카메라 만들면 다시 주석 풀어야함
-		tBaseShaderCB.matWorld = matWorld;
-		tBaseShaderCB.matView = (*CCameraMgr::GetInstance()->Get_CurCameraView());
-		tBaseShaderCB.matProj = (*CCameraMgr::GetInstance()->Get_CurCameraProj());
-
+		tBaseShaderCB.matLightView[0] = XMMatrixTranspose(matView);
 
 		m_pContext->UpdateSubresource(pBaseShaderCB, 0, NULL, &tBaseShaderCB, 0, 0);
 
@@ -192,15 +189,14 @@ void CStaticMesh::RenderInst(const vector<_matrix*>& vecObjWorld)
 		// Instancing
 		for (_uint uiDrawCnt = 0; uiDrawCnt < _uint(vecObjWorld.size() / INSTCNT) + 1; ++uiDrawCnt)
 		{
-			INSTANCINGSHADERCB tInstShaderCB;
-			
+			INSTSHADER_CB tInstShaderCB;
 			_uint uiInstSize = vecObjWorld.size() - (uiDrawCnt * INSTCNT);
 
 			if (uiInstSize > INSTCNT)
 				uiInstSize = INSTCNT;
 
 			for (_uint uiIndex = 0; uiIndex < uiInstSize; ++uiIndex)
-				tInstShaderCB.matWorld[uiIndex] = *(vecObjWorld[uiIndex + (uiDrawCnt * INSTCNT)]); //체크
+				tInstShaderCB.matWorld[uiIndex] = XMMatrixTranspose(XMLoadFloat4x4(vecObjWorld[uiIndex + (uiDrawCnt * INSTCNT)]));
 
 			m_pContext->UpdateSubresource(pInstShaderCB, 0, NULL, &tInstShaderCB, 0, 0);
 
@@ -218,10 +214,6 @@ void CStaticMesh::Release(void)
 {
 	CMesh::Release();
 
-	if (m_dwRefCount == NULL)
-	{
-	}
-
 	delete this;
 }
 
@@ -231,14 +223,14 @@ HRESULT CStaticMesh::Set_BoundingBox(void)
 	VTXTEX pVtxTex[] =
 	{
 		// Pos										TexUV				Normal
-		{ _vec3(m_vMin.x, m_vMax.y, m_vMin.z), _vec2(0.f, 0.f), _vec3(0.f, 0.f, 0.f) },
-		{ _vec3(m_vMax.x, m_vMax.y, m_vMin.z), _vec2(0.f, 0.f), _vec3(0.f, 0.f, 0.f) },
-		{ _vec3(m_vMax.x, m_vMin.y, m_vMin.z), _vec2(0.f, 0.f), _vec3(0.f, 0.f, 0.f) },
-		{ _vec3(m_vMin.x, m_vMin.y, m_vMin.z), _vec2(0.f, 0.f), _vec3(0.f, 0.f, 0.f) },
-		{ _vec3(m_vMin.x, m_vMax.y, m_vMax.z), _vec2(0.f, 0.f), _vec3(0.f, 0.f, 0.f) },
-		{ _vec3(m_vMax.x, m_vMax.y, m_vMax.z), _vec2(0.f, 0.f), _vec3(0.f, 0.f, 0.f) },
-		{ _vec3(m_vMax.x, m_vMin.y, m_vMax.z), _vec2(0.f, 0.f), _vec3(0.f, 0.f, 0.f) },
-		{ _vec3(m_vMin.x, m_vMin.y, m_vMax.z), _vec2(0.f, 0.f), _vec3(0.f, 0.f, 0.f) }
+		{ XMFLOAT3(m_vMin.x, m_vMax.y, m_vMin.z), XMFLOAT2(0.f, 0.f), XMFLOAT3(0.f, 0.f, 0.f) },
+		{ XMFLOAT3(m_vMax.x, m_vMax.y, m_vMin.z), XMFLOAT2(0.f, 0.f), XMFLOAT3(0.f, 0.f, 0.f) },
+		{ XMFLOAT3(m_vMax.x, m_vMin.y, m_vMin.z), XMFLOAT2(0.f, 0.f), XMFLOAT3(0.f, 0.f, 0.f) },
+		{ XMFLOAT3(m_vMin.x, m_vMin.y, m_vMin.z), XMFLOAT2(0.f, 0.f), XMFLOAT3(0.f, 0.f, 0.f) },
+		{ XMFLOAT3(m_vMin.x, m_vMax.y, m_vMax.z), XMFLOAT2(0.f, 0.f), XMFLOAT3(0.f, 0.f, 0.f) },
+		{ XMFLOAT3(m_vMax.x, m_vMax.y, m_vMax.z), XMFLOAT2(0.f, 0.f), XMFLOAT3(0.f, 0.f, 0.f) },
+		{ XMFLOAT3(m_vMax.x, m_vMin.y, m_vMax.z), XMFLOAT2(0.f, 0.f), XMFLOAT3(0.f, 0.f, 0.f) },
+		{ XMFLOAT3(m_vMin.x, m_vMin.y, m_vMax.z), XMFLOAT2(0.f, 0.f), XMFLOAT3(0.f, 0.f, 0.f) }
 	};
 
 	_uint uiVtxCnt = ARRAYSIZE(pVtxTex);

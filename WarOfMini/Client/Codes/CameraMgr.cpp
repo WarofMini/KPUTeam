@@ -1,5 +1,3 @@
-
-
 #include "stdafx.h"
 #include "CameraMgr.h"
 #include "Camera.h"
@@ -23,18 +21,18 @@ CCameraMgr::~CCameraMgr(void)
 {
 }
 
-void CCameraMgr::Ready_DynamicCamera(ID3D11DeviceContext* pContext, CAMERALIST eCameraName, _float fNear, _float fFar, _vec3& vEye, _vec3& vAt)
+void CCameraMgr::Ready_DynamicCamera(ID3D11DeviceContext* pContext, CAMERALIST eCameraName, _float fNear, _float fFar, XMFLOAT3& vPos, XMFLOAT3& vTarget)
 {
-	if (m_vecCamera[eCameraName] == NULL)
-		m_vecCamera[eCameraName] = CDynamicCamera::Create(pContext, fNear, fFar, vEye, vAt);
+	if (m_vecCamera[eCameraName] == nullptr)
+		m_vecCamera[eCameraName] = CDynamicCamera::Create(pContext, fNear, fFar, vPos, vTarget);
 }
 
 void CCameraMgr::Ready_StaticCamera(ID3D11DeviceContext* pContext, CAMERALIST eCameraName, const CTransform* pObjTrans, _float fDist, _float fHeightPivot
-	, _float fNear, _float fFar, _vec3& vEye, _vec3& vAt)
+	, _float fNear, _float fFar, XMFLOAT3& vPos, XMFLOAT3& vTarget)
 {
 }
 
-void CCameraMgr::Update_CurCamera(const _float& fTimeDelta)
+void CCameraMgr::Update_CurCamera(const FLOAT& fTimeDelta)
 {
 	m_vecCamera[m_eCurCamera]->Update(fTimeDelta);
 }
@@ -51,12 +49,12 @@ void CCameraMgr::Release(void)
 	delete this;
 }
 
-const _matrix* CCameraMgr::Get_CurCameraProj(void)
+const XMFLOAT4X4* CCameraMgr::Get_CurCameraProj(void)
 {
 	return m_vecCamera[m_eCurCamera]->Get_Proj();
 }
 
-const _matrix* CCameraMgr::Get_CurCameraView(void)
+const XMFLOAT4X4* CCameraMgr::Get_CurCameraView(void)
 {
 	return m_vecCamera[m_eCurCamera]->Get_View();
 }
@@ -67,5 +65,3 @@ void CCameraMgr::Set_CurCamera(CAMERALIST eCameraName)
 
 	m_vecCamera[m_eCurCamera]->Update(0);
 }
-
-

@@ -4,7 +4,11 @@
 #include "CameraMgr.h"
 #include "FontMgr.h"
 #include "LogoBack.h"
-#include "StaticObject.h"
+#include "DefaultObject.h"
+#include "Player.h"
+#include "PlayerMain.h"
+#include "Player.h"
+#include "PlayerMain.h"
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
 : CScene(pGraphicDev, pContext)
@@ -33,8 +37,8 @@ CStage* CStage::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
 
 HRESULT CStage::Ready_Scene(void)
 {
-	if (FAILED(Ready_Environment()))	return E_FAIL;
 	if (FAILED(Ready_GameLogic()))		return E_FAIL;
+	if (FAILED(Ready_Environment()))	return E_FAIL;
 
 	return S_OK;
 }
@@ -53,18 +57,17 @@ HRESULT CStage::Ready_GameLogic(void)
 	CGameObject* pGameObject = NULL;
 
 
+	pGameObject = CPlayerMain::Create(m_pGraphicDev, m_pContext);
+	if (NULL == pGameObject) return E_FAIL;
+	pLayer->Ready_Object(L"PlayerMain", pGameObject);
 
-	//StatocObject
-	pGameObject = CStaticObject::Create(m_pContext);
 
-	if (NULL == pGameObject)
-		return E_FAIL;
-
-	pLayer->Ready_Object(L"Object", pGameObject);
+	pGameObject = CDefaultObj::Create(m_pContext);
+	if (NULL == pGameObject) return E_FAIL;
+	pLayer->Ready_Object(L"Dfdf", pGameObject);
 
 
 	m_mapLayer.insert(MAPLAYER::value_type(L"Layer_GameLogic", pLayer));
-
 	return S_OK;
 }
 
@@ -74,11 +77,8 @@ HRESULT CStage::Ready_Environment(void)
 	CGameObject* pGameObject = NULL;
 
 	//다이나믹 카메라 적용
-	CCameraMgr::GetInstance()->Ready_DynamicCamera(m_pContext, CCameraMgr::CAMERA_DYNAMIC, 0.1f, 1000.f, _vec3(0.f, 5.f, -10.f), _vec3(0.f, 0.f, 0.f));
+	CCameraMgr::GetInstance()->Ready_DynamicCamera(m_pContext, CCameraMgr::CAMERA_DYNAMIC, 0.1f, 1000.f, XMFLOAT3(0.f, 5.f, -10.f), XMFLOAT3(0.f, 0.f, 0.f));
 
-
-	// RenderTarget
-	//CRenderTargetMgr::GetInstance()->Ready_RenderTarget(m_pGraphicDev, m_pContext, L"RT_Blend", DXGI_FORMAT_R8G8B8A8_UNORM, WINCX, WINCY, -0.8f, 0.8f);
 
 	m_mapLayer.insert(MAPLAYER::value_type(L"Layer_Environment", pLayer));
 

@@ -150,8 +150,8 @@ HRESULT CRenderTexture::Ready_RenderTexture(const DXGI_FORMAT& eFormat, const _u
 	m_pRcTex = dynamic_cast<CRcTex*>(CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, L"Buffer_RcTex"));
 	m_pTransform = CTransform::Create();
 
-	m_pTransform->m_vPos = _vec3(fRenderPosX, fRenderPosY, 0.f);
-	m_pTransform->m_vScale = _vec3(0.3f, 0.3f, 0.f);
+	m_pTransform->m_vPos = XMFLOAT3(fRenderPosX, fRenderPosY, 0.f);
+	m_pTransform->m_vScale = XMFLOAT3(0.3f, 0.3f, 0.f);
 
 	m_pTransform->Update(0.f);
 
@@ -165,12 +165,11 @@ void CRenderTexture::Render(void)
 	ID3D11Buffer* pConstantBuffer = CGraphicDev::GetInstance()->GetBaseShaderCB();
 	ID3D11SamplerState* pBaseSampler = CGraphicDev::GetInstance()->GetBaseSampler();
 
-	BASESHADERCB tConstantBuffer;
+	BASESHADER_CB tConstantBuffer;
 
-	tConstantBuffer.matWorld = m_pTransform->m_matWorld;
-	
-	D3DXMatrixIdentity(&tConstantBuffer.matView);
-	D3DXMatrixIdentity(&tConstantBuffer.matProj);
+	tConstantBuffer.matWorld = XMMatrixTranspose(XMLoadFloat4x4(&m_pTransform->m_matWorld));
+	tConstantBuffer.matView = XMMatrixTranspose(XMMatrixIdentity());
+	tConstantBuffer.matProj = XMMatrixTranspose(XMMatrixIdentity());
 
 
 	m_pContext->UpdateSubresource(pConstantBuffer, 0, NULL, &tConstantBuffer, 0, 0);
@@ -186,7 +185,7 @@ void CRenderTexture::Render(void)
 
 	// Target2
 	m_pTransform->m_matWorld._42 -= 0.3f;
-	tConstantBuffer.matWorld = m_pTransform->m_matWorld;
+	tConstantBuffer.matWorld = XMMatrixTranspose(XMLoadFloat4x4(&m_pTransform->m_matWorld));
 	m_pContext->UpdateSubresource(pConstantBuffer, 0, NULL, &tConstantBuffer, 0, 0);
 
 	m_pContext->PSSetShaderResources(0, 1, &m_pShaderResourceView[1]);	// RT Texture

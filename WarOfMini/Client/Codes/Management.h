@@ -15,7 +15,7 @@ private:
 
 public:
 	void Add_RenderGroup(CRenderer::RENDERTYPE eType, CGameObject* pGameObject, _float fViewZ = 0);
-	void Add_RenderInstGroup(CRenderer::RENDERTYPE eType, _uint uiObjNum, _matrix* pMatWorld);
+	void Add_RenderInstGroup(CRenderer::RENDERTYPE eType, UINT uiObjNum, XMFLOAT4X4* pMatWorld);
 
 public:
 	HRESULT Ready_Management(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);

@@ -35,12 +35,12 @@ void CRenderer::Add_RenderGroup(RENDERTYPE eType, CGameObject* pGameObject, _flo
 		m_mapAlpha.insert(MAPALPHA::value_type(fViewZ, pGameObject));
 }
 
-void CRenderer::Add_RenderInstGroup(RENDERTYPE eType, _uint uiObjNum, _matrix* pMatWorld)
+void CRenderer::Add_RenderInstGroup(RENDERTYPE eType, UINT uiObjNum, XMFLOAT4X4* pMatWorld)
 {
 	if (eType != RENDER_INST && eType != RENDER_ALPHAINST)
 		return;
 
-	MAPINST* pMapInst = NULL;
+	MAPINST* pMapInst = nullptr;
 
 	if (eType == RENDER_INST)
 		pMapInst = &m_mapInst;
@@ -98,11 +98,11 @@ HRESULT CRenderer::Ready_Renderer(void)
 
 void CRenderer::Render(void)
 {
-	m_pContext->ClearRenderTargetView((CRenderTargetMgr::GetInstance()->Get_RanderTargetView(L"RT_Blend"))[0], D3DXCOLOR(0.f, 0.f, 0.5f, 0.f));
+	m_pContext->ClearRenderTargetView((CRenderTargetMgr::GetInstance()->Get_RanderTargetView(L"RT_Blend"))[0], D3DXCOLOR(0.f, 0.f, 1.f, 0.f));
 	m_pContext->ClearRenderTargetView((CRenderTargetMgr::GetInstance()->Get_RanderTargetView(L"RT_Blend"))[1], D3DXCOLOR(1.f, 1.f, 1.f, 0.f));
 	m_pContext->ClearDepthStencilView((CRenderTargetMgr::GetInstance()->Get_DepthStencilView(L"RT_Blend")), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 
-	m_pContext->ClearRenderTargetView(m_pRenderTargetView, D3DXCOLOR(0.f, 0.f, 0.5f, 0.f));
+	m_pContext->ClearRenderTargetView(m_pRenderTargetView, D3DXCOLOR(0.f, 0.f, 1.0f, 0.f));
 	m_pContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 
 	Render_Priority();
@@ -135,17 +135,11 @@ void CRenderer::Render(void)
 	ID3D11Buffer* pBaseShaderCB = CGraphicDev::GetInstance()->GetBaseShaderCB();
 	ID3D11SamplerState* pBaseSampler = CGraphicDev::GetInstance()->GetBaseSampler();
 
-	BASESHADERCB tBaseShaderCB;
+	BASESHADER_CB tBaseShaderCB;
 
-	_matrix matScale, matView, matProj;
-	D3DXMatrixScaling(&matScale, 2.f, 2.f, 2.f);
-
-	D3DXMatrixIdentity(&matView);
-	D3DXMatrixIdentity(&matProj);
-
-	tBaseShaderCB.matWorld = matScale;
-	tBaseShaderCB.matView = matView;
-	tBaseShaderCB.matProj = matProj;
+	tBaseShaderCB.matWorld = XMMatrixTranspose(XMMatrixScaling(2.f, 2.f, 2.f));
+	tBaseShaderCB.matView = XMMatrixTranspose(XMMatrixIdentity());
+	tBaseShaderCB.matProj = XMMatrixTranspose(XMMatrixIdentity());
 
 	m_pContext->UpdateSubresource(pBaseShaderCB, 0, NULL, &tBaseShaderCB, 0, 0);
 
@@ -242,13 +236,13 @@ void CRenderer::Render_AlphaInst(void)
 	for (; iter != iter_end; ++iter)
 	{
 		sort(iter->second.begin(), iter->second.end()
-			, [](const _matrix* m1, const _matrix* m2)
+			, [](const XMFLOAT4X4* m1, const XMFLOAT4X4* m2)
 		{
-			_matrix matView = *(CCameraMgr::GetInstance()->Get_CurCameraView());
-			_matrix matViewWorld1, matViewWorld2;
+			XMMATRIX matView = XMLoadFloat4x4(CCameraMgr::GetInstance()->Get_CurCameraView());
+			XMFLOAT4X4 matViewWorld1, matViewWorld2;
 
-			matViewWorld1 = (*m1) * matView;
-			matViewWorld2 = (*m2) * matView;
+			XMStoreFloat4x4(&matViewWorld1, XMLoadFloat4x4(m1) * matView);
+			XMStoreFloat4x4(&matViewWorld2, XMLoadFloat4x4(m2) * matView);
 
 			return matViewWorld1._43 > matViewWorld2._43;
 		});

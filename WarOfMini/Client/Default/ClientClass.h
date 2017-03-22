@@ -1,5 +1,6 @@
 #pragma once
-#include "Soldier.h"
+#include "Player.h"
+
 class AsynchronousClientClass
 {
 public:

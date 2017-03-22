@@ -313,7 +313,7 @@ HRESULT CGraphicDev::Ready_GraphicDev(HWND hWnd, WINMODE eWinMode, const _ushort
 	ZeroMemory(&tBufferDesc, sizeof(D3D11_BUFFER_DESC));
 
 	tBufferDesc.Usage = D3D11_USAGE_DEFAULT; //버퍼가 쓰이는 방식 GPU가 버퍼의 자원을 읽고 쓸경우 DEFAULT
-	tBufferDesc.ByteWidth = sizeof(BASESHADERCB); //생성할 정점 버퍼의 크기(바이트 단위)
+	tBufferDesc.ByteWidth = sizeof(BASESHADER_CB); //생성할 정점 버퍼의 크기(바이트 단위)
 	tBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER; //정점 버퍼의 경우에는 D3D11_BIND_VERTEX_BUFFER를 지정
 
 	if (FAILED(m_pGraphicDev->CreateBuffer(&tBufferDesc, NULL, &m_pBaseShaderCB)))
@@ -323,7 +323,7 @@ HRESULT CGraphicDev::Ready_GraphicDev(HWND hWnd, WINMODE eWinMode, const _ushort
 	}
 
 	// 인스턴싱 정점버퍼
-	tBufferDesc.ByteWidth = sizeof(INSTANCINGSHADERCB);
+	tBufferDesc.ByteWidth = sizeof(INSTSHADER_CB);
 
 	if (FAILED(m_pGraphicDev->CreateBuffer(&tBufferDesc, NULL, &m_pInstShaderCB)))
 	{
@@ -332,7 +332,7 @@ HRESULT CGraphicDev::Ready_GraphicDev(HWND hWnd, WINMODE eWinMode, const _ushort
 	}
 
 	// 다이나믹 메시 정점버퍼
-	tBufferDesc.ByteWidth = sizeof(DYNAMICSHADERCB);
+	tBufferDesc.ByteWidth = sizeof(DYNAMICSHADER_CB);
 
 	if (FAILED(m_pGraphicDev->CreateBuffer(&tBufferDesc, NULL, &m_pDynamicShaderCB)))
 	{

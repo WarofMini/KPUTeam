@@ -6,17 +6,14 @@
 const _uint WINCX = 1600;
 const _uint WINCY = 900;
 
-const _uint	BONE_NUM = 8;
 const _uint	BONE_MATRIX_NUM = 128;
 const _ubyte MAX_NAME = 128;
-const _uint VERTEXCOUNTX = 129;
-const _uint VERTEXCOUNTZ = 129;
-const _uint VERTEXINTERVAL = 1;
 
+const XMFLOAT3 g_vLightPos = XMFLOAT3(0.f, -70.f, -32.f);
 const _vec3 g_vLook(0.f, 0.f, 1.f);
 
 const _ubyte NODELAYANICNT = 3;
-const _ubyte MAX_BONE_MATRICES = 128;
+const _ubyte MAX_BONE_MATRICES = 100;
 const _ubyte INSTCNT = 32;
 
 #define VS_SLOT_VIEW_MATRIX			0x00

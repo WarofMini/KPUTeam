@@ -75,7 +75,6 @@ void CLoading::StageLoading(void)
 {
 
 
-
 	cout << "Thread Stage Loading End" << endl;
 	m_bComplete = true;
 }

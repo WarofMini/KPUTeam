@@ -11,20 +11,15 @@ private:
 	virtual ~CDynamicCamera(void);
 
 public:
-	static CDynamicCamera* Create(ID3D11DeviceContext* pContext, _float fNear, _float fFar, _vec3& vEye, _vec3& vAt);
+	static CDynamicCamera* Create(ID3D11DeviceContext* pContext, _float fNear, _float fFar, XMFLOAT3& vPos, XMFLOAT3& vTarget);
 
 public:
 	virtual _int Update(const _float& fTimeDelta);
 	virtual void Release(void);
 
 private:
-	_float	m_fSpeed;
-
-
-private:
-	void	KeyCheck(const _float& fTimeDelta);
-	void	MouseMove(const _float& fTimeDelta);
-	void	FixMouse(void);
+	FLOAT	m_fSpeed;
+	FLOAT	m_fCurAngleX;
 };
 
 #endif // DynamicCamera_h__

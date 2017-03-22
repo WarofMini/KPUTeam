@@ -4,29 +4,29 @@
 #include "Component.h"
 
 
-class CTransform :
-	public CComponent
+class CTransform
+	: public CComponent
 {
-
 private:
 	explicit CTransform(void);
 	virtual ~CTransform(void);
 
 public:
-	_vec3					m_vAngle;
-	_vec3					m_vScale;
-	_vec3					m_vPos;
-	_vec3					m_vDir;
-	_matrix					m_matWorld;
-	Ser_PLAYER_DATA			m_ServerInfo;
-
+	virtual _int  Update(const _float& fTime);
+	void Update_MatrixNotXRot(void);
 
 public:
-	virtual _int Update(const _float& fTime);
 	static CTransform* Create(void);
 
 public:
-	virtual  void		Release(void);
+	virtual void Release(void);
+
+public:
+	XMFLOAT3			m_vScale;
+	XMFLOAT3			m_vAngle;
+	XMFLOAT3			m_vPos;
+	XMFLOAT3			m_vDir;
+	XMFLOAT4X4			m_matWorld;
 };
 
 #endif

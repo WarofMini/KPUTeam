@@ -20,7 +20,7 @@ private:
 
 public:
 	void Push_AnimData(ANIMDATA& tAniData);
-	void UpdateSubresource(CAnimationInfo* pAnimInfo, _matrix* pBoneWorld = NULL);
+	void UpdateSubresource(CAnimationInfo* pAnimInfo, XMFLOAT4X4* pBoneWorld = nullptr);
 
 public:
 	static CAnimation* Create(ID3D11DeviceContext* pContext);
