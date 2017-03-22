@@ -39,7 +39,7 @@ HRESULT CPlayerMain::Initialize(ID3D11Device* pGraphicDev)
 
 
 	m_pTransform->m_vScale = XMFLOAT3(0.06f, 0.06f, 0.06f);
-	m_pTransform->m_vAngle.y = D3DXToRadian(180.f);
+	m_pTransform->m_vAngle.y = (_float)D3DXToRadian(180.f);
 	m_pTransform->m_vPos = XMFLOAT3(0.f, 0.f, 0.f);
 	m_pTransform->m_vDir = XMFLOAT3(0.f, 0.f, -1.f);
 	m_pAnimInfo->Set_Key(PLAYER_IDLE);
