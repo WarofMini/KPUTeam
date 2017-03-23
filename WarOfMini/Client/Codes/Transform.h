@@ -26,7 +26,23 @@ public:
 	XMFLOAT3			m_vAngle;
 	XMFLOAT3			m_vPos;
 	XMFLOAT3			m_vDir;
+
+public:
 	XMFLOAT4X4			m_matWorld;
+	XMFLOAT4X4			m_matNRotWorld;
+	XMFLOAT4X4			m_matNScaleWorld;
+
+
+public:
+	void				Move_Position(const XMVECTOR* pDirection);
+
+	void				Move_TargetPos(const XMVECTOR* pTargetPos, const _float& fSpeed, const _float& fTimeDelta);
+
+	void				Move_Forward(const _float& fSpeed, const _float& fTimeDelta);
+
+	void				Move_Right(const XMVECTOR* pDirection, const _float& fSpeed, const _float& fTimeDelta);
+
+	void				Move_Left(const XMVECTOR* pDirection, const _float& fSpeed, const _float& fTimeDelta);
 };
 
 #endif
