@@ -17,7 +17,7 @@ public:
 
 public:
 	virtual HRESULT	Initialize(void);
-	virtual INT Update(const FLOAT& fTimeDelta);
+	virtual _int Update(const _float& fTimeDelta);
 	virtual void Render(void);
 	virtual void Release(void);
 
@@ -25,9 +25,13 @@ private:
 	virtual HRESULT Ready_Component(void);
 
 private:
-	UINT			m_uiObjNum;
-	FLOAT			m_fRadius;
+	_uint			m_uiObjNum;
+	_float			m_fRadius;
 	CTransform*		m_pTransform;
+
+public:
+	void			SetObjNum(_uint uNum);
+
 };
 
 #endif // DefaultObj_h__

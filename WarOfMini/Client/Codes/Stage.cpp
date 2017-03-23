@@ -9,6 +9,8 @@
 #include "PlayerMain.h"
 #include "Player.h"
 #include "PlayerMain.h"
+#include "Transform.h"
+
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
 : CScene(pGraphicDev, pContext)
@@ -57,15 +59,35 @@ HRESULT CStage::Ready_GameLogic(void)
 	CGameObject* pGameObject = NULL;
 
 
-	pGameObject = CPlayerMain::Create(m_pGraphicDev, m_pContext);
-	if (NULL == pGameObject) return E_FAIL;
-	pLayer->Ready_Object(L"PlayerMain", pGameObject);
+	//pGameObject = CPlayerMain::Create(m_pGraphicDev, m_pContext);
+	//if (NULL == pGameObject) return E_FAIL;
+	//pLayer->Ready_Object(L"PlayerMain", pGameObject);
 
 
-	pGameObject = CDefaultObj::Create(m_pContext);
-	if (NULL == pGameObject) return E_FAIL;
-	pLayer->Ready_Object(L"Dfdf", pGameObject);
 
+	//InitFloor
+	float m_iSize = 500.f;
+	float m_fSize = 0.4f;
+
+	m_iSize *= m_fSize;
+
+	for (int i = 0; i < 8; ++i)
+	{
+		for (int j = 0; j < 6; ++j)
+		{
+			pGameObject = CDefaultObj::Create(m_pContext);
+			if (NULL == pGameObject) return E_FAIL;
+
+			((CDefaultObj*)pGameObject)->SetObjNum(MESHNUM_FLOOR1);
+
+			//((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle.x = (_float)D3DXToRadian(90.f);
+			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale = XMFLOAT3(m_fSize, m_fSize, m_fSize);
+			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos = XMFLOAT3((j % 6) * m_iSize, 0.f, i * m_iSize);
+
+			pLayer->Ready_Object(L"StaticObject", pGameObject);
+
+		}
+	}
 
 	m_mapLayer.insert(MAPLAYER::value_type(L"Layer_GameLogic", pLayer));
 	return S_OK;

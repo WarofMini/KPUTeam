@@ -9,7 +9,7 @@
 
 CDefaultObj::CDefaultObj(ID3D11DeviceContext* pContext)
 : CGameObject(pContext)
-, m_uiObjNum(1)
+, m_uiObjNum(0)
 , m_fRadius(0.f)
 , m_pTransform(NULL)
 {
@@ -34,7 +34,6 @@ HRESULT CDefaultObj::Initialize()
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
 
-	m_uiObjNum = 1;
 
 	//m_pTransform->m_vScale = XMFLOAT3(tObjData.vScale);
 	//m_pTransform->m_vAngle = XMFLOAT3(tObjData.vAngle);
@@ -52,7 +51,7 @@ HRESULT CDefaultObj::Initialize()
 	return S_OK;
 }
 
-INT CDefaultObj::Update(const FLOAT& fTimeDelta)
+_int CDefaultObj::Update(const _float& fTimeDelta)
 {
 	CGameObject::Update(fTimeDelta);
 
@@ -103,4 +102,9 @@ HRESULT CDefaultObj::Ready_Component()
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Transform", pComponent));
 
 	return S_OK;
+}
+
+void CDefaultObj::SetObjNum(_uint uNum)
+{
+	m_uiObjNum = uNum;
 }

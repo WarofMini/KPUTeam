@@ -31,7 +31,7 @@ HRESULT CGun::Initialize(void)
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
 
-	m_uiObjNum = MESHNUM_GUN;
+	m_uiObjNum = 0;
 
 	//m_pTransform->m_vPos = XMFLOAT3(-5.f, -13.f, 30.f);
 	m_pTransform->m_vPos = XMFLOAT3(0.f, 0.f, -0.f);

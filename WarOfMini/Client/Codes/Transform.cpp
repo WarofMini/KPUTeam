@@ -16,12 +16,6 @@ CTransform::~CTransform(void)
 
 _int  CTransform::Update(const _float& fTime)
 {
-	if (m_vAngle.y > (_float)D3DXToRadian(360.f))	
-		m_vAngle.y -= (_float)D3DXToRadian(360.f);
-
-	if (m_vAngle.y < (_float)D3DXToRadian(0.f))
-		m_vAngle.y += (_float)D3DXToRadian(360.f);
-
 	XMMATRIX matScale = XMMatrixScaling(m_vScale.x, m_vScale.y, m_vScale.z);
 	XMMATRIX matRotX = XMMatrixRotationX(m_vAngle.x);
 	XMMATRIX matRotY = XMMatrixRotationY(m_vAngle.y);
