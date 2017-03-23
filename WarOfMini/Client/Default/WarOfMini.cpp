@@ -23,6 +23,8 @@ WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 HWND g_hWnd;
 Scene_Type	m_eSceneID;
 BOOL m_bLogoLoading;
+_bool g_bFocus;
+_bool g_bSetAquire;
 //AsynchronousClientClass g_Client;
 
 
@@ -201,6 +203,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+	case WM_KILLFOCUS:
+		g_bFocus = false;
+		g_bSetAquire = true;
+		break;
+
+	case WM_SETFOCUS:
+		g_bFocus = true;
+		break;
+
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);

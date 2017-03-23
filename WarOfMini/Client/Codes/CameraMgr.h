@@ -28,6 +28,7 @@ public:
 public:
 	const XMFLOAT4X4* Get_CurCameraProj(void);
 	const XMFLOAT4X4* Get_CurCameraView(void);
+	const _bool*	Get_CurCameraFixMouseCheck(void);
 
 public:
 	void Set_CurCamera(CAMERALIST eCameraName);

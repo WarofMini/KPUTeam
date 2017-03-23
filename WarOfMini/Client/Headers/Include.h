@@ -25,4 +25,8 @@ extern BOOL			m_bLogoLoading;
 
 extern XMFLOAT3		g_vPlayerPos;
 
+
+extern _bool		g_bFocus;
+extern _bool		g_bSetAquire;
+
 #endif

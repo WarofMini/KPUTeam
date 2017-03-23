@@ -59,6 +59,11 @@ const XMFLOAT4X4* CCameraMgr::Get_CurCameraView(void)
 	return m_vecCamera[m_eCurCamera]->Get_View();
 }
 
+const _bool * CCameraMgr::Get_CurCameraFixMouseCheck(void)
+{
+	return m_vecCamera[m_eCurCamera]->GetMouseFixCheck();
+}
+
 void CCameraMgr::Set_CurCamera(CAMERALIST eCameraName)
 {
 	m_eCurCamera = eCameraName;

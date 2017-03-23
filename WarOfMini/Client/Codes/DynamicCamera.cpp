@@ -4,7 +4,6 @@
 
 CDynamicCamera::CDynamicCamera(ID3D11DeviceContext* pContext)
 : CCamera(pContext)
-, m_fSpeed(50.f)
 {
 }
 
@@ -12,11 +11,11 @@ CDynamicCamera::~CDynamicCamera(void)
 {
 }
 
-CDynamicCamera* CDynamicCamera::Create(ID3D11DeviceContext* pContext, _float fNear, _float fFar, XMFLOAT3& vPos, XMFLOAT3& vTarget)
+CDynamicCamera* CDynamicCamera::Create(ID3D11DeviceContext* pContext, _float fNear, _float fFar, XMFLOAT3& vEye, XMFLOAT3& vAt)
 {
 	CDynamicCamera* pCamera = new CDynamicCamera(pContext);
 
-	if (FAILED(pCamera->Initialize(fNear, fFar, vPos, vTarget)))
+	if (FAILED(pCamera->Initialize(fNear, fFar, vEye, vAt)))
 		Safe_Release(pCamera);
 
 	return pCamera;
@@ -24,103 +23,12 @@ CDynamicCamera* CDynamicCamera::Create(ID3D11DeviceContext* pContext, _float fNe
 
 INT CDynamicCamera::Update(const _float& fTimeDelta)
 {
-	// Key
-	_ushort wInput = 0;
+	KeyState(fTimeDelta);
+	MouseMove(fTimeDelta);
+	FixMouse();
 
-	if (CInput::GetInstance()->GetDIKeyState(DIK_W) & 0x80)		wInput |= 0x0001;
-	if (CInput::GetInstance()->GetDIKeyState(DIK_S) & 0x80)		wInput |= 0x0002;
-	if (CInput::GetInstance()->GetDIKeyState(DIK_A) & 0x80)		wInput |= 0x0004;
-	if (CInput::GetInstance()->GetDIKeyState(DIK_D) & 0x80)		wInput |= 0x0008;
 
-	if (CInput::GetInstance()->GetDIKeyState(DIK_UP) & 0x80)		wInput |= 0x0010;
-	if (CInput::GetInstance()->GetDIKeyState(DIK_DOWN) & 0x80)		wInput |= 0x0020;
-	if (CInput::GetInstance()->GetDIKeyState(DIK_LEFT) & 0x80)		wInput |= 0x0040;
-	if (CInput::GetInstance()->GetDIKeyState(DIK_RIGHT) & 0x80)	wInput |= 0x0080;
-
-	if (CInput::GetInstance()->GetDIKeyState(DIK_Q) & 0x80)		wInput |= 0x0100;
-	if (CInput::GetInstance()->GetDIKeyState(DIK_E) & 0x80)		wInput |= 0x0200;
-
-	// Move Camera
-	XMVECTOR vPos = XMLoadFloat3(m_pPos);
-	XMVECTOR vTarget = XMLoadFloat3(m_pTarget);
-
-	XMVECTOR vLook = vTarget - vPos;
-	vLook = XMVector3Normalize(vLook);
-
-	// Pos
-	if (wInput & 0x000f)
-	{
-		XMVECTOR vYzeroRight, vYzeroLook;
-
-		vYzeroRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook);
-		vYzeroRight = XMVectorSetY(vYzeroRight, 0.f);
-		vYzeroRight = XMVector3Normalize(vYzeroRight);
-
-		vYzeroLook = XMVectorSetY(vLook, 0.f);
-		vYzeroLook = XMVector3Normalize(vYzeroLook);
-
-		if (wInput & 0x0001) vPos += vYzeroLook * m_fSpeed * fTimeDelta;
-		if (wInput & 0x0002) vPos -= vYzeroLook * m_fSpeed * fTimeDelta;
-		if (wInput & 0x0004) vPos -= vYzeroRight * m_fSpeed * fTimeDelta;
-		if (wInput & 0x0008) vPos += vYzeroRight * m_fSpeed * fTimeDelta;
-
-		vTarget = vPos + vLook;
-
-		XMMATRIX matView = XMMatrixLookAtLH(vPos, vTarget, XMVectorSet(0.f, 1.f, 0.f, 0.f));
-
-		XMStoreFloat4x4(m_pView, matView);
-		XMStoreFloat3(m_pPos, vPos);
-		XMStoreFloat3(m_pTarget, vTarget);
-	}
-
-	// Target
-	if (wInput & 0x00f0)
-	{
-		XMVECTOR vRotLook = vLook;
-
-		_float fAngleX = 0.f;
-		_float fAngleY = 0.f;
-
-		XMMATRIX matRotAxis = XMMatrixIdentity();
-
-		if (wInput & 0x0010)	fAngleX -= m_fSpeed * fTimeDelta;
-		if (wInput & 0x0020)	fAngleX += m_fSpeed * fTimeDelta;
-		if (wInput & 0x0040)	fAngleY -= m_fSpeed * fTimeDelta;
-		if (wInput & 0x0080)	fAngleY += m_fSpeed * fTimeDelta;
-
-		matRotAxis = XMMatrixRotationX((_float)D3DXToRadian(fAngleX));
-		vRotLook = XMVector3TransformNormal(vRotLook, matRotAxis);
-
-		matRotAxis = XMMatrixRotationY((_float)D3DXToRadian(fAngleY));
-		vRotLook = XMVector3TransformNormal(vRotLook, matRotAxis);
-
-		vTarget = vPos + vRotLook;
-
-		XMMATRIX matView = XMMatrixLookAtLH(vPos, vTarget, XMVectorSet(0.f, 1.f, 0.f, 0.f));
-
-		XMStoreFloat4x4(m_pView, matView);
-		XMStoreFloat3(m_pTarget, vTarget);
-	}
-
-	// Zoom
-	if (wInput & 0x0300)
-	{
-		// Zoom
-		if ((wInput & 0x0100))
-			vPos += vLook * m_fSpeed * fTimeDelta;
-
-		if (wInput & 0x0200)
-			vPos -= vLook * m_fSpeed * fTimeDelta;
-
-		vTarget = vPos + vLook;
-
-		XMMATRIX matView = XMMatrixLookAtLH(vPos, vTarget, XMVectorSet(0.f, 1.f, 0.f, 0.f));
-
-		XMStoreFloat4x4(m_pView, matView);
-		XMStoreFloat3(m_pPos, vPos);
-		XMStoreFloat3(m_pTarget, vTarget);
-	}
-
+	MakeView();
 
 	return 0;
 }
@@ -130,4 +38,194 @@ void CDynamicCamera::Release(void)
 	CCamera::Release();
 
 	delete this;
+}
+
+void CDynamicCamera::KeyState(const _float& fTimeDelta)
+{
+	XMMATRIX	matWorld;
+	XMVECTOR    vecTest = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+
+
+	matWorld = XMMatrixInverse(&vecTest, XMLoadFloat4x4(m_pView));
+
+	if (CInput::GetInstance()->Get_DIKeyState(DIK_W) & 0x80)
+	{
+		XMVECTOR vLook;
+
+		memcpy(&vLook, &matWorld.m[2][0], sizeof(XMVECTOR));
+
+		vLook = XMVector3Normalize(vLook);
+
+
+		XMVECTOR	vLength = vLook * m_fCameraSpeed * fTimeDelta;
+
+		XMVECTOR vPos, vAt;
+
+		vPos = XMLoadFloat3(m_pEye);
+		vAt = XMLoadFloat3(m_pAt);
+
+		vPos += vLength;
+		vAt += vLength;
+		
+		XMStoreFloat3(m_pEye, vPos);
+		XMStoreFloat3(m_pAt, vAt);
+	}
+
+
+	if (CInput::GetInstance()->Get_DIKeyState(DIK_S) & 0x80)
+	{
+		XMVECTOR vLook;
+
+		memcpy(&vLook, &matWorld.m[2][0], sizeof(XMVECTOR));
+
+		vLook = XMVector3Normalize(vLook);
+
+		XMVECTOR	vLength = vLook * m_fCameraSpeed * fTimeDelta;
+
+		XMVECTOR vPos, vAt;
+
+		vPos = XMLoadFloat3(m_pEye);
+		vAt = XMLoadFloat3(m_pAt);
+
+		vPos -= vLength;
+		vAt  -= vLength;
+
+		XMStoreFloat3(m_pEye, vPos);
+		XMStoreFloat3(m_pAt, vAt);
+	}
+
+	if (CInput::GetInstance()->Get_DIKeyState(DIK_A) & 0x80)
+	{
+		XMVECTOR vLook;
+
+		memcpy(&vLook, &matWorld.m[0][0], sizeof(XMVECTOR));
+
+		vLook = XMVector3Normalize(vLook);
+
+		XMVECTOR	vLength = vLook * m_fCameraSpeed * fTimeDelta;
+
+		XMVECTOR vPos, vAt;
+
+		vPos = XMLoadFloat3(m_pEye);
+		vAt = XMLoadFloat3(m_pAt);
+
+		vPos -= vLength;
+		vAt -= vLength;
+
+		XMStoreFloat3(m_pEye, vPos);
+		XMStoreFloat3(m_pAt, vAt);
+	}
+
+
+
+	if (CInput::GetInstance()->Get_DIKeyState(DIK_D) & 0x80)
+	{
+		XMVECTOR vLook;
+
+		memcpy(&vLook, &matWorld.m[0][0], sizeof(XMVECTOR));
+
+		vLook = XMVector3Normalize(vLook);
+
+		XMVECTOR	vLength = vLook * m_fCameraSpeed * fTimeDelta;
+
+		XMVECTOR vPos, vAt;
+
+		vPos = XMLoadFloat3(m_pEye);
+		vAt = XMLoadFloat3(m_pAt);
+
+		vPos += vLength;
+		vAt  += vLength;
+
+		XMStoreFloat3(m_pEye, vPos);
+		XMStoreFloat3(m_pAt, vAt);
+	}
+
+	//Mouse Fix
+	if (GetAsyncKeyState('Q') & 1)
+	{
+		if (m_bMouseFix == true)
+			m_bMouseFix = false;
+		else
+			m_bMouseFix = true;
+	}
+
+}
+
+void CDynamicCamera::FixMouse(void)
+{
+	POINT ptMouse;
+	ZeroMemory(&ptMouse, sizeof(POINT));
+
+	ptMouse = { WINCX >> 1, WINCY >> 1 };
+
+	ClientToScreen(g_hWnd, &ptMouse);
+
+	if (m_bMouseFix == true)
+		SetCursorPos(ptMouse.x, ptMouse.y);
+}
+
+void CDynamicCamera::MouseMove(const _float& fTimeDelta)
+{
+	_long dwMouseMove = 0;
+	
+	XMMATRIX	matWorld;
+
+	XMVECTOR    vecTest = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+
+	matWorld = XMMatrixInverse(&vecTest, XMLoadFloat4x4(m_pView));
+
+	//R Btn
+	if (CInput::GetInstance()->Get_DIMouseState(CInput::DIM_RB))
+	{
+		if (dwMouseMove = CInput::GetInstance()->Get_DIMouseMove(CInput::DIMS_Y))
+		{
+			XMVECTOR vRight;
+
+			memcpy(&vRight, &matWorld.m[0][0], sizeof(XMVECTOR));
+
+			XMVECTOR	vLook, vAt, vEye;
+
+			vEye = XMLoadFloat3(m_pEye);
+			vAt = XMLoadFloat3(m_pAt);
+
+			vLook = vAt - vEye;
+
+			XMMATRIX	matRot;
+
+			matRot = XMMatrixRotationAxis(vRight, (_float)D3DXToRadian(dwMouseMove/ 10.0f));
+
+			vLook = XMVector3TransformNormal(vLook, matRot);
+
+			vAt = vEye + vLook;
+
+			XMStoreFloat3(m_pAt, vAt);
+		}
+
+
+		if (dwMouseMove = CInput::GetInstance()->Get_DIMouseMove(CInput::DIMS_X))
+		{
+			XMVECTOR vAxis = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+
+
+			XMVECTOR vLook, vAt, vEye;
+
+			vEye = XMLoadFloat3(m_pEye);
+			vAt = XMLoadFloat3(m_pAt);
+
+			vLook = vAt - vEye;
+
+
+			XMMATRIX	matRot;
+
+			matRot = XMMatrixRotationAxis(vAxis, (_float)D3DXToRadian(dwMouseMove / 10.0f));
+
+			vLook = XMVector3TransformNormal(vLook, matRot);
+
+			vAt = vEye + vLook;
+
+			XMStoreFloat3(m_pAt, vAt);
+		}
+
+	}
+
 }

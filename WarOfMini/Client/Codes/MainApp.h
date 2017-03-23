@@ -23,7 +23,8 @@ private:
 	_tchar							m_szFPS[128];
 	_float							m_fTime;
 
-
+private:	//인풋 장치 소실 했을때 다시 찾는 함수.
+	void		Set_Focus(void);
 
 public:
 	void Release(void);
@@ -34,6 +35,8 @@ private:
 public:
 	void Render_FPS(void);
 	void Render_CurrentScene(void);
+
+	void Stage_DebugInfo(void);
 };
 
 #endif // MainApp_h__

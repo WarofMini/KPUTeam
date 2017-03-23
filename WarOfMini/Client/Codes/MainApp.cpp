@@ -71,7 +71,7 @@ HRESULT CMainApp::Initialize(void)
 	}
 
 	// Input
-	if (FAILED(CInput::GetInstance()->InitInputDevice(g_hInst, g_hWnd)))
+	if (FAILED(CInput::GetInstance()->Ready_InputDevice(g_hInst, g_hWnd)))
 	{
 		MSG_BOX(L"Ready_InputDev Failed");
 		return FALSE;
@@ -90,11 +90,9 @@ INT CMainApp::Update(const _float& fTimeDelta)
 	m_fTime += fTimeDelta;
 
 
-	if (GetFocus() == g_hWnd)
-		CInput::GetInstance()->SetInputState();
-	else
-		CInput::GetInstance()->ResetInputState();
-
+	CInput::GetInstance()->SetUp_InputState();
+		// ÀÎÇ² ÀåÄ¡ ¼Ò½Ç Àâ¾Æ ÁÖ´Â ÇÔ¼ö.
+	Set_Focus();
 
 
 	return CManagement::GetInstance()->Update(fTimeDelta);
@@ -135,6 +133,21 @@ CMainApp* CMainApp::Create(void)
 	}
 
 	return pMainApp;
+}
+
+void CMainApp::Set_Focus(void)
+{
+	if (g_bFocus)
+	{
+		if (g_bSetAquire)
+		{
+			CInput::GetInstance()->Set_Acquire();
+			g_bSetAquire = false;
+		}
+	}
+	else
+		CInput::GetInstance()->Reset_InputState();
+
 }
 
 void CMainApp::Release(void)
@@ -205,8 +218,8 @@ void CMainApp::Ready_TextureFromFile(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 void CMainApp::Render_FPS(void)
 {
 	////Render Font
-	CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"<Debug Information>", 20.f, 10.f, 0.f, D3DXCOLOR(0.0f, 0.f, 1.f, 1.f));
-	CFontMgr::GetInstance()->Render_Font(L"°íµñ", m_szFPS, 20.f, 10.f, 30.f, D3DXCOLOR(0.0f, 1.f, 0.f, 1.f));
+	CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"<Debug Information>", 15.f, 10.f, 0.f, D3DXCOLOR(0.0f, 0.f, 1.f, 1.f));
+	CFontMgr::GetInstance()->Render_Font(L"°íµñ", m_szFPS, 15.f, 10.f, 30.f, D3DXCOLOR(0.0f, 1.f, 0.f, 1.f));
 }
 
 void CMainApp::Render_CurrentScene(void)
@@ -214,24 +227,46 @@ void CMainApp::Render_CurrentScene(void)
 	switch (m_eSceneID)
 	{
 	case SCENE_LOGO:
-		CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"Current Scene : Logo", 20.f, 10.f, 50.f, D3DXCOLOR(0.0f, 1.f, 0.f, 1.f));
+		CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"Current Scene : Logo", 15.f, 10.f, 50.f, D3DXCOLOR(0.0f, 1.f, 0.f, 1.f));
 
 		if (m_bLogoLoading == TRUE)
 		{
-			CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"LoadingState : END", 20.f, 10.f, 75.f, D3DXCOLOR(1.0f, 1.f, 0.f, 1.f));
-			CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"Press Enter Key", 20.f, 10.f, 100.f, D3DXCOLOR(1.0f, 1.f, 0.f, 1.f));
+			CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"LoadingState : END", 15.f, 10.f, 75.f, D3DXCOLOR(1.0f, 1.f, 0.f, 1.f));
+			CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"Press Enter Key", 15.f, 10.f, 100.f, D3DXCOLOR(1.0f, 1.f, 0.f, 1.f));
 		}
 		else
-			CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"LoadingState : ING", 20.f, 10.f, 75.f, D3DXCOLOR(0.0f, 0.f, 1.f, 1.f));
+			CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"LoadingState : ING", 15.f, 10.f, 75.f, D3DXCOLOR(0.0f, 0.f, 1.f, 1.f));
 
 		break;
 
 
 	case SCENE_STAGE:
-		CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"Current Scene : Stage", 20.f, 10.f, 50.f, D3DXCOLOR(0.0f, 1.f, 0.f, 1.f));
-
-		CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"´ÜÃàÅ° ¸ðÀ½", 20.f, 10.f, 80.f, D3DXCOLOR(0.1f, 1.f, 0.f, 1.f));
-		CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"Q : Mouse Fix(ON/OFF)", 20.f, 10.f, 100.f, D3DXCOLOR(0.1f, 1.f, 0.f, 1.f));
+		Stage_DebugInfo();
 		break;
 	}
+}
+
+void CMainApp::Stage_DebugInfo(void)
+{
+	CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"Current Scene : Stage", 15.f, 10.f, 50.f, D3DXCOLOR(0.0f, 1.f, 0.f, 1.f));
+	CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"´ÜÃàÅ° ¸ðÀ½", 15.f, 10.f, 80.f, D3DXCOLOR(0.1f, 1.f, 0.f, 1.f));
+	CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"Q : Mouse Fix(ON/OFF)", 15.f, 10.f, 100.f, D3DXCOLOR(0.1f, 1.f, 0.f, 1.f));
+
+	CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"Fix Mouse : ", 15.f, 15.f, 120.f, D3DXCOLOR(1.0f, 0.f, 0.f, 1.f));
+
+	wstring strFixMouseState;
+	D3DXCOLOR FixColor;
+
+	if ((*CCameraMgr::GetInstance()->Get_CurCameraFixMouseCheck()) == true) //FixMouse On
+	{
+		strFixMouseState = L"On";
+		FixColor = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
+	}
+	else
+	{
+		strFixMouseState = L"Off";
+		FixColor = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);
+	}
+	CFontMgr::GetInstance()->Render_Font(L"°íµñ", strFixMouseState.c_str(), 15.f, 100.f, 120.f, FixColor);
+	
 }

@@ -16,10 +16,10 @@ public:
 
 protected:
 	void Set_Proj(_float fNear, _float fFar);
-	void Set_View(XMFLOAT3 vPos, XMFLOAT3 vTarget);
+	void Set_View(XMFLOAT3 vEye, XMFLOAT3 vTarget);
 
 public:
-	virtual HRESULT	Initialize(_float fNear, _float fFar, XMFLOAT3 vPos, XMFLOAT3 vTarget);
+	virtual HRESULT	Initialize(_float fNear, _float fFar, XMFLOAT3 vEye, XMFLOAT3 vTarget);
 	virtual _int Update(const _float& fTimeDelta)	PURE;
 	virtual void Release(void);
 
@@ -28,8 +28,24 @@ protected:
 	XMFLOAT4X4*				m_pView;
 
 protected:
-	XMFLOAT3*				m_pPos;
-	XMFLOAT3*				m_pTarget;
+	XMFLOAT3*				m_pEye;
+	XMFLOAT3*				m_pAt;
+	XMFLOAT3*				m_pUp;
+
+	_float					m_fNear;
+	_float					m_fFar;
+	_float					m_fCameraSpeed;
+	_bool					m_bMouseFix;
+
+public:
+	void		MakeView(void);
+
+	void		MakeProjection(void);
+
+
+public:
+	_bool*		GetMouseFixCheck(void);
+	void		SetMouseFixCheck(_bool bCheck);
 };
 
 #endif Camera_h__

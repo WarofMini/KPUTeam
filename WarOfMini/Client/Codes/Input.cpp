@@ -3,200 +3,78 @@
 
 IMPLEMENT_SINGLETON(CInput)
 
+
 CInput::CInput(void)
-: m_pInput(NULL),
-  m_pKeyBoard(NULL),
-  m_pMouse(NULL)
 {
-	ZeroMemory(m_byKeyState, sizeof(_ubyte) * 256);
-	ZeroMemory(m_byCheckOnce, sizeof(_ubyte) * 260);
-	ZeroMemory(m_byIsOnce, sizeof(_ubyte) * 260);
-	ZeroMemory(m_byIsLeave, sizeof(_ubyte) * 260);
-	ZeroMemory(&m_MouseState, sizeof(MOUSEKEYSTATE));
+
 }
 
 CInput::~CInput(void)
 {
 }
 
-_ubyte CInput::GetDIKeyState(_ubyte byKeyID)
+
+_byte CInput::Get_DIKeyState(_ubyte byKeyID)
 {
 	return m_byKeyState[byKeyID];
 }
 
-_ubyte CInput::GetDIMouseState(_ubyte byMouseID)
+_byte CInput::Get_DIMouseState(MOUSEKEYSTATE byMouseID)
 {
 	return m_MouseState.rgbButtons[byMouseID];
 }
 
-_long CInput::GetDIMouseMove(MOUSEMOVESTATE byMouseMoveState)
+_long CInput::Get_DIMouseMove(MOUSEMOVESTATE byMouseMoveState)
 {
-	return *(((_long*)&m_MouseState) + byMouseMoveState);
+	return *(((_long*)(&m_MouseState)) + byMouseMoveState);
 }
 
-void CInput::SetInputState(void)
+void CInput::Set_Acquire(void)
 {
-	ResetOnce();
-	SetAcquire();
-
-	m_pKeyBoard->GetDeviceState(256, m_byKeyState);
-	m_pMouse->GetDeviceState(sizeof(MOUSEKEYSTATE), &m_MouseState);
-
-	SetInputOnce();
+	m_pKeyBoard->Acquire();
+	m_pMouse->Acquire();
 }
 
-void CInput::ResetInputState(void)
+HRESULT CInput::Ready_InputDevice(HINSTANCE hInst, HWND hWnd)
 {
-	ZeroMemory(m_byKeyState, sizeof(_ubyte) * 256);
-	ZeroMemory(m_byCheckOnce, sizeof(_ubyte) * 260);
-	ZeroMemory(m_byIsOnce, sizeof(_ubyte) * 260);
-	ZeroMemory(m_byIsLeave, sizeof(_ubyte) * 260);
-	ZeroMemory(&m_MouseState, sizeof(MOUSEKEYSTATE));
-}
+	if (FAILED(DirectInput8Create(hInst, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_pInputSDK, NULL)))
+		return E_FAIL;
 
-HRESULT CInput::InitInputDevice(HINSTANCE hInst, HWND hWnd)
-{
-	HRESULT	hr = NULL;
-
-
-	hr = DirectInput8Create(hInst, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_pInput, NULL);
-	FAILED_CHECK_MSG(hr, L"Input Created Failed");
-
-	hr = InitKeyBoard(hWnd);
-	FAILED_CHECK_MSG(hr, L"KeyBoard Created Failed");
-
-	hr = InitMouse(hWnd);
-	FAILED_CHECK_MSG(hr, L"Mouse Created Failed");
-
-	return S_OK;
-}
-
-void CInput::SetAcquire()
-{
-	if (m_pKeyBoard)
-		m_pKeyBoard->Acquire();
-
-	if (m_pMouse)
-		m_pMouse->Acquire();
-}
-
-HRESULT CInput::InitKeyBoard(HWND hWnd)
-{
-	HRESULT		hr = NULL;
-	hr = m_pInput->CreateDevice(GUID_SysKeyboard, &m_pKeyBoard, NULL);
-	FAILED_CHECK(hr);
-
-	m_pKeyBoard->SetCooperativeLevel(hWnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
-	FAILED_CHECK(hr);
+	if (FAILED(m_pInputSDK->CreateDevice(GUID_SysKeyboard, &m_pKeyBoard, NULL)))
+		return E_FAIL;
 
 	m_pKeyBoard->SetDataFormat(&c_dfDIKeyboard);
-	FAILED_CHECK(hr);
-
+	m_pKeyBoard->SetCooperativeLevel(hWnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
 	m_pKeyBoard->Acquire();
 
-	return S_OK;
-}
-
-HRESULT CInput::InitMouse(HWND hWnd)
-{
-	HRESULT		hr = NULL;
-	hr = m_pInput->CreateDevice(GUID_SysMouse, &m_pMouse, NULL);
-	FAILED_CHECK(hr);
-
-	m_pMouse->SetCooperativeLevel(hWnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
-	FAILED_CHECK(hr);
+	if (FAILED(m_pInputSDK->CreateDevice(GUID_SysMouse, &m_pMouse, NULL)))
+		return E_FAIL;
 
 	m_pMouse->SetDataFormat(&c_dfDIMouse);
-	FAILED_CHECK(hr);
-
+	m_pMouse->SetCooperativeLevel(hWnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
 	m_pMouse->Acquire();
 
 	return S_OK;
 }
 
-void CInput::SetInputOnce(void)
+void CInput::SetUp_InputState(void)
 {
-	for (int i = 0; i < 256; ++i)
-	{
-		if (m_byKeyState[i] && !m_byCheckOnce[i])
-		{
-			m_byIsOnce[i] = true;
-			m_byCheckOnce[i] = true;
-		}
-		else if (m_byKeyState[i] && m_byCheckOnce[i])
-			m_byIsOnce[i] = false;
-	}
-
-	for (int i = 0; i < 4; ++i)
-	{
-		if (m_MouseState.rgbButtons[i] && !m_byCheckOnce[i + 256])
-		{
-			m_byIsOnce[i + 256] = true;
-			m_byCheckOnce[i + 256] = true;
-		}
-		else if (m_MouseState.rgbButtons[i] && m_byCheckOnce[i + 256])
-			m_byIsOnce[i + 256] = false;
-	}
+	m_pKeyBoard->GetDeviceState(256, m_byKeyState);
+	m_pMouse->GetDeviceState(sizeof(m_MouseState), &m_MouseState);
 }
 
-void CInput::ResetOnce(void)
+void CInput::Reset_InputState(void)
 {
-	for (int i = 0; i < 256; ++i)
-	{
-		m_byIsOnce[i] = false;
-		m_byIsLeave[i] = false;
-
-		if (!m_byKeyState[i])
-		{
-			if (m_byCheckOnce[i])
-			{
-				m_byIsLeave[i] = true;
-				m_byCheckOnce[i] = false;
-			}
-		}
-	}
-
-	for (int i = 0; i < 4; ++i)
-	{
-		m_byIsOnce[i + 256] = false;
-		m_byIsLeave[i + 256] = false;
-		if (!m_MouseState.rgbButtons[i])
-		{
-			if (m_byCheckOnce[i + 256])
-			{
-				m_byIsLeave[i + 256] = true;
-				m_byCheckOnce[i + 256] = false;
-			}
-		}
-	}
+	ZeroMemory(m_byKeyState, sizeof(_ubyte) * 256);
+	ZeroMemory(&m_MouseState, sizeof(MOUSEKEYSTATE));
 }
 
-_ubyte CInput::GetDIKeyStateOnce(_ubyte KeyFlag)
-{
-	return m_byIsOnce[KeyFlag];
-}
-
-_ubyte CInput::GetDIKeyStateLeave(_ubyte KeyFlag)
-{
-	return m_byIsLeave[KeyFlag];
-}
-
-_ubyte CInput::GetDIMouseStateOnce(_ubyte KeyFlag)
-{
-	return m_byIsOnce[KeyFlag + 256];
-}
-
-_ubyte CInput::GetDIMouseStateLeave(_ubyte KeyFlag)
-{
-	return m_byIsLeave[KeyFlag + 256];
-}
 
 void CInput::Release(void)
 {
 	Safe_Release(m_pMouse);
 	Safe_Release(m_pKeyBoard);
-	Safe_Release(m_pInput);
+	Safe_Release(m_pInputSDK);
 
 	delete this;
 }
-
