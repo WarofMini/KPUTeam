@@ -45,7 +45,7 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 
 
 	m_pTransform->m_vScale = XMFLOAT3(0.06f, 0.06f, 0.06f);
-	m_pTransform->m_vAngle.y = (_float)D3DXToRadian(180.f);
+	m_pTransform->m_vAngle.x = 90.f;
 	m_pTransform->m_vPos = XMFLOAT3(0.f, 0.f, 0.f);
 	m_pTransform->m_vDir = XMFLOAT3(0.f, 0.f, -1.f);
 	m_pAnimInfo->Set_Key(PLAYER_IDLE);
@@ -68,7 +68,7 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 	m_pTransform->m_vDir = XMFLOAT3(m_pTransform->m_matWorld._31, m_pTransform->m_matWorld._32, m_pTransform->m_matWorld._33);
 	XMStoreFloat3(&m_pTransform->m_vDir, XMVector3Normalize(XMLoadFloat3(&m_pTransform->m_vDir)));
 
-	m_pTransform->Update_MatrixNotXRot();
+	//m_pTransform->Update_MatrixNotXRot();
 
 	Update_Equipment(fTimeDelta);
 

@@ -13,7 +13,7 @@ private:
 
 public:
 	virtual _int  Update(const _float& fTime);
-	void Update_MatrixNotXRot(void);
+	//void Update_MatrixNotXRot(void);
 
 public:
 	static CTransform* Create(void);
