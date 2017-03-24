@@ -18,10 +18,15 @@ CTransform::~CTransform(void)
 
 _int  CTransform::Update(const _float& fTime)
 {
+	
+
+
 	XMMATRIX matScale = XMMatrixScaling(m_vScale.x, m_vScale.y, m_vScale.z);
-	XMMATRIX matRotX = XMMatrixRotationX(m_vAngle.x);
-	XMMATRIX matRotY = XMMatrixRotationY(m_vAngle.y);
-	XMMATRIX matRotZ = XMMatrixRotationZ(m_vAngle.z);
+	
+	XMMATRIX matRotX = XMMatrixRotationX((_float)D3DXToRadian(m_vAngle.x));
+	XMMATRIX matRotY = XMMatrixRotationY((_float)D3DXToRadian(m_vAngle.y));
+	XMMATRIX matRotZ = XMMatrixRotationZ((_float)D3DXToRadian(m_vAngle.z));
+
 	XMMATRIX matTrans = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
 
 	XMStoreFloat4x4(&m_matWorld, matScale * matRotX * matRotY * matRotZ * matTrans);

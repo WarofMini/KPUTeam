@@ -26,6 +26,9 @@ protected:
 protected:
 	typedef map<const _tchar*, CLayer*>   MAPLAYER;
 	MAPLAYER							m_mapLayer;
+
+public:
+	CLayer*								FindLayer(const _tchar* LayerName);
 };
 
 #endif // Scene_h__

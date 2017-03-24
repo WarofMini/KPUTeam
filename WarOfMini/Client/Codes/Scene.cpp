@@ -47,3 +47,8 @@ void CScene::Release(void)
 	m_mapLayer.clear();
 }
 
+CLayer* CScene::FindLayer(const _tchar* LayerName)
+{
+	return m_mapLayer.find(LayerName)->second;
+}
+

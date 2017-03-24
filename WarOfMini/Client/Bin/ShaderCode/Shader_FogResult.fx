@@ -41,7 +41,7 @@ float4 PS(VS_OUTPUT input) :SV_Target
 	vColor[0] = txColor.Sample(BaseSampler, input.vTexUV);
 	vColor[1] = txDepth.Sample(BaseSampler, input.vTexUV);
 
-	vColor[1].rgb = min(vColor[1].rgb, 0.7f);
+	vColor[1].rgb = min(vColor[1].rgb, 0.0f);
 
 	float4 vFogColor = vector(1.f, 1.f, 1.f, 1.f);
 

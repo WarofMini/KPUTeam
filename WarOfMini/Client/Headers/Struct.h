@@ -66,6 +66,16 @@ typedef struct tagObjData
 
 }OBJDATA;
 
+
+typedef struct tagObjectInfo
+{
+	TCHAR			m_szName[MAX_PATH]; //이름
+	D3DXVECTOR3		m_vAngle;			//회전값
+	D3DXVECTOR3		m_vScale;			//크기
+	D3DXVECTOR3		m_vPos;				//위치
+
+}OBJ_INFO;
+
 typedef struct tagClusData {
 	XMFLOAT4 R;
 	XMFLOAT3 T;

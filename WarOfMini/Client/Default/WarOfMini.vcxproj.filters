@@ -357,17 +357,14 @@
     <ClInclude Include="..\Codes\Gun.h">
       <Filter>02.Object\04.Equipment\00.Gun</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\PlayerMain.h">
-      <Filter>02.Object\01.Soldier\00.SoldierMain</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Codes\Player.h">
-      <Filter>02.Object\01.Soldier</Filter>
-    </ClInclude>
     <ClInclude Include="..\Codes\DefaultObject.h">
       <Filter>02.Object\03.DefaultObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\LogoBack.h">
       <Filter>02.Object\99.LogoBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Player.h">
+      <Filter>02.Object\01.Soldier\00.SoldierMain</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -503,17 +500,14 @@
     <ClCompile Include="..\Codes\Gun.cpp">
       <Filter>02.Object\04.Equipment\00.Gun</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\PlayerMain.cpp">
-      <Filter>02.Object\01.Soldier\00.SoldierMain</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\Player.cpp">
-      <Filter>02.Object\01.Soldier</Filter>
-    </ClCompile>
     <ClCompile Include="..\Codes\DefaultObject.cpp">
       <Filter>02.Object\03.DefaultObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\LogoBack.cpp">
       <Filter>02.Object\99.LogoBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Player.cpp">
+      <Filter>02.Object\01.Soldier\00.SoldierMain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

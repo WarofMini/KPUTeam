@@ -437,10 +437,10 @@ void CBatch::InitTreeObject(void)
 
 	//Door1
 	HTREEITEM  hDoor1;
-	hDoor1 = m_ctrlTreeObject.InsertItem(L"Mesh_Door", 1/* nImage */, 1/* nSelectedImage */, hDoor, TVI_LAST);
+	hDoor1 = m_ctrlTreeObject.InsertItem(L"Mesh_Door1", 1/* nImage */, 1/* nSelectedImage */, hDoor, TVI_LAST);
 	//Door2
 	HTREEITEM  hDoor2;
-	hDoor2 = m_ctrlTreeObject.InsertItem(L"Mesh_Door1", 1/* nImage */, 1/* nSelectedImage */, hDoor, TVI_LAST);
+	hDoor2 = m_ctrlTreeObject.InsertItem(L"Mesh_Door2", 1/* nImage */, 1/* nSelectedImage */, hDoor, TVI_LAST);
 
 
 	//ToiletStall
@@ -558,8 +558,6 @@ void CBatch::InitTreeObject(void)
 	//Floor3
 	HTREEITEM  hFloor3;
 	hFloor3 = m_ctrlTreeObject.InsertItem(L"Mesh_Floor3", 1/* nImage */, 1/* nSelectedImage */, hFloor, TVI_LAST);
-
-
 
 
 	//Plant
@@ -791,14 +789,13 @@ void CBatch::OnBnClickedSaveBtn()
 	GetDlgItemText(IDC_OBJPATHSTATIC, strPath);
 
 	if (strPath == L"")
-	{
+	{	
 		AfxMessageBox(L"경로 지정을 먼저 해야 됩니다.!");
 		return;
 	}
 
 	DWORD	dwByte = 0;
-	HANDLE	hFile = CreateFile(strPath, GENERIC_WRITE,
-		0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	HANDLE	hFile = CreateFile(strPath, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	if (hFile == NULL)
 	{

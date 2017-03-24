@@ -141,6 +141,7 @@ void CToolStage::InitMesh(void)
 
 }
 
+
 void CToolStage::InitBookMesh(void)
 {
 	HRESULT hr = NULL;
@@ -174,6 +175,7 @@ void CToolStage::InitBookMesh(void)
 
 }
 
+
 void CToolStage::InitFloorMesh(void)
 {
 	HRESULT hr = NULL;
@@ -205,6 +207,7 @@ void CToolStage::InitFloorMesh(void)
 
 	FAILED_CHECK_RETURN(hr, );
 }
+
 
 void CToolStage::InitDeskMesh(void)
 {
@@ -320,6 +323,7 @@ void CToolStage::InitDeskMesh(void)
 	FAILED_CHECK_RETURN(hr, );
 }
 
+
 void CToolStage::InitChairMesh(void)
 {
 	HRESULT hr = NULL;
@@ -361,6 +365,7 @@ void CToolStage::InitChairMesh(void)
 	FAILED_CHECK_RETURN(hr, );
 }
 
+
 void CToolStage::InitCabinetMesh(void)
 {
 	HRESULT hr = NULL;
@@ -382,6 +387,7 @@ void CToolStage::InitCabinetMesh(void)
 		, "Cabinet2.FBX");
 	FAILED_CHECK_RETURN(hr, );
 }
+
 
 void CToolStage::InitShelfMesh(void)
 {
@@ -416,6 +422,7 @@ void CToolStage::InitShelfMesh(void)
 
 
 }
+
 //¹Ù´Ú »ý¼º
 void CToolStage::InitFloor(void)
 {
@@ -796,7 +803,7 @@ void CToolStage::InitDoor(void)
 	hr = CResourcesMgr::GetInstance()->AddMesh(
 		RESOURCE_STAGE,
 		MESH_STATIC
-		, L"Mesh_Door"
+		, L"Mesh_Door1"
 		, "../Resource/Mesh/Door/"
 		, "Door1.FBX");
 	FAILED_CHECK_RETURN(hr, );
@@ -804,7 +811,7 @@ void CToolStage::InitDoor(void)
 	hr = CResourcesMgr::GetInstance()->AddMesh(
 		RESOURCE_STAGE,
 		MESH_STATIC
-		, L"Mesh_Door1"
+		, L"Mesh_Door2"
 		, "../Resource/Mesh/Door/"
 		, "Door2.FBX");
 	FAILED_CHECK_RETURN(hr, );

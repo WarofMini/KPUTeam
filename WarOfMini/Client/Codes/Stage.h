@@ -23,6 +23,15 @@ private:
 
 public:
 	virtual void Release(void);
+
+public:
+	HRESULT	 InitFloor(void);
+
+	HRESULT  InitToiletFloor(void);
+
+	HRESULT  LoadStageMap(void);
+
+	MESHNUM	 MatchingObject(wstring strMeshName);
 };
 
 

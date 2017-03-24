@@ -66,11 +66,11 @@ void CMyForm::OnInitialUpdate()
 	m_TapControl.GetClientRect(&rcToolWindow);
 	
 	m_pBatchDIg.Create(IDD_BATCH);
-	m_pBatchDIg.SetWindowPos(NULL, 10, 95, rcToolWindow.right - 10,
+	m_pBatchDIg.SetWindowPos(NULL, 18, 56, rcToolWindow.right - 12,
 							rcToolWindow.bottom - 35, SWP_SHOWWINDOW);
 
 	m_pNaviDIg.Create(IDD_NAVIDIG);
-	m_pNaviDIg.SetWindowPos(NULL, 10, 95, rcToolWindow.right - 10,
+	m_pNaviDIg.SetWindowPos(NULL, 18, 56, rcToolWindow.right - 12,
 							rcToolWindow.bottom - 35, SWP_SHOWWINDOW);
 
 

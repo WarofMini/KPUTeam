@@ -185,7 +185,6 @@
     <ClInclude Include="..\Codes\Mesh.h" />
     <ClInclude Include="..\Codes\MeshMgr.h" />
     <ClInclude Include="..\Codes\Player.h" />
-    <ClInclude Include="..\Codes\PlayerMain.h" />
     <ClInclude Include="..\Codes\RcTex.h" />
     <ClInclude Include="..\Codes\Renderer.h" />
     <ClInclude Include="..\Codes\RenderTarget.h" />
@@ -248,7 +247,6 @@
     <ClCompile Include="..\Codes\Mesh.cpp" />
     <ClCompile Include="..\Codes\MeshMgr.cpp" />
     <ClCompile Include="..\Codes\Player.cpp" />
-    <ClCompile Include="..\Codes\PlayerMain.cpp" />
     <ClCompile Include="..\Codes\RcTex.cpp" />
     <ClCompile Include="..\Codes\Renderer.cpp" />
     <ClCompile Include="..\Codes\RenderTarget.cpp" />
