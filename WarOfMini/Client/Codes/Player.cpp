@@ -1,34 +1,79 @@
 #include "stdafx.h"
+#include "Include.h"
 #include "Player.h"
+#include "AnimationInfo.h"
 #include "Transform.h"
 #include "MeshMgr.h"
 #include "Gun.h"
+#include "Management.h"
 
+XMFLOAT3 g_vPlayerPos = XMFLOAT3(0.f, 0.f, 0.f);
+INT g_iPlayerHP = 120;
 
 CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 	: CDynamicObject(pContext)
-	, m_uiNavIdx(0)
-	, m_bJump(FALSE)
-	, m_fJumpTime(0.f)
-	, m_UseNavMesh(FALSE)
-	, m_fTrailTime(0.f)
 {
+	m_vLook = XMFLOAT3(0.f, 0.f, -1.f);
+
 	XMStoreFloat4x4(&m_matEquipBone[0], XMMatrixIdentity());
 	XMStoreFloat4x4(&m_matEquipBone[1], XMMatrixIdentity());
 
-	ZeroMemory(m_pEquipment, sizeof(CEquipment*) * 2);
+	ZeroMemory(m_pEquipment, sizeof(CEquipment*) * 1);
 }
 
 CPlayer::~CPlayer(void)
 {
 }
 
+CPlayer* CPlayer::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
+{
+	CPlayer* pObject = new CPlayer(pContext);
+
+	if (FAILED(pObject->Initialize(pGraphicDev)))
+		Safe_Release(pObject);
+
+	return pObject;
+}
+
+HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
+{
+	if (FAILED(Ready_Component(pGraphicDev)))
+		return E_FAIL;
+
+
+	m_uiObjNum = MESHNUM_PLAYER;
+
+
+	m_pTransform->m_vScale = XMFLOAT3(0.06f, 0.06f, 0.06f);
+	m_pTransform->m_vAngle.y = (_float)D3DXToRadian(180.f);
+	m_pTransform->m_vPos = XMFLOAT3(0.f, 0.f, 0.f);
+	m_pTransform->m_vDir = XMFLOAT3(0.f, 0.f, -1.f);
+	m_pAnimInfo->Set_Key(PLAYER_IDLE);
+
+	return S_OK;
+}
+
 INT CPlayer::Update(const FLOAT& fTimeDelta)
 {
 	CDynamicObject::Update(fTimeDelta);
+
+	// Temp	-------------------------------------------------------------------------------
+
+	g_vPlayerPos = m_pTransform->m_vPos;
+
+
+	// Update
+	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
+
+	m_pTransform->m_vDir = XMFLOAT3(m_pTransform->m_matWorld._31, m_pTransform->m_matWorld._32, m_pTransform->m_matWorld._33);
+	XMStoreFloat3(&m_pTransform->m_vDir, XMVector3Normalize(XMLoadFloat3(&m_pTransform->m_vDir)));
+
+	m_pTransform->Update_MatrixNotXRot();
+
+	Update_Equipment(fTimeDelta);
+
 	return 0;
 }
-
 void CPlayer::Release(void)
 {
 	CDynamicObject::Release();
@@ -55,5 +100,15 @@ void CPlayer::Update_Equipment(const FLOAT& fTimeDelta)
 	m_pEquipment[0]->SetParent(m_matEquipBone[0]);
 	m_pEquipment[0]->Update(fTimeDelta);
 
+
+}
+
+void CPlayer::InputKey(const FLOAT& fTimeDelta)
+{
+
+}
+
+void CPlayer::Move(const FLOAT& fTimeDelta)
+{
 
 }
