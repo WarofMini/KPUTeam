@@ -52,6 +52,8 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 
 	m_uiObjNum = MESHNUM_PLAYER;
 
+	int i = 0;
+
 	m_pTransform->m_vScale = XMFLOAT3(1.f, 1.f, 1.f);
 	m_pTransform->m_vAngle.x = 90.f;
 	m_pTransform->m_vPos = XMFLOAT3(20.f, 10.f, 20.f);
