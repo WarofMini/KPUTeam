@@ -22,21 +22,33 @@ public:
 	_byte 						Get_DIMouseState(MOUSEKEYSTATE byMouseID);
 	_long 						Get_DIMouseMove(MOUSEMOVESTATE byMouseMoveState);
 
+	BYTE	GetDIKeyStateOnce(BYTE KeyFlag);
+	BYTE	GetDIKeyStateLeave(BYTE KeyFlag);
+	BYTE	GetDIMouseStateOnce(BYTE KeyFlag);
+	BYTE	GetDIMouseStateLeave(BYTE KeyFlag);
 
 public:
 	void						Set_Acquire(void);
 public:
 	HRESULT						Ready_InputDevice(HINSTANCE hInst, HWND hWnd);
-	void						SetUp_InputState(void);
+	void						SetInputState(void);
 	void						Reset_InputState(void);
+	void						ResetOnce(void);
+	void						SetAcquire(void);
+	void						SetInputOnce(void);
+
 private:
 	LPDIRECTINPUT8				m_pInputSDK;
-private:
 	LPDIRECTINPUTDEVICE8		m_pKeyBoard;
 	LPDIRECTINPUTDEVICE8		m_pMouse;
 private:
 	_byte						m_byKeyState[256];
 	DIMOUSESTATE				m_MouseState;
+
+	BYTE						m_byCheckOnce[260];
+	BYTE						m_byIsOnce[260];
+	BYTE						m_byIsLeave[260];
+
 public:
 	void						Release(void);
 };

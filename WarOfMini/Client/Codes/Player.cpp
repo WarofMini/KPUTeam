@@ -42,9 +42,7 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 	if (FAILED(Ready_Component(pGraphicDev)))
 		return E_FAIL;
 
-
 	m_uiObjNum = MESHNUM_PLAYER;
-
 
 	m_pTransform->m_vScale = XMFLOAT3(1.f, 1.f, 1.f);
 	m_pTransform->m_vAngle.x = 90.f;
@@ -59,8 +57,21 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 {
 	CDynamicObject::Update(fTimeDelta);
 
-	// Temp	-------------------------------------------------------------------------------
+	/*if (CInput::GetInstance()->GetDIKeyStateOnce(DIK_UP))
+		cout << "ÇÑ¹ø ´­¸²" << endl;
+	if (CInput::GetInstance()->GetDIKeyStateLeave(DIK_UP))
+		cout << "ÇÑ¹ø ¶³¾îÁü" << endl;*/
+	if (CInput::GetInstance()->Get_DIKeyState(DIK_UP))
+		m_pTransform->m_vPos.z += 10.f * fTimeDelta;
+	if (CInput::GetInstance()->Get_DIKeyState(DIK_DOWN))
+		m_pTransform->m_vPos.z -= 10.f * fTimeDelta;
+	if (CInput::GetInstance()->Get_DIKeyState(DIK_LEFT))
+		m_pTransform->m_vPos.x -= 10.f * fTimeDelta;
+	if (CInput::GetInstance()->Get_DIKeyState(DIK_RIGHT))
+		m_pTransform->m_vPos.x += 10.f * fTimeDelta;
 
+	// Temp	-------------------------------------------------------------------------------
+	
 	g_vPlayerPos = m_pTransform->m_vPos;
 
 

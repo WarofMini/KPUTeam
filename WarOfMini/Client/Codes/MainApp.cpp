@@ -90,7 +90,7 @@ INT CMainApp::Update(const _float& fTimeDelta)
 	m_fTime += fTimeDelta;
 
 
-	CInput::GetInstance()->SetUp_InputState();
+	CInput::GetInstance()->SetInputState();
 		// 인풋 장치 소실 잡아 주는 함수.
 	Set_Focus();
 
