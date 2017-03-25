@@ -81,7 +81,7 @@ HRESULT CStage::Ready_Environment(void)
 
 	if (pTransform != NULL)
 	{
-		CCameraMgr::GetInstance()->Ready_StaticCamera(m_pContext, CCameraMgr::CAMERA_STATIC, (CTransform*)pTransform, 10.f, 0.1f, 10000.f, XMFLOAT3(0.f, 5.f, -10.f), XMFLOAT3(0.f, 0.f, 0.f));
+		CCameraMgr::GetInstance()->Ready_StaticCamera(m_pContext, CCameraMgr::CAMERA_STATIC, (CTransform*)pTransform, 41.f, 0.1f, 10000.f, XMFLOAT3(0.f, 5.f, -10.f), XMFLOAT3(0.f, 0.f, 0.f));
 	}
 
 	m_mapLayer.insert(MAPLAYER::value_type(L"Layer_Environment", pLayer));

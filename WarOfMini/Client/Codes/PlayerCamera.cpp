@@ -8,7 +8,7 @@ CPlayerCamera::CPlayerCamera(ID3D11DeviceContext* pContext, const CTransform* pT
 	, m_pTargetTransform(pTargetTransform)
 	, m_fGap(fGap)
 {
-	m_fEpsilonY = 10.f;
+	m_fEpsilonY = 15.f;
 
 }
 
@@ -35,7 +35,7 @@ _int CPlayerCamera::Update(const _float& fTimeDelta)
 
 	MakeView();
 
-	FixMouse();
+	//FixMouse();
 
 	return 0;
 }
