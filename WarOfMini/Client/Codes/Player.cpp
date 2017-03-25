@@ -7,12 +7,16 @@
 #include "Gun.h"
 #include "Management.h"
 #include "Input.h"
+#include "StateMachine.h"
+#include "SoldierDefine.h"
 
 XMFLOAT3		g_vPlayerPos;
 
 CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 	: CDynamicObject(pContext)
+	, m_dwState(SOLDIER_IDLE)
 	, m_dwAniIdx(PLAYER_idle)
+	, m_pComStateMachine(NULL)
 {
 	m_vLook = XMFLOAT3(0.f, 0.f, -1.f);
 
@@ -43,6 +47,8 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 	if (FAILED(Ready_Component(pGraphicDev)))
 		return E_FAIL;
 
+	FAILED_CHECK(Prepare_StateMachine());
+
 	m_uiObjNum = MESHNUM_PLAYER;
 
 	m_pTransform->m_vScale = XMFLOAT3(1.f, 1.f, 1.f);
@@ -50,6 +56,8 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 	m_pTransform->m_vPos = XMFLOAT3(20.f, 10.f, 20.f);
 	m_pTransform->m_vDir = XMFLOAT3(0.f, 0.f, -1.f);
 	m_pAnimInfo->Set_Key(m_dwAniIdx);
+
+	m_pComStateMachine->Enter_State(SOLDIER_IDLE);
 
 //	m_pServer_PlayerData->vPos = m_pTransform->m_vPos;
 
@@ -61,6 +69,8 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 INT CPlayer::Update(const FLOAT& fTimeDelta)
 {
 	CDynamicObject::Update(fTimeDelta);
+
+	Operate_StateMAchine(fTimeDelta);
 
 	/*if (CInput::GetInstance()->GetDIKeyStateOnce(DIK_UP))
 		cout << "한번 눌림" << endl;
@@ -105,6 +115,12 @@ HRESULT CPlayer::Ready_Component(ID3D11Device* pGraphicDev)
 	// Equipment
 	m_pEquipment[0] = CGun::Create(pGraphicDev, m_pContext);
 
+	CComponent* pComponent = NULL;
+	//StateMachine
+	pComponent = m_pComStateMachine = CStateMachine::Create(SOLDIER_END);
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"StateMachine", pComponent));
+
 	return S_OK;
 }
 
@@ -117,16 +133,50 @@ void CPlayer::Update_Equipment(const FLOAT& fTimeDelta)
 
 	m_pEquipment[0]->SetParent(m_matEquipBone[0]);
 	m_pEquipment[0]->Update(fTimeDelta);
-
-
 }
 
-void CPlayer::InputKey(const FLOAT& fTimeDelta)
+HRESULT CPlayer::Prepare_StateMachine(void)
 {
+	NULL_CHECK_RETURN(m_pComStateMachine, E_FAIL);
+	CState*	pState = NULL;
 
+	pState = CSoldierIdle::Create(this);
+	FAILED_CHECK(m_pComStateMachine->Add_State(pState));
+
+	pState = CSoldierMove::Create(this);
+	FAILED_CHECK(m_pComStateMachine->Add_State(pState));
+
+	return S_OK;
 }
 
-void CPlayer::Move(const FLOAT& fTimeDelta)
+void CPlayer::Operate_StateMAchine(const float& fTimeDelta)
 {
+	DWORD dwState = m_pComStateMachine->Get_State();
 
+	switch (dwState)
+	{
+	case SOLDIER_IDLE:
+		if (m_dwAniIdx != PLAYER_idle)
+		{
+			m_pComStateMachine->Enter_State(SOLDIER_MOVE);
+		}
+		break;
+	case SOLDIER_MOVE:
+		if (m_dwAniIdx != PLAYER_RunForward)
+		{
+			m_pComStateMachine->Enter_State(SOLDIER_IDLE);
+		}
+		break;
+	default:
+		break;
+	}
+	m_pComStateMachine->Update_State(dwState);
+}
+
+void CPlayer::PlayAnimation(DWORD dwAniIdx, bool bImmediate)
+{
+	if (bImmediate)
+		m_pAnimInfo->Set_KeyImm(dwAniIdx);
+	m_pAnimInfo->Set_Key(dwAniIdx);
+	m_dwAniIdx = dwAniIdx;
 }

@@ -187,6 +187,18 @@
     <Filter Include="02.Object\03.Equipment\00.Gun">
       <UniqueIdentifier>{018484a4-70a3-43f0-9577-f6ff8cd80dd0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="95.Engine\00.Utility\12.StateMachine">
+      <UniqueIdentifier>{aa4460f0-8115-46b9-8129-265d52162974}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\01.Soldier\00.SoldierMain\State">
+      <UniqueIdentifier>{b7ae1835-ce0d-4a17-b373-7840b9b6f1f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\01.Soldier\00.SoldierMain\State\Idle">
+      <UniqueIdentifier>{28295aee-2ccc-40b1-9f76-9103605264b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\01.Soldier\00.SoldierMain\State\Move">
+      <UniqueIdentifier>{528d44ee-c4d7-4cc0-9d53-e48ae0174e01}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -375,6 +387,24 @@
     <ClInclude Include="..\Codes\OtherPlayer.h">
       <Filter>02.Object\01.Soldier\01.OtherPlayer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\State.h">
+      <Filter>95.Engine\00.Utility\12.StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\StateMachine.h">
+      <Filter>95.Engine\00.Utility\12.StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\SoldierDefine.h">
+      <Filter>02.Object\01.Soldier\00.SoldierMain\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\SoldierState.h">
+      <Filter>02.Object\01.Soldier\00.SoldierMain\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\SoldierIdle.h">
+      <Filter>02.Object\01.Soldier\00.SoldierMain\State\Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\SoldierMove.h">
+      <Filter>02.Object\01.Soldier\00.SoldierMain\State\Move</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -523,6 +553,21 @@
     </ClCompile>
     <ClCompile Include="..\Codes\OtherPlayer.cpp">
       <Filter>02.Object\01.Soldier\01.OtherPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\State.cpp">
+      <Filter>95.Engine\00.Utility\12.StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\StateMachine.cpp">
+      <Filter>95.Engine\00.Utility\12.StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\SoldierState.cpp">
+      <Filter>02.Object\01.Soldier\00.SoldierMain\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\SoldierIdle.cpp">
+      <Filter>02.Object\01.Soldier\00.SoldierMain\State\Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\SoldierMove.cpp">
+      <Filter>02.Object\01.Soldier\00.SoldierMain\State\Move</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
