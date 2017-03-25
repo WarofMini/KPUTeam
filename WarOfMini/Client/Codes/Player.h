@@ -39,6 +39,14 @@ public:
 	DWORD*		Get_AniIdx(void) { return &m_dwAniIdx; }
 	bool		Check_AnimationFrame(void);
 
+	void		KeyState(const FLOAT& fTimeDelta);
+
+public:
+	void		UpdateDir(void);
+
+	//현재 카메라 상태가 Dynamic일 경우  Player Update 실행X
+	_bool		DynamicCameraCheck(void); 
+
 private:
 	CInput*			m_pInput;
 	XMFLOAT3		m_vLook;

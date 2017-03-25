@@ -205,7 +205,7 @@
     <ClInclude Include="..\Codes\Stage.h" />
     <ClInclude Include="..\Codes\State.h" />
     <ClInclude Include="..\Codes\StateMachine.h" />
-    <ClInclude Include="..\Codes\StaticCamera.h" />
+    <ClInclude Include="..\Codes\PlayerCamera.h" />
     <ClInclude Include="..\Codes\StaticMesh.h" />
     <ClInclude Include="..\Codes\StaticObject.h" />
     <ClInclude Include="..\Codes\Texture.h" />
@@ -275,7 +275,7 @@
     <ClCompile Include="..\Codes\Stage.cpp" />
     <ClCompile Include="..\Codes\State.cpp" />
     <ClCompile Include="..\Codes\StateMachine.cpp" />
-    <ClCompile Include="..\Codes\StaticCamera.cpp" />
+    <ClCompile Include="..\Codes\PlayerCamera.cpp" />
     <ClCompile Include="..\Codes\StaticMesh.cpp" />
     <ClCompile Include="..\Codes\StaticObject.cpp" />
     <ClCompile Include="..\Codes\Texture.cpp" />

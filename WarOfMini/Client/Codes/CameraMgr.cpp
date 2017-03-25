@@ -2,6 +2,7 @@
 #include "CameraMgr.h"
 #include "Camera.h"
 #include "DynamicCamera.h"
+#include "PlayerCamera.h"
 
 
 IMPLEMENT_SINGLETON(CCameraMgr)
@@ -27,13 +28,25 @@ void CCameraMgr::Ready_DynamicCamera(ID3D11DeviceContext* pContext, CAMERALIST e
 		m_vecCamera[eCameraName] = CDynamicCamera::Create(pContext, fNear, fFar, vPos, vTarget);
 }
 
-void CCameraMgr::Ready_StaticCamera(ID3D11DeviceContext* pContext, CAMERALIST eCameraName, const CTransform* pObjTrans, _float fDist, _float fHeightPivot
-	, _float fNear, _float fFar, XMFLOAT3& vPos, XMFLOAT3& vTarget)
+
+void CCameraMgr::Ready_StaticCamera(ID3D11DeviceContext* pContext, CAMERALIST eCameraName, const CTransform* pTargetTransform, _float fGap, _float fNear, _float fFar, XMFLOAT3& vEye, XMFLOAT3& vAt)
 {
+	if (m_vecCamera[eCameraName] == nullptr)
+		m_vecCamera[eCameraName] = CPlayerCamera::Create(pContext, pTargetTransform, fGap, fNear, fFar, vEye, vAt);
 }
 
 void CCameraMgr::Update_CurCamera(const FLOAT& fTimeDelta)
 {
+	if (GetAsyncKeyState('I') & 1)
+	{
+		if (m_eCurCamera == CAMERA_DYNAMIC)
+			m_eCurCamera = CAMERA_STATIC;
+		else
+			m_eCurCamera = CAMERA_DYNAMIC;
+	}
+
+
+
 	m_vecCamera[m_eCurCamera]->Update(fTimeDelta);
 }
 
@@ -74,4 +87,9 @@ void CCameraMgr::Set_CurCamera(CAMERALIST eCameraName)
 	m_eCurCamera = eCameraName;
 
 	m_vecCamera[m_eCurCamera]->Update(0);
+}
+
+CCameraMgr::CAMERALIST CCameraMgr::Get_CurCamera(void)
+{
+	return m_eCurCamera;
 }

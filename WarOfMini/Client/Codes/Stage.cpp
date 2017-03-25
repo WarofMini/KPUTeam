@@ -10,7 +10,7 @@
 
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
-: CScene(pGraphicDev, pContext)
+	: CScene(pGraphicDev, pContext)
 {
 }
 
@@ -77,6 +77,12 @@ HRESULT CStage::Ready_Environment(void)
 	//다이나믹 카메라 적용
 	CCameraMgr::GetInstance()->Ready_DynamicCamera(m_pContext, CCameraMgr::CAMERA_DYNAMIC, 0.1f, 10000.f, XMFLOAT3(0.f, 5.f, -10.f), XMFLOAT3(0.f, 0.f, 0.f));
 
+	CComponent* pTransform = (CComponent*)FindLayer(L"Layer_GameLogic")->Get_Component(L"Player", L"Com_Transform");
+
+	if (pTransform != NULL)
+	{
+		CCameraMgr::GetInstance()->Ready_StaticCamera(m_pContext, CCameraMgr::CAMERA_STATIC, (CTransform*)pTransform, 10.f, 0.1f, 10000.f, XMFLOAT3(0.f, 5.f, -10.f), XMFLOAT3(0.f, 0.f, 0.f));
+	}
 
 	m_mapLayer.insert(MAPLAYER::value_type(L"Layer_Environment", pLayer));
 
@@ -107,7 +113,7 @@ HRESULT CStage::InitFloor(void)
 		for (int j = 0; j < 6; ++j)
 		{
 			pGameObject = CDefaultObj::Create(m_pContext);
-			if (NULL == pGameObject) 
+			if (NULL == pGameObject)
 				return E_FAIL;
 
 			((CDefaultObj*)pGameObject)->SetObjNum(MESHNUM_FLOOR1);
@@ -143,7 +149,7 @@ HRESULT CStage::InitToiletFloor(void)
 		for (int j = 0; j < 4; ++j)
 		{
 			pGameObject = CDefaultObj::Create(m_pContext);
-			
+
 			if (NULL == pGameObject)
 				return E_FAIL;
 
@@ -192,11 +198,11 @@ HRESULT CStage::LoadStageMap(void)
 
 		wstring strName = m_tInfo.m_szName;
 
-		
+
 
 		eMeshNum = MatchingObject(strName);
 
-		
+
 		if (eMeshNum != MESHNUM_END)
 		{
 			pGameObject = CDefaultObj::Create(m_pContext);
@@ -210,7 +216,7 @@ HRESULT CStage::LoadStageMap(void)
 			vPos = XMVectorSet(m_tInfo.m_vPos.x, m_tInfo.m_vPos.y, m_tInfo.m_vPos.z, 0.0f);
 			vAngle = XMVectorSet(m_tInfo.m_vAngle.x + 90.f, m_tInfo.m_vAngle.y, m_tInfo.m_vAngle.z, 0.0f);
 
-			vScale = XMVectorSet(m_tInfo.m_vScale.x + BITSCALE, m_tInfo.m_vScale.y + BITSCALE, m_tInfo.m_vScale.z  + BITSCALE, 0.0f);
+			vScale = XMVectorSet(m_tInfo.m_vScale.x + BITSCALE, m_tInfo.m_vScale.y + BITSCALE, m_tInfo.m_vScale.z + BITSCALE, 0.0f);
 
 			((CDefaultObj*)pGameObject)->SetObjNum(eMeshNum);
 

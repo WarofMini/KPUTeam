@@ -9,6 +9,7 @@
 #include "Input.h"
 #include "StateMachine.h"
 #include "SoldierDefine.h"
+#include "CameraMgr.h"
 
 XMFLOAT3		g_vPlayerPos;
 
@@ -19,7 +20,7 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 	, m_pComStateMachine(NULL)
 {
 	m_pInput = CInput::GetInstance();
-	m_vLook = XMFLOAT3(0.f, 0.f, -1.f);
+	m_vLook = XMFLOAT3(0.f, 1.f, 0.f);
 
 	XMStoreFloat4x4(&m_matEquipBone[0], XMMatrixIdentity());
 	XMStoreFloat4x4(&m_matEquipBone[1], XMMatrixIdentity());
@@ -52,10 +53,9 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 
 	m_uiObjNum = MESHNUM_PLAYER;
 
-	int i = 0;
-
 	m_pTransform->m_vScale = XMFLOAT3(1.f, 1.f, 1.f);
 	m_pTransform->m_vAngle.x = 90.f;
+
 	m_pTransform->m_vPos = XMFLOAT3(20.f, 10.f, 20.f);
 	m_pTransform->m_vDir = XMFLOAT3(0.f, 0.f, -1.f);
 	m_pAnimInfo->Set_Key((_ushort)m_dwAniIdx);
@@ -71,35 +71,30 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 
 INT CPlayer::Update(const FLOAT& fTimeDelta)
 {
+
+
+
 	CDynamicObject::Update(fTimeDelta);
 
-	Operate_StateMAchine(fTimeDelta);
 
-	/*if (CInput::GetInstance()->GetDIKeyStateOnce(DIK_UP))
-		cout << "한번 눌림" << endl;
-	if (CInput::GetInstance()->GetDIKeyStateLeave(DIK_UP))
-		cout << "한번 떨어짐" << endl;*/
-	/*if (CInput::GetInstance()->Get_DIKeyState(DIK_UP))
-		m_pTransform->m_vPos.z += 10.f * fTimeDelta;
-	if (CInput::GetInstance()->Get_DIKeyState(DIK_DOWN))
-		m_pTransform->m_vPos.z -= 10.f * fTimeDelta;
-	if (CInput::GetInstance()->Get_DIKeyState(DIK_LEFT))
-		m_pTransform->m_vPos.x -= 10.f * fTimeDelta;
-	if (CInput::GetInstance()->Get_DIKeyState(DIK_RIGHT))
-		m_pTransform->m_vPos.x += 10.f * fTimeDelta;*/
+	//Dynamic카메라 체크 함수
+	if (!DynamicCameraCheck())
+	{
+		Operate_StateMAchine(fTimeDelta);
+		KeyState(fTimeDelta);
+	}
+
 
 	// Temp	-------------------------------------------------------------------------------
 	
-	g_vPlayerPos = m_pTransform->m_vPos;
-
-
 	// Update
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
 
-	m_pTransform->m_vDir = XMFLOAT3(m_pTransform->m_matWorld._31, m_pTransform->m_matWorld._32, m_pTransform->m_matWorld._33);
-	XMStoreFloat3(&m_pTransform->m_vDir, XMVector3Normalize(XMLoadFloat3(&m_pTransform->m_vDir)));
 
-	//m_pTransform->Update_MatrixNotXRot();
+	UpdateDir();
+
+
+
 
 	Update_Equipment(fTimeDelta);
 
@@ -218,5 +213,45 @@ bool CPlayer::Check_AnimationFrame(void)
 {
 	if (m_pAnimInfo->Get_CurFrame() >= m_pAnimInfo->Get_LastFrame())
 		return true;
+	return false;
+}
+
+void CPlayer::KeyState(const FLOAT& fTimeDelta)
+{
+	//테스트용
+	if (CInput::GetInstance()->Get_DIKeyState(DIK_UP))
+		m_pTransform->m_vPos.z += 10.f * fTimeDelta;
+	if (CInput::GetInstance()->Get_DIKeyState(DIK_DOWN))
+		m_pTransform->m_vPos.z -= 10.f * fTimeDelta;
+	if (CInput::GetInstance()->Get_DIKeyState(DIK_LEFT))
+		m_pTransform->m_vPos.x -= 10.f * fTimeDelta;
+	if (CInput::GetInstance()->Get_DIKeyState(DIK_RIGHT))
+		m_pTransform->m_vPos.x += 10.f * fTimeDelta;
+	if (CInput::GetInstance()->Get_DIKeyState(DIK_U))
+		m_pTransform->m_vAngle.y += 10.f * fTimeDelta;
+}
+
+void CPlayer::UpdateDir(void)
+{
+	XMVECTOR vDir;
+
+	vDir = XMLoadFloat3(&m_pTransform->m_vDir);
+
+	XMVECTOR vLook = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+
+	vDir = XMVector3TransformNormal(vLook, XMLoadFloat4x4(&m_pTransform->m_matWorld));
+
+	vDir = XMVector3Normalize(vDir);
+
+	XMStoreFloat3(&m_pTransform->m_vDir,vDir);
+}
+
+_bool CPlayer::DynamicCameraCheck(void)
+{
+	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
+	{
+		return true;
+	}
+
 	return false;
 }

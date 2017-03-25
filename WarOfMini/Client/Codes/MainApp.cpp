@@ -274,10 +274,26 @@ void CMainApp::Stage_DebugInfo(void)
 
 	//Á¤¼öÇüÀ» ¹®ÀÚ¿­·Î º¯È¯
 	wstring strspeed = to_wstring((_int)fSpeed);
-	
+
 	CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"Camera Speed : ", 15.f, 10.f, 140.f, D3DXCOLOR(0.0f, 0.0f, 1.f, 1.f));
-	
+
 	CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"Speed Up(Key : O), Speed Down(Key : P)", 15.f, 10.f, 160.f, D3DXCOLOR(0.0f, 0.0f, 1.f, 1.f));
-	
+
 	CFontMgr::GetInstance()->Render_Font(L"°íµñ", strspeed.c_str(), 15.f, 125.f, 140.f, D3DXCOLOR(0.0f, 0.0f, 1.f, 1.f));
+
+
+	CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"I : ChangingCamera(Dynamic/Static)",  15.f, 10.f, 180.f, D3DXCOLOR(0.0f, 1.0f, 0.f, 1.f));
+	
+	
+	wstring strCamera = L"CameraState : ";
+
+	//ÇöÀç Ä«¸Þ¶ó 
+	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
+		strCamera += L" DYNAMIC";
+	else if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_STATIC)
+	{
+		strCamera += L" STATIC";
+	}
+
+	CFontMgr::GetInstance()->Render_Font(L"°íµñ", strCamera.c_str(), 15.f, 10.f, 200.f, D3DXCOLOR(0.0f, 0.0f, 1.f, 1.f));
 }

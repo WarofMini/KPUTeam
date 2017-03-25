@@ -178,9 +178,6 @@
     <Filter Include="02.Object\02.DefaultObject">
       <UniqueIdentifier>{dd822835-712c-4a67-8648-e119dfaf53d2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="95.Engine\00.Utility\11.Camera\01.StaticCamera">
-      <UniqueIdentifier>{4b2868ca-b93a-4648-96d9-844e7ae0b792}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Object\03.Equipment">
       <UniqueIdentifier>{8c439ebf-5628-4572-abc6-2e00978b34a5}</UniqueIdentifier>
     </Filter>
@@ -204,6 +201,9 @@
     </Filter>
     <Filter Include="02.Object\01.Soldier\00.SoldierMain\State\Roll">
       <UniqueIdentifier>{d7032f5d-6c55-491b-8ce7-79d203400b0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.Engine\00.Utility\11.Camera\01.PlayerCamera">
+      <UniqueIdentifier>{4b2868ca-b93a-4648-96d9-844e7ae0b792}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -387,9 +387,6 @@
     <ClInclude Include="..\Codes\Player.h">
       <Filter>02.Object\01.Soldier\00.SoldierMain</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\StaticCamera.h">
-      <Filter>95.Engine\00.Utility\11.Camera\01.StaticCamera</Filter>
-    </ClInclude>
     <ClInclude Include="..\Codes\OtherPlayer.h">
       <Filter>02.Object\01.Soldier\01.OtherPlayer</Filter>
     </ClInclude>
@@ -416,6 +413,9 @@
     </ClInclude>
     <ClInclude Include="..\Codes\SoldierRoll.h">
       <Filter>02.Object\01.Soldier\00.SoldierMain\State\Roll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\PlayerCamera.h">
+      <Filter>95.Engine\00.Utility\11.Camera\01.PlayerCamera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -560,9 +560,6 @@
     <ClCompile Include="..\Codes\Player.cpp">
       <Filter>02.Object\01.Soldier\00.SoldierMain</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\StaticCamera.cpp">
-      <Filter>95.Engine\00.Utility\11.Camera\01.StaticCamera</Filter>
-    </ClCompile>
     <ClCompile Include="..\Codes\OtherPlayer.cpp">
       <Filter>02.Object\01.Soldier\01.OtherPlayer</Filter>
     </ClCompile>
@@ -586,6 +583,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\SoldierRoll.cpp">
       <Filter>02.Object\01.Soldier\00.SoldierMain\State\Roll</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\PlayerCamera.cpp">
+      <Filter>95.Engine\00.Utility\11.Camera\01.PlayerCamera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
