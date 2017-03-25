@@ -32,6 +32,8 @@ private:
 
 	XMFLOAT4X4		m_matEquipBone[2];
 	CEquipment*		m_pEquipment[2];
+
+	DWORD			m_dwAniIdx;
 };
 
 #endif //

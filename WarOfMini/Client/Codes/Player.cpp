@@ -6,12 +6,14 @@
 #include "MeshMgr.h"
 #include "Gun.h"
 #include "Management.h"
+#include "Input.h"
 
 XMFLOAT3 g_vPlayerPos = XMFLOAT3(0.f, 0.f, 0.f);
 INT g_iPlayerHP = 120;
 
 CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 	: CDynamicObject(pContext)
+	, m_dwAniIdx(PLAYER_idle)
 {
 	m_vLook = XMFLOAT3(0.f, 0.f, -1.f);
 
@@ -44,11 +46,11 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 	m_uiObjNum = MESHNUM_PLAYER;
 
 
-	m_pTransform->m_vScale = XMFLOAT3(0.06f, 0.06f, 0.06f);
+	m_pTransform->m_vScale = XMFLOAT3(1.f, 1.f, 1.f);
 	m_pTransform->m_vAngle.x = 90.f;
-	m_pTransform->m_vPos = XMFLOAT3(0.f, 0.f, 0.f);
+	m_pTransform->m_vPos = XMFLOAT3(20.f, 10.f, 20.f);
 	m_pTransform->m_vDir = XMFLOAT3(0.f, 0.f, -1.f);
-	m_pAnimInfo->Set_Key(PLAYER_IDLE);
+	m_pAnimInfo->Set_Key(m_dwAniIdx);
 
 	return S_OK;
 }
@@ -92,7 +94,7 @@ HRESULT CPlayer::Ready_Component(ID3D11Device* pGraphicDev)
 
 void CPlayer::Update_Equipment(const FLOAT& fTimeDelta)
 {
-	m_matEquipBone[0] = CMeshMgr::GetInstance()->Get_TransMeshBone(m_uiObjNum, 0, 24, m_pMatBoneNode);
+	m_matEquipBone[0] = CMeshMgr::GetInstance()->Get_TransMeshBone(m_uiObjNum, 0, 0, m_pMatBoneNode);
 
 	XMMATRIX matWorld = XMLoadFloat4x4(&m_pTransform->m_matWorld);
 	XMStoreFloat4x4(&m_matEquipBone[0], XMLoadFloat4x4(&m_matEquipBone[0]) * matWorld);
