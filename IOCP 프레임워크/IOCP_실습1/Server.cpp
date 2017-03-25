@@ -292,14 +292,6 @@ void CServer::Worker_thread()
 			}
 
 
-			//남은 버퍼의 오버랩을 iosize만큼 넘겨주자..
-
-			// 받은 패킷을 돌려주자..
-
-			/*while (remained > 0)
-			{
-			if(m_Client[key]->prev_received)
-			}*/
 		}
 
 	}
@@ -363,21 +355,26 @@ void CServer::ProcessPacket(const unsigned char* buf, const unsigned int& id)
 
 	switch (buf[1])
 	{
-	case TEST:
-	{
-		//클라에서 받은 패킷을 그대로 다시 돌려준다.
-		cout << "[NO. " << id << "]TEST Packet Recv.. " << endl;
-		cout << "buf[0] =  " << buf[0] << "buf[1] = " << buf[1] << "buf[2] =  " << buf[2] << endl;
-		SendPacket(id, buf);
-	}
-	break;
+	//case TEST:
+	//{
+	//	//클라에서 받은 패킷을 그대로 다시 돌려준다.
+	//	cout << "[NO. " << id << "]TEST Packet Recv.. " << endl;
+	//	cout << "buf[0] =  " << buf[0] << "buf[1] = " << buf[1] << "buf[2] =  " << buf[2] << endl;
+	//	SendPacket(id, buf);
+	//}
+	//break;
 
-	default:
-		// 클라이언트로 부터 알수 없는 데이터가 왔을 경우, 해킹 방지를 위해 서버를 강제 종료. 해당 클라이언트의 고유 번호와 타입 번호를 알려준다.
-		printf("ERROR, Unknown signal -> [ %u ] protocol num = %d\n", id, buf[1]);
-		exit(-1);
-		break;
-	}
+	//default:
+	//	// 클라이언트로 부터 알수 없는 데이터가 왔을 경우, 해킹 방지를 위해 서버를 강제 종료. 해당 클라이언트의 고유 번호와 타입 번호를 알려준다.
+	//	printf("ERROR, Unknown signal -> [ %u ] protocol num = %d\n", id, buf[1]);
+	//	exit(-1);
+	//	break;
+	//}
+
+	/*case INIT_CLIENT:
+	{
+
+	}*/
 	
 }
 
