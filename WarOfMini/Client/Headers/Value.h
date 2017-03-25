@@ -8,6 +8,8 @@
 
 #define BITROTATE 90.0f		  //90.f도 돌아간거
 
+#define MAXFRAME 5			  //프레임자리수
+
 const _uint WINCX = 1600;
 const _uint WINCY = 900;
 

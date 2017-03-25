@@ -748,17 +748,17 @@ void CResourcesMgr::Load_FrameData(const _tchar* pResourceKey, vector<pair<_usho
 	wifstream inFile;
 	inFile.open(wstrPath.c_str(), ios::in);
 
-	_tchar pStartFrame[4];
-	_tchar pEndFrame[4];
+	_tchar pStartFrame[MAXFRAME];
+	_tchar pEndFrame[MAXFRAME];
 	_tchar pKeyName[MAX_NAME];
-	_tchar pFrameSpeed[4];
+	_tchar pFrameSpeed[MAXFRAME];
 
 	while (!inFile.eof())
 	{
-		inFile.getline(pStartFrame, 4, '-');
-		inFile.getline(pEndFrame, 4, '-');
+		inFile.getline(pStartFrame, MAXFRAME, '-');
+		inFile.getline(pEndFrame, MAXFRAME, '-');
 		inFile.getline(pKeyName, MAX_NAME, '-');
-		inFile.getline(pFrameSpeed, 4);
+		inFile.getline(pFrameSpeed, MAXFRAME);
 
 		pairFrame.first = _wtoi(pStartFrame);
 		pairFrame.second = _wtoi(pEndFrame);
