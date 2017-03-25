@@ -43,6 +43,11 @@ public:
 	void				Move_Right(const XMVECTOR* pDirection, const _float& fSpeed, const _float& fTimeDelta);
 
 	void				Move_Left(const XMVECTOR* pDirection, const _float& fSpeed, const _float& fTimeDelta);
+	
+	void				Chase_Target(const XMVECTOR* pTargetPos, const _float& fSpee);
+
+	const XMMATRIX		Compute_LookAtTarget(const XMVECTOR* pTargetPos);
+
 };
 
 #endif

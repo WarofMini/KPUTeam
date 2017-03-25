@@ -64,6 +64,11 @@ const _bool * CCameraMgr::Get_CurCameraFixMouseCheck(void)
 	return m_vecCamera[m_eCurCamera]->GetMouseFixCheck();
 }
 
+_float CCameraMgr::Get_CurrentCameraSpeed(void)
+{
+	return m_vecCamera[m_eCurCamera]->GetCameraSpeed();
+}
+
 void CCameraMgr::Set_CurCamera(CAMERALIST eCameraName)
 {
 	m_eCurCamera = eCameraName;

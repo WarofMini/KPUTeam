@@ -39,13 +39,17 @@ protected:
 
 public:
 	void		MakeView(void);
-
 	void		MakeProjection(void);
 
 
 public:
 	_bool*		GetMouseFixCheck(void);
 	void		SetMouseFixCheck(_bool bCheck);
+
+	void		ReduceCameraSpeed(_float fSpeed);
+	void		AddCameraSpeed(_float fSpeed);
+
+	_float		GetCameraSpeed(void);
 };
 
 #endif Camera_h__

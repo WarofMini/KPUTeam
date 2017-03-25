@@ -138,3 +138,56 @@ void CTransform::Move_Left(const XMVECTOR * pDirection, const _float & fSpeed, c
 
 	XMStoreFloat3(&m_vPos, vPos);
 }
+
+void CTransform::Chase_Target(const XMVECTOR* pTargetPos, const _float& fSpee)
+{
+	XMVECTOR  vPos;
+	vPos = XMLoadFloat3(&m_vPos);
+
+	XMVECTOR vDirection = (*pTargetPos) - vPos;
+	vDirection = XMVector3Normalize(vDirection);
+
+	vPos += vDirection;
+
+	XMMATRIX matRot = Compute_LookAtTarget(pTargetPos);
+	XMMATRIX matScale, matTrans;
+	
+	XMStoreFloat3(&m_vPos, vPos);
+
+
+	 matScale = XMMatrixScaling(m_vScale.x, m_vScale.y, m_vScale.z);
+
+	 matTrans = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
+
+	 XMStoreFloat4x4(&m_matWorld, matScale * matRot * matTrans);
+}
+
+const XMMATRIX  CTransform::Compute_LookAtTarget(const XMVECTOR* pTargetPos)
+{
+	XMVECTOR  vPos, vUp, vAxis;
+
+	vUp = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	vPos = XMLoadFloat3(&m_vPos);
+
+
+	XMVECTOR	vDirection = (*pTargetPos) - vPos;
+
+	vAxis = XMVector3Cross(vUp, vDirection);
+
+	vDirection = XMVector3Normalize(vDirection);
+	vUp		   = XMVector3Normalize(vUp);
+
+	XMVECTOR vDot = XMVector3Dot(vDirection, vUp);
+
+	XMFLOAT3 xfDot;
+
+	XMStoreFloat3(&xfDot, vDot);
+
+	_float Dot = acosf(xfDot.x + xfDot.y + xfDot.z);
+
+	XMMATRIX	matRot;
+
+	matRot = XMMatrixRotationAxis(vAxis, Dot);
+
+	return matRot;
+}

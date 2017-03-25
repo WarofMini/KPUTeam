@@ -268,5 +268,15 @@ void CMainApp::Stage_DebugInfo(void)
 		FixColor = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);
 	}
 	CFontMgr::GetInstance()->Render_Font(L"°íµñ", strFixMouseState.c_str(), 15.f, 100.f, 120.f, FixColor);
+
+
+	_float fSpeed = CCameraMgr::GetInstance()->Get_CurrentCameraSpeed();
+
+	wstring strspeed = to_wstring((_int)fSpeed);
 	
+	CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"Camera Speed : ", 15.f, 10.f, 140.f, D3DXCOLOR(0.0f, 0.0f, 1.f, 1.f));
+	
+	CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"Speed Up(Key : O), Speed Down(Key : P)", 15.f, 10.f, 160.f, D3DXCOLOR(0.0f, 0.0f, 1.f, 1.f));
+	
+	CFontMgr::GetInstance()->Render_Font(L"°íµñ", strspeed.c_str(), 15.f, 125.f, 140.f, D3DXCOLOR(0.0f, 0.0f, 1.f, 1.f));
 }

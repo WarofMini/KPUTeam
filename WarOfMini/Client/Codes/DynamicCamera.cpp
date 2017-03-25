@@ -149,6 +149,16 @@ void CDynamicCamera::KeyState(const _float& fTimeDelta)
 			m_bMouseFix = true;
 	}
 
+	//Speed Control
+	if (GetAsyncKeyState('O') & 1) //Speed 감속
+	{
+		ReduceCameraSpeed(5.f);
+	}
+	if (GetAsyncKeyState('P') & 1) //Speed 증가
+	{
+		AddCameraSpeed(5.f);
+	}
+
 }
 
 void CDynamicCamera::FixMouse(void)
