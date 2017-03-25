@@ -18,6 +18,7 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 	, m_dwAniIdx(PLAYER_idle)
 	, m_pComStateMachine(NULL)
 {
+	m_pInput = CInput::GetInstance();
 	m_vLook = XMFLOAT3(0.f, 0.f, -1.f);
 
 	XMStoreFloat4x4(&m_matEquipBone[0], XMMatrixIdentity());
@@ -55,7 +56,7 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 	m_pTransform->m_vAngle.x = 90.f;
 	m_pTransform->m_vPos = XMFLOAT3(20.f, 10.f, 20.f);
 	m_pTransform->m_vDir = XMFLOAT3(0.f, 0.f, -1.f);
-	m_pAnimInfo->Set_Key(m_dwAniIdx);
+	m_pAnimInfo->Set_Key((_ushort)m_dwAniIdx);
 
 	m_pComStateMachine->Enter_State(SOLDIER_IDLE);
 
@@ -76,14 +77,14 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 		cout << "ÇÑ¹ø ´­¸²" << endl;
 	if (CInput::GetInstance()->GetDIKeyStateLeave(DIK_UP))
 		cout << "ÇÑ¹ø ¶³¾îÁü" << endl;*/
-	if (CInput::GetInstance()->Get_DIKeyState(DIK_UP))
+	/*if (CInput::GetInstance()->Get_DIKeyState(DIK_UP))
 		m_pTransform->m_vPos.z += 10.f * fTimeDelta;
 	if (CInput::GetInstance()->Get_DIKeyState(DIK_DOWN))
 		m_pTransform->m_vPos.z -= 10.f * fTimeDelta;
 	if (CInput::GetInstance()->Get_DIKeyState(DIK_LEFT))
 		m_pTransform->m_vPos.x -= 10.f * fTimeDelta;
 	if (CInput::GetInstance()->Get_DIKeyState(DIK_RIGHT))
-		m_pTransform->m_vPos.x += 10.f * fTimeDelta;
+		m_pTransform->m_vPos.x += 10.f * fTimeDelta;*/
 
 	// Temp	-------------------------------------------------------------------------------
 	
@@ -146,6 +147,12 @@ HRESULT CPlayer::Prepare_StateMachine(void)
 	pState = CSoldierMove::Create(this);
 	FAILED_CHECK(m_pComStateMachine->Add_State(pState));
 
+	pState = CSoldierLying::Create(this);
+	FAILED_CHECK(m_pComStateMachine->Add_State(pState));
+
+	pState = CSoldierRoll::Create(this);
+	FAILED_CHECK(m_pComStateMachine->Add_State(pState));
+
 	return S_OK;
 }
 
@@ -156,15 +163,39 @@ void CPlayer::Operate_StateMAchine(const float& fTimeDelta)
 	switch (dwState)
 	{
 	case SOLDIER_IDLE:
-		if (m_dwAniIdx != PLAYER_idle)
+ 		if (m_dwState == SOLDIER_MOVE)
+ 		{
+ 			m_pComStateMachine->Enter_State(SOLDIER_MOVE);
+ 		}
+		if (m_dwState == SOLDIER_LYING)
 		{
-			m_pComStateMachine->Enter_State(SOLDIER_MOVE);
+			m_pComStateMachine->Enter_State(SOLDIER_LYING);
 		}
 		break;
 	case SOLDIER_MOVE:
-		if (m_dwAniIdx != PLAYER_RunForward)
+		if (m_dwState == SOLDIER_IDLE)
+		{
+ 			m_pComStateMachine->Enter_State(SOLDIER_IDLE);
+ 		}
+		if (m_dwState == SOLDIER_ROLL)
+		{
+			m_pComStateMachine->Enter_State(SOLDIER_ROLL);
+		}
+		break;
+	case SOLDIER_LYING:
+		if (m_dwState == SOLDIER_IDLE)
 		{
 			m_pComStateMachine->Enter_State(SOLDIER_IDLE);
+		}
+		break;
+	case SOLDIER_ROLL:
+		if (m_dwState == SOLDIER_IDLE)
+		{
+			m_pComStateMachine->Enter_State(SOLDIER_IDLE);
+		}
+		if (m_dwState == SOLDIER_MOVE)
+		{
+			m_pComStateMachine->Enter_State(SOLDIER_MOVE);
 		}
 		break;
 	default:
@@ -176,7 +207,14 @@ void CPlayer::Operate_StateMAchine(const float& fTimeDelta)
 void CPlayer::PlayAnimation(DWORD dwAniIdx, bool bImmediate)
 {
 	if (bImmediate)
-		m_pAnimInfo->Set_KeyImm(dwAniIdx);
-	m_pAnimInfo->Set_Key(dwAniIdx);
+		m_pAnimInfo->Set_KeyImm((_ushort)dwAniIdx);
+	m_pAnimInfo->Set_Key((_ushort)dwAniIdx);
 	m_dwAniIdx = dwAniIdx;
+}
+
+bool CPlayer::Check_AnimationFrame(void)
+{
+	if (m_pAnimInfo->Get_CurFrame() >= m_pAnimInfo->Get_LastFrame())
+		return true;
+	return false;
 }

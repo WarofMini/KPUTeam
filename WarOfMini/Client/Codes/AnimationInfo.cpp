@@ -45,7 +45,7 @@ _int CAnimationInfo::Update(const _float& fTime)
 			&& (m_wCurKey < NODELAYANICNT || m_wCurFrame == m_vecMeshFrameInfo[m_eMeshNum][m_wCurKey].wFrameCnt - 1))
 		{
 			m_wNextKey = m_wStoreNextKey;
-			m_wNextFrame = 0;
+			//m_wNextFrame = 0;
 		}
 
 		else

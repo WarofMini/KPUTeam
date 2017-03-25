@@ -48,7 +48,7 @@ void CDynamicCamera::KeyState(const _float& fTimeDelta)
 
 	matWorld = XMMatrixInverse(&vecTest, XMLoadFloat4x4(m_pView));
 
-	if (CInput::GetInstance()->Get_DIKeyState(DIK_W) & 0x80)
+	if (CInput::GetInstance()->Get_DIKeyState(DIK_UP) & 0x80)
 	{
 		XMVECTOR vLook;
 
@@ -72,7 +72,7 @@ void CDynamicCamera::KeyState(const _float& fTimeDelta)
 	}
 
 
-	if (CInput::GetInstance()->Get_DIKeyState(DIK_S) & 0x80)
+	if (CInput::GetInstance()->Get_DIKeyState(DIK_DOWN) & 0x80)
 	{
 		XMVECTOR vLook;
 
@@ -94,7 +94,7 @@ void CDynamicCamera::KeyState(const _float& fTimeDelta)
 		XMStoreFloat3(m_pAt, vAt);
 	}
 
-	if (CInput::GetInstance()->Get_DIKeyState(DIK_A) & 0x80)
+	if (CInput::GetInstance()->Get_DIKeyState(DIK_LEFT) & 0x80)
 	{
 		XMVECTOR vLook;
 
@@ -118,7 +118,7 @@ void CDynamicCamera::KeyState(const _float& fTimeDelta)
 
 
 
-	if (CInput::GetInstance()->Get_DIKeyState(DIK_D) & 0x80)
+	if (CInput::GetInstance()->Get_DIKeyState(DIK_RIGHT) & 0x80)
 	{
 		XMVECTOR vLook;
 

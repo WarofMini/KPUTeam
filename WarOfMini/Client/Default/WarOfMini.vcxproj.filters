@@ -199,6 +199,12 @@
     <Filter Include="02.Object\01.Soldier\00.SoldierMain\State\Move">
       <UniqueIdentifier>{528d44ee-c4d7-4cc0-9d53-e48ae0174e01}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\01.Soldier\00.SoldierMain\State\Lying">
+      <UniqueIdentifier>{ed677b37-57a4-44f3-932b-5158a83f0de8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\01.Soldier\00.SoldierMain\State\Roll">
+      <UniqueIdentifier>{d7032f5d-6c55-491b-8ce7-79d203400b0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -405,6 +411,12 @@
     <ClInclude Include="..\Codes\SoldierMove.h">
       <Filter>02.Object\01.Soldier\00.SoldierMain\State\Move</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\SoldierLying.h">
+      <Filter>02.Object\01.Soldier\00.SoldierMain\State\Lying</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\SoldierRoll.h">
+      <Filter>02.Object\01.Soldier\00.SoldierMain\State\Roll</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -568,6 +580,12 @@
     </ClCompile>
     <ClCompile Include="..\Codes\SoldierMove.cpp">
       <Filter>02.Object\01.Soldier\00.SoldierMain\State\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\SoldierLying.cpp">
+      <Filter>02.Object\01.Soldier\00.SoldierMain\State\Lying</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\SoldierRoll.cpp">
+      <Filter>02.Object\01.Soldier\00.SoldierMain\State\Roll</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

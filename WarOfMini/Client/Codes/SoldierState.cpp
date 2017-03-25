@@ -4,6 +4,8 @@
 
 CSoldierState::CSoldierState(CPlayer* pSoldier)
 	: m_pSoldier(pSoldier)
+	, m_pInput(pSoldier->GetInput())
+	, m_pAniIdx(pSoldier->Get_AniIdx())
 {
 
 }
@@ -26,6 +28,11 @@ int CSoldierState::OnState()
 int CSoldierState::OutState()
 {
 	return 0;
+}
+
+void CSoldierState::ShootCheck(void)
+{
+
 }
 
 void CSoldierState::Release(void)

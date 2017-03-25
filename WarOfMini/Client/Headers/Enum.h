@@ -32,7 +32,7 @@ enum ANIPLAYER {
 	, PLAYER_Runback
 	, PLAYER_RunForward
 	, PLAYER_RunLeft
-	, PLAYER_RunLight
+	, PLAYER_RunRight
 	, PLAYER_Jump
 	, PLAYER_JumpIn
 	, PLAYER_JumpLoop

@@ -14,11 +14,17 @@ protected:
 	virtual int	OnState();
 	virtual int	OutState();
 
+	virtual void ShootCheck(void);
+
 public:
 	static	CSoldierMove*		Create(CPlayer* pSoldier);
 
 protected:
 	virtual void Release(void);
+
+private:
+	bool	MoveKeyCheck(void);
+	bool	RollLeyCheck(void);
 
 private:
 	CPlayer*	m_pSoldier;

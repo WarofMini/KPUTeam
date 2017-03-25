@@ -5,7 +5,7 @@
 
 class CEquipment;
 class CStateMachine;
-
+class CInput;
 class CPlayer
 	: public CDynamicObject
 {
@@ -14,7 +14,7 @@ protected:
 	virtual ~CPlayer(void);
 
 public:
-	enum STATE_SOLDIER { SOLDIER_IDLE, SOLDIER_MOVE, SOLDIER_END };
+	enum STATE_SOLDIER { SOLDIER_IDLE, SOLDIER_MOVE, SOLDIER_LYING, SOLDIER_ROLL, SOLDIER_END };
 
 public:
 	static CPlayer* Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);
@@ -33,9 +33,14 @@ private:
 	void		Operate_StateMAchine(const float& fTimeDelta);
 
 public:
-	void		PlayAnimation(DWORD dwAniIdx, bool bImmediate = false);
+	CInput*		GetInput(void) { return m_pInput; }
+	void		PlayAnimation(DWORD dwAniIdx, bool bImmediate = true);
+	DWORD*		Get_State(void) { return &m_dwState; }
+	DWORD*		Get_AniIdx(void) { return &m_dwAniIdx; }
+	bool		Check_AnimationFrame(void);
 
 private:
+	CInput*			m_pInput;
 	XMFLOAT3		m_vLook;
 
 	XMFLOAT4X4		m_matEquipBone[2];

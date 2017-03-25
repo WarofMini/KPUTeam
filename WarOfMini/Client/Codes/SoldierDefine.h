@@ -3,5 +3,7 @@
 
 #include "SoldierIdle.h"
 #include "SoldierMove.h"
+#include "SoldierLying.h"
+#include "SoldierRoll.h"
 
 #endif // SoldierDefine_h__
