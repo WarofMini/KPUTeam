@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Management.h"
 #include "Scene.h"
+#include "OtherPlayer.h"
 
 IMPLEMENT_SINGLETON(CManagement)
 
@@ -67,4 +68,25 @@ void CManagement::Release(void)
 CRenderer * CManagement::GetRenderer(void)
 {
 	return m_pRenderer;
+}
+
+Ser_PLAYER_DATA* CManagement::Get_Server_Data(int uId)
+{
+	CLayer* pLayer = m_pScene->FindLayer(L"Layer_GameLogic");
+
+	list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"OtherPlayer");
+	list<CGameObject*>::iterator iter = pObjList->begin();
+	list<CGameObject*>::iterator iter_end = pObjList->end();
+
+	for (iter; iter != iter_end; ++iter)
+	{
+		int iCompare = ((COtherPlayer*)*iter)->GetPacketData()->ID;
+		
+		if (iCompare == uId)
+		{
+			return ((COtherPlayer*)*iter)->GetPacketData();
+		}
+	}
+
+	return nullptr;
 }

@@ -8,8 +8,7 @@
 #include "Management.h"
 #include "Input.h"
 
-XMFLOAT3 g_vPlayerPos = XMFLOAT3(0.f, 0.f, 0.f);
-INT g_iPlayerHP = 120;
+XMFLOAT3		g_vPlayerPos;
 
 CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 	: CDynamicObject(pContext)
@@ -21,6 +20,8 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 	XMStoreFloat4x4(&m_matEquipBone[1], XMMatrixIdentity());
 
 	ZeroMemory(m_pEquipment, sizeof(CEquipment*) * 1);
+
+	m_pServer_PlayerData = new Ser_PLAYER_DATA;
 }
 
 CPlayer::~CPlayer(void)
@@ -49,6 +50,10 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 	m_pTransform->m_vPos = XMFLOAT3(20.f, 10.f, 20.f);
 	m_pTransform->m_vDir = XMFLOAT3(0.f, 0.f, -1.f);
 	m_pAnimInfo->Set_Key(m_dwAniIdx);
+
+//	m_pServer_PlayerData->vPos = m_pTransform->m_vPos;
+
+//	g_Client.sendPacket()
 
 	return S_OK;
 }

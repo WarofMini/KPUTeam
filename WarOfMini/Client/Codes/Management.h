@@ -36,7 +36,9 @@ private:
 	ID3D11DeviceContext*	m_pContext;
 
 public:
-	CRenderer*		GetRenderer(void);
+	CRenderer*			GetRenderer(void);
+	CScene*				GetScene(void) { return m_pScene; }
+	Ser_PLAYER_DATA*	Get_Server_Data(int uId);
 };
 
 // SceneChange

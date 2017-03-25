@@ -33,7 +33,7 @@ public:
 	static CLayer* Create(void);
 	void			Release(void);
 
-private:
+public:
 	list<CGameObject*>* Find_ObjectList(const _tchar* pObjectTag);
 
 };

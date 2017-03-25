@@ -15,6 +15,7 @@ protected:
 protected:
 	typedef map<const _tchar*, CComponent*>		MAPCOMPONENT;
 	MAPCOMPONENT								m_mapComponent;
+	Ser_PLAYER_DATA*			m_pServer_PlayerData;
 
 
 protected:
@@ -27,10 +28,17 @@ public:
 	const CComponent* Get_Component(const _tchar* pComponentTag);
 
 public:
+	void SetPacketData(Ser_PLAYER_DATA* SetPacketData)
+	{
+		//m_pServer_PlayerData = SetPacketData;
+		memcpy(m_pServer_PlayerData, SetPacketData, sizeof(Ser_PLAYER_DATA));
+	}
+	Ser_PLAYER_DATA* GetPacketData(void) { return m_pServer_PlayerData; }
+
+public:
 	virtual HRESULT	Initialize(void);
 	virtual _int  Update(const _float& fTimeDelta);
 	virtual void Render(void);
-
 
 public:
 	virtual void Release(void);

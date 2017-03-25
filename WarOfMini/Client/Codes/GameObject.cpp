@@ -4,6 +4,7 @@
 
 CGameObject::CGameObject(ID3D11DeviceContext * pContext)
 : m_pContext(pContext)
+, m_pServer_PlayerData(NULL)
 {
 }
 
@@ -52,4 +53,6 @@ void CGameObject::Release(void)
 {
 	for_each(m_mapComponent.begin(), m_mapComponent.end(), CRelease_Pair());
 	m_mapComponent.clear();
+
+	Safe_Delete(m_pServer_PlayerData);
 }

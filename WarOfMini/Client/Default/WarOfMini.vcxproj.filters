@@ -169,20 +169,20 @@
     <Filter Include="95.Engine\00.Utility\06.GameObject\01.StaticObject">
       <UniqueIdentifier>{cb7c1add-10ae-40fd-891a-6e890b284a6f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\04.Equipment">
-      <UniqueIdentifier>{8c439ebf-5628-4572-abc6-2e00978b34a5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Object\04.Equipment\00.Gun">
-      <UniqueIdentifier>{018484a4-70a3-43f0-9577-f6ff8cd80dd0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Object\01.Soldier\00.SoldierMain">
       <UniqueIdentifier>{2b36e40c-3b66-41d3-b555-373e81f51a83}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\02.OtherPlayer">
+    <Filter Include="02.Object\01.Soldier\01.OtherPlayer">
       <UniqueIdentifier>{fad12007-0f63-4ee3-8179-ca0887e6da13}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\03.DefaultObject">
+    <Filter Include="02.Object\02.DefaultObject">
       <UniqueIdentifier>{dd822835-712c-4a67-8648-e119dfaf53d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\03.Equipment">
+      <UniqueIdentifier>{8c439ebf-5628-4572-abc6-2e00978b34a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\03.Equipment\00.Gun">
+      <UniqueIdentifier>{018484a4-70a3-43f0-9577-f6ff8cd80dd0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -352,19 +352,22 @@
       <Filter>95.Engine\00.Utility\06.GameObject\01.StaticObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Equipment.h">
-      <Filter>02.Object\04.Equipment</Filter>
+      <Filter>02.Object\03.Equipment</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Gun.h">
-      <Filter>02.Object\04.Equipment\00.Gun</Filter>
+      <Filter>02.Object\03.Equipment\00.Gun</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\DefaultObject.h">
-      <Filter>02.Object\03.DefaultObject</Filter>
+      <Filter>02.Object\02.DefaultObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\LogoBack.h">
       <Filter>02.Object\99.LogoBack</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Player.h">
       <Filter>02.Object\01.Soldier\00.SoldierMain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\OtherPlayer.h">
+      <Filter>02.Object\01.Soldier\01.OtherPlayer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -495,19 +498,22 @@
       <Filter>95.Engine\00.Utility\06.GameObject\00.DynamicObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Equipment.cpp">
-      <Filter>02.Object\04.Equipment</Filter>
+      <Filter>02.Object\03.Equipment</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Gun.cpp">
-      <Filter>02.Object\04.Equipment\00.Gun</Filter>
+      <Filter>02.Object\03.Equipment\00.Gun</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\DefaultObject.cpp">
-      <Filter>02.Object\03.DefaultObject</Filter>
+      <Filter>02.Object\02.DefaultObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\LogoBack.cpp">
       <Filter>02.Object\99.LogoBack</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Player.cpp">
       <Filter>02.Object\01.Soldier\00.SoldierMain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\OtherPlayer.cpp">
+      <Filter>02.Object\01.Soldier\01.OtherPlayer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

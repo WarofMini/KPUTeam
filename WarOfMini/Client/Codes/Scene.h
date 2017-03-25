@@ -28,7 +28,8 @@ protected:
 	MAPLAYER							m_mapLayer;
 
 public:
-	CLayer*								FindLayer(const _tchar* LayerName);
+	CLayer*		FindLayer(const _tchar* LayerName);
+	//MAPLAYER*	GetMapLayer(void) { return &m_mapLayer; }
 };
 
 #endif // Scene_h__

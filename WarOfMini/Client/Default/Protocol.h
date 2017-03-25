@@ -36,8 +36,8 @@ struct Ser_PLAYER_DATA
 	BYTE size;
 	BYTE type;
 	int ID;
-	D3DXVECTOR3 vPos;
-	D3DXVECTOR3 vDir;
+	XMFLOAT3 vPos;
+	XMFLOAT3 vDir;
 	// + HP값도 보내줘야함
 };
 

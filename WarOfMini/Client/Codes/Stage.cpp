@@ -62,9 +62,10 @@ HRESULT CStage::Ready_GameLogic(void)
 
 	pGameObject = CPlayer::Create(m_pGraphicDev, m_pContext);
 	if (NULL == pGameObject) return E_FAIL;
-	pLayer->Ready_Object(L"PlayerMain", pGameObject);
+	pLayer->Ready_Object(L"Player", pGameObject);
 
 	m_mapLayer.insert(MAPLAYER::value_type(L"Layer_GameLogic", pLayer));
+
 	return S_OK;
 }
 

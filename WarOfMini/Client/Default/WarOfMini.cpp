@@ -62,6 +62,9 @@ int APIENTRY wWinMain( HINSTANCE hInstance,
 	m_bLogoLoading = FALSE;
 
 
+	g_Client.InitSock(g_hWnd);
+
+
     MSG msg;
 	msg.message = WM_NULL;
 
