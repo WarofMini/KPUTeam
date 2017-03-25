@@ -197,6 +197,7 @@
     <ClInclude Include="..\Codes\Shader.h" />
     <ClInclude Include="..\Codes\ShaderMgr.h" />
     <ClInclude Include="..\Codes\Stage.h" />
+    <ClInclude Include="..\Codes\StaticCamera.h" />
     <ClInclude Include="..\Codes\StaticMesh.h" />
     <ClInclude Include="..\Codes\StaticObject.h" />
     <ClInclude Include="..\Codes\Texture.h" />
@@ -259,6 +260,7 @@
     <ClCompile Include="..\Codes\Shader.cpp" />
     <ClCompile Include="..\Codes\ShaderMgr.cpp" />
     <ClCompile Include="..\Codes\Stage.cpp" />
+    <ClCompile Include="..\Codes\StaticCamera.cpp" />
     <ClCompile Include="..\Codes\StaticMesh.cpp" />
     <ClCompile Include="..\Codes\StaticObject.cpp" />
     <ClCompile Include="..\Codes\Texture.cpp" />

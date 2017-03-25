@@ -47,7 +47,7 @@ HRESULT COtherPlayer::Initialize(ID3D11Device* pGraphicDev)
 	m_pTransform->m_vAngle.x = 90.f;
 	m_pTransform->m_vPos = XMFLOAT3(10.f, 10.f, 10.f);
 	m_pTransform->m_vDir = XMFLOAT3(0.f, 0.f, -1.f);
-	m_pAnimInfo->Set_Key(PLAYER_IDLE);
+	m_pAnimInfo->Set_Key(PLAYER_idle);
 
 	return S_OK;
 }

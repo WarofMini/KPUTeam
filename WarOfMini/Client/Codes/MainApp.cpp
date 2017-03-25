@@ -272,6 +272,7 @@ void CMainApp::Stage_DebugInfo(void)
 
 	_float fSpeed = CCameraMgr::GetInstance()->Get_CurrentCameraSpeed();
 
+	//정수형을 문자열로 변환
 	wstring strspeed = to_wstring((_int)fSpeed);
 	
 	CFontMgr::GetInstance()->Render_Font(L"고딕", L"Camera Speed : ", 15.f, 10.f, 140.f, D3DXCOLOR(0.0f, 0.0f, 1.f, 1.f));

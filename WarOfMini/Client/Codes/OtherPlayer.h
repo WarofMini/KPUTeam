@@ -4,6 +4,7 @@
 #include "DynamicObject.h"
 
 class CEquipment;
+
 class COtherPlayer
 	: public CDynamicObject
 {
