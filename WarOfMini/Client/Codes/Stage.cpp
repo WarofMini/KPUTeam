@@ -20,8 +20,6 @@ CStage::~CStage(void)
 
 CStage* CStage::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
 {
-	//SetCursor(NULL);
-	//ShowCursor(FALSE);
 
 	CStage* pScene = new CStage(pGraphicDev, pContext);
 
@@ -77,6 +75,7 @@ HRESULT CStage::Ready_Environment(void)
 	//다이나믹 카메라 적용
 	CCameraMgr::GetInstance()->Ready_DynamicCamera(m_pContext, CCameraMgr::CAMERA_DYNAMIC, 0.1f, 10000.f, XMFLOAT3(0.f, 5.f, -10.f), XMFLOAT3(0.f, 0.f, 0.f));
 
+	//플레이어 카메라 적용
 	CComponent* pTransform = (CComponent*)FindLayer(L"Layer_GameLogic")->Get_Component(L"Player", L"Com_Transform");
 
 	if (pTransform != NULL)
@@ -219,6 +218,7 @@ HRESULT CStage::LoadStageMap(void)
 			vScale = XMVectorSet(m_tInfo.m_vScale.x + BITSCALE, m_tInfo.m_vScale.y + BITSCALE, m_tInfo.m_vScale.z + BITSCALE, 0.0f);
 
 			((CDefaultObj*)pGameObject)->SetObjNum(eMeshNum);
+			((CDefaultObj*)pGameObject)->ComputeCollider();
 
 			XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos, vPos);
 			XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle, vAngle);

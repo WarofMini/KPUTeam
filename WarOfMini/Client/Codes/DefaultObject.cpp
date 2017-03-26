@@ -35,19 +35,6 @@ HRESULT CDefaultObj::Initialize()
 		return E_FAIL;
 
 
-	//m_pTransform->m_vScale = XMFLOAT3(tObjData.vScale);
-	//m_pTransform->m_vAngle = XMFLOAT3(tObjData.vAngle);
-	//m_pTransform->m_vPos = XMFLOAT3(tObjData.vPos);
-
-	XMFLOAT3 vMax = *CMeshMgr::GetInstance()->Get_MeshMax(m_uiObjNum);
-
-	vMax = XMFLOAT3(vMax.x * m_pTransform->m_vScale.x,
-		vMax.y * m_pTransform->m_vScale.y,
-		vMax.z * m_pTransform->m_vScale.z);
-
-	m_fRadius = (vMax.x > vMax.y) ? vMax.x : vMax.y;
-	m_fRadius = (vMax.z > m_fRadius) ? vMax.z : m_fRadius;
-
 	return S_OK;
 }
 
@@ -56,8 +43,8 @@ _int CDefaultObj::Update(const _float& fTimeDelta)
 	CGameObject::Update(fTimeDelta);
 
 	
-	CManagement::GetInstance()->Add_RenderInstGroup(CRenderer::RENDER_INST, m_uiObjNum, &m_pTransform->m_matWorld);
-
+	//CManagement::GetInstance()->Add_RenderInstGroup(CRenderer::RENDER_INST, m_uiObjNum, &m_pTransform->m_matWorld);
+	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
 
 	return 0;
 }
@@ -107,4 +94,16 @@ HRESULT CDefaultObj::Ready_Component()
 void CDefaultObj::SetObjNum(_uint uNum)
 {
 	m_uiObjNum = uNum;
+}
+
+void CDefaultObj::ComputeCollider(void)
+{
+	XMFLOAT3 vMax = *CMeshMgr::GetInstance()->Get_MeshMax(m_uiObjNum);
+
+	vMax = XMFLOAT3(vMax.x * m_pTransform->m_vScale.x,
+		vMax.y * m_pTransform->m_vScale.y,
+		vMax.z * m_pTransform->m_vScale.z);
+
+	m_fRadius = (vMax.x > vMax.y) ? vMax.x : vMax.y;
+	m_fRadius = (vMax.z > m_fRadius) ? vMax.z : m_fRadius;
 }

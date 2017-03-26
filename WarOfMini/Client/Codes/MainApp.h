@@ -37,6 +37,8 @@ public:
 	void Render_CurrentScene(void);
 
 	void Stage_DebugInfo(void);
+
+	void Debug_KeyCheck(void);
 };
 
 #endif // MainApp_h__

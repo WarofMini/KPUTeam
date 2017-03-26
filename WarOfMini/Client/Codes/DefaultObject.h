@@ -31,6 +31,7 @@ private:
 
 public:
 	void			SetObjNum(_uint uNum);
+	void			ComputeCollider(void);
 
 };
 

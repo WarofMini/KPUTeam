@@ -230,7 +230,6 @@ void CResourcesMgr::Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 		FbxMesh* pMesh = (FbxMesh*)pNode->GetNodeAttribute();
 
 		// Get Transform
-		// Get Transform
 		XMFLOAT4X4 matWorld;
 		FbxMatrix matFbxWorld = pNode->EvaluateGlobalTransform();
 

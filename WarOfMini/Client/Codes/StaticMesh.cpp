@@ -106,7 +106,6 @@ CResource* CStaticMesh::Clone_Resource(void)
 
 void CStaticMesh::Render(_bool bColliderDraw)
 {
-	{
 		_uint uiStride = sizeof(VTXTEX);
 		_uint uiOffset = 0;
 
@@ -122,6 +121,8 @@ void CStaticMesh::Render(_bool bColliderDraw)
 			m_pContext->DrawIndexed(m_uiIdxCnt, 0, 0);
 		}
 
+
+		bColliderDraw = g_bCollisionDraw;
 		// Bounding Box
 		if (bColliderDraw == TRUE)
 		{
@@ -134,7 +135,6 @@ void CStaticMesh::Render(_bool bColliderDraw)
 
 			CGraphicDev::GetInstance()->SetWireFrame(FALSE);
 		}
-	}
 
 	for (_uint uiSize = 0; uiSize < m_vecChild.size(); ++uiSize)
 		m_vecChild[uiSize]->Render(bColliderDraw);

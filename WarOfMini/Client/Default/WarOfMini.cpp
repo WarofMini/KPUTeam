@@ -25,6 +25,7 @@ Scene_Type	m_eSceneID;
 BOOL m_bLogoLoading;
 _bool g_bFocus;
 _bool g_bSetAquire;
+_bool g_bCollisionDraw;
 //AsynchronousClientClass g_Client;
 
 
@@ -60,7 +61,7 @@ int APIENTRY wWinMain( HINSTANCE hInstance,
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_WAROFMINI));
 
 	m_bLogoLoading = FALSE;
-
+	g_bCollisionDraw = FALSE;
 
 	g_Client.InitSock(g_hWnd);
 

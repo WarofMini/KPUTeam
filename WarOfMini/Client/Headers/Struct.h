@@ -8,6 +8,12 @@ typedef struct tagVertexTexture
 	XMFLOAT3 vNormal;
 }VTXTEX;
 
+typedef struct tagVertexCubeColor
+{
+	XMFLOAT3 vPos;
+	XMCOLOR  dwColor;
+}VTXCOL;
+
 typedef struct tagVertexBone
 {
 	XMFLOAT3 vPos;

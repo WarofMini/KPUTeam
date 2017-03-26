@@ -11,6 +11,7 @@
 #include "SoldierDefine.h"
 #include "CameraMgr.h"
 
+
 XMFLOAT3		g_vPlayerPos;
 
 CPlayer::CPlayer(ID3D11DeviceContext* pContext)
@@ -72,12 +73,10 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 INT CPlayer::Update(const FLOAT& fTimeDelta)
 {
 
-
-
 	CDynamicObject::Update(fTimeDelta);
 
 
-	//Dynamic카메라 체크 함수
+	//Dynamic카메라 체크 함수(Dynamic 카메라일시 Update 안돌린다.
 	if (!DynamicCameraCheck())
 	{
 		Operate_StateMAchine(fTimeDelta);

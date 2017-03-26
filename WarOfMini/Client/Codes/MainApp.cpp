@@ -93,7 +93,7 @@ INT CMainApp::Update(const _float& fTimeDelta)
 	CInput::GetInstance()->SetInputState();
 		// ÀÎÇ² ÀåÄ¡ ¼Ò½Ç Àâ¾Æ ÁÖ´Â ÇÔ¼ö.
 	Set_Focus();
-
+	Debug_KeyCheck();
 
 	return CManagement::GetInstance()->Update(fTimeDelta);
 
@@ -296,4 +296,33 @@ void CMainApp::Stage_DebugInfo(void)
 	}
 
 	CFontMgr::GetInstance()->Render_Font(L"°íµñ", strCamera.c_str(), 15.f, 10.f, 200.f, D3DXCOLOR(0.0f, 0.0f, 1.f, 1.f));
+
+
+	CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"L : CollisionDraw(On/Off)", 15.f, 10.f, 230.f, D3DXCOLOR(0.0f, 1.0f, 0.f, 1.f));
+
+	CFontMgr::GetInstance()->Render_Font(L"°íµñ", L"DebugCollision : ", 15.f, 10.f, 250.f, D3DXCOLOR(0.0f, 1.0f, 0.f, 1.f));
+
+
+	wstring strOnOff = L"Off";
+	D3DXCOLOR OnOffColor = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);
+	if (g_bCollisionDraw == TRUE)
+	{
+		OnOffColor = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
+		strOnOff = L"ON";
+	}
+
+	CFontMgr::GetInstance()->Render_Font(L"°íµñ", strOnOff.c_str(), 15.f, 130.f, 252.f, OnOffColor);
+
+}
+
+//µð¹ö±× On/Off Ã¼Å©
+void CMainApp::Debug_KeyCheck(void)
+{
+	if (GetAsyncKeyState('L') & 1)
+	{
+		if (g_bCollisionDraw == TRUE)
+			g_bCollisionDraw = FALSE;
+		else
+			g_bCollisionDraw = TRUE;
+	}
 }
