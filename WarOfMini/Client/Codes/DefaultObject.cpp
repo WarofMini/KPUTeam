@@ -6,12 +6,14 @@
 #include "Management.h"
 #include "GraphicDev.h"
 #include "CameraMgr.h"
+#include "SphereMesh.h"
 
 CDefaultObj::CDefaultObj(ID3D11DeviceContext* pContext)
 : CGameObject(pContext)
 , m_uiObjNum(0)
 , m_fRadius(0.f)
 , m_pTransform(NULL)
+, m_pSphereMesh(NULL)
 {
 }
 
@@ -40,9 +42,11 @@ HRESULT CDefaultObj::Initialize()
 
 _int CDefaultObj::Update(const _float& fTimeDelta)
 {
+	//if (m_pSphereMesh != NULL)
+	//	m_pSphereMesh->Update(fTimeDelta);
+
 	CGameObject::Update(fTimeDelta);
 
-	
 	//CManagement::GetInstance()->Add_RenderInstGroup(CRenderer::RENDER_INST, m_uiObjNum, &m_pTransform->m_matWorld);
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
 
@@ -51,6 +55,11 @@ _int CDefaultObj::Update(const _float& fTimeDelta)
 
 void CDefaultObj::Render(void)
 {
+	//if (m_pSphereMesh != NULL)
+	//{
+	//	m_pSphereMesh->Render();
+	//}
+
 	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Default"));
 
 	ID3D11Buffer* pBaseShaderCB = CGraphicDev::GetInstance()->GetBaseShaderCB();
@@ -69,11 +78,15 @@ void CDefaultObj::Render(void)
 	m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_Default"), NULL, 0);
 	m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
 
+
 	CMeshMgr::GetInstance()->Render_MeshMgr(m_uiObjNum, FALSE);
+
 }
 
 void CDefaultObj::Release(void)
 {
+	//Safe_Release(m_pSphereMesh);
+
 	CGameObject::Release();
 	delete this;
 }
@@ -101,9 +114,14 @@ void CDefaultObj::ComputeCollider(void)
 	XMFLOAT3 vMax = *CMeshMgr::GetInstance()->Get_MeshMax(m_uiObjNum);
 
 	vMax = XMFLOAT3(vMax.x * m_pTransform->m_vScale.x,
-		vMax.y * m_pTransform->m_vScale.y,
-		vMax.z * m_pTransform->m_vScale.z);
+	vMax.y * m_pTransform->m_vScale.y,
+	vMax.z * m_pTransform->m_vScale.z);
+
+
 
 	m_fRadius = (vMax.x > vMax.y) ? vMax.x : vMax.y;
 	m_fRadius = (vMax.z > m_fRadius) ? vMax.z : m_fRadius;
+
+
+	//m_pSphereMesh = CSphereMesh::Create(m_pContext, m_fRadius , &m_pTransform->m_vPos);
 }

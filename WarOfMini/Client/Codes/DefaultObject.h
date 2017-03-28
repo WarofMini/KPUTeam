@@ -4,6 +4,7 @@
 #include "GameObject.h"
 
 class CTransform;
+class CSphereMesh;
 
 class CDefaultObj
 	: public CGameObject
@@ -28,6 +29,7 @@ private:
 	_uint			m_uiObjNum;
 	_float			m_fRadius;
 	CTransform*		m_pTransform;
+	CSphereMesh*	m_pSphereMesh;
 
 public:
 	void			SetObjNum(_uint uNum);

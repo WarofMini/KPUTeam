@@ -7,7 +7,7 @@
 #include "DefaultObject.h"
 #include "Player.h"
 #include "Transform.h"
-
+#include "SphereMesh.h"
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
 	: CScene(pGraphicDev, pContext)
@@ -58,9 +58,11 @@ HRESULT CStage::Ready_GameLogic(void)
 	CGameObject* pGameObject = NULL;
 
 
+
 	pGameObject = CPlayer::Create(m_pGraphicDev, m_pContext);
 	if (NULL == pGameObject) return E_FAIL;
 	pLayer->Ready_Object(L"Player", pGameObject);
+
 
 	m_mapLayer.insert(MAPLAYER::value_type(L"Layer_GameLogic", pLayer));
 
@@ -119,7 +121,7 @@ HRESULT CStage::InitFloor(void)
 
 
 			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle = XMFLOAT3(0.f, 90.f, 0.f);
-			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale = XMFLOAT3(BITSCALE, BITSCALE, BITSCALE);
+			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale = XMFLOAT3(1.016f, 1.016f, 1.016f);
 			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos = XMFLOAT3((j % 6) * m_iSize, 0.f, i * m_iSize);
 			pLayer->Ready_Object(L"StaticObject", pGameObject);
 
@@ -155,8 +157,8 @@ HRESULT CStage::InitToiletFloor(void)
 			((CDefaultObj*)pGameObject)->SetObjNum(MESHNUM_FLOOR2);
 
 			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle = XMFLOAT3(0.f, 90.f, 0.f);
-			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale = XMFLOAT3(BITSCALE, BITSCALE, BITSCALE);
-			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos = XMFLOAT3((j % 4) * m_iSize + 1182.f, 0.1f, i * m_iSize + 400.f);
+			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale = XMFLOAT3(1.016f, 1.016f, 1.016f);
+			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos = XMFLOAT3((j % 4) * m_iSize + 1182.f, 0.2f, i * m_iSize + 400.f);
 
 			pLayer->Ready_Object(L"StaticObject", pGameObject);
 
@@ -218,12 +220,12 @@ HRESULT CStage::LoadStageMap(void)
 			vScale = XMVectorSet(m_tInfo.m_vScale.x + BITSCALE, m_tInfo.m_vScale.y + BITSCALE, m_tInfo.m_vScale.z + BITSCALE, 0.0f);
 
 			((CDefaultObj*)pGameObject)->SetObjNum(eMeshNum);
-			((CDefaultObj*)pGameObject)->ComputeCollider();
 
 			XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos, vPos);
 			XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle, vAngle);
 			XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale, vScale);
 
+			((CDefaultObj*)pGameObject)->ComputeCollider();
 			pLayer->Ready_Object(L"StaticObject", pGameObject);
 		}
 

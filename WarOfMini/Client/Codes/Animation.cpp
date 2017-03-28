@@ -55,7 +55,7 @@ void CAnimation::UpdateSubresource(CAnimationInfo* pAnimInfo, XMFLOAT4X4* pBoneW
 				{
 					matTrans.m[iRow][iColumn] = (matTrans.m[iRow][iColumn] * (1.f - fRatio)) + (matTrans2.m[iRow][iColumn] * fRatio);
 					matScale.m[iRow][iColumn] = (matScale.m[iRow][iColumn] * (1.f - fRatio)) + (matScale2.m[iRow][iColumn] * fRatio);
-					matRot.m[iRow][iColumn] = (matRot.m[iRow][iColumn] * (1.f - fRatio)) + (matRot2.m[iRow][iColumn] * fRatio);
+					matRot.m[iRow][iColumn]	  = (matRot.m[iRow][iColumn] * (1.f - fRatio)) + (matRot2.m[iRow][iColumn] * fRatio);
 				}
 			}
 

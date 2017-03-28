@@ -122,10 +122,13 @@ void CStaticMesh::Render(_bool bColliderDraw)
 		}
 
 
-		bColliderDraw = g_bCollisionDraw;
+	
+			bColliderDraw = g_bCollisionDraw;	
+
 		// Bounding Box
 		if (bColliderDraw == TRUE)
 		{
+
 			CGraphicDev::GetInstance()->SetWireFrame(TRUE);
 
 			m_pContext->IASetVertexBuffers(0, 1, &m_pBBoxVB, &uiStride, &uiOffset);
@@ -133,7 +136,9 @@ void CStaticMesh::Render(_bool bColliderDraw)
 
 			m_pContext->DrawIndexed(36, 0, 0);
 
+	
 			CGraphicDev::GetInstance()->SetWireFrame(FALSE);
+			
 		}
 
 	for (_uint uiSize = 0; uiSize < m_vecChild.size(); ++uiSize)
@@ -219,6 +224,7 @@ void CStaticMesh::Release(void)
 
 HRESULT CStaticMesh::Set_BoundingBox(void)
 {
+
 	// Vertex
 	VTXTEX pVtxTex[] =
 	{

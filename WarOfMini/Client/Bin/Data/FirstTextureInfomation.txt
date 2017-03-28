@@ -1,2 +1,3 @@
 LogoBack-png-0
+SphereColor-png-0
 Office-png-0

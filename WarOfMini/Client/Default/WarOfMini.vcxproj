@@ -202,6 +202,7 @@
     <ClInclude Include="..\Codes\SoldierMove.h" />
     <ClInclude Include="..\Codes\SoldierRoll.h" />
     <ClInclude Include="..\Codes\SoldierState.h" />
+    <ClInclude Include="..\Codes\SphereMesh.h" />
     <ClInclude Include="..\Codes\Stage.h" />
     <ClInclude Include="..\Codes\State.h" />
     <ClInclude Include="..\Codes\StateMachine.h" />
@@ -272,6 +273,7 @@
     <ClCompile Include="..\Codes\SoldierMove.cpp" />
     <ClCompile Include="..\Codes\SoldierRoll.cpp" />
     <ClCompile Include="..\Codes\SoldierState.cpp" />
+    <ClCompile Include="..\Codes\SphereMesh.cpp" />
     <ClCompile Include="..\Codes\Stage.cpp" />
     <ClCompile Include="..\Codes\State.cpp" />
     <ClCompile Include="..\Codes\StateMachine.cpp" />

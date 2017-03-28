@@ -264,7 +264,6 @@ void CResourcesMgr::Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 		pVtxTex = new VTXTEX[uiVtxCnt];
 		ZeroMemory(pVtxTex, sizeof(VTXTEX) * uiVtxCnt);
 
-		FbxVector2 vFbxUV(0, 0);
 
 		// Vertex
 		for (UINT i = 0; i < uiVtxCnt; ++i)
@@ -292,11 +291,12 @@ void CResourcesMgr::Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 				pMesh->GetPolygonVertexNormal(uiPolygonIndex, uiVerticeIndex, vNormal);
 
 				pVtxTex[uiIndex].vNormal = XMFLOAT3((FLOAT)vNormal.Buffer()[0],
-					(FLOAT)vNormal.Buffer()[1],
-					(FLOAT)vNormal.Buffer()[2]);
+													(FLOAT)vNormal.Buffer()[1],
+													(FLOAT)vNormal.Buffer()[2]);
 
-				FbxVector2 vUV;
+				FbxVector2 vUV= FbxVector2(0.0, 0.0);
 				bool bUnmappedUV;
+
 
 				if (UVNames.GetCount())
 				{
@@ -304,7 +304,7 @@ void CResourcesMgr::Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 					pUVName = UVNames[0];
 
 					pMesh->GetPolygonVertexUV(uiPolygonIndex, uiVerticeIndex, pUVName, vUV, bUnmappedUV);
-					pVtxTex[uiIndex].vTexUV = XMFLOAT2((FLOAT)vUV.Buffer()[0], -(FLOAT)vUV.Buffer()[1]);
+					pVtxTex[uiIndex].vTexUV = XMFLOAT2((FLOAT)vUV.mData[0],  1.f - (FLOAT)vUV.mData[1]);
 				}
 			}
 		}

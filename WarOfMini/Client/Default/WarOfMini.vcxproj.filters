@@ -205,6 +205,12 @@
     <Filter Include="95.Engine\00.Utility\11.Camera\01.PlayerCamera">
       <UniqueIdentifier>{4b2868ca-b93a-4648-96d9-844e7ae0b792}</UniqueIdentifier>
     </Filter>
+    <Filter Include="95.Engine\00.Utility\13.Collision">
+      <UniqueIdentifier>{a1d5920d-efe1-4d83-b776-c7fa2ee8c31d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.Engine\00.Utility\13.Collision\00.CollisionSphere">
+      <UniqueIdentifier>{2de7f605-75c7-453d-90e5-f7fcc0ac14c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -417,6 +423,9 @@
     <ClInclude Include="..\Codes\PlayerCamera.h">
       <Filter>95.Engine\00.Utility\11.Camera\01.PlayerCamera</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\SphereMesh.h">
+      <Filter>95.Engine\00.Utility\13.Collision\00.CollisionSphere</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -586,6 +595,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\PlayerCamera.cpp">
       <Filter>95.Engine\00.Utility\11.Camera\01.PlayerCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\SphereMesh.cpp">
+      <Filter>95.Engine\00.Utility\13.Collision\00.CollisionSphere</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

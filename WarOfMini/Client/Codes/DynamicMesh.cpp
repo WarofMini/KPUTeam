@@ -185,7 +185,7 @@ void CDynaicMesh::RenderAnim(CAnimationInfo* pAnimInfo, MATNODE* pMatNode, _ubyt
 			m_pContext->DrawIndexed(m_uiIdxCnt, 0, 0);
 		}
 
-		bColliderDraw = g_bCollisionDraw;
+		//bColliderDraw = g_bCollisionDraw;
 		// Bounding Box
 		if (bColliderDraw == TRUE)
 		{
