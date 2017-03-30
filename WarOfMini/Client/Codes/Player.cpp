@@ -217,17 +217,16 @@ bool CPlayer::Check_AnimationFrame(void)
 
 void CPlayer::KeyState(const FLOAT& fTimeDelta)
 {
-	//테스트용
-	if (CInput::GetInstance()->Get_DIKeyState(DIK_UP))
-		m_pTransform->m_vPos.z += 10.f * fTimeDelta;
-	if (CInput::GetInstance()->Get_DIKeyState(DIK_DOWN))
-		m_pTransform->m_vPos.z -= 10.f * fTimeDelta;
-	if (CInput::GetInstance()->Get_DIKeyState(DIK_LEFT))
-		m_pTransform->m_vPos.x -= 10.f * fTimeDelta;
-	if (CInput::GetInstance()->Get_DIKeyState(DIK_RIGHT))
-		m_pTransform->m_vPos.x += 10.f * fTimeDelta;
-	if (CInput::GetInstance()->Get_DIKeyState(DIK_U))
-		m_pTransform->m_vAngle.y += 10.f * fTimeDelta;
+	_long lMouseMove = 0;
+
+	if (lMouseMove = m_pInput->Get_DIMouseMove(CInput::DIMS_X))
+	{
+		if (m_pTransform->m_vAngle.y >= 360.f)
+			m_pTransform->m_vAngle.y = 0.f;
+		if (m_pTransform->m_vAngle.y < 0.f)
+			m_pTransform->m_vAngle.y = 360.f;
+		m_pTransform->m_vAngle.y += lMouseMove * fTimeDelta * 5.f;
+	}
 }
 
 void CPlayer::UpdateDir(void)

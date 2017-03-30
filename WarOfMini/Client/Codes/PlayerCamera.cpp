@@ -7,6 +7,7 @@ CPlayerCamera::CPlayerCamera(ID3D11DeviceContext* pContext, const CTransform* pT
 	: CCamera(pContext)
 	, m_pTargetTransform(pTargetTransform)
 	, m_fGap(fGap)
+	, m_fAngleY(0.f)
 {
 	m_fEpsilonY = 15.f;
 
@@ -34,8 +35,7 @@ _int CPlayerCamera::Update(const _float& fTimeDelta)
 	KeyState(fTimeDelta);
 
 	MakeView();
-
-	//FixMouse();
+	FixMouse();
 
 	return 0;
 }
@@ -50,25 +50,32 @@ void CPlayerCamera::Release(void)
 void CPlayerCamera::PlayerState(void)
 {
 	XMVECTOR vTargetPos = XMVectorSet(m_pTargetTransform->m_vPos.x, m_pTargetTransform->m_vPos.y, m_pTargetTransform->m_vPos.z, 0.0f);
-	XMVECTOR vEye, vAt, vUpPos, vLook, g_Look;
+	XMVECTOR vTargetDir = XMVectorSet(m_pTargetTransform->m_vDir.x, 0.f, m_pTargetTransform->m_vDir.z, 0.0f);
+	XMVECTOR vEye, vAt, vUpPos, vLook, vUp;
+
+	vUp = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	vUpPos = XMVectorSet(0.0f, m_fEpsilonY, 0.0f, 0.0f);//입실론?
+	vAt = vTargetPos + vUpPos;							//바라볼위치
+
 	XMMATRIX matWorld;
-
-	g_Look = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	vUpPos = XMVectorSet(0.0f, m_fEpsilonY, 0.0f, 0.0f);
-
-	vAt = vTargetPos + vUpPos;
-
 	matWorld = XMLoadFloat4x4(&m_pTargetTransform->m_matWorld);
 
-	//방향
-	vLook = XMVector3TransformNormal(g_Look, matWorld);
+	vLook = XMVector3Normalize(vTargetDir);				//바라볼방향
+	vEye = (-vLook) * m_fGap;							//카메라위치
+	//vEye += vAt;
 
-	vEye = (-vLook) * m_fGap;
+	XMVECTOR vTargetRight = XMVectorSet(m_pTargetTransform->m_matWorld._11, m_pTargetTransform->m_matWorld._12, m_pTargetTransform->m_matWorld._13, 0.0f);
+	XMVECTOR vRight = XMVector3Normalize(vTargetRight);
 
+	XMMATRIX	matRot;
+	matRot = XMMatrixRotationAxis(vRight, (_float)D3DXToRadian(m_fAngleY));
+
+	//vEye -= vAt;
+	vEye = XMVector3TransformNormal(vEye, matRot);
 	vEye += vAt;
-
-	XMStoreFloat3(m_pEye, vEye);
+	
 	XMStoreFloat3(m_pAt, vAt);
+	XMStoreFloat3(m_pEye, vEye);
 }
 
 void CPlayerCamera::FixMouse(void)
@@ -111,7 +118,16 @@ void CPlayerCamera::KeyState(const _float& fTimeDelta)
 
 		XMStoreFloat3(m_pEye, vEye);
 		XMStoreFloat3(m_pAt, vAt);
-
 	}
 
+	dwMouseMove = 0;
+	if (dwMouseMove = CInput::GetInstance()->Get_DIMouseMove(CInput::DIMS_Y))
+	{
+		m_fAngleY += dwMouseMove * fTimeDelta * 3.f;
+
+		if (m_fAngleY <= -80.f)
+			m_fAngleY = -80.f;
+		if (m_fAngleY >= 80.f)
+			m_fAngleY = 80.f;
+	}
 }

@@ -26,6 +26,7 @@ private:
 	bool				m_bCreate;
 	_float				m_fEpsilonY;
 	_float				m_fGap;
+	_float				m_fAngleY;
 
 
 public:
