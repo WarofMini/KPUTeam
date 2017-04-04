@@ -44,6 +44,16 @@ int CSoldierIdle::OutState()
 
 void CSoldierIdle::ShootCheck(void)
 {
+	if (*m_pAniIdx != PLAYER_Reload && m_pInput->GetDIKeyStateOnce(DIK_R))
+	{
+		m_pSoldier->PlayAnimation(PLAYER_Reload);
+	}
+	if (*m_pAniIdx == PLAYER_Reload)
+	{
+		if(m_pSoldier->Check_AnimationFrame())
+			m_pSoldier->PlayAnimation(PLAYER_idle);
+	}
+
 	if (m_bShoot && *m_pAniIdx != PLAYER_Shoot)
 	{
 		m_pSoldier->PlayAnimation(PLAYER_Shoot);

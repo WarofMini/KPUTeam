@@ -40,6 +40,7 @@ public:
 	bool		Check_AnimationFrame(void);
 
 	void		KeyState(const FLOAT& fTimeDelta);
+	void		Soldier_Move(const FLOAT& fTimeDelta);
 
 public:
 	void		UpdateDir(void);

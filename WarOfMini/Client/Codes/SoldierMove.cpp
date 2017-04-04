@@ -29,7 +29,10 @@ int CSoldierMove::OnState()
 	if (MoveKeyCheck())
 		return 0;
 	
-	if (RollLeyCheck())
+	if (RollKeyCheck())
+		return 0;
+
+	if (LyingKeyCheck())
 		return 0;
 
 	return 1;
@@ -223,7 +226,7 @@ bool CSoldierMove::MoveKeyCheck(void)
 	return false;
 }
 
-bool CSoldierMove::RollLeyCheck(void)
+bool CSoldierMove::RollKeyCheck(void)
 {
 	if (m_pInput->Get_DIMouseState(CInput::DIM_RB))
 	{
@@ -250,6 +253,11 @@ bool CSoldierMove::RollLeyCheck(void)
 		return true;
 	}
 
+	return false;
+}
+
+bool CSoldierMove::LyingKeyCheck(void)
+{
 	return false;
 }
 

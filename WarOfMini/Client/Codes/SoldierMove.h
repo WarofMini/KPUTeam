@@ -24,7 +24,8 @@ protected:
 
 private:
 	bool	MoveKeyCheck(void);
-	bool	RollLeyCheck(void);
+	bool	RollKeyCheck(void);
+	bool	LyingKeyCheck(void);
 
 private:
 	CPlayer*	m_pSoldier;

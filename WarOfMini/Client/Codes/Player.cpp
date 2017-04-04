@@ -29,6 +29,8 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 	ZeroMemory(m_pEquipment, sizeof(CEquipment*) * 1);
 
 	m_pServer_PlayerData = new Ser_PLAYER_DATA;
+
+	m_fSpeed = 200.f;
 }
 
 CPlayer::~CPlayer(void)
@@ -57,7 +59,7 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 	m_pTransform->m_vScale = XMFLOAT3(1.f, 1.f, 1.f);
 	m_pTransform->m_vAngle.x = 90.f;
 
-	m_pTransform->m_vPos = XMFLOAT3(20.f, 10.f, 20.f);
+	m_pTransform->m_vPos = XMFLOAT3(20.f, 0.f, 20.f);
 	m_pTransform->m_vDir = XMFLOAT3(0.f, 0.f, -1.f);
 	m_pAnimInfo->Set_Key((_ushort)m_dwAniIdx);
 
@@ -72,6 +74,22 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 
 INT CPlayer::Update(const FLOAT& fTimeDelta)
 {
+	if (m_pInput->GetDIKeyStateOnce(DIK_1))
+	{
+		PlayAnimation(PLAYER_Jump);
+	}
+	if (m_pInput->GetDIKeyStateOnce(DIK_2))
+	{
+		PlayAnimation(PLAYER_JumpIn);
+	}
+	if (m_pInput->GetDIKeyStateOnce(DIK_3))
+	{
+		PlayAnimation(PLAYER_JumpLoop);
+	}
+	if (m_pInput->GetDIKeyStateOnce(DIK_4))
+	{
+		PlayAnimation(PLAYER_JumpOut);
+	}
 
 	CDynamicObject::Update(fTimeDelta);
 
@@ -226,6 +244,52 @@ void CPlayer::KeyState(const FLOAT& fTimeDelta)
 		if (m_pTransform->m_vAngle.y < 0.f)
 			m_pTransform->m_vAngle.y = 360.f;
 		m_pTransform->m_vAngle.y += lMouseMove * fTimeDelta * 5.f;
+	}
+
+	Soldier_Move(fTimeDelta);
+}
+
+void CPlayer::Soldier_Move(const FLOAT& fTimeDelta)
+{
+	XMVECTOR vDir = XMVectorSet(m_pTransform->m_vDir.x, 0.f, m_pTransform->m_vDir.z, 0.0f);
+	XMVECTOR vUp = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	XMVECTOR vRight = XMVector3Cross(vUp, vDir);
+	XMVECTOR vMovePos = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	XMVECTOR vPos = XMLoadFloat3(&m_pTransform->m_vPos);
+
+	vDir = XMVector3Normalize(vDir);
+	vRight = XMVector3Normalize(vRight);
+
+	switch (m_dwState)
+	{
+	case SOLDIER_MOVE:
+		if (m_pInput->Get_DIKeyState(DIK_W))
+			vMovePos += vDir * m_fSpeed * fTimeDelta;
+		if (m_pInput->Get_DIKeyState(DIK_S))
+			vMovePos -= vDir * m_fSpeed * fTimeDelta;
+		if (m_pInput->Get_DIKeyState(DIK_A))
+			vMovePos -= vRight * m_fSpeed * fTimeDelta;
+		if (m_pInput->Get_DIKeyState(DIK_D))
+			vMovePos += vRight * m_fSpeed * fTimeDelta;
+		vMovePos = XMVector3Normalize(vMovePos);
+		vPos += vMovePos;
+		XMStoreFloat3(&m_pTransform->m_vPos, vPos);
+		m_pTransform->Update(fTimeDelta);
+		break;
+	case SOLDIER_LYING:
+		if (m_pInput->Get_DIKeyState(DIK_W))
+			vMovePos += vDir * m_fSpeed * fTimeDelta * 0.5f;
+		if (m_pInput->Get_DIKeyState(DIK_S))
+			vMovePos -= vDir * m_fSpeed * fTimeDelta * 0.5f;
+		if (m_pInput->Get_DIKeyState(DIK_A))
+			vMovePos -= vRight * m_fSpeed * fTimeDelta * 0.5f;
+		if (m_pInput->Get_DIKeyState(DIK_D))
+			vMovePos += vRight * m_fSpeed * fTimeDelta * 0.5f;
+		vMovePos = XMVector3Normalize(vMovePos);
+		vPos += vMovePos;
+		XMStoreFloat3(&m_pTransform->m_vPos, vPos);
+		m_pTransform->Update(fTimeDelta);
+		break;
 	}
 }
 
