@@ -211,6 +211,9 @@
     <Filter Include="95.Engine\00.Utility\13.Collision\00.CollisionSphere">
       <UniqueIdentifier>{2de7f605-75c7-453d-90e5-f7fcc0ac14c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="95.Engine\00.Utility\14.Gravity">
+      <UniqueIdentifier>{dae598de-1a7a-4044-8982-f6f181264b5e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -426,6 +429,9 @@
     <ClInclude Include="..\Codes\SphereMesh.h">
       <Filter>95.Engine\00.Utility\13.Collision\00.CollisionSphere</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Gravity.h">
+      <Filter>95.Engine\00.Utility\14.Gravity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -598,6 +604,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\SphereMesh.cpp">
       <Filter>95.Engine\00.Utility\13.Collision\00.CollisionSphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Gravity.cpp">
+      <Filter>95.Engine\00.Utility\14.Gravity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

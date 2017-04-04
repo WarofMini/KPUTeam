@@ -10,6 +10,7 @@
 #include "StateMachine.h"
 #include "SoldierDefine.h"
 #include "CameraMgr.h"
+#include "Gravity.h"
 
 
 XMFLOAT3		g_vPlayerPos;
@@ -19,6 +20,7 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 	, m_dwState(SOLDIER_IDLE)
 	, m_dwAniIdx(PLAYER_idle)
 	, m_pComStateMachine(NULL)
+	, m_pComGravity(NULL)
 {
 	m_pInput = CInput::GetInstance();
 	m_vLook = XMFLOAT3(0.f, 1.f, 0.f);
@@ -74,7 +76,7 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 
 INT CPlayer::Update(const FLOAT& fTimeDelta)
 {
-	if (m_pInput->GetDIKeyStateOnce(DIK_1))
+	/*if (m_pInput->GetDIKeyStateOnce(DIK_1))
 	{
 		PlayAnimation(PLAYER_Jump);
 	}
@@ -89,10 +91,15 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 	if (m_pInput->GetDIKeyStateOnce(DIK_4))
 	{
 		PlayAnimation(PLAYER_JumpOut);
+	}*/
+	if (m_pInput->Get_DIKeyState(DIK_1))
+	{
+		m_pComGravity->Add_Velocity(10.f);
+		m_pComGravity->Set_OnGround(false);
 	}
+	Collision_Field(fTimeDelta);
 
 	CDynamicObject::Update(fTimeDelta);
-
 
 	//Dynamic카메라 체크 함수(Dynamic 카메라일시 Update 안돌린다.
 	if (!DynamicCameraCheck())
@@ -136,6 +143,11 @@ HRESULT CPlayer::Ready_Component(ID3D11Device* pGraphicDev)
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"StateMachine", pComponent));
 
+	//Gravity
+	pComponent = m_pComGravity = CGravity::Create(100.f);
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Gravity", pComponent));
+
 	return S_OK;
 }
 
@@ -170,7 +182,7 @@ HRESULT CPlayer::Prepare_StateMachine(void)
 	return S_OK;
 }
 
-void CPlayer::Operate_StateMAchine(const float& fTimeDelta)
+void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 {
 	DWORD dwState = m_pComStateMachine->Get_State();
 
@@ -216,6 +228,21 @@ void CPlayer::Operate_StateMAchine(const float& fTimeDelta)
 		break;
 	}
 	m_pComStateMachine->Update_State(dwState);
+}
+
+void CPlayer::Collision_Field(const FLOAT& fTimeDelta)
+{
+	m_pComGravity->Move_Inertia(fTimeDelta, &m_pTransform->m_vPos);//로봇 날아ㅏ다닐때 쓰면 좋을듯. Add_Velocity
+
+	if (m_pTransform->m_vPos.y <= 0)
+	{
+		m_pComGravity->Set_LandOn();
+		m_pTransform->m_vPos.y = 0.f;
+	}
+	else
+	{
+		m_pComGravity->Set_OnGround(false);
+	}
 }
 
 void CPlayer::PlayAnimation(DWORD dwAniIdx, bool bImmediate)

@@ -6,6 +6,8 @@
 class CEquipment;
 class CStateMachine;
 class CInput;
+class CGravity;
+
 class CPlayer
 	: public CDynamicObject
 {
@@ -30,7 +32,8 @@ protected:
 
 private:
 	HRESULT		Prepare_StateMachine(void);
-	void		Operate_StateMAchine(const float& fTimeDelta);
+	void		Operate_StateMAchine(const FLOAT& fTimeDelta);
+	void		Collision_Field(const FLOAT& fTimeDelta);
 
 public:
 	CInput*		GetInput(void) { return m_pInput; }
@@ -54,6 +57,9 @@ private:
 
 	XMFLOAT4X4		m_matEquipBone[2];
 	CEquipment*		m_pEquipment[2];
+
+	//Component
+	CGravity*		m_pComGravity;
 
 	//Player Animation
 	DWORD			m_dwState;

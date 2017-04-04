@@ -45,9 +45,9 @@ enum ANIPLAYER {
 	, PLAYER_Reload
 	, PLAYER_Shoot
 	, PLAYER_GetCover
-	, PLAYER_GetCoverIn
-	, PLAYER_GetCoverLoop
-	, PLAYER_GetCoverOut
+	, PLAYER_GetCoverIn//
+	, PLAYER_GetCoverLoop//
+	, PLAYER_GetCoverOut//
 	, PLAYER_RunForwardShoot
 	, PLAYER_RunBackShoot
 	, PLAYER_RunLeftShoot
