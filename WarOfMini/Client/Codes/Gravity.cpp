@@ -6,6 +6,8 @@ CGravity::CGravity(const float& fFallAcc)
 , m_fFallAccelerate(fFallAcc)
 , m_fFallVelocity(0.f)
 , m_bOnGround(true)
+, m_fGroundDist(0.0f)
+, m_vBeforePos(0.0f, 0.0f, 0.0f)
 {
 
 }
@@ -52,9 +54,24 @@ void CGravity::Set_LandOff(const float& fFallVel)
 	m_fFallVelocity = fFallVel;
 }
 
+void CGravity::Set_GroundDist(float& fDist)
+{
+	m_fGroundDist = fDist;
+}
+
+void CGravity::Set_BeforePos(XMVECTOR pPos)
+{
+	XMStoreFloat3(&m_vBeforePos, pPos);
+}
+
 _float CGravity::Get_Velocity(void)
 {
 	return m_fFallVelocity;
+}
+
+XMVECTOR CGravity::Get_BeforePos(void)
+{
+	return XMLoadFloat3(&m_vBeforePos);
 }
 
 CGravity* CGravity::Create(const float& fFallAcc)

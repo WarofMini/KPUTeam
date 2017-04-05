@@ -78,6 +78,7 @@ private:
 //중력 & 충돌체크
 	CCalculator*	m_pCalculator;
 	CRigidBody*		m_pRigidBody;
+
 };
 
 #endif //

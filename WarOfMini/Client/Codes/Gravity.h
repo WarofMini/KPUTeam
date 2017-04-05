@@ -17,14 +17,22 @@ public:
 	void		Set_LandOn();
 	void		Set_LandOff(const float& fFallVel);
 
+	void		Set_GroundDist(float& fDist);
+	void		Set_BeforePos(XMVECTOR pPos);
+
 private:
 	float		m_fFallAccelerate; //가속화하다
 	float		m_fFallVelocity; //떨어지는 속도
 	bool		m_bOnGround;
 
+
+	_float		m_fGroundDist; //메시와의 거리
+	XMFLOAT3	m_vBeforePos; //객체의 전 위치
+
 public:	//Getter
 	const bool&		Get_OnGround() { return m_bOnGround; }
-
+	_float			Get_GroundDist() { return m_fGroundDist; }
+	XMVECTOR		Get_BeforePos(void);
 	_float			Get_Velocity(void);
 
 public:
