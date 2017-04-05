@@ -26,6 +26,7 @@ private:
 	bool	MoveKeyCheck(void);
 	bool	RollKeyCheck(void);
 	bool	LyingKeyCheck(void);
+	bool	IsSoldierJump(void);
 
 private:
 	CPlayer*	m_pSoldier;

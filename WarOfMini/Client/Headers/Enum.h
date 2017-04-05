@@ -52,7 +52,7 @@ enum ANIPLAYER {
 	, PLAYER_RunBackShoot
 	, PLAYER_RunLeftShoot
 	, PLAYER_RunRightShoot
-	, PLAYER_JumpAndShoot
+	, PLAYER_JumpAndShoot		//이거 안쓰고	in loop out
 	, PLAYER_JumpAndShootIn
 	, PLAYER_JumpAndShootLoop
 	, PLAYER_JumpAndShootOut

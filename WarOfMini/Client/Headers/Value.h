@@ -17,7 +17,7 @@ const _ubyte MAX_NAME = 128;
 const XMFLOAT3 g_vLightPos = XMFLOAT3(0.f, -70.f, -32.f);
 const _vec3 g_vLook(0.f, 0.f, 1.f);
 
-const _ubyte NODELAYANICNT = 3;
+const _ubyte NODELAYANICNT = 3;		//??
 const _ubyte MAX_BONE_MATRICES = 100;
 const _ubyte INSTCNT = 32;
 

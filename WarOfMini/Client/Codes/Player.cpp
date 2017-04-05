@@ -40,7 +40,7 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 
 	m_pServer_PlayerData = new Ser_PLAYER_DATA;
 
-	m_fSpeed = 200.f;
+	m_fSpeed = 100.f;
 }
 
 CPlayer::~CPlayer(void)
@@ -211,6 +211,11 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 		{
 			m_pComStateMachine->Enter_State(SOLDIER_ROLL);
 		}
+		if (m_dwState == SOLDIER_JUMP)
+		{
+			m_pComStateMachine->Enter_State(SOLDIER_JUMP);
+			m_pComGravity->Set_LandOff(50.f);				// 일단 이렇게
+		}
 		break;
 	case SOLDIER_LYING:
 		if (m_dwState == SOLDIER_IDLE)
@@ -242,7 +247,12 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 
 void CPlayer::Collision_Field(const FLOAT& fTimeDelta)
 {
-	//m_pComGravity->Move_Inertia(fTimeDelta, &m_pTransform->m_vPos);//로봇 날아다닐때 쓰면 좋을듯. Add_Velocity
+	m_pComGravity->Move_Inertia(fTimeDelta, &m_pTransform->m_vPos);//로봇 날아다닐때 쓰면 좋을듯. Add_Velocity
+	if (m_pTransform->m_vPos.y <= 0.f)
+	{
+		m_pTransform->m_vPos.y = 0.f;
+		m_pComGravity->Set_LandOn();
+	}
 
 	//_float tmin = 1000.0f;
 	//XMVECTOR vRayDir = XMVectorSet(0.0f, -1.0f, 0.0f, 0.0f);
@@ -492,6 +502,11 @@ void CPlayer::Soldier_Move(const FLOAT& fTimeDelta)
 			XMStoreFloat3(&m_pTransform->m_vPos, vPos);
 			m_pTransform->Update(fTimeDelta);
 		}
+		break;
+	case SOLDIER_JUMP:
+		vPos += vDir * m_fSpeed * fTimeDelta;
+		XMStoreFloat3(&m_pTransform->m_vPos, vPos);
+		m_pTransform->Update(fTimeDelta);
 		break;
 	}
 }

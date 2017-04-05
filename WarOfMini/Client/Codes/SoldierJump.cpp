@@ -20,7 +20,10 @@ int CSoldierJump::InState()
 
 	if (*m_pSoldier->Get_AniIdx() == PLAYER_JumpIn && m_pSoldier->Check_AnimationFrame())
 	{
-		m_pSoldier->PlayAnimation(PLAYER_JumpLoop);
+		if(m_bShoot)
+			m_pSoldier->PlayAnimation(PLAYER_JumpAndShootLoop);
+		else
+			m_pSoldier->PlayAnimation(PLAYER_JumpLoop);
 		return 0;
 	}
 
@@ -30,6 +33,17 @@ int CSoldierJump::InState()
 int CSoldierJump::OnState()
 {
 	m_bShoot = m_pInput->Get_DIMouseState(CInput::DIM_LB);
+
+	if (m_bShoot)
+	{
+		if (*m_pAniIdx == PLAYER_JumpLoop)
+			m_pSoldier->PlayAnimation(PLAYER_JumpAndShootLoop);
+	}
+	else
+	{
+		if (*m_pAniIdx == PLAYER_JumpAndShootLoop)
+			m_pSoldier->PlayAnimation(PLAYER_JumpLoop);
+	}
 
 	if (EndJump())
 		return 0;

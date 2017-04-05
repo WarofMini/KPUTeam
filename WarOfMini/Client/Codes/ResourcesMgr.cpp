@@ -931,7 +931,7 @@ void CResourcesMgr::Load_FrameData(const _tchar* pResourceKey, vector<pair<_usho
 	CAnimationInfo::VECFRAMEINFO vecFrameInfo;		// -> KeyName & KeyInex & FrameCnt & FrameSpeed
 	FRAMEINFO tFrameInfo;
 
-	vecFrameCnt.reserve(10);
+	vecFrameCnt.reserve(50);
 
 	wstring wstrPath = L"../Bin/Data/";
 	wstrPath += pResourceKey;
@@ -958,8 +958,8 @@ void CResourcesMgr::Load_FrameData(const _tchar* pResourceKey, vector<pair<_usho
 		tFrameInfo.wFrameCnt = (pairFrame.second - pairFrame.first) + 1;
 		tFrameInfo.wFrameSpeed = _wtoi(pFrameSpeed);
 
-		vecFrameCnt.push_back(pairFrame);
-		vecFrameInfo.push_back(tFrameInfo);
+		vecFrameCnt.push_back(pairFrame);	//여기에 시작 프레임, 끝 프레임
+		vecFrameInfo.push_back(tFrameInfo);	//여기는 프레임 수랑 속도
 	}
 
 	inFile.close();
