@@ -98,7 +98,7 @@ bool CMouseCol::PickObjMesh(CMesh * pMesh, D3DXMATRIX * pMatWorld, float* fDist,
 
 	for (int i = 0; i < nPrimitives; i++)
 	{
-		v0 = *(D3DXVECTOR3 *)(pbPositions + ((i * nOffset + 0) * pMesh->m_iVertexStrides));
+		v0 = *(D3DXVECTOR3 *)(pbPositions + ((i * nOffset + 0) * pMesh->m_iVertexStrides)  );
 		v1 = *(D3DXVECTOR3 *)(pbPositions + ((i * nOffset + 1) * pMesh->m_iVertexStrides));
 		v2 = *(D3DXVECTOR3 *)(pbPositions + ((i * nOffset + 2) * pMesh->m_iVertexStrides));
 

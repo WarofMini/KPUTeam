@@ -113,8 +113,8 @@ void CCamera::AddCameraSpeed(_float fSpeed)
 {
 	m_fCameraSpeed += fSpeed;
 
-	if (m_fCameraSpeed >= 250.0f)
-		m_fCameraSpeed = 250.0f;
+	if (m_fCameraSpeed >= 300.0f)
+		m_fCameraSpeed = 300.0f;
 }
 
 _float CCamera::GetCameraSpeed(void)

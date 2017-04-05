@@ -13,6 +13,7 @@ CMesh::CMesh(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
 , m_vMax(XMFLOAT3(0.f, 0.f, 0.f))
 , m_pBBoxVB(NULL)
 , m_pBBoxIB(NULL)
+, m_pVtxTex(NULL)
 {
 }
 
@@ -101,6 +102,8 @@ void CMesh::Release(void)
 {
 	CResource::Release();
 
+	Safe_Delete_Array(m_pVtxTex);
+
 	if (m_dwRefCount == NULL)
 	{
 		Safe_Release(m_pTexture);
@@ -114,4 +117,14 @@ void CMesh::Release(void)
 
 		m_vecChild.clear();
 	}
+}
+
+VTXTEX* CMesh::GetVtxTex(void)
+{
+	return m_vecChild[0]->m_pVtxTex;
+}
+
+_uint CMesh::GetVtxCnt(void)
+{
+	return m_vecChild[0]->m_uiVtxCnt;
 }

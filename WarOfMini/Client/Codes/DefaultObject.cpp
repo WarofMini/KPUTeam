@@ -47,7 +47,6 @@ _int CDefaultObj::Update(const _float& fTimeDelta)
 
 	CGameObject::Update(fTimeDelta);
 
-	//CManagement::GetInstance()->Add_RenderInstGroup(CRenderer::RENDER_INST, m_uiObjNum, &m_pTransform->m_matWorld);
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
 
 	return 0;
@@ -107,6 +106,11 @@ HRESULT CDefaultObj::Ready_Component()
 void CDefaultObj::SetObjNum(_uint uNum)
 {
 	m_uiObjNum = uNum;
+}
+
+_uint CDefaultObj::GetObjNum(void)
+{
+	return m_uiObjNum;
 }
 
 void CDefaultObj::ComputeCollider(void)

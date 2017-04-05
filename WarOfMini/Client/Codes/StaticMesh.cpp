@@ -38,10 +38,18 @@ HRESULT CStaticMesh::Create_Buffer(const VTXTEX* pVB, const _uint& uiVtxCnt, con
 	m_uiVtxCnt = uiVtxCnt;
 	m_uiIdxCnt = uiIdxCnt;
 
+
 	HRESULT hr = E_FAIL;
 
-	if (m_uiVtxCnt && m_uiIdxCnt)
+	if (m_uiVtxCnt)
 	{
+
+		m_pVtxTex =  new VTXTEX[m_uiVtxCnt];
+		ZeroMemory(m_pVtxTex, sizeof(VTXTEX) * m_uiVtxCnt);
+
+		memcpy(m_pVtxTex, pVB, sizeof(VTXTEX) * m_uiVtxCnt);
+
+
 		D3D11_BUFFER_DESC tBufferDesc;
 
 		ZeroMemory(&tBufferDesc, sizeof(D3D11_BUFFER_DESC));
@@ -64,18 +72,19 @@ HRESULT CStaticMesh::Create_Buffer(const VTXTEX* pVB, const _uint& uiVtxCnt, con
 			return E_FAIL;
 		}
 
-		tBufferDesc.ByteWidth = sizeof(_uint) * m_uiIdxCnt;
-		tBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
-		tSubData.pSysMem = pIB;
+		//tBufferDesc.ByteWidth = sizeof(_uint) * m_uiIdxCnt;
+		//tBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
-		hr = m_pGraphicDev->CreateBuffer(&tBufferDesc, &tSubData, &m_pIB);
+		//tSubData.pSysMem = pIB;
 
-		if (FAILED(hr) == TRUE)
-		{
-			MSG_BOX(L"CMesh IB CreateBuffer Failed");
-			return E_FAIL;
-		}
+		//hr = m_pGraphicDev->CreateBuffer(&tBufferDesc, &tSubData, &m_pIB);
+
+		//if (FAILED(hr) == TRUE)
+		//{
+		//	MSG_BOX(L"CMesh IB CreateBuffer Failed");
+		//	return E_FAIL;
+		//}
 
 		wstring wstrTexName = L"Texture_";
 		wstrTexName += pTexName;
@@ -112,18 +121,21 @@ void CStaticMesh::Render(_bool bColliderDraw)
 		if (m_uiVtxCnt != 0)
 		{
 			// Texture
-			if (m_pTexture) m_pTexture->Render(0, 0);
+			if (m_pTexture) 
+				m_pTexture->Render(0, 0);
 
 			// Mesh
 			m_pContext->IASetVertexBuffers(0, 1, &m_pVB, &uiStride, &uiOffset);
-			m_pContext->IASetIndexBuffer(m_pIB, DXGI_FORMAT_R32_UINT, 0);
+			//m_pContext->IASetIndexBuffer(m_pIB, DXGI_FORMAT_R32_UINT, 0);
 
-			m_pContext->DrawIndexed(m_uiIdxCnt, 0, 0);
+			//m_pContext->DrawIndexed(m_uiIdxCnt, 0, 0);
+
+			m_pContext->Draw(m_uiVtxCnt, 0);
 		}
 
 
 	
-			bColliderDraw = g_bCollisionDraw;	
+		bColliderDraw = g_bCollisionDraw;	
 
 		// Bounding Box
 		if (bColliderDraw == TRUE)

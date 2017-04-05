@@ -48,6 +48,9 @@ public:
 
 	const XMMATRIX		Compute_LookAtTarget(const XMVECTOR* pTargetPos);
 
+
+	void				Set_AccMotion(const XMVECTOR* pAccMotion);
+
 };
 
 #endif

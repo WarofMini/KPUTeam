@@ -35,18 +35,24 @@ protected:
 protected:
 	vector<CMesh*> m_vecChild;
 
+
 protected:
 	CTextures*		m_pTexture;
 	ID3D11Buffer*	m_pVB;
 	ID3D11Buffer*	m_pIB;
 	_uint			m_uiVtxCnt;
 	_uint			m_uiIdxCnt;
+	VTXTEX*			m_pVtxTex;
 
 protected:
 	XMFLOAT3		m_vMin;
 	XMFLOAT3		m_vMax;
 	ID3D11Buffer*	m_pBBoxVB;
 	ID3D11Buffer*	m_pBBoxIB;
+
+public:
+	VTXTEX*			GetVtxTex(void);
+	_uint			GetVtxCnt(void);
 };
 
 #endif // Mesh_h__

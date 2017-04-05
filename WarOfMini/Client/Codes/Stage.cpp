@@ -97,6 +97,7 @@ void CStage::Release(void)
 	delete this;
 }
 
+//¹Ù´Ú »ý¼º
 HRESULT CStage::InitFloor(void)
 {
 	CLayer* pLayer = FindLayer(L"Layer_GameLogic");
@@ -120,8 +121,8 @@ HRESULT CStage::InitFloor(void)
 			((CDefaultObj*)pGameObject)->SetObjNum(MESHNUM_FLOOR1);
 
 
-			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle = XMFLOAT3(0.f, 90.f, 0.f);
-			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale = XMFLOAT3(1.016f, 1.016f, 1.016f);
+			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle = XMFLOAT3(270.f, 90.f, 0.f);
+			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale = XMFLOAT3(m_fSize, m_fSize, m_fSize);
 			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos = XMFLOAT3((j % 6) * m_iSize, 0.f, i * m_iSize);
 			pLayer->Ready_Object(L"StaticObject", pGameObject);
 
@@ -156,9 +157,9 @@ HRESULT CStage::InitToiletFloor(void)
 
 			((CDefaultObj*)pGameObject)->SetObjNum(MESHNUM_FLOOR2);
 
-			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle = XMFLOAT3(0.f, 90.f, 0.f);
-			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale = XMFLOAT3(1.016f, 1.016f, 1.016f);
-			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos = XMFLOAT3((j % 4) * m_iSize + 1182.f, 0.2f, i * m_iSize + 400.f);
+			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle = XMFLOAT3(270.f, 90.f, 0.f);
+			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale = XMFLOAT3(m_fSize, m_fSize, m_fSize);
+			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos = XMFLOAT3((j % 4) * m_iSize + 1182.f, 0.1f, i * m_iSize + 400.f);
 
 			pLayer->Ready_Object(L"StaticObject", pGameObject);
 
@@ -215,9 +216,9 @@ HRESULT CStage::LoadStageMap(void)
 			XMVECTOR vPos, vAngle, vScale;
 
 			vPos = XMVectorSet(m_tInfo.m_vPos.x, m_tInfo.m_vPos.y, m_tInfo.m_vPos.z, 0.0f);
-			vAngle = XMVectorSet(m_tInfo.m_vAngle.x + 90.f, m_tInfo.m_vAngle.y, m_tInfo.m_vAngle.z, 0.0f);
+			vAngle = XMVectorSet(m_tInfo.m_vAngle.x, m_tInfo.m_vAngle.y, m_tInfo.m_vAngle.z, 0.0f);
 
-			vScale = XMVectorSet(m_tInfo.m_vScale.x + BITSCALE, m_tInfo.m_vScale.y + BITSCALE, m_tInfo.m_vScale.z + BITSCALE, 0.0f);
+			vScale = XMVectorSet(m_tInfo.m_vScale.x, m_tInfo.m_vScale.y, m_tInfo.m_vScale.z, 0.0f);
 
 			((CDefaultObj*)pGameObject)->SetObjNum(eMeshNum);
 
@@ -230,8 +231,6 @@ HRESULT CStage::LoadStageMap(void)
 		}
 
 	}
-
-
 
 
 	return S_OK;

@@ -14,6 +14,7 @@ CDynaicMesh::CDynaicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContex
 , m_pAnimation(nullptr)
 {
 	ZeroMemory(&m_vPivotPos, sizeof(XMFLOAT3));
+
 }
 
 CDynaicMesh::~CDynaicMesh(void)
@@ -94,7 +95,7 @@ HRESULT CDynaicMesh::Create_Buffer(const VTXBONE* pVB, const _uint& uiVtxCnt, co
 			MSG_BOX(L"CMesh IB CreateBuffer Failed");
 			return E_FAIL;
 		}
-
+		
 		wstring wstrTexName = L"Texture_";
 		wstrTexName += pTexName;
 
@@ -174,6 +175,8 @@ void CDynaicMesh::RenderAnim(CAnimationInfo* pAnimInfo, MATNODE* pMatNode, _ubyt
 			// Texture
 			if (m_pTexture) m_pTexture->Render(0, byColor);
 
+
+
 			// Animation
 			if (m_pAnimation)
 				m_pAnimation->UpdateSubresource(pAnimInfo, pMatNode->matBone);
@@ -185,7 +188,8 @@ void CDynaicMesh::RenderAnim(CAnimationInfo* pAnimInfo, MATNODE* pMatNode, _ubyt
 			m_pContext->DrawIndexed(m_uiIdxCnt, 0, 0);
 		}
 
-		//bColliderDraw = g_bCollisionDraw;
+		bColliderDraw = g_bCollisionDraw;
+		
 		// Bounding Box
 		if (bColliderDraw == TRUE)
 		{

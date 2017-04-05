@@ -10,8 +10,9 @@
 #include "StateMachine.h"
 #include "SoldierDefine.h"
 #include "CameraMgr.h"
+#include "RigidBody.h"
+#include "Calculator.h"
 #include "Gravity.h"
-
 
 XMFLOAT3		g_vPlayerPos;
 
@@ -20,6 +21,8 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 	, m_dwState(SOLDIER_IDLE)
 	, m_dwAniIdx(PLAYER_idle)
 	, m_pComStateMachine(NULL)
+	, m_pCalculator(NULL)
+	, m_pRigidBody(NULL)
 	, m_pComGravity(NULL)
 {
 	m_pInput = CInput::GetInstance();
@@ -108,6 +111,11 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 		KeyState(fTimeDelta);
 	}
 
+	if (m_pCalculator->Get_IsCol()) //지형충돌
+		m_pRigidBody->Set_Gravity(false); //중력을 false
+	else
+		m_pRigidBody->Set_Gravity(true); //중력을 true
+
 
 	// Temp	-------------------------------------------------------------------------------
 	
@@ -142,6 +150,21 @@ HRESULT CPlayer::Ready_Component(ID3D11Device* pGraphicDev)
 	pComponent = m_pComStateMachine = CStateMachine::Create(SOLDIER_END);
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"StateMachine", pComponent));
+
+	//Calculator
+	pComponent = m_pCalculator = CCalculator::Create();
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Calculator", pComponent));
+	m_pCalculator->Set_Transform(m_pTransform);
+	m_pCalculator->Set_MagicNum(1.025f);
+
+
+	//RigidBody
+	pComponent = m_pRigidBody = CRigidBody::Create(m_pTransform, m_pCalculator);
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"RigidBody", pComponent));
+	m_pRigidBody->Set_Gravity(false);
+
 
 	//Gravity
 	pComponent = m_pComGravity = CGravity::Create(100.f);

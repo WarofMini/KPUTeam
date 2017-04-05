@@ -159,6 +159,7 @@
   <ItemGroup>
     <ClInclude Include="..\Codes\Animation.h" />
     <ClInclude Include="..\Codes\AnimationInfo.h" />
+    <ClInclude Include="..\Codes\Calculator.h" />
     <ClInclude Include="..\Codes\Camera.h" />
     <ClInclude Include="..\Codes\CameraMgr.h" />
     <ClInclude Include="..\Codes\Component.h" />
@@ -193,6 +194,7 @@
     <ClInclude Include="..\Codes\RenderTargetMgr.h" />
     <ClInclude Include="..\Codes\Resources.h" />
     <ClInclude Include="..\Codes\ResourcesMgr.h" />
+    <ClInclude Include="..\Codes\RigidBody.h" />
     <ClInclude Include="..\Codes\Scene.h" />
     <ClInclude Include="..\Codes\SceneSelector.h" />
     <ClInclude Include="..\Codes\Shader.h" />
@@ -214,6 +216,7 @@
     <ClInclude Include="..\Codes\Timer_Manager.h" />
     <ClInclude Include="..\Codes\Timer.h" />
     <ClInclude Include="..\Codes\Transform.h" />
+    <ClInclude Include="..\Codes\xnacollision.h" />
     <ClInclude Include="..\Headers\Enum.h" />
     <ClInclude Include="..\Headers\Function.h" />
     <ClInclude Include="..\Headers\Functor.h" />
@@ -233,6 +236,7 @@
   <ItemGroup>
     <ClCompile Include="..\Codes\Animation.cpp" />
     <ClCompile Include="..\Codes\AnimationInfo.cpp" />
+    <ClCompile Include="..\Codes\Calculator.cpp" />
     <ClCompile Include="..\Codes\Camera.cpp" />
     <ClCompile Include="..\Codes\CameraMgr.cpp" />
     <ClCompile Include="..\Codes\Component.cpp" />
@@ -267,6 +271,7 @@
     <ClCompile Include="..\Codes\RenderTargetMgr.cpp" />
     <ClCompile Include="..\Codes\Resources.cpp" />
     <ClCompile Include="..\Codes\ResourcesMgr.cpp" />
+    <ClCompile Include="..\Codes\RigidBody.cpp" />
     <ClCompile Include="..\Codes\Scene.cpp" />
     <ClCompile Include="..\Codes\Shader.cpp" />
     <ClCompile Include="..\Codes\ShaderMgr.cpp" />
@@ -286,6 +291,7 @@
     <ClCompile Include="..\Codes\Timer_Manager.cpp" />
     <ClCompile Include="..\Codes\Timer.cpp" />
     <ClCompile Include="..\Codes\Transform.cpp" />
+    <ClCompile Include="..\Codes\xnacollision.cpp" />
     <ClCompile Include="ClientClass.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -23,6 +23,7 @@
 // Directx
 #include <d3d11_1.h>
 #include <d3dx11.h>
+#include <d3dx9math.h>
 #include <D3DX10Math.h>
 #include <d3dcompiler.h>
 #include <xnamath.h>
@@ -30,7 +31,6 @@
 #include <DXGIFormat.h>
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
-
 #include <vector>
 #include <list>
 #include <map>
@@ -39,7 +39,9 @@
 #include <algorithm>
 #include <process.h>
 #include <fstream>
+#include "xnacollision.h"
 
+using namespace XNA;
 ///////////////////////////////////////////
 #pragma comment(lib, "ws2_32")
 

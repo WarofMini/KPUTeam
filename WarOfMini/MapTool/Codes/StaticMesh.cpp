@@ -59,6 +59,8 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,const char* szFileNa
 
 	vector<VTXTEX> vecVTXTEX;
 
+	int chilecount = pRootNode->GetChildCount();
+
 	for (int i = 0; i < pRootNode->GetChildCount(); ++i)
 	{
 		FbxNode* pChildNode = pRootNode->GetChild(i);
@@ -80,6 +82,8 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,const char* szFileNa
 		FbxVector4* mControlPoints = pMesh->GetControlPoints();
 		int iVTXCounter = 0;
 
+		int polygoncount = pMesh->GetPolygonCount();
+		int vertextcount = pMesh->GetControlPointsCount();
 
 		for (int j = 0; j < pMesh->GetPolygonCount(); j++) // Æú¸®°ïÀÇ ÀÎµ¦½º
 		{

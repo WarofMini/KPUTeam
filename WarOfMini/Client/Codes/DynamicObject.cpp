@@ -47,11 +47,12 @@ void CDynamicObject::Render(void)
 
 	BASESHADER_CB tBaseShaderCB;
 
+
 	tBaseShaderCB.matWorld = XMMatrixTranspose(XMLoadFloat4x4(&m_pTransform->m_matWorld));
 	tBaseShaderCB.matView = XMMatrixTranspose(XMLoadFloat4x4(CCameraMgr::GetInstance()->Get_CurCameraView()));
 	tBaseShaderCB.matProj = XMMatrixTranspose(XMLoadFloat4x4(CCameraMgr::GetInstance()->Get_CurCameraProj()));
 	tBaseShaderCB.vLightPos = XMVectorSet(g_vLightPos.x - g_vPlayerPos.x, g_vLightPos.y - g_vPlayerPos.y
-		, g_vLightPos.z - g_vPlayerPos.z, 1.f);
+										, g_vLightPos.z - g_vPlayerPos.z, 1.f);
 
 	/*XMMATRIX matView = XMMatrixLookAtLH(XMLoadFloat3(&g_vLightPos) - XMLoadFloat3(&g_vPlayerPos)
 	, XMLoadFloat3(&g_vPlayerPos), XMVectorSet(0.f, 1.f, 0.f, 0.f));

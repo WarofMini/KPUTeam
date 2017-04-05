@@ -30,6 +30,9 @@ public:
 	void RenderInst_MeshMgr(_uint uiObjNum, const vector<XMFLOAT4X4*>& vecObjWorld);
 	void Release(void);
 
+public:
+	_uint	Get_MeshVtxCnt(_uint uiObjNum);
+	VTXTEX*	Get_MeshVtxTex(_uint uiObjNum);
 
 private:
 	vector<MESHDATA*>	m_vecMeshData;

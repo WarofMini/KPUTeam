@@ -115,3 +115,13 @@ void CMeshMgr::Release(void)
 
 	delete this;
 }
+
+_uint CMeshMgr::Get_MeshVtxCnt(_uint uiObjNum)
+{
+	return m_vecMeshData[uiObjNum]->pMesh->GetVtxCnt();
+}
+
+VTXTEX* CMeshMgr::Get_MeshVtxTex(_uint uiObjNum)
+{
+	return m_vecMeshData[uiObjNum]->pMesh->GetVtxTex();
+}

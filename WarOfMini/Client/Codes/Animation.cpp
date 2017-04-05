@@ -59,6 +59,7 @@ void CAnimation::UpdateSubresource(CAnimationInfo* pAnimInfo, XMFLOAT4X4* pBoneW
 				}
 			}
 
+
 			XMStoreFloat4x4(&matBoneWorld[iCluster], XMMatrixTranspose(matScale * matRot * matTrans));
 			XMStoreFloat4x4(&pBoneWorld[iCluster], matScale * matRot * matTrans);
 		}

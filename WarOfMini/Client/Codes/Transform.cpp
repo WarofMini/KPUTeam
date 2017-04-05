@@ -191,3 +191,14 @@ const XMMATRIX  CTransform::Compute_LookAtTarget(const XMVECTOR* pTargetPos)
 
 	return matRot;
 }
+
+void CTransform::Set_AccMotion(const XMVECTOR* pAccMotion)
+{
+	XMVECTOR vPos;
+
+	vPos = XMLoadFloat3(&m_vPos);
+
+	vPos += (*pAccMotion);
+
+	XMStoreFloat3(&m_vPos, vPos);
+}

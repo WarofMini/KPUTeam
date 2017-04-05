@@ -4,9 +4,7 @@
 #include "Typedef.h"
 
 
-#define BITSCALE 1.2166f      //줄어든 스케일
 
-#define BITROTATE 90.0f		  //90.f도 돌아간거
 
 #define MAXFRAME 5			  //프레임자리수
 

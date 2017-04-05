@@ -33,6 +33,7 @@ private:
 
 public:
 	void			SetObjNum(_uint uNum);
+	_uint			GetObjNum(void);
 	void			ComputeCollider(void);
 
 };

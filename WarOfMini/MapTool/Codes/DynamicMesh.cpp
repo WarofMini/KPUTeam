@@ -90,7 +90,6 @@ HRESULT CDynamicMesh::Load_Model(const char* _pPath, vector<string> _vecAniName,
 
 	for (unsigned int i = 0; i < _vecAniName.size(); ++i)
 	{
-		// http://www.slideshare.net/quxn6/c4316-alignment-error
 		pAni = new Animation();
 		pAni->strAniName = _vecAniName[i];//fbx의 이름 주입.
 

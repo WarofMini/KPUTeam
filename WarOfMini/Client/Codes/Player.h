@@ -6,6 +6,9 @@
 class CEquipment;
 class CStateMachine;
 class CInput;
+class CCalculator;
+class CRigidBody;
+
 class CGravity;
 
 class CPlayer
@@ -65,6 +68,11 @@ private:
 	DWORD			m_dwState;
 	DWORD			m_dwAniIdx;
 	CStateMachine*	m_pComStateMachine;
+
+
+//중력 & 충돌체크
+	CCalculator*	m_pCalculator;
+	CRigidBody*		m_pRigidBody;
 };
 
 #endif //
