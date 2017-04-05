@@ -10,9 +10,11 @@
 #include "StateMachine.h"
 #include "SoldierDefine.h"
 #include "CameraMgr.h"
-#include "RigidBody.h"
-#include "Calculator.h"
 #include "Gravity.h"
+#include "Layer.h"
+#include "DefaultObject.h"
+#include "Management.h"
+#include "Scene.h"
 
 XMFLOAT3		g_vPlayerPos;
 
@@ -90,12 +92,6 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 		KeyState(fTimeDelta);
 	}
 
-	if (m_pCalculator->Get_IsCol()) //지형충돌
-		m_pRigidBody->Set_Gravity(false); //중력을 false
-	else
-		m_pRigidBody->Set_Gravity(true); //중력을 true
-
-
 	// Temp	-------------------------------------------------------------------------------
 	
 	// Update
@@ -103,8 +99,6 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 
 
 	UpdateDir();
-
-
 
 
 	Update_Equipment(fTimeDelta);
@@ -129,21 +123,6 @@ HRESULT CPlayer::Ready_Component(ID3D11Device* pGraphicDev)
 	pComponent = m_pComStateMachine = CStateMachine::Create(SOLDIER_END);
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"StateMachine", pComponent));
-
-	//Calculator
-	pComponent = m_pCalculator = CCalculator::Create();
-	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Calculator", pComponent));
-	m_pCalculator->Set_Transform(m_pTransform);
-	m_pCalculator->Set_MagicNum(1.025f);
-
-
-	//RigidBody
-	pComponent = m_pRigidBody = CRigidBody::Create(m_pTransform, m_pCalculator);
-	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"RigidBody", pComponent));
-	m_pRigidBody->Set_Gravity(false);
-
 
 	//Gravity
 	pComponent = m_pComGravity = CGravity::Create(100.f);
@@ -234,17 +213,97 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 
 void CPlayer::Collision_Field(const FLOAT& fTimeDelta)
 {
-	m_pComGravity->Move_Inertia(fTimeDelta, &m_pTransform->m_vPos);//로봇 날아ㅏ다닐때 쓰면 좋을듯. Add_Velocity
+	//m_pComGravity->Move_Inertia(fTimeDelta, &m_pTransform->m_vPos);//로봇 날아다닐때 쓰면 좋을듯. Add_Velocity
 
-	if (m_pTransform->m_vPos.y <= 0)
-	{
-		m_pComGravity->Set_LandOn();
-		m_pTransform->m_vPos.y = 0.f;
-	}
-	else
-	{
-		m_pComGravity->Set_OnGround(false);
-	}
+
+	//_float tmin = 1000.0f;
+	//XMVECTOR vRayDir = XMVectorSet(0.0f, -1.0f, 0.0f, 0.0f);
+	//XMVECTOR vOrigin = XMLoadFloat3(&m_pTransform->m_vPos);
+
+
+
+	////반직선의 원점, 방향, 삼각형 정점0, 1, 2, 교점의 매개변수
+
+	//CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
+
+	//if (pLayer == NULL)
+	//	return ;
+
+	//list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"StaticObject");
+
+	//if (pObjList == NULL)
+	//	return ;
+
+	//list<CGameObject*>::iterator iter = pObjList->begin();
+	//list<CGameObject*>::iterator iter_end = pObjList->end();
+
+
+	//XMMATRIX	matWorld;
+
+	//XMVECTOR    vecTest;
+	//matWorld = XMMatrixInverse(&vecTest, XMLoadFloat4x4(&((CTransform*)((CDefaultObj*)(*iter))->Get_Component(L"Com_Transform"))->m_matWorld));
+
+	//vOrigin = XMVector3TransformCoord(vOrigin, matWorld);
+	//vRayDir = XMVector3TransformNormal(vRayDir, matWorld);
+	//vRayDir = XMVector3Normalize(vRayDir);
+
+
+	//for (iter; iter != iter_end; ++iter) //배치된 오브젝트를 순휘
+	//{
+
+	//	int nOffset = 3;
+
+	//	int nPrimitives = CMeshMgr::GetInstance()->Get_MeshVtxCnt(((CDefaultObj*)(*iter))->GetObjNum()) / 3;
+
+	//	VTXTEX*	m_pTex = CMeshMgr::GetInstance()->Get_MeshVtxTex(((CDefaultObj*)(*iter))->GetObjNum());
+
+
+	//	if (m_pTex == NULL)
+	//		continue;
+
+	//	XMVECTOR v0, v1, v2;
+
+	//	for (int i = 0; i < nPrimitives; ++i)
+	//	{
+
+	//		v0 = XMLoadFloat3(&m_pTex[i * nOffset + 0].vPos);
+	//		v1 = XMLoadFloat3(&m_pTex[i * nOffset + 1].vPos);
+	//		v2 = XMLoadFloat3(&m_pTex[i * nOffset + 2].vPos);
+
+	//		XMMATRIX  matWorld;
+
+	//		matWorld = XMLoadFloat4x4(&((CTransform*)((CDefaultObj*)(*iter))->Get_Component(L"Com_Transform"))->m_matWorld);
+
+	//		v0 = XMVector3TransformCoord(v0, matWorld);
+	//		v1 = XMVector3TransformCoord(v1, matWorld);
+	//		v2 = XMVector3TransformCoord(v2, matWorld);
+
+	//		float fDist = 0.0f;
+
+	//		if (XNA::IntersectRayTriangle(vOrigin, vRayDir, v0, v1, v2, &fDist))
+	//		{
+	//			if (fDist < tmin)
+	//			{
+	//				tmin = fDist;
+	//			}
+	//		}
+	//	}
+
+	//}
+
+	//
+	////이부분을 메시충돌로 하자
+	//if (tmin <= 0.1f)
+	//{
+	//	tmin = 0.0f;
+	//	m_pComGravity->Set_LandOn(); //착지 한걸로 하자
+	//	XMVECTOR vPos = vOrigin + (vRayDir * tmin);
+	//	XMStoreFloat3(&m_pTransform->m_vPos, vPos);
+	//}
+	//else
+	//{
+	//	m_pComGravity->Set_OnGround(false); //아직 착지 안함
+	//}
 }
 
 void CPlayer::PlayAnimation(DWORD dwAniIdx, bool bImmediate)

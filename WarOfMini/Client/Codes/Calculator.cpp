@@ -63,110 +63,110 @@ _int CCalculator::Update(const _float& fTime)
 {
 	
 	// 지형 충돌
-	//if (m_pTransform == NULL)
-	//	return 0;
+	if (m_pTransform == NULL)
+		return 0;
 
-	//_float tmin = 1000.0f;
-	//_float fMagicNumber = 2.f;
-	//XMVECTOR vRayDir = XMVectorSet(0.0f, -1.0f, 0.0f, 0.0f);
-	//XMVECTOR vOrigin = XMLoadFloat3(&m_pTransform->m_vPos);
+	_float tmin = 1000.0f;
+	_float fMagicNumber = 2.f;
+	XMVECTOR vRayDir = XMVectorSet(0.0f, -1.0f, 0.0f, 0.0f);
+	XMVECTOR vOrigin = XMLoadFloat3(&m_pTransform->m_vPos);
 
-	//_float posy = m_pTransform->m_vPos.y + fMagicNumber;
+	_float posy = m_pTransform->m_vPos.y + fMagicNumber;
 
-	//XMFLOAT3 test = XMFLOAT3(m_pTransform->m_vPos.x, posy, m_pTransform->m_vPos.z);
+	XMFLOAT3 test = XMFLOAT3(m_pTransform->m_vPos.x, posy, m_pTransform->m_vPos.z);
 
-	//vOrigin = XMLoadFloat3(&test);
+	vOrigin = XMLoadFloat3(&test);
 
-	////반직선의 원점, 방향, 삼각형 정점0, 1, 2, 교점의 매개변수
+	//반직선의 원점, 방향, 삼각형 정점0, 1, 2, 교점의 매개변수
 
-	//
-	//CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
+	
+	CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
 
-	//if (pLayer == NULL)
-	//	return 0;
+	if (pLayer == NULL)
+		return 0;
 
-	//list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"StaticObject");
+	list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"StaticObject");
 
-	//if (pObjList == NULL)
-	//	return 0;
+	if (pObjList == NULL)
+		return 0;
 
-	//list<CGameObject*>::iterator iter = pObjList->begin();
-	//list<CGameObject*>::iterator iter_end = pObjList->end();
-
-
-	//for (iter; iter != iter_end; ++iter) //배치된 오브젝트를 순휘
-	//{
-
-	//	int nOffset = 3;
-
-	//	int nPrimitives = CMeshMgr::GetInstance()->Get_MeshVtxCnt( ( (CDefaultObj*)(*iter)  )->GetObjNum()) / 3;
-
-	//	VTXTEX*	m_pTex = CMeshMgr::GetInstance()->Get_MeshVtxTex(((CDefaultObj*)(*iter))->GetObjNum());
+	list<CGameObject*>::iterator iter = pObjList->begin();
+	list<CGameObject*>::iterator iter_end = pObjList->end();
 
 
-	//	//XMMATRIX	matWorld;
+	for (iter; iter != iter_end; ++iter) //배치된 오브젝트를 순휘
+	{
 
-	//	//XMVECTOR    vecTest;
-	//	//matWorld = XMMatrixInverse(&vecTest, XMLoadFloat4x4(&((CTransform*)((CDefaultObj*)(*iter))->Get_Component(L"Com_Transform"))->m_matWorld));
+		int nOffset = 3;
 
-	//	//vOrigin = XMVector3TransformCoord(vOrigin, matWorld);
-	// //   vRayDir = XMVector3TransformNormal(vRayDir, matWorld);
-	//	//vRayDir = XMVector3Normalize(vRayDir);
+		int nPrimitives = CMeshMgr::GetInstance()->Get_MeshVtxCnt( ( (CDefaultObj*)(*iter)  )->GetObjNum()) / 3;
 
+		VTXTEX*	m_pTex = CMeshMgr::GetInstance()->Get_MeshVtxTex(((CDefaultObj*)(*iter))->GetObjNum());
 
 
-	//	if (m_pTex == NULL)
-	//		continue;
+		//XMMATRIX	matWorld;
 
-	//	XMVECTOR v0, v1, v2;
-	//	
-	//	for (int i = 0; i < nPrimitives; ++i)
-	//	{
+		//XMVECTOR    vecTest;
+		//matWorld = XMMatrixInverse(&vecTest, XMLoadFloat4x4(&((CTransform*)((CDefaultObj*)(*iter))->Get_Component(L"Com_Transform"))->m_matWorld));
 
-	//		v0 = XMLoadFloat3(&m_pTex[i * nOffset + 0].vPos);
-	//		v1 = XMLoadFloat3(&m_pTex[i * nOffset + 1].vPos);
-	//		v2 = XMLoadFloat3(&m_pTex[i * nOffset + 2].vPos);
+		//vOrigin = XMVector3TransformCoord(vOrigin, matWorld);
+	 //   vRayDir = XMVector3TransformNormal(vRayDir, matWorld);
+		//vRayDir = XMVector3Normalize(vRayDir);
 
-	//		//XMMATRIX  matWorld;
 
-	//		//matWorld = XMLoadFloat4x4(&((CTransform*)((CDefaultObj*)(*iter))->Get_Component(L"Com_Transform"))->m_matWorld);
 
-	//		//v0 = XMVector3TransformCoord(v0, matWorld);
-	//		//v1 = XMVector3TransformCoord(v1, matWorld);
-	//		//v2 = XMVector3TransformCoord(v2, matWorld);
+		if (m_pTex == NULL)
+			continue;
 
-	//		float fDist = 0.0f;
+		XMVECTOR v0, v1, v2;
+		
+		for (int i = 0; i < nPrimitives; ++i)
+		{
 
-	//		if (XNA::IntersectRayTriangle(vOrigin, vRayDir, v0, v1, v2, &fDist))
-	//		{
-	//			if (fDist < tmin)
-	//			{
-	//				tmin = fDist;
-	//			}
-	//		}
-	//	}
-	//}
+			v0 = XMLoadFloat3(&m_pTex[i * nOffset + 0].vPos);
+			v1 = XMLoadFloat3(&m_pTex[i * nOffset + 1].vPos);
+			v2 = XMLoadFloat3(&m_pTex[i * nOffset + 2].vPos);
 
-	//if (tmin != 1000.0f &&  tmin > fMagicNumber  &&  m_bJump)
-	//	m_bJump = false; 
+			//XMMATRIX  matWorld;
 
-	//if (m_bJump)
-	//{
-	//	m_bIsCol = false;
-	//	return 0;
-	//}
+			//matWorld = XMLoadFloat4x4(&((CTransform*)((CDefaultObj*)(*iter))->Get_Component(L"Com_Transform"))->m_matWorld);
 
-	//if (tmin < fMagicNumber)
-	//{
-	//	XMVECTOR vPos = vOrigin + (vRayDir * tmin );
+			//v0 = XMVector3TransformCoord(v0, matWorld);
+			//v1 = XMVector3TransformCoord(v1, matWorld);
+			//v2 = XMVector3TransformCoord(v2, matWorld);
 
-	//	XMStoreFloat3(&m_vCollPos, vPos);
+			float fDist = 0.0f;
 
-	//	XMStoreFloat3(&m_pTransform->m_vPos, vPos);
-	//	m_bIsCol = true;
-	//}
-	//else
-	//	m_bIsCol = false;
+			if (XNA::IntersectRayTriangle(vOrigin, vRayDir, v0, v1, v2, &fDist))
+			{
+				if (fDist < tmin)
+				{
+					tmin = fDist;
+				}
+			}
+		}
+	}
+
+	if (tmin != 1000.0f &&  tmin > fMagicNumber  &&  m_bJump)
+		m_bJump = false; 
+
+	if (m_bJump)
+	{
+		m_bIsCol = false;
+		return 0;
+	}
+
+	if (tmin < fMagicNumber)
+	{
+		XMVECTOR vPos = vOrigin + (vRayDir * tmin );
+
+		XMStoreFloat3(&m_vCollPos, vPos);
+
+		XMStoreFloat3(&m_pTransform->m_vPos, vPos);
+		m_bIsCol = true;
+	}
+	else
+		m_bIsCol = false;
 		
 	return 0;
 }

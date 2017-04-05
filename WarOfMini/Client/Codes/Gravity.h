@@ -18,8 +18,8 @@ public:
 	void		Set_LandOff(const float& fFallVel);
 
 private:
-	float		m_fFallAccelerate;
-	float		m_fFallVelocity;
+	float		m_fFallAccelerate; //가속화하다
+	float		m_fFallVelocity; //떨어지는 속도
 	bool		m_bOnGround;
 
 public:	//Getter
