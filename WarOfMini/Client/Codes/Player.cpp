@@ -105,7 +105,7 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 		KeyState(fTimeDelta);
 	}
 
-	// Temp	-------------------------------------------------------------------------------
+	// Temp	----------------------------------------------------------------------------
 	
 	// Update
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
@@ -242,17 +242,11 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 
 void CPlayer::Collision_Field(const FLOAT& fTimeDelta)
 {
-	m_pComGravity->Move_Inertia(fTimeDelta, &m_pTransform->m_vPos);//로봇 날아다닐때 쓰면 좋을듯. Add_Velocity
-	if (m_pTransform->m_vPos.y <= 0.f)
-	{
-		m_pTransform->m_vPos.y = 0.f;
-		m_pComGravity->Set_LandOn();
-	}
+	//m_pComGravity->Move_Inertia(fTimeDelta, &m_pTransform->m_vPos);//로봇 날아다닐때 쓰면 좋을듯. Add_Velocity
 
 	//_float tmin = 1000.0f;
 	//XMVECTOR vRayDir = XMVectorSet(0.0f, -1.0f, 0.0f, 0.0f);
 	//XMVECTOR vOrigin = XMLoadFloat3(&m_pTransform->m_vPos);
-
 
 
 	////반직선의 원점, 방향, 삼각형 정점0, 1, 2, 교점의 매개변수
@@ -260,25 +254,25 @@ void CPlayer::Collision_Field(const FLOAT& fTimeDelta)
 	//CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
 
 	//if (pLayer == NULL)
-	//	return ;
+	//	return;
 
 	//list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"StaticObject");
 
 	//if (pObjList == NULL)
-	//	return ;
+	//	return;
 
 	//list<CGameObject*>::iterator iter = pObjList->begin();
 	//list<CGameObject*>::iterator iter_end = pObjList->end();
 
 
-	//XMMATRIX	matWorld;
+	////XMMATRIX	matWorld;
 
-	//XMVECTOR    vecTest;
-	//matWorld = XMMatrixInverse(&vecTest, XMLoadFloat4x4(&((CTransform*)((CDefaultObj*)(*iter))->Get_Component(L"Com_Transform"))->m_matWorld));
+	////XMVECTOR    vecTest;
+	////matWorld = XMMatrixInverse(&vecTest, XMLoadFloat4x4(&((CTransform*)((CDefaultObj*)(*iter))->Get_Component(L"Com_Transform"))->m_matWorld));
 
-	//vOrigin = XMVector3TransformCoord(vOrigin, matWorld);
-	//vRayDir = XMVector3TransformNormal(vRayDir, matWorld);
-	//vRayDir = XMVector3Normalize(vRayDir);
+	////vOrigin = XMVector3TransformCoord(vOrigin, matWorld);
+	////vRayDir = XMVector3TransformNormal(vRayDir, matWorld);
+	////vRayDir = XMVector3Normalize(vRayDir);
 
 
 	//for (iter; iter != iter_end; ++iter) //배치된 오브젝트를 순휘
@@ -324,19 +318,35 @@ void CPlayer::Collision_Field(const FLOAT& fTimeDelta)
 
 	//}
 
-	//
-	////이부분을 메시충돌로 하자
-	//if (tmin <= 0.1f)
-	//{
-	//	tmin = 0.0f;
-	//	m_pComGravity->Set_LandOn(); //착지 한걸로 하자
-	//	XMVECTOR vPos = vOrigin + (vRayDir * tmin);
-	//	XMStoreFloat3(&m_pTransform->m_vPos, vPos);
-	//}
-	//else
-	//{
-	//	m_pComGravity->Set_OnGround(false); //아직 착지 안함
-	//}
+	////if (m_pComGravity->Get_Velocity() < 0.0f)
+	////{
+	////	if (tmin != 1000.f && tmin < (-m_pComGravity->Get_Velocity()) )
+	////	{	
+	////		m_pComGravity->Set_Velocity(10);
+	////		//if ((-m_pComGravity->Get_Velocity()) - tmin <= 0.1f)
+	////		//{
+	////			//m_pComGravity->Set_LandOn(); //착지 한걸로 하자
+	////			//XMVECTOR vPos = vOrigin + (vRayDir * tmin);
+	////			//XMStoreFloat3(&m_pTransform->m_vPos, vPos);
+
+	////		//}
+	////	}
+	////}
+
+
+	//	//이부분을 메시충돌로 하자
+	//	if (tmin <= 0.1f)
+	//	{
+	//		tmin = 0.0f;
+	//		m_pComGravity->Set_LandOn(); //착지 한걸로 하자
+	//		XMVECTOR vPos = vOrigin + (vRayDir * tmin);
+	//		XMStoreFloat3(&m_pTransform->m_vPos, vPos);
+	//	}
+	//	else
+	//	{
+	//		m_pComGravity->Set_OnGround(false); //아직 착지 안함
+	//	}
+
 }
 
 void CPlayer::PlayAnimation(DWORD dwAniIdx, bool bImmediate)

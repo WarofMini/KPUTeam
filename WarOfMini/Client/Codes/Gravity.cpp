@@ -52,6 +52,11 @@ void CGravity::Set_LandOff(const float& fFallVel)
 	m_fFallVelocity = fFallVel;
 }
 
+_float CGravity::Get_Velocity(void)
+{
+	return m_fFallVelocity;
+}
+
 CGravity* CGravity::Create(const float& fFallAcc)
 {
 	return new CGravity(fFallAcc);

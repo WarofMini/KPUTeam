@@ -25,6 +25,8 @@ private:
 public:	//Getter
 	const bool&		Get_OnGround() { return m_bOnGround; }
 
+	_float			Get_Velocity(void);
+
 public:
 	static	CGravity*		Create(const float& fFallAcc);
 
