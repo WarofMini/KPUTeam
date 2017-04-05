@@ -69,61 +69,39 @@ void CSoldierIdle::ShootCheck(void)
 
 bool CSoldierIdle::IsSoldierMove(void)
 {
-	bool bInputKey[KEY_END] = {false};
-
-	if (m_pInput->Get_DIKeyState(DIK_W))
-		bInputKey[KEY_UP] = true;
-	if (m_pInput->Get_DIKeyState(DIK_S))
-		bInputKey[KEY_DOWN] = true;
-	if (m_pInput->Get_DIKeyState(DIK_A))
-		bInputKey[KEY_LEFT] = true;
-	if (m_pInput->Get_DIKeyState(DIK_D))
-		bInputKey[KEY_RIGHT] = true;
-
-	if (bInputKey[KEY_UP] == true && bInputKey[KEY_DOWN] == true)
+	switch (*m_pMoveDir)
 	{
-		bInputKey[KEY_UP] = false;
-		bInputKey[KEY_DOWN] = false;
-	}
-	if (bInputKey[KEY_LEFT] == true && bInputKey[KEY_RIGHT] == true)
-	{
-		bInputKey[KEY_LEFT] = false;
-		bInputKey[KEY_RIGHT] = false;
-	}
-
-	if (bInputKey[KEY_UP] == false && bInputKey[KEY_DOWN] == false &&
-		bInputKey[KEY_LEFT] == false && bInputKey[KEY_RIGHT] == false)
-		return false;
-
-	
-	if (bInputKey[KEY_LEFT])
-	{
-		if(m_bShoot)
-			m_pSoldier->PlayAnimation(PLAYER_RunLeftShoot);
-		else
-			m_pSoldier->PlayAnimation(PLAYER_RunLeft);
-	}
-	if (bInputKey[KEY_RIGHT])
-	{
-		if (m_bShoot)
-			m_pSoldier->PlayAnimation(PLAYER_RunRightShoot);
-		else
-			m_pSoldier->PlayAnimation(PLAYER_RunRight);
-	}
-
-	if (bInputKey[KEY_UP])
-	{
+	case DIR_U:
+	case DIR_UL:
+	case DIR_UR:
 		if (m_bShoot)
 			m_pSoldier->PlayAnimation(PLAYER_RunForwardShoot);
 		else
 			m_pSoldier->PlayAnimation(PLAYER_RunForward);
-	}
-	if (bInputKey[KEY_DOWN])
-	{
+		break;
+	case DIR_D:
+	case DIR_DL:
+	case DIR_DR:
 		if (m_bShoot)
 			m_pSoldier->PlayAnimation(PLAYER_RunBackShoot);
 		else
 			m_pSoldier->PlayAnimation(PLAYER_Runback);
+		break;
+	case DIR_L:
+		if (m_bShoot)
+			m_pSoldier->PlayAnimation(PLAYER_RunLeftShoot);
+		else
+			m_pSoldier->PlayAnimation(PLAYER_RunLeft);
+		break;
+	case DIR_R:
+		if (m_bShoot)
+			m_pSoldier->PlayAnimation(PLAYER_RunRightShoot);
+		else
+			m_pSoldier->PlayAnimation(PLAYER_RunRight);
+		break;
+	default:
+		return false;
+		break;
 	}
 
 	*(m_pSoldier->Get_State()) = CPlayer::SOLDIER_MOVE;

@@ -26,6 +26,8 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 	, m_pCalculator(NULL)
 	, m_pRigidBody(NULL)
 	, m_pComGravity(NULL)
+	, m_eMoveDir(DIR_END)
+	, m_vMoveDir(0.f, 0.f, 0.f)
 {
 	m_pInput = CInput::GetInstance();
 	m_vLook = XMFLOAT3(0.f, 1.f, 0.f);
@@ -34,6 +36,7 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 	XMStoreFloat4x4(&m_matEquipBone[1], XMMatrixIdentity());
 
 	ZeroMemory(m_pEquipment, sizeof(CEquipment*) * 1);
+	ZeroMemory(&m_bKey, sizeof(bool) * KEY_END);
 
 	m_pServer_PlayerData = new Ser_PLAYER_DATA;
 
@@ -178,6 +181,8 @@ HRESULT CPlayer::Prepare_StateMachine(void)
 
 void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 {
+	KeyCheck();
+
 	DWORD dwState = m_pComStateMachine->Get_State();
 
 	switch (dwState)
@@ -354,6 +359,94 @@ bool CPlayer::IsOnGround(void)
 	return m_pComGravity->Get_OnGround();
 }
 
+MOVE_DIR* CPlayer::GetMoveDir(void)
+{
+	return &m_eMoveDir;
+}
+
+void CPlayer::KeyCheck(void)
+{
+	m_eMoveDir = DIR_END;
+	m_vMoveDir = XMFLOAT3(0.f, 0.f, 0.f);
+	ZeroMemory(&m_bKey, sizeof(bool) * KEY_END);
+
+	if (m_pInput->Get_DIKeyState(DIK_W))
+		m_bKey[KEY_UP] = true;
+	if (m_pInput->Get_DIKeyState(DIK_S))
+		m_bKey[KEY_DOWN] = true;
+	if (m_pInput->Get_DIKeyState(DIK_A))
+		m_bKey[KEY_LEFT] = true;
+	if (m_pInput->Get_DIKeyState(DIK_D))
+		m_bKey[KEY_RIGHT] = true;
+
+	if (m_bKey[KEY_UP] == true && m_bKey[KEY_DOWN] == true)
+	{
+		m_bKey[KEY_UP] = false;
+		m_bKey[KEY_DOWN] = false;
+	}
+	if (m_bKey[KEY_LEFT] == true && m_bKey[KEY_RIGHT] == true)
+	{
+		m_bKey[KEY_LEFT] = false;
+		m_bKey[KEY_RIGHT] = false;
+	}
+
+	if (!m_bKey[KEY_UP] && !m_bKey[KEY_DOWN] && !m_bKey[KEY_LEFT] && !m_bKey[KEY_RIGHT])
+		return;
+
+	XMVECTOR vDir = XMVectorSet(m_pTransform->m_vDir.x, 0.f, m_pTransform->m_vDir.z, 0.0f);
+	XMVECTOR vUp = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	XMVECTOR vRight = XMVector3Cross(vUp, vDir);
+	XMVECTOR vMoveDir = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+
+	vDir = XMVector3Normalize(vDir);
+	vRight = XMVector3Normalize(vRight);
+
+	if (m_bKey[KEY_UP])
+	{
+		vMoveDir += vDir;
+		if (m_bKey[KEY_LEFT])
+		{
+			vMoveDir -= vRight;
+			m_eMoveDir = DIR_UL;
+		}
+		else if (m_bKey[KEY_RIGHT])
+		{
+			vMoveDir += vRight;
+			m_eMoveDir = DIR_UR;
+		}
+		else
+			m_eMoveDir = DIR_U;
+	}
+	else if (m_bKey[KEY_DOWN])
+	{
+		vMoveDir -= vDir;
+		if (m_bKey[KEY_LEFT])
+		{
+			vMoveDir -= vRight;
+			m_eMoveDir = DIR_DL;
+		}
+		else if (m_bKey[KEY_RIGHT])
+		{
+			vMoveDir += vRight;
+			m_eMoveDir = DIR_DR;
+		}
+		else
+			m_eMoveDir = DIR_D;
+	}
+	else if (m_bKey[KEY_LEFT])
+	{
+		vMoveDir -= vRight;
+		m_eMoveDir = DIR_L;
+	}
+	else if (m_bKey[KEY_RIGHT])
+	{
+		vMoveDir += vRight;
+		m_eMoveDir = DIR_R;
+	}
+	vMoveDir = XMVector3Normalize(vMoveDir);
+	XMStoreFloat3(&m_vMoveDir, vMoveDir);
+}
+
 void CPlayer::KeyState(const FLOAT& fTimeDelta)
 {
 	_long lMouseMove = 0;
@@ -372,44 +465,23 @@ void CPlayer::KeyState(const FLOAT& fTimeDelta)
 
 void CPlayer::Soldier_Move(const FLOAT& fTimeDelta)
 {
-	XMVECTOR vDir = XMVectorSet(m_pTransform->m_vDir.x, 0.f, m_pTransform->m_vDir.z, 0.0f);
-	XMVECTOR vUp = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	XMVECTOR vRight = XMVector3Cross(vUp, vDir);
-	XMVECTOR vMovePos = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	XMVECTOR vDir = XMLoadFloat3(&m_vMoveDir);
 	XMVECTOR vPos = XMLoadFloat3(&m_pTransform->m_vPos);
-
-	vDir = XMVector3Normalize(vDir);
-	vRight = XMVector3Normalize(vRight);
 
 	switch (m_dwState)
 	{
 	case SOLDIER_MOVE:
-		if (m_pInput->Get_DIKeyState(DIK_W))
-			vMovePos += vDir * m_fSpeed * fTimeDelta;
-		if (m_pInput->Get_DIKeyState(DIK_S))
-			vMovePos -= vDir * m_fSpeed * fTimeDelta;
-		if (m_pInput->Get_DIKeyState(DIK_A))
-			vMovePos -= vRight * m_fSpeed * fTimeDelta;
-		if (m_pInput->Get_DIKeyState(DIK_D))
-			vMovePos += vRight * m_fSpeed * fTimeDelta;
-		vMovePos = XMVector3Normalize(vMovePos);
-		vPos += vMovePos;
+		vPos += vDir * m_fSpeed * fTimeDelta;
 		XMStoreFloat3(&m_pTransform->m_vPos, vPos);
 		m_pTransform->Update(fTimeDelta);
 		break;
 	case SOLDIER_LYING:
-		if (m_pInput->Get_DIKeyState(DIK_W))
-			vMovePos += vDir * m_fSpeed * fTimeDelta * 0.5f;
-		if (m_pInput->Get_DIKeyState(DIK_S))
-			vMovePos -= vDir * m_fSpeed * fTimeDelta * 0.5f;
-		if (m_pInput->Get_DIKeyState(DIK_A))
-			vMovePos -= vRight * m_fSpeed * fTimeDelta * 0.5f;
-		if (m_pInput->Get_DIKeyState(DIK_D))
-			vMovePos += vRight * m_fSpeed * fTimeDelta * 0.5f;
-		vMovePos = XMVector3Normalize(vMovePos);
-		vPos += vMovePos;
-		XMStoreFloat3(&m_pTransform->m_vPos, vPos);
-		m_pTransform->Update(fTimeDelta);
+		if (m_dwAniIdx != PLAYER_Lying && m_dwAniIdx != PLAYER_LyingShoot)
+		{
+			vPos += vDir * m_fSpeed * fTimeDelta * 0.5f;
+			XMStoreFloat3(&m_pTransform->m_vPos, vPos);
+			m_pTransform->Update(fTimeDelta);
+		}
 		break;
 	}
 }

@@ -28,6 +28,9 @@ protected:
 	DWORD*			m_pAniIdx;
 	bool			m_bShoot;
 
+	//
+	MOVE_DIR*		m_pMoveDir;
+
 protected:
 	virtual void Release(void);
 };

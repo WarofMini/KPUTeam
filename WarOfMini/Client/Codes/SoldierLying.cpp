@@ -32,7 +32,6 @@ int CSoldierLying::OnState()
 
 	MoveKeyCheck();
 
-
 	return 1;
 }
 
@@ -61,62 +60,37 @@ void CSoldierLying::MoveKeyCheck(void)
 	if (m_bShoot)
 		return;
 
-	bool bInputKey[KEY_END] = { false };
-
-	if (m_pInput->Get_DIKeyState(DIK_W))
-		bInputKey[KEY_UP] = true;
-	if (m_pInput->Get_DIKeyState(DIK_S))
-		bInputKey[KEY_DOWN] = true;
-	if (m_pInput->Get_DIKeyState(DIK_A))
-		bInputKey[KEY_LEFT] = true;
-	if (m_pInput->Get_DIKeyState(DIK_D))
-		bInputKey[KEY_RIGHT] = true;
-
-	if (bInputKey[KEY_UP] == true && bInputKey[KEY_DOWN] == true)
+	switch (*m_pMoveDir)
 	{
-		bInputKey[KEY_UP] = false;
-		bInputKey[KEY_DOWN] = false;
-	}
-	if (bInputKey[KEY_LEFT] == true && bInputKey[KEY_RIGHT] == true)
-	{
-		bInputKey[KEY_LEFT] = false;
-		bInputKey[KEY_RIGHT] = false;
-	}
-
-	if (bInputKey[KEY_UP] == false && bInputKey[KEY_DOWN] == false &&
-		bInputKey[KEY_LEFT] == false && bInputKey[KEY_RIGHT] == false)
-	{
+	case DIR_U:
+	case DIR_UL:
+	case DIR_UR:
+		if (*m_pAniIdx != PLAYER_CrawlingFront)
+			m_pSoldier->PlayAnimation(PLAYER_CrawlingFront);
+		break;
+	case DIR_D:
+	case DIR_DL:
+	case DIR_DR:
+		if (*m_pAniIdx != PLAYER_CrawlingBack)
+			m_pSoldier->PlayAnimation(PLAYER_CrawlingBack);
+		break;
+	case DIR_L:
+		if (*m_pAniIdx != PLAYER_CrawlingLeft)
+			m_pSoldier->PlayAnimation(PLAYER_CrawlingLeft);
+		break;
+	case DIR_R:
+		if (*m_pAniIdx != PLAYER_CrawlingRight)
+			m_pSoldier->PlayAnimation(PLAYER_CrawlingRight);
+		break;
+	default:
 		if (*m_pAniIdx != PLAYER_Lying && *m_pAniIdx != PLAYER_LyingShoot)
 		{
-			if(m_bShoot)
+			if (m_bShoot)
 				m_pSoldier->PlayAnimation(PLAYER_LyingShoot);
 			else
 				m_pSoldier->PlayAnimation(PLAYER_Lying);
 		}
-		return;
-	}
-
-	if (bInputKey[KEY_UP] || bInputKey[KEY_DOWN])
-	{
-		if (bInputKey[KEY_UP] && *m_pAniIdx != PLAYER_CrawlingFront)
-		{
-			m_pSoldier->PlayAnimation(PLAYER_CrawlingFront);
-		}
-		if (bInputKey[KEY_DOWN] && *m_pAniIdx != PLAYER_CrawlingBack)
-		{
-			m_pSoldier->PlayAnimation(PLAYER_CrawlingBack);
-		}
-	}
-	else
-	{
-		if (bInputKey[KEY_LEFT] && *m_pAniIdx != PLAYER_CrawlingLeft)
-		{
-			m_pSoldier->PlayAnimation(PLAYER_CrawlingLeft);
-		}
-		else if (bInputKey[KEY_RIGHT] && *m_pAniIdx != PLAYER_CrawlingRight)
-		{
-			m_pSoldier->PlayAnimation(PLAYER_CrawlingRight);
-		}
+		break;
 	}
 }
 

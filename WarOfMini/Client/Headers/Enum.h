@@ -68,4 +68,8 @@ enum ANIPLAYER {
 	, PLAYER_END
 };
 
+
+enum eKey { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT, KEY_END };
+enum MOVE_DIR { DIR_U, DIR_UR, DIR_UL, DIR_R, DIR_L, DIR_D, DIR_DR, DIR_DL, DIR_END};
+
 #endif

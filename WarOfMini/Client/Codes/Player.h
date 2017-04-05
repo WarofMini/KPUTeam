@@ -45,7 +45,9 @@ public:
 	DWORD*		Get_AniIdx(void) { return &m_dwAniIdx; }
 	bool		Check_AnimationFrame(void);
 	bool		IsOnGround(void);
+	MOVE_DIR*	GetMoveDir(void);
 
+	void		KeyCheck(void);
 	void		KeyState(const FLOAT& fTimeDelta);
 	void		Soldier_Move(const FLOAT& fTimeDelta);
 
@@ -69,7 +71,9 @@ private:
 	DWORD			m_dwState;
 	DWORD			m_dwAniIdx;
 	CStateMachine*	m_pComStateMachine;
-
+	_bool			m_bKey[KEY_END];
+	MOVE_DIR		m_eMoveDir;
+	XMFLOAT3		m_vMoveDir;
 
 //중력 & 충돌체크
 	CCalculator*	m_pCalculator;

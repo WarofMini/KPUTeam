@@ -6,6 +6,7 @@ CSoldierState::CSoldierState(CPlayer* pSoldier)
 	: m_pSoldier(pSoldier)
 	, m_pInput(pSoldier->GetInput())
 	, m_pAniIdx(pSoldier->Get_AniIdx())
+	, m_pMoveDir(pSoldier->GetMoveDir())
 {
 
 }
