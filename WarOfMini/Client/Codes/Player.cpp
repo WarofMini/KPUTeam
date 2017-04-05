@@ -81,8 +81,18 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 
 INT CPlayer::Update(const FLOAT& fTimeDelta)
 {
-	Collision_Field(fTimeDelta);
+	if (m_pInput->Get_DIKeyState(DIK_1))
+	{
+		m_pComGravity->Set_LandOff(50.f);
+	}
+	if (m_pInput->Get_DIKeyState(DIK_2))
+	{
+		m_pComGravity->Add_Velocity(10.f);
+		m_pComGravity->Set_OnGround(false);
+	}
 
+	Collision_Field(fTimeDelta);
+	
 	CDynamicObject::Update(fTimeDelta);
 
 	//Dynamic카메라 체크 함수(Dynamic 카메라일시 Update 안돌린다.
@@ -213,8 +223,12 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 
 void CPlayer::Collision_Field(const FLOAT& fTimeDelta)
 {
-	//m_pComGravity->Move_Inertia(fTimeDelta, &m_pTransform->m_vPos);//로봇 날아다닐때 쓰면 좋을듯. Add_Velocity
-
+	m_pComGravity->Move_Inertia(fTimeDelta, &m_pTransform->m_vPos);//로봇 날아다닐때 쓰면 좋을듯. Add_Velocity
+	if (m_pTransform->m_vPos.y <= 0.f)
+	{
+		m_pTransform->m_vPos.y = 0.f;
+		m_pComGravity->Set_LandOn();
+	}
 
 	//_float tmin = 1000.0f;
 	//XMVECTOR vRayDir = XMVectorSet(0.0f, -1.0f, 0.0f, 0.0f);
