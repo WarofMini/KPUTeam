@@ -34,6 +34,9 @@ int CSoldierIdle::OnState()
 	if (IsSoldierLying())
 		return 0;
 
+	if (IsSoldierJump())
+		return 0;
+
 	return 1;
 }
 
@@ -139,6 +142,18 @@ bool CSoldierIdle::IsSoldierLying(void)
 		*(m_pSoldier->Get_State()) = CPlayer::SOLDIER_LYING;
 		return true;
 	}
+	return false;
+}
+
+bool CSoldierIdle::IsSoldierJump(void)
+{
+	if (m_pSoldier->IsOnGround() && m_pInput->Get_DIKeyState(DIK_SPACE))
+	{
+		m_pSoldier->PlayAnimation(PLAYER_JumpIn);
+		*(m_pSoldier->Get_State()) = CPlayer::SOLDIER_JUMP;
+		return true;
+	}
+
 	return false;
 }
 

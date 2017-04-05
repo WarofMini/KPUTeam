@@ -25,6 +25,7 @@ protected:
 private:
 	bool	IsSoldierMove(void);
 	bool	IsSoldierLying(void);
+	bool	IsSoldierJump(void);
 
 private:
 	CPlayer*	m_pSoldier;

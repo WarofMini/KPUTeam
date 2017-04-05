@@ -24,7 +24,7 @@ protected:
 
 private:
 	bool	MoveKeyCheck(void);
-
+	bool	EndJump(void);
 private:
 	CPlayer*	m_pSoldier;
 };

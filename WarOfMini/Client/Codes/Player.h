@@ -19,7 +19,7 @@ protected:
 	virtual ~CPlayer(void);
 
 public:
-	enum STATE_SOLDIER { SOLDIER_IDLE, SOLDIER_MOVE, SOLDIER_LYING, SOLDIER_ROLL, SOLDIER_END };
+	enum STATE_SOLDIER { SOLDIER_IDLE, SOLDIER_MOVE, SOLDIER_LYING, SOLDIER_ROLL, SOLDIER_JUMP, SOLDIER_END };
 
 public:
 	static CPlayer* Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);
@@ -44,6 +44,7 @@ public:
 	DWORD*		Get_State(void) { return &m_dwState; }
 	DWORD*		Get_AniIdx(void) { return &m_dwAniIdx; }
 	bool		Check_AnimationFrame(void);
+	bool		IsOnGround(void);
 
 	void		KeyState(const FLOAT& fTimeDelta);
 	void		Soldier_Move(const FLOAT& fTimeDelta);

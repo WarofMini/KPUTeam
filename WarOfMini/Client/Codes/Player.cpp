@@ -170,6 +170,9 @@ HRESULT CPlayer::Prepare_StateMachine(void)
 	pState = CSoldierRoll::Create(this);
 	FAILED_CHECK(m_pComStateMachine->Add_State(pState));
 
+	pState = CSoldierJump::Create(this);
+	FAILED_CHECK(m_pComStateMachine->Add_State(pState));
+
 	return S_OK;
 }
 
@@ -187,6 +190,11 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 		if (m_dwState == SOLDIER_LYING)
 		{
 			m_pComStateMachine->Enter_State(SOLDIER_LYING);
+		}
+		if (m_dwState == SOLDIER_JUMP)
+		{
+			m_pComStateMachine->Enter_State(SOLDIER_JUMP);
+			m_pComGravity->Set_LandOff(50.f);				// 일단 이렇게
 		}
 		break;
 	case SOLDIER_MOVE:
@@ -213,6 +221,12 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 		if (m_dwState == SOLDIER_MOVE)
 		{
 			m_pComStateMachine->Enter_State(SOLDIER_MOVE);
+		}
+		break;
+	case SOLDIER_JUMP:
+		if (m_dwState == SOLDIER_IDLE)
+		{
+			m_pComStateMachine->Enter_State(SOLDIER_IDLE);
 		}
 		break;
 	default:
@@ -333,6 +347,11 @@ bool CPlayer::Check_AnimationFrame(void)
 	if (m_pAnimInfo->Get_CurFrame() >= m_pAnimInfo->Get_LastFrame())
 		return true;
 	return false;
+}
+
+bool CPlayer::IsOnGround(void)
+{
+	return m_pComGravity->Get_OnGround();
 }
 
 void CPlayer::KeyState(const FLOAT& fTimeDelta)
