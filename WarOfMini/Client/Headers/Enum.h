@@ -33,7 +33,7 @@ enum ANIPLAYER {
 	, PLAYER_RunForward
 	, PLAYER_RunLeft
 	, PLAYER_RunRight
-	, PLAYER_Jump
+	, PLAYER_Jump				//이거 안쓰고	in loop out
 	, PLAYER_JumpIn
 	, PLAYER_JumpLoop
 	, PLAYER_JumpOut
@@ -44,7 +44,7 @@ enum ANIPLAYER {
 	, PLAYER_Damage
 	, PLAYER_Reload
 	, PLAYER_Shoot
-	, PLAYER_GetCover
+	, PLAYER_GetCover			//이거 안쓰고	in loop out
 	, PLAYER_GetCoverIn//
 	, PLAYER_GetCoverLoop//
 	, PLAYER_GetCoverOut//

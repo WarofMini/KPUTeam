@@ -28,7 +28,7 @@ private:
 
 private:
 	ID3D11Device*	m_pGraphicDev;
-
+	float			m_fScale;
 
 };
 

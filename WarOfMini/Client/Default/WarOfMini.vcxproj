@@ -201,6 +201,7 @@
     <ClInclude Include="..\Codes\ShaderMgr.h" />
     <ClInclude Include="..\Codes\SoldierDefine.h" />
     <ClInclude Include="..\Codes\SoldierIdle.h" />
+    <ClInclude Include="..\Codes\SoldierJump.h" />
     <ClInclude Include="..\Codes\SoldierLying.h" />
     <ClInclude Include="..\Codes\SoldierMove.h" />
     <ClInclude Include="..\Codes\SoldierRoll.h" />
@@ -276,6 +277,7 @@
     <ClCompile Include="..\Codes\Shader.cpp" />
     <ClCompile Include="..\Codes\ShaderMgr.cpp" />
     <ClCompile Include="..\Codes\SoldierIdle.cpp" />
+    <ClCompile Include="..\Codes\SoldierJump.cpp" />
     <ClCompile Include="..\Codes\SoldierLying.cpp" />
     <ClCompile Include="..\Codes\SoldierMove.cpp" />
     <ClCompile Include="..\Codes\SoldierRoll.cpp" />

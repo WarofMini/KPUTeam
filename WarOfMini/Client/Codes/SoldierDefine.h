@@ -5,5 +5,6 @@
 #include "SoldierMove.h"
 #include "SoldierLying.h"
 #include "SoldierRoll.h"
+#include "SoldierJump.h"
 
 #endif // SoldierDefine_h__

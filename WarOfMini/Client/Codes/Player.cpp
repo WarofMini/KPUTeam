@@ -79,27 +79,6 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 
 INT CPlayer::Update(const FLOAT& fTimeDelta)
 {
-	/*if (m_pInput->GetDIKeyStateOnce(DIK_1))
-	{
-		PlayAnimation(PLAYER_Jump);
-	}
-	if (m_pInput->GetDIKeyStateOnce(DIK_2))
-	{
-		PlayAnimation(PLAYER_JumpIn);
-	}
-	if (m_pInput->GetDIKeyStateOnce(DIK_3))
-	{
-		PlayAnimation(PLAYER_JumpLoop);
-	}
-	if (m_pInput->GetDIKeyStateOnce(DIK_4))
-	{
-		PlayAnimation(PLAYER_JumpOut);
-	}*/
-	if (m_pInput->Get_DIKeyState(DIK_1))
-	{
-		m_pComGravity->Add_Velocity(10.f);
-		m_pComGravity->Set_OnGround(false);
-	}
 	Collision_Field(fTimeDelta);
 
 	CDynamicObject::Update(fTimeDelta);

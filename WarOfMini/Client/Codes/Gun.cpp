@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Gun.h"
 #include "Transform.h"
-
 #include "Management.h"
 
 
@@ -9,6 +8,7 @@
 CGun::CGun(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
 : CEquipment(pContext)
 , m_pGraphicDev(pGraphicDev)
+, m_fScale(0.4f)
 {
 }
 
@@ -33,8 +33,9 @@ HRESULT CGun::Initialize(void)
 
 	m_uiObjNum = MESHNUM_GUN;
 
-	m_pTransform->m_vPos = XMFLOAT3(3.f, -17.f, 10.f);
-	m_pTransform->m_vAngle = XMFLOAT3(-0.f, (float)D3DXToDegree(3.5), (float)D3DXToDegree(0.007));
+	m_pTransform->m_vPos = XMFLOAT3(0.252f, -17.72f, 10.575f);
+	m_pTransform->m_vAngle = XMFLOAT3(86.41f, -9.f, -176.67f);
+	m_pTransform->m_vScale = XMFLOAT3(m_fScale, m_fScale, m_fScale);
 
 	return S_OK;
 }
