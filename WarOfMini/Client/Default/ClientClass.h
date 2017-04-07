@@ -33,8 +33,7 @@ private:
 	MSG m_msg;
 
 	//////////////////////////////////////
-	Ser_PLAYER_DATA*	 m_pPlayerData;
-	//Ser_InitPlayer	 m_tInitPlayer;
+	//Ser_PLAYER_DATA*	 m_pPlayerData;
 
 
 	//////////////////////////////////////

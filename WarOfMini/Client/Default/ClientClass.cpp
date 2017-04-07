@@ -261,7 +261,6 @@ SOCKET * AsynchronousClientClass::GetServerSocket()
 
 void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 {
-	static bool first_time = true;
 	static int id;
 
 	switch (buf[1])
@@ -275,8 +274,42 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 				break;*/
 	case INIT_CLIENT:
 	{
+		Ser_PLAYER_DATA* m_pPlayerData = new Ser_PLAYER_DATA;
+
 		m_pPlayerData = reinterpret_cast<Ser_PLAYER_DATA*>(buf[2]);
-		id = m_pPlayerData->ID;	//첫 입장시 플레이어 id 값.
+		id = m_pPlayerData->ID;	//첫 입장시 플레이어 id 값. 여기로 값을 받으니까 요건 좀 이따 설명해야겠따.
+		// 여기서 언제 관련 패킷을 보냇엉
+		// 여기서 이제 sendpacket해야곘지 ?
+		// 너가 굳이 그렇게 짜고 싶으면 그렇게 짜도 되긴하는데
+		// 서버에 클라이언트가 접속하자마자, 서버 -> 클라로 초기화 패킷 한번만 보내면
+		// 클라이언트는 패킷 한번으로 바로 초기화가 되는데
+		// 너가 말한 방법은
+		// 서버 접속하고, 클라 -> 서버 ( init 패킷 보내줭 ) 하고
+		// 서버가 ㅇㅋ , 서버 -> 클라 ( 초기화 담긴 정보) 보내주고
+		// 다시 클라가 받아서 초기화 하는 단계를 여럿 거쳐야 되잖아그러네..
+
+		// 그러니, 그러지 말고, 서버로 클라이언트가 바로 접속하자마자 초기화 패킷을 보내주자 이거지
+		// 무슨 말인지는 이해했음?ㅇㅇㅇㅇ 그건 이해가가는데 감이 안잡히네.. 그럼 Send안하고도 서버에서 어떻게 저걸 받아서 인식을 하게되는지 모르겠어.
+		// send는 무조건 해야지. 애초에 통신을 해야 데이터를 클라가 받는데?
+		// 그래서 저런 식으로 밖에 이해를 못하겠어 ㄷㄷ;
+
+		// 너가 서버에서 패킷 send 할때 어떻게 ㅎ하는데 한번 생각해봥
+		// 아까 다시 init_client 서버로 가보자
+
+		/*struct my_int_struct
+		{
+			int a;
+			int b;
+			char c;
+		};
+
+		struct my_int_struct m_i;
+		char buffer[255] = { 0 };
+		
+		buffer[0] = (char)(char*)&m_i.a;
+		buffer[8] = m_i.c;
+		*((my_int_struct*)&buffer[0]) = m_i;*/
+		// 자 이걸 m_i 구조체 변수를 한번 buffer 배열에 넣어보렴
 	}
 	break;
 	case INIT_OTHER_PLAYER:
@@ -307,59 +340,14 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 		}
 	}
 	case CLIENT_POSITION:
-		//if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
-		//{
-		//	//플레이어 포지션 값을 다른 클라에 뿌려준다.
 
-		//	Ser_PLAYER_DATA* pData = CObjMgr::GetInstance()->Get_Server_Data(*reinterpret_cast<int*>(buf[sizeof(pData->vPos) + 2]));
-		//	if (nullptr != pData)
-		//	{
-		//		memcpy(&pData->vPos, &buf[2], sizeof(Ser_PLAYER_DATA::vPos));
-		//	}
-		//	else
-		//	{
-		//		break;
-		//	}
-		//}
 		break;
 	case CLIENT_DIRECTION:
 
-		/*if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
-		{
-			Ser_PLAYER_DATA* pData = CObjMgr::GetInstance()->Get_Server_Data(*reinterpret_cast<int*>(buf[sizeof(pData->vPos) + 2]));
-
-			if (nullptr != pData)
-			{
-				memcpy(&pData->vDir, &buf[2], sizeof(Ser_PLAYER_DATA::vDir));
-			}
-			else
-			{
-				break;
-			}
-
-		}*/
 
 		break;
 	case PLAYER_DISCONNECTED:
-		//Ser_PLAYER_DATA* pData = CObjMgr::GetInstance()->Get_Server_Data(reinterpret_cast<Ser_PLAYER_DATA*>(buf[2])->ID);
-		//
-		//list<CObject*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
-		//list<CObject*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
 
-		//for (iter; iter != iter_end;)
-		//{
-		//	if ((*iter)->GetPacketData()->ID == reinterpret_cast<Ser_PLAYER_DATA*>(pData)->ID)
-		//	{
-		//		CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
-		//		Safe_Delete(*iter);
-		//		CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->erase(iter++);
-		//	}
-		//	
-		//	else
-		//	{
-		//		++iter;
-		//	}
-		//}
 		break;
 	}
 }
