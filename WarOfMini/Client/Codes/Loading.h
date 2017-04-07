@@ -31,7 +31,7 @@ private:
 	LOADINGID				m_eLoadID;
 	CRITICAL_SECTION		m_CSKey;
 	HANDLE					m_hThread;
-	bool					m_bServerConnected;
+	
 	ID3D11Device*			pGraphicDev;
 	ID3D11DeviceContext*	pContext;
 

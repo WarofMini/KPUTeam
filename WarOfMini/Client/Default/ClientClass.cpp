@@ -277,7 +277,11 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 		Ser_PLAYER_DATA* m_pPlayerData = new Ser_PLAYER_DATA;
 
 		m_pPlayerData = reinterpret_cast<Ser_PLAYER_DATA*>(buf[2]);
-		id = m_pPlayerData->ID;	//첫 입장시 플레이어 id 값. 여기로 값을 받으니까 요건 좀 이따 설명해야겠따.
+
+		//sendPacket(sizeof(Ser_PLAYER_DATA*), INIT_CLIENT, reinterpret_cast<BYTE*>(&m_pPlayerData->ID));
+
+		//id = m_pPlayerData->ID;	//첫 입장시 플레이어 id 값. 여기로 값을 받으니까 요건 좀 이따 설명해야겠따.
+
 		// 여기서 언제 관련 패킷을 보냇엉
 		// 여기서 이제 sendpacket해야곘지 ?
 		// 너가 굳이 그렇게 짜고 싶으면 그렇게 짜도 되긴하는데

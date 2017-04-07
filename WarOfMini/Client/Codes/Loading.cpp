@@ -11,7 +11,6 @@ CLoading::CLoading(LOADINGID eLoadID)
 : m_eLoadID(eLoadID)
 , m_hThread(NULL)
 , m_bComplete(false)
-, m_bServerConnected(false)
 , pGraphicDev(NULL)
 , pContext(NULL)
 {

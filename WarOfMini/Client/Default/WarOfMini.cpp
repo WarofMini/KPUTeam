@@ -62,9 +62,13 @@ int APIENTRY wWinMain( HINSTANCE hInstance,
 
 	m_bLogoLoading = FALSE;
 	g_bCollisionDraw = FALSE;
+	static bool	m_bServerConnected = false;
 
-	g_Client.InitSock(g_hWnd);
-
+	if (m_bServerConnected == false)
+	{
+		g_Client.InitSock(g_hWnd);
+		m_bServerConnected = true;
+	}
 
     MSG msg;
 	msg.message = WM_NULL;
