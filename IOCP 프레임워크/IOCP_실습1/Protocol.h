@@ -6,7 +6,7 @@
 #include <thread>
 #include <vector>
 #include <D3DX10math.h>
-#include<cstdlib>
+#include <cstdlib>
 
 
 using namespace std;
@@ -34,7 +34,6 @@ struct Overlap_ex
 	int operation_type;
 	WSABUF wsabuf;
 	unsigned char IOCPbuf[MAX_BUFFER_SIZE];
-	unsigned char Packetbuf[MAX_PACKET_SIZE];
 };
 
 struct PLAYER_INFO
@@ -50,6 +49,13 @@ struct PLAYER_INFO
 	CRITICAL_SECTION cs;
 };
 //////////////////////////////////////////
+
+//클라에서 보내온 정보들을 담아서 프로토콜로 뿌려주기 ?
+
+//struct SC_initPlayer
+//{
+//
+//};
 
 
 struct KEY_INPUT
@@ -67,6 +73,7 @@ enum ProcessPacket
 	CLIENT_POSITION,	 // 좌표를 주고받자.
 	CLIENT_DIRECTION,	 // direction 값을 받아오자.
 	PLAYER_DISCONNECTED, // 연결이 끊기면 삭제시켜주자.
+	SEND_POSITION,
 };
 
 struct Packet_remove_Player
@@ -75,3 +82,4 @@ struct Packet_remove_Player
 	BYTE type;
 	WORD id;
 };
+

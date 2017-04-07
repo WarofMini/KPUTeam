@@ -164,7 +164,7 @@ void CServer::Accept_thread()
 
 		CreateIoCompletionPort(reinterpret_cast<HANDLE>(client_sock), g_hIocp, playerIndex, 0);
 
-		PLAYER_INFO* User = new PLAYER_INFO;
+		User = new PLAYER_INFO;
 
 		User->sock = client_sock;
 		User->connected = true;
@@ -175,7 +175,6 @@ void CServer::Accept_thread()
 		User->my_overapped.operation_type = OP_RECV;
 		User->my_overapped.wsabuf.buf = reinterpret_cast<char*>(&User->my_overapped.IOCPbuf);
 		User->my_overapped.wsabuf.len = sizeof(User->my_overapped.IOCPbuf);
-
 
 
 		m_Client.push_back(move(User));
@@ -192,6 +191,10 @@ void CServer::Accept_thread()
 				error_display("Accept_WSARecv", err_no);
 			}
 		}
+		/*SC_InitPlayer initPlayer;
+		ZeroMemory(initPlayer, sizeof(initPlayer));
+		initPlayer.move
+		SendPacket()*/
 	}
 
 
@@ -301,9 +304,7 @@ void CServer::Worker_thread()
 }
 
 void CServer::SendPacket(unsigned int id, const unsigned char* packet)
-{
-
-	
+{	
 	Overlap_ex* overlap = new Overlap_ex;
 	//unsigned char* packetTemp = packet;
 	memset(overlap, 0, sizeof(Overlap_ex));
@@ -353,16 +354,41 @@ void CServer::SendPacket(unsigned int id, const unsigned char* packet)
 void CServer::ProcessPacket(const unsigned char* buf, const unsigned int& id)
 {
 
+	unsigned char m_sendbuf[256]{ 0 };
+
 	switch (buf[1])
 	{
-		//case TEST:
-		//{
-		//	//클라에서 받은 패킷을 그대로 다시 돌려준다.
-		//	cout << "[NO. " << id << "]TEST Packet Recv.. " << endl;
-		//	cout << "buf[0] =  " << buf[0] << "buf[1] = " << buf[1] << "buf[2] =  " << buf[2] << endl;
-		//	SendPacket(id, buf);
-		//}
-		//break;
+	case TEST:
+	{
+		//클라에서 받은 패킷을 그대로 다시 돌려준다.
+		cout << "[NO. " << id << "]TEST Packet Recv.. " << endl;
+		cout << "buf[0] =  " << buf[0] << "buf[1] = " << buf[1] << "buf[2] =  " << buf[2] << endl;
+		SendPacket(id, buf);
+		break;
+	}
+
+	case INIT_CLIENT:
+	{
+		//id값 전달받자
+		/*cout << "Client Join ! " << endl;
+		PLAYER_INFO* Temp;
+
+		Temp->id = User->id;
+		SendPacket(id, buf);*/
+	}
+	//case KEYINPUT:
+	//	cout << "recv keyInput\n";
+	//	m_sendbuf[0] = 3;
+	//	m_sendbuf[1] = POSITION;
+	//	m_sendbuf[2] = 3;		// true
+	//	SendPacket(id, m_sendbuf);
+	//	cout << "send position info\n";
+	//	break;
+	/*case POSITION:
+		break;*/
+
+	
+	//break;
 
 		//default:
 		//	// 클라이언트로 부터 알수 없는 데이터가 왔을 경우, 해킹 방지를 위해 서버를 강제 종료. 해당 클라이언트의 고유 번호와 타입 번호를 알려준다.

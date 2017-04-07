@@ -14,7 +14,7 @@ private:
 	bool g_bShoutdown = false;
 	int iCpuCore;
 	unsigned int playerIndex{ UINT_MAX };
-
+	PLAYER_INFO* User;
 	//DWORD KeyValue;
 	//CPlayer*	m_pPlayer;
 
