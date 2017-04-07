@@ -128,3 +128,8 @@ _uint CMesh::GetVtxCnt(void)
 {
 	return m_vecChild[0]->m_uiVtxCnt;
 }
+
+CTextures* CMesh::GetTexture(void)
+{
+	return m_pTexture;
+}

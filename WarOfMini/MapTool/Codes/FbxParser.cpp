@@ -28,12 +28,15 @@ void CFbxParser::ParsingVertex(FbxNode* _pNode, Animation* _pAnimation)
 			for (unsigned int i = 0; i < VertexCount; i++)
 				lVertexArray[i] = pMesh->GetControlPoints()[i];
 
-
+			//====================================================
 			int *IndexArray = new int[IndexCount];
 			for (unsigned int i = 0; i < IndexCount; i++)
 				IndexArray[i] = pMesh->GetPolygonVertices()[i];
 
+			//인덱스 카운트만큼 크기할당
 			_pAnimation->pAniBuffer->SetVertexSize(IndexCount);
+
+			//==========================================================
 			for (unsigned int i = 0; i < IndexCount; i++)
 			{
 				/* 버텍스의 정점 위치 정보를 가져온다. */
@@ -74,6 +77,8 @@ void CFbxParser::ParsingVertex(FbxNode* _pNode, Animation* _pAnimation)
 			}
 		}
 		
+		//================================================================
+
 
 		FbxGeometry * pGeo = _pNode->GetGeometry();
 		int SkinCount = pGeo->GetDeformerCount(FbxDeformer::eSkin);

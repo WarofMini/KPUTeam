@@ -42,23 +42,21 @@ HRESULT CDefaultObj::Initialize()
 
 _int CDefaultObj::Update(const _float& fTimeDelta)
 {
-	//if (m_pSphereMesh != NULL)
-	//	m_pSphereMesh->Update(fTimeDelta);
 
 	CGameObject::Update(fTimeDelta);
 
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
 
+
+	//if (m_pSphereMesh != NULL && g_bCollisionDraw)
+	//	m_pSphereMesh->Update(fTimeDelta);
+	
+	
 	return 0;
 }
 
 void CDefaultObj::Render(void)
 {
-	//if (m_pSphereMesh != NULL)
-	//{
-	//	m_pSphereMesh->Render();
-	//}
-
 	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Default"));
 
 	ID3D11Buffer* pBaseShaderCB = CGraphicDev::GetInstance()->GetBaseShaderCB();
@@ -78,13 +76,18 @@ void CDefaultObj::Render(void)
 	m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
 
 
-	CMeshMgr::GetInstance()->Render_MeshMgr(m_uiObjNum, FALSE);
+	CMeshMgr::GetInstance()->Render_MeshMgr(m_uiObjNum, TRUE);
 
+
+	//if (m_pSphereMesh != NULL && g_bCollisionDraw)
+	//{
+	//	m_pSphereMesh->Render();
+	//}
 }
 
 void CDefaultObj::Release(void)
 {
-	//Safe_Release(m_pSphereMesh);
+	Safe_Release(m_pSphereMesh);
 
 	CGameObject::Release();
 	delete this;
@@ -127,5 +130,5 @@ void CDefaultObj::ComputeCollider(void)
 	m_fRadius = (vMax.z > m_fRadius) ? vMax.z : m_fRadius;
 
 
-	//m_pSphereMesh = CSphereMesh::Create(m_pContext, m_fRadius , &m_pTransform->m_vPos);
+	m_pSphereMesh = CSphereMesh::Create(m_pContext, m_fRadius , &m_pTransform->m_vPos);
 }

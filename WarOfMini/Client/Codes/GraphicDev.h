@@ -43,6 +43,7 @@ private:
 
 	_bool							m_b4xMsaaCheck;//품질검사
 	_ushort							m_usFPS; //디스플레이 모드 갱신율
+	_bool							m_bWireEnable;
 
 
 private:
@@ -58,6 +59,7 @@ public:
 	void							SetAlphaEnable(_bool bAlphaEnable);
 	void							SetCullEnable(_bool bCullEnable);
 	void							SetWireFrame(_bool bWireEnable);
+	_bool							GetWireFrame(void);
 
 public:
 	HRESULT Ready_GraphicDev(HWND hWnd, WINMODE eWinMode, const _ushort& wSizeX, const _ushort& wSizeY

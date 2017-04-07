@@ -186,6 +186,8 @@ void CDynaicMesh::RenderAnim(CAnimationInfo* pAnimInfo, MATNODE* pMatNode, _ubyt
 			m_pContext->IASetIndexBuffer(m_pIB, DXGI_FORMAT_R32_UINT, 0);
 
 			m_pContext->DrawIndexed(m_uiIdxCnt, 0, 0);
+
+			//m_pContext->Draw(m_uiVtxCnt, 0);
 		}
 
 		bColliderDraw = g_bCollisionDraw;

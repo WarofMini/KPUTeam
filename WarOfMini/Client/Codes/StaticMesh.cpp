@@ -5,6 +5,7 @@
 #include "ShaderMgr.h"
 #include "GraphicDev.h"
 #include "CameraMgr.h"
+#include "SphereMesh.h"
 
 CStaticMesh::CStaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
 : CMesh(pGraphicDev, pContext)
@@ -115,6 +116,7 @@ CResource* CStaticMesh::Clone_Resource(void)
 
 void CStaticMesh::Render(_bool bColliderDraw)
 {
+
 		_uint uiStride = sizeof(VTXTEX);
 		_uint uiOffset = 0;
 
@@ -133,9 +135,11 @@ void CStaticMesh::Render(_bool bColliderDraw)
 			m_pContext->Draw(m_uiVtxCnt, 0);
 		}
 
-
-	
-		bColliderDraw = g_bCollisionDraw;	
+		//bColliderDraw가 FALSE이면 바운딩박스를 Render하지 않는다.
+		if (bColliderDraw == TRUE)
+		{
+			bColliderDraw = g_bCollisionDraw;
+		}
 
 		// Bounding Box
 		if (bColliderDraw == TRUE)
@@ -147,11 +151,11 @@ void CStaticMesh::Render(_bool bColliderDraw)
 			m_pContext->IASetIndexBuffer(m_pBBoxIB, DXGI_FORMAT_R32_UINT, 0);
 
 			m_pContext->DrawIndexed(36, 0, 0);
-
 	
 			CGraphicDev::GetInstance()->SetWireFrame(FALSE);
-			
+
 		}
+
 
 	for (_uint uiSize = 0; uiSize < m_vecChild.size(); ++uiSize)
 		m_vecChild[uiSize]->Render(bColliderDraw);
@@ -278,16 +282,27 @@ HRESULT CStaticMesh::Set_BoundingBox(void)
 	// Index
 	_uint pIndex[] =
 	{
-		1, 5, 6,
+		//+x
 		1, 6, 2,
+		1, 5, 6,
+
+		//-x
 		4, 0, 3,
 		4, 3, 7,
+
+		//+y
 		4, 5, 1,
 		4, 1, 0,
+
+		//-y
 		3, 2, 6,
 		3, 6, 7,
+
+		//+z
 		7, 6, 5,
 		7, 5, 4,
+
+		//-z
 		0, 1, 2,
 		0, 2, 3
 	};

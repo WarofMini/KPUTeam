@@ -43,19 +43,23 @@ HRESULT CSphereMesh::Initialize()
 
 _int CSphereMesh::Update(const _float& fTimeDelta)
 {
-	m_pTransform->m_vPos = (*m_vPos);
+
+	//m_pTransform->m_vPos = (*m_vPos);
+
+	m_pTransform->m_vPos = XMFLOAT3(0.0f, 10.0f, 0.0f);
 
 	//m_pTransform->m_vPos.y += 30.f;
 
 	CGameObject::Update(fTimeDelta);
 
-	//CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
+	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
 
 	return 0;
 }
 
 void CSphereMesh::Render(void)
 {
+
 	CGraphicDev::GetInstance()->SetWireFrame(TRUE);
 
 	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Default"));
@@ -77,9 +81,10 @@ void CSphereMesh::Render(void)
 	m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
 
 
-	CMeshMgr::GetInstance()->Render_MeshMgr(m_uiObjNum, TRUE);
+	CMeshMgr::GetInstance()->Render_MeshMgr(m_uiObjNum, FALSE);
 
-	CGraphicDev::GetInstance()->SetWireFrame(TRUE);
+	CGraphicDev::GetInstance()->SetWireFrame(FALSE);
+
 }
 
 void CSphereMesh::Release(void)

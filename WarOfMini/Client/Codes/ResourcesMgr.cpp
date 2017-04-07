@@ -237,13 +237,6 @@ void CResourcesMgr::Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 	{
 		FbxMesh* pMesh = (FbxMesh*)pNode->GetNodeAttribute();
 
-		// Get Transform
-		XMFLOAT4X4 matWorld;
-		FbxMatrix matFbxWorld = pNode->EvaluateGlobalTransform();
-
-		for (int i = 0; i < 4; ++i)
-			for (int j = 0; j < 4; ++j)
-				matWorld.m[i][j] = (_float)matFbxWorld.Get(i, j);
 
 		// Compute Bounding Box
 		pMesh->ComputeBBox();
@@ -252,10 +245,6 @@ void CResourcesMgr::Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 		vMin = XMFLOAT3((FLOAT)min.mData[0], (FLOAT)min.mData[1], (FLOAT)min.mData[2]);
 		FbxDouble3 max = pMesh->BBoxMax.Get();
 		vMax = XMFLOAT3((FLOAT)max.mData[0], (FLOAT)max.mData[1], (FLOAT)max.mData[2]);
-
-		XMStoreFloat3(&vMin, XMVector3TransformCoord(XMLoadFloat3(&vMin), XMLoadFloat4x4(&matWorld)));
-		XMStoreFloat3(&vMax, XMVector3TransformCoord(XMLoadFloat3(&vMax), XMLoadFloat4x4(&matWorld)));
-
 
 
 		if (vMin.x > vMax.x)
@@ -425,43 +414,43 @@ void CResourcesMgr::Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 
 		for (UINT uiPolygonIndex = 0; uiPolygonIndex < uiPolygonCount; ++uiPolygonIndex)
 		{
-			UINT uiVerticeCount = pMesh->GetPolygonSize(uiPolygonIndex);
+		UINT uiVerticeCount = pMesh->GetPolygonSize(uiPolygonIndex);
 
-			D3DXVECTOR2 outUV;
-			FbxGeometryElementUV* vertexUV = pMesh->GetElementUV(0);
-			FbxGeometryElementNormal* vertexNormal = pMesh->GetElementNormal(0);
-
-
-			for (UINT uiVerticeIndex = 0; uiVerticeIndex < uiVerticeCount; ++uiVerticeIndex)
-			{
-				UINT uiIndex = pMesh->GetPolygonVertex(uiPolygonIndex, uiVerticeIndex);
-
-				UINT TextureUVIndex = pMesh->GetTextureUVIndex(uiPolygonIndex, uiVerticeIndex);
+		D3DXVECTOR2 outUV;
+		FbxGeometryElementUV* vertexUV = pMesh->GetElementUV(0);
+		FbxGeometryElementNormal* vertexNormal = pMesh->GetElementNormal(0);
 
 
-				FbxVector4 vNormal;
+		for (UINT uiVerticeIndex = 0; uiVerticeIndex < uiVerticeCount; ++uiVerticeIndex)
+		{
+		UINT uiIndex = pMesh->GetPolygonVertex(uiPolygonIndex, uiVerticeIndex);
 
-				pMesh->GetPolygonVertexNormal(uiPolygonIndex, uiVerticeIndex, vNormal);
-
-				pVtxTex[uiIndex].vNormal = XMFLOAT3((FLOAT)vNormal.Buffer()[0],
-													(FLOAT)vNormal.Buffer()[1],
-													(FLOAT)vNormal.Buffer()[2]);
+		UINT TextureUVIndex = pMesh->GetTextureUVIndex(uiPolygonIndex, uiVerticeIndex);
 
 
-				FbxVector2 vUV= FbxVector2(0.0, 0.0);
-				bool bUnmappedUV;
+		FbxVector4 vNormal;
+
+		pMesh->GetPolygonVertexNormal(uiPolygonIndex, uiVerticeIndex, vNormal);
+
+		pVtxTex[uiIndex].vNormal = XMFLOAT3((FLOAT)vNormal.Buffer()[0],
+		(FLOAT)vNormal.Buffer()[1],
+		(FLOAT)vNormal.Buffer()[2]);
 
 
-				if (UVNames.GetCount())
-				{
-					const char* pUVName = NULL;
-					pUVName = UVNames[0];
+		FbxVector2 vUV= FbxVector2(0.0, 0.0);
+		bool bUnmappedUV;
 
-					pMesh->GetPolygonVertexUV(uiPolygonIndex, uiVerticeIndex, pUVName, vUV, bUnmappedUV);
-					pVtxTex[uiIndex].vTexUV = XMFLOAT2((FLOAT)vUV.mData[0],  1.f - (FLOAT)vUV.mData[1]);
-				}
 
-			}
+		if (UVNames.GetCount())
+		{
+		const char* pUVName = NULL;
+		pUVName = UVNames[0];
+
+		pMesh->GetPolygonVertexUV(uiPolygonIndex, uiVerticeIndex, pUVName, vUV, bUnmappedUV);
+		pVtxTex[uiIndex].vTexUV = XMFLOAT2((FLOAT)vUV.mData[0],  1.f - (FLOAT)vUV.mData[1]);
+		}
+
+		}
 		}
 		*/
 
@@ -471,9 +460,9 @@ void CResourcesMgr::Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 
 		for (UINT uiPolygonIndex = 0; uiPolygonIndex < uiPolygonCount; ++uiPolygonIndex)
 		{
-			UINT uiVerticeCount = pMesh->GetPolygonSize(uiPolygonIndex);
-			for (UINT uiVerticeIndex = 0; uiVerticeIndex < uiVerticeCount; ++uiVerticeIndex)
-				++index;
+		UINT uiVerticeCount = pMesh->GetPolygonSize(uiPolygonIndex);
+		for (UINT uiVerticeIndex = 0; uiVerticeIndex < uiVerticeCount; ++uiVerticeIndex)
+		++index;
 		}
 
 		uiIdxCnt = index;
@@ -482,13 +471,13 @@ void CResourcesMgr::Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 
 		for (UINT uiPolygonIndex = 0, uiCuridx = 0; uiPolygonIndex < uiPolygonCount; ++uiPolygonIndex)
 		{
-			UINT uiVerticeCount = pMesh->GetPolygonSize(uiPolygonIndex);
-			for (UINT uiVerticeIndex = 0; uiVerticeIndex < uiVerticeCount; ++uiVerticeIndex)
-			{
-				UINT uiIndex = pMesh->GetPolygonVertex(uiPolygonIndex, uiVerticeIndex);
-				pIndex[uiCuridx] = uiIndex;
-				++uiCuridx;
-			}
+		UINT uiVerticeCount = pMesh->GetPolygonSize(uiPolygonIndex);
+		for (UINT uiVerticeIndex = 0; uiVerticeIndex < uiVerticeCount; ++uiVerticeIndex)
+		{
+		UINT uiIndex = pMesh->GetPolygonVertex(uiPolygonIndex, uiVerticeIndex);
+		pIndex[uiCuridx] = uiIndex;
+		++uiCuridx;
+		}
 		}
 		*/
 
@@ -523,6 +512,8 @@ void CResourcesMgr::Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 			}
 		}
 	}
+
+
 
 	CStaticMesh* pStaticMesh = CStaticMesh::Create(pGraphicDev, pContext, pVtxTex, uiVtxCnt, pIndex, uiIdxCnt, vMin, vMax, wstrTextureName);
 
@@ -609,6 +600,7 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 		// Get Vertex, UV, Normal, Index, Texture
 
 		//ControlPointsCount() = 물리적인 vertex    (걍 vertex)
+	
 		uiVtxCnt = pMesh->GetControlPointsCount();//Vertex의 갯수
 		pVtxBone = new VTXBONE[uiVtxCnt];
 		ZeroMemory(pVtxBone, sizeof(VTXBONE) * uiVtxCnt);
@@ -623,6 +615,8 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 			{
 				//Vertex의 Position을 대입
 				pVtxBone[i].vPos = XMFLOAT3((_float)pVertices[i].mData[0], (_float)pVertices[i].mData[1], (_float)pVertices[i].mData[2]);
+
+				//도대체 이건 왜 필요한것인가
 				XMStoreFloat3(&pVtxBone[i].vPos, XMVector3TransformCoord(XMLoadFloat3(&pVtxBone[i].vPos), XMLoadFloat4x4(&matWorld)));
 
 				for (int boneindex = 0; boneindex < 4; ++boneindex)
@@ -661,8 +655,8 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 					pMesh->GetPolygonVertexNormal(uiPolygonIndex, uiVerticeIndex, vNormal);
 
 					pVtxBone[uiIndex].vNormal = XMFLOAT3((_float)vNormal.Buffer()[0],
-						(_float)vNormal.Buffer()[1],
-						(_float)vNormal.Buffer()[2]);
+													 	 (_float)vNormal.Buffer()[1],
+													 	 (_float)vNormal.Buffer()[2]);
 
 					FbxVector2 vUV;
 					_bool bUnmappedUV;
@@ -758,6 +752,9 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 					Safe_Delete_Array(bonecount);
 				}
 
+
+
+
 				//Animation
 				{
 					pAnimation = CAnimation::Create(pContext);
@@ -803,37 +800,33 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 
 									if (pCluster->GetLink())
 									{
-										FbxAMatrix lRefGlobalInitPos, lRefGlobalCurrentPos;
-										FbxAMatrix lClusterGlobalInitPos, lClusterGlobalCurPos;
+										FbxAMatrix TransBoneMtx;
+										FbxAMatrix LinkBoneMtx, lClusterGlobalCurPos;
 										FbxAMatrix lRefGeometry;
-
-										FbxAMatrix lClusterRelativeInitPos, lClusterRelativeCurPosInv;
-
 
 
 										//============================================================
 										//GetTransformMatrix : 전체 메시의 Global Transform이고,
 										//모든 cluster는 정확하게 같은 TransformMatrix를 가진다.
-										pCluster->GetTransformMatrix(lRefGlobalInitPos);
+										pCluster->GetTransformMatrix(TransBoneMtx);
+										TransBoneMtx *= lRefGeometry;
 										//============================================================
 
 										//============================================================
 										//Cluster(Joint)의 변환이다. 마야에서 Joint Space -> World Space로 변하는 변환
-										pCluster->GetTransformLinkMatrix(lClusterGlobalInitPos);
+										pCluster->GetTransformLinkMatrix(LinkBoneMtx);
 										//============================================================
 
-
 										lRefGeometry = GetGeometry(pMesh->GetNode()); //대부분 단위행렬
-
-										lRefGlobalInitPos *= lRefGeometry;
 
 										//시간에 따른 EvaluateGlobalTransform
 										lClusterGlobalCurPos = GetGlobalPosition(pCluster->GetLink(), pTime, pPose);
 
-										lClusterRelativeInitPos = lClusterGlobalInitPos.Inverse() * lRefGeometry;
-										lClusterRelativeCurPosInv = lRefGlobalCurrentPos.Inverse() * lClusterGlobalCurPos;
 
-										matVertexTransform = lRefGlobalInitPos * lClusterRelativeCurPosInv * lClusterRelativeInitPos;
+										//옛날버전
+										matVertexTransform = TransBoneMtx * lClusterGlobalCurPos * LinkBoneMtx.Inverse();
+
+										//matVertexTransform = lClusterGlobalCurPos * LinkBoneMtx.Inverse() * TransBoneMtx;
 
 
 									}

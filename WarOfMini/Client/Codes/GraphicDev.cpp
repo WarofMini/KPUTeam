@@ -20,6 +20,7 @@ CGraphicDev::CGraphicDev(void)
 , m_pDynamicShaderCB(NULL)
 , m_b4xMsaaCheck(true)
 , m_usFPS(0)
+, m_bWireEnable(false)
 {
 }
 
@@ -151,10 +152,17 @@ void CGraphicDev::SetCullEnable(_bool bCullEnable)
 
 void CGraphicDev::SetWireFrame(_bool bWireEnable)
 {
-	if (bWireEnable)
+	m_bWireEnable = bWireEnable;
+
+	if (m_bWireEnable)
 		m_pContext->RSSetState(m_pWireFrameRS);
 	else
 		m_pContext->RSSetState(m_pSolidRS);
+}
+
+_bool CGraphicDev::GetWireFrame(void)
+{
+	return m_bWireEnable;
 }
 
 HRESULT CGraphicDev::Ready_GraphicDev(HWND hWnd, WINMODE eWinMode, const _ushort & wSizeX, const _ushort & wSizeY, ID3D11Device *& pGraphicDev, ID3D11DeviceContext *& pContext)

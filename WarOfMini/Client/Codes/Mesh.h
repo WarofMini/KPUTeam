@@ -44,6 +44,7 @@ protected:
 	_uint			m_uiIdxCnt;
 	VTXTEX*			m_pVtxTex;
 
+
 protected:
 	XMFLOAT3		m_vMin;
 	XMFLOAT3		m_vMax;
@@ -53,6 +54,7 @@ protected:
 public:
 	VTXTEX*			GetVtxTex(void);
 	_uint			GetVtxCnt(void);
+	CTextures*		GetTexture(void);
 };
 
 #endif // Mesh_h__

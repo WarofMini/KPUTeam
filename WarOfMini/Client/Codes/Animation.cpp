@@ -42,6 +42,12 @@ void CAnimation::UpdateSubresource(CAnimationInfo* pAnimInfo, XMFLOAT4X4* pBoneW
 			XMMATRIX matRot = XMMatrixRotationQuaternion(XMLoadFloat4(&m_vecAnimData[wCurKey][wCurFrame][iCluster].R));
 			XMMATRIX matRot2 = XMMatrixRotationQuaternion(XMLoadFloat4(&m_vecAnimData[wNextKey][wNextFrame][iCluster].R));
 
+			//XMMATRIX matRot = XMMatrixRotationQuaternion(XMQuaternionSlerp(XMLoadFloat4(&m_vecAnimData[wCurKey][wCurFrame][iCluster].R)
+			//	, XMLoadFloat4(&m_vecAnimData[wNextKey][wNextFrame][iCluster].R), fRatio));
+
+
+
+
 
 			XMMATRIX matTrans = XMMatrixTranslationFromVector(XMLoadFloat3(&m_vecAnimData[wCurKey][wCurFrame][iCluster].T));
 			XMMATRIX matTrans2 = XMMatrixTranslationFromVector(XMLoadFloat3(&m_vecAnimData[wNextKey][wNextFrame][iCluster].T));

@@ -94,6 +94,7 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 		m_pComGravity->Set_OnGround(false);
 	}
 
+
 	Collision_Field(fTimeDelta);
 	
 	CDynamicObject::Update(fTimeDelta);
@@ -248,6 +249,8 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 void CPlayer::Collision_Field(const FLOAT& fTimeDelta)
 {
 	m_pComGravity->Move_Inertia(fTimeDelta, &m_pTransform->m_vPos);//로봇 날아다닐때 쓰면 좋을듯. Add_Velocity
+
+	
 	if (m_pTransform->m_vPos.y <= 0.f)
 	{
 		m_pTransform->m_vPos.y = 0.f;
@@ -526,11 +529,10 @@ void CPlayer::UpdateDir(void)
 {
 	XMVECTOR vDir;
 
+
 	vDir = XMLoadFloat3(&m_pTransform->m_vDir);
 
-	XMVECTOR vLook = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-
-	vDir = XMVector3TransformNormal(vLook, XMLoadFloat4x4(&m_pTransform->m_matWorld));
+	vDir = XMVector3TransformNormal(XMLoadFloat3(&m_vLook), XMLoadFloat4x4(&m_pTransform->m_matWorld));
 
 	vDir = XMVector3Normalize(vDir);
 

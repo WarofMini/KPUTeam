@@ -126,6 +126,8 @@ HRESULT CStage::InitFloor(void)
 			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle = XMFLOAT3(270.f, 90.f, 0.f);
 			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale = XMFLOAT3(m_fSize, m_fSize, m_fSize);
 			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos = XMFLOAT3((j % 6) * m_iSize, 0.f, i * m_iSize);
+			
+			((CDefaultObj*)pGameObject)->ComputeCollider();
 			pLayer->Ready_Object(L"StaticObject", pGameObject);
 
 		}
@@ -163,6 +165,7 @@ HRESULT CStage::InitToiletFloor(void)
 			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale = XMFLOAT3(m_fSize, m_fSize, m_fSize);
 			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos = XMFLOAT3((j % 4) * m_iSize + 1182.f, 0.1f, i * m_iSize + 400.f);
 
+			((CDefaultObj*)pGameObject)->ComputeCollider();
 			pLayer->Ready_Object(L"StaticObject", pGameObject);
 
 		}

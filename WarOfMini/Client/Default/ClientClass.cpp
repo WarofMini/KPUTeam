@@ -195,7 +195,7 @@ void AsynchronousClientClass::InputServerIP()
 
 	cout << "\n\n\t--==** Connecting Server, Please Wait **==--\n\n\n";
 #else
-	inputServerIP_ReadtxtFile();
+	InputServerIP_ReadtxtFile();
 #endif
 }
 
