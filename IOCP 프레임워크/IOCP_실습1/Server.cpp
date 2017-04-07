@@ -180,8 +180,12 @@ void CServer::Accept_thread()
 		User->my_overapped.operation_type = OP_RECV; // 그걸 접속하자 마자 여기서 초기화 해준거야.
 		User->my_overapped.wsabuf.buf = reinterpret_cast<char*>(&User->my_overapped.IOCPbuf);
 		User->my_overapped.wsabuf.len = sizeof(User->my_overapped.IOCPbuf);
-
-
+		
+		Ser_PLAYER_DATA* m_PlayerData = new Ser_PLAYER_DATA;
+		m_PlayerData->ID = User->id;
+		m_PlayerData->size = sizeof(m_PlayerData);
+		m_PlayerData->type = INIT_CLIENT;
+		
 		// 그리고 여기서 이제 전체 클라이언트 관리하는 녀석으로 값을 넣어주잖아.ㅇㅇ
 		m_Client.push_back(move(User));
 
@@ -193,7 +197,7 @@ void CServer::Accept_thread()
 		// 바로 패킷보내주는 작업을 하는게 그냥 내 기분에 좋으니까
 		// 나도 여기라 생각했는데 밑에 Recv는 하고 받야아할것같아서 그밑에다 할려그랬는데...ㅅㅂ
 
-		SendPacket(User->id, User->Packetbuf);
+		SendPacket(m_PlayerData->ID, User->Packetbuf);
 
 		DWORD flags{ 0 };
 
@@ -445,8 +449,12 @@ void CServer::ProcessPacket(const unsigned char* buf, const unsigned int& id)	//
 
 	case INIT_CLIENT:
 	{
-		// 그러면, 여기 process packet 함수는 어디에 위치해 있냐하면
 
+
+
+		//SendPacket(m_PlayerData->ID)
+
+		// 그러면, 여기 process packet 함수는 어디에 위치해 있냐하면
 		// 그러면, 만약에 여기서 클라이언트에게 초기화 하는 코드를 보내주고 싶다고 한다면..
 		// 어떻게 해야 이 안으로 들어오겠어?
 		// 똑같은 크기로 id값을 처리 해줘야곘지 ?;;
@@ -482,9 +490,6 @@ void CServer::ProcessPacket(const unsigned char* buf, const unsigned int& id)	//
 		// 여기서 너가 클라이언트로 패킷을 보내고 싶어
 		// 한번 간단히 코드 몇줄 쳐봐
 
-		//Ser_PLAYER_DATA* m_PlayerData = new Ser_PLAYER_DATA;
-
-		//m_PlayerData = reinterpret_cast<Ser_PLAYER_DATA*>(buf[2]);
 		//
 		////id = reinterpret_cast<int>(m_PlayerData->ID);
 		// m_PlayerData->ID = id;
