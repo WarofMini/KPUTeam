@@ -75,9 +75,9 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 
 	m_pComStateMachine->Enter_State(SOLDIER_IDLE);
 
-//	m_pServer_PlayerData->vPos = m_pTransform->m_vPos;
+	//m_pServer_PlayerData->vPos = m_pTransform->m_vPos;
 
-//	g_Client.sendPacket()
+	//g_Client.sendPacket(sizeof(XMFLOAT3),INIT_CLIENT,)
 
 	return S_OK;
 }

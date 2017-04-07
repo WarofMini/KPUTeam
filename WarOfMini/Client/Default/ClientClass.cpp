@@ -266,20 +266,19 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 
 	switch (buf[1])
 	{
-
-	case TEST:
-#ifdef _DEBUG
-		cout << "Server is Running. TEST Packet Recived Successfully.\n";
-#endif //_DEBUG
-		break;
-	case KEYINPUT:
-		break;
+		//	case TEST:
+		//#ifdef _DEBUG
+		//		cout << "Server is Running. TEST Packet Recived Successfully.\n";
+		//#endif //_DEBUG
+		//		break;
+			/*case KEYINPUT:
+				break;*/
 	case INIT_CLIENT:
 	{
 		m_pPlayerData = reinterpret_cast<Ser_PLAYER_DATA*>(buf[2]);
 		id = m_pPlayerData->ID;	//첫 입장시 플레이어 id 값.
 	}
-		break;
+	break;
 	case INIT_OTHER_PLAYER:
 	{
 		int iA = 0;
@@ -306,7 +305,6 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 				pLayer->Ready_Object(L"OtherPlayer", pGameObject);
 			}
 		}
-		
 	}
 	case CLIENT_POSITION:
 		//if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
