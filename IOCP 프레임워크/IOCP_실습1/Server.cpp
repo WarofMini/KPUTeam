@@ -181,11 +181,15 @@ void CServer::Accept_thread()
 		User->my_overapped.wsabuf.buf = reinterpret_cast<char*>(&User->my_overapped.IOCPbuf);
 		User->my_overapped.wsabuf.len = sizeof(User->my_overapped.IOCPbuf);
 		
-		Ser_PLAYER_DATA* m_PlayerData = new Ser_PLAYER_DATA;
-		m_PlayerData->ID = User->id;
-		m_PlayerData->size = sizeof(m_PlayerData);
-		m_PlayerData->type = INIT_CLIENT;
+		//m_listPlayer
+		Ser_PLAYER_DATA* pPlayerTemp = new Ser_PLAYER_DATA;
+		pPlayerTemp->ID = User->id;
+		pPlayerTemp->size = sizeof(Ser_PLAYER_DATA);
+		pPlayerTemp->type = INIT_CLIENT;
+		pPlayerTemp->vPos = XMFLOAT3(20.f, 10.f, 20.f);
 		
+		m_listPlayer.push_back(pPlayerTemp);
+
 		// 그리고 여기서 이제 전체 클라이언트 관리하는 녀석으로 값을 넣어주잖아.ㅇㅇ
 		m_Client.push_back(move(User));
 
@@ -197,7 +201,18 @@ void CServer::Accept_thread()
 		// 바로 패킷보내주는 작업을 하는게 그냥 내 기분에 좋으니까
 		// 나도 여기라 생각했는데 밑에 Recv는 하고 받야아할것같아서 그밑에다 할려그랬는데...ㅅㅂ
 
-		SendPacket(m_PlayerData->ID, reinterpret_cast<Packet*>(m_PlayerData));
+		SendPacket(pPlayerTemp->ID, reinterpret_cast<Packet*>(pPlayerTemp));
+
+		list<Ser_PLAYER_DATA*>::iterator iter = m_listPlayer.begin();
+		list<Ser_PLAYER_DATA*>::iterator iter_end = m_listPlayer.end();
+
+		for (iter; iter != iter_end; ++iter)
+		{
+			if(pPlayerTemp == *iter)
+				continue;
+			(*iter)->type = INIT_OTHER_PLAYER;
+			SendPacket((*iter)->ID, reinterpret_cast<Packet*>(*iter));
+		}
 
 		DWORD flags{ 0 };
 
@@ -564,7 +579,12 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 		// a의 주소가 아니라, i_ptr 포인터 변수의 주소값을 charㅇ 로 강제 캐스팅 한거야
 
 	}
-	
+	break;
+	case CLIENT_POSITION:
+	{
+		int iA = 0;
+	}
+	break;
 	}
 	
 }

@@ -33,6 +33,8 @@ public:
 	void SendPacket(unsigned int id, const Packet* packet);
 	void ProcessPacket(const Packet* buf, const unsigned int& id);
 	
+private:
+	list<Ser_PLAYER_DATA*> m_listPlayer;
 
 public:
 	CServer();
