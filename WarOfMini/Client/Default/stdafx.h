@@ -42,14 +42,19 @@
 #include "xnacollision.h"
 
 using namespace XNA;
-///////////////////////////////////////////
+
+//피직스================================================//
+#include "PxPhysicsAPI.h"
+using namespace physx;
+//=====================================================//
+
+//==서버===============================================//
 #pragma comment(lib, "ws2_32")
 
 #include <WinSock2.h>
 
 #include <iostream>
 using namespace std;
-
 #include "Protocol.h"
 // client 통신 class
 #include<fstream>

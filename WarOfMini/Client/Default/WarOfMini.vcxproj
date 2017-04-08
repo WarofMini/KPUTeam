@@ -94,14 +94,14 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>../Headers/;../Codes/;../Bin/ShaderCode/;../ThirdParty/Vld/;../ThirdParty/FMOD/;../ThirdParty/Direct/;../ThirdParty/Font/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Headers/;../Codes/;../Bin/ShaderCode/;../ThirdParty/Vld/;../ThirdParty/FMOD/;../ThirdParty/Direct/;../ThirdParty/Font/;../ThirdParty/PhysX/Include/;../ThirdParty/PhysX/Lib/</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>dinput8.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;winmm.lib;dxgi.lib;comctl32.lib;DirectXTex.lib;libfbxsdk-md.lib;vldmtdll.lib;fmodex_vc.lib;FW1FontWrapper.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../Library/Debug/;../ThirdParty/Vld/;../ThirdParty/Direct/;../ThirdParty/FMOD/;../ThirdParty/Font/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../Library/Debug/;../ThirdParty/Vld/;../ThirdParty/Direct/;../ThirdParty/FMOD/;../ThirdParty/Font/;../ThirdParty/PhysX/Lib/</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -126,7 +126,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>../Headers/;../Codes/;../Bin/ShaderCode/;../ThirdParty/Vld/;../ThirdParty/FMOD/;../ThirdParty/Direct/;../ThirdParty/Font/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Headers/;../Codes/;../Bin/ShaderCode/;../ThirdParty/Vld/;../ThirdParty/FMOD/;../ThirdParty/Direct/;../ThirdParty/Font/;../ThirdParty/PhysX/Include/;../ThirdParty/PhysX/Lib/</AdditionalIncludeDirectories>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
@@ -136,7 +136,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>dinput8.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;winmm.lib;dxgi.lib;comctl32.lib;DirectXTex.lib;libfbxsdk-md.lib;vldmtdll.lib;fmodex_vc.lib;FW1FontWrapper.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../Library/Release/;../ThirdParty/Vld/;../ThirdParty/Direct/;../ThirdParty/FMOD/;../ThirdParty/Font/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../Library/Release/;../ThirdParty/Vld/;../ThirdParty/Direct/;../ThirdParty/FMOD/;../ThirdParty/Font/;../ThirdParty/PhysX/Lib/</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

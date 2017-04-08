@@ -21,6 +21,7 @@ public:
 	virtual void Render(void);
 	virtual void Release(void);
 
+
 private:
 	virtual HRESULT Ready_Component(void);
 
