@@ -10,6 +10,7 @@ class CCalculator;
 class CRigidBody;
 
 class CGravity;
+class CGun;
 
 class CPlayer
 	: public CDynamicObject
@@ -65,7 +66,7 @@ private:
 	XMFLOAT3		m_vLook;
 
 	XMFLOAT4X4		m_matEquipBone[2];
-	CEquipment*		m_pEquipment[2];
+	CGun*		m_pEquipment[2];
 	_int			m_iEquipBone;
 
 	//Component

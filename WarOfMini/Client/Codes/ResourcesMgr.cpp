@@ -877,6 +877,7 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 
 CResource* CResourcesMgr::Find_Resource(const _ushort& wContainerIdx, const _tchar* pResourceKey)
 {
+
 	MAPRESOURCE::iterator iter = find_if(m_pmapResource[wContainerIdx].begin()
 		, m_pmapResource[wContainerIdx].end(), CTag_Finder(pResourceKey));
 

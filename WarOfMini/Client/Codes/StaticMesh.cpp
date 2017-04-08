@@ -88,7 +88,9 @@ HRESULT CStaticMesh::Create_Buffer(const VTXTEX* pVB, const _uint& uiVtxCnt, con
 		//}
 
 		wstring wstrTexName = L"Texture_";
-		wstrTexName += pTexName;
+
+		wstrTexName += CompareTexture(pTexName);
+
 
 		if (wstrTexName != L"Texture_")
 			m_pTexture = dynamic_cast<CTextures*>(CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, wstrTexName.c_str()));
@@ -114,17 +116,20 @@ CResource* CStaticMesh::Clone_Resource(void)
 	return pMesh;
 }
 
-void CStaticMesh::Render(_bool bColliderDraw)
+void CStaticMesh::Render(_uint uiTextureNumber, _bool bColliderDraw)
 {
+	
+		m_iTextureNumber = uiTextureNumber;
 
 		_uint uiStride = sizeof(VTXTEX);
 		_uint uiOffset = 0;
 
 		if (m_uiVtxCnt != 0)
 		{
+			
 			// Texture
 			if (m_pTexture) 
-				m_pTexture->Render(0, 0);
+				m_pTexture->Render(0, m_iTextureNumber);
 
 			// Mesh
 			m_pContext->IASetVertexBuffers(0, 1, &m_pVB, &uiStride, &uiOffset);
@@ -158,7 +163,7 @@ void CStaticMesh::Render(_bool bColliderDraw)
 
 
 	for (_uint uiSize = 0; uiSize < m_vecChild.size(); ++uiSize)
-		m_vecChild[uiSize]->Render(bColliderDraw);
+		m_vecChild[uiSize]->Render(uiTextureNumber, bColliderDraw);
 }
 
 void CStaticMesh::RenderInst(const vector<XMFLOAT4X4*>& vecObjWorld)
@@ -184,7 +189,7 @@ void CStaticMesh::RenderInst(const vector<XMFLOAT4X4*>& vecObjWorld)
 
 		//Texture
 		if (m_pTexture) 
-			m_pTexture->Render(0, 0);
+			m_pTexture->Render(0, m_iTextureNumber);
 
 		// Mesh
 		m_pContext->IASetVertexBuffers(0, 1, &m_pVB, &uiStride, &uiOffset);

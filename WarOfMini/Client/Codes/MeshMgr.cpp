@@ -59,7 +59,7 @@ void CMeshMgr::Ready_MeshMgr(MESHDATA* pMeshData)
 	m_vecMeshData.push_back(pMeshData);
 }
 
-void CMeshMgr::Render_MeshMgr(_uint uiObjNum, _bool bColliderDraw)
+void CMeshMgr::Render_MeshMgr(_uint uiObjNum, _uint uiTextureNumber, _bool bColliderDraw)
 {
 	if (m_vecMeshData[uiObjNum]->bBillboard)
 		CGraphicDev::GetInstance()->SetCullEnable(FALSE);
@@ -67,7 +67,7 @@ void CMeshMgr::Render_MeshMgr(_uint uiObjNum, _bool bColliderDraw)
 	if (m_vecMeshData[uiObjNum]->bAlpha)
 		CGraphicDev::GetInstance()->SetAlphaEnable(TRUE);
 
-	m_vecMeshData[uiObjNum]->pMesh->Render(bColliderDraw);
+	m_vecMeshData[uiObjNum]->pMesh->Render(uiTextureNumber, bColliderDraw);
 
 	if (m_vecMeshData[uiObjNum]->bBillboard)
 		CGraphicDev::GetInstance()->SetCullEnable(TRUE);
@@ -76,10 +76,10 @@ void CMeshMgr::Render_MeshMgr(_uint uiObjNum, _bool bColliderDraw)
 		CGraphicDev::GetInstance()->SetAlphaEnable(FALSE);
 }
 
-void CMeshMgr::RenderAnim_MeshMgr(_uint uiObjNum, CAnimationInfo* pAnimInfo, MATNODE* pMatNode, _ubyte byColor /*=0*/, _bool bColliderDraw /*= FALSE*/)
+void CMeshMgr::RenderAnim_MeshMgr(_uint uiObjNum, CAnimationInfo* pAnimInfo, MATNODE* pMatNode, _uint uiTextureNumber, _ubyte byColor /*=0*/, _bool bColliderDraw /*= FALSE*/)
 {
 	if (dynamic_cast<CDynaicMesh*>(m_vecMeshData[uiObjNum]->pMesh))
-		dynamic_cast<CDynaicMesh*>(m_vecMeshData[uiObjNum]->pMesh)->RenderAnim(pAnimInfo, pMatNode, byColor, bColliderDraw);
+		dynamic_cast<CDynaicMesh*>(m_vecMeshData[uiObjNum]->pMesh)->RenderAnim(pAnimInfo, pMatNode, uiTextureNumber, byColor, bColliderDraw);
 }
 
 void CMeshMgr::RenderInst_MeshMgr(_uint uiObjNum, const vector<XMFLOAT4X4*>& vecObjWorld)

@@ -15,7 +15,9 @@ protected:
 protected:
 	typedef map<const _tchar*, CComponent*>		MAPCOMPONENT;
 	MAPCOMPONENT								m_mapComponent;
-	Ser_PLAYER_DATA*			m_pServer_PlayerData;
+	Ser_PLAYER_DATA*							m_pServer_PlayerData;
+	//텍스쳐 번호
+	_int										m_iTextureNumber;
 
 
 protected:
@@ -42,6 +44,11 @@ public:
 
 public:
 	virtual void Release(void);
+
+public:
+	//객체의 텍스쳐를 바꿔주는 함수(요걸로 각각의 객체의 텍스쳐를 바꿔줄수 있다.)
+	void	Set_TextureNumber(_uint uiTextureNum);
+	_uint	Get_TextureNumber(void);
 };
 
 #endif

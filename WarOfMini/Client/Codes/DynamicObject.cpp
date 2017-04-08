@@ -67,7 +67,7 @@ void CDynamicObject::Render(void)
 	m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_DynamicMesh"), NULL, 0);
 	m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
 
-	CMeshMgr::GetInstance()->RenderAnim_MeshMgr(m_uiObjNum, m_pAnimInfo, m_pMatBoneNode, m_byColor, FALSE);
+	CMeshMgr::GetInstance()->RenderAnim_MeshMgr(m_uiObjNum, m_pAnimInfo, m_pMatBoneNode, m_iTextureNumber, m_byColor, FALSE);
 }
 
 void CDynamicObject::Release(void)

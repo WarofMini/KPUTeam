@@ -20,8 +20,8 @@ public:
 
 public:
 	virtual CResource* Clone_Resource(void);
-	virtual void Render(_bool bColliderDraw = FALSE);
-	void RenderAnim(CAnimationInfo* pAnimInfo, MATNODE* pMatNode, _ubyte byColor = 0, _bool bColliderDraw = FALSE);
+	virtual void Render(_uint uiTextureNumber, _bool bColliderDraw = FALSE);
+	void RenderAnim(CAnimationInfo* pAnimInfo, MATNODE* pMatNode, _uint uiTextureNumber, _ubyte byColor = 0, _bool bColliderDraw = FALSE);
 	virtual void RenderInst(const vector<XMFLOAT4X4*>& vecObjWorld);
 	virtual void Release(void);
 

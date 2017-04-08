@@ -76,7 +76,7 @@ void CDefaultObj::Render(void)
 	m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
 
 
-	CMeshMgr::GetInstance()->Render_MeshMgr(m_uiObjNum, TRUE);
+	CMeshMgr::GetInstance()->Render_MeshMgr(m_uiObjNum, m_iTextureNumber, FALSE);
 
 
 	//if (m_pSphereMesh != NULL && g_bCollisionDraw)

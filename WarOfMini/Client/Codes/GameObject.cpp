@@ -5,6 +5,7 @@
 CGameObject::CGameObject(ID3D11DeviceContext * pContext)
 : m_pContext(pContext)
 , m_pServer_PlayerData(NULL)
+, m_iTextureNumber(0)
 {
 }
 
@@ -55,4 +56,14 @@ void CGameObject::Release(void)
 	m_mapComponent.clear();
 
 	Safe_Delete(m_pServer_PlayerData);
+}
+
+void CGameObject::Set_TextureNumber(_uint uiTextureNum)
+{
+	m_iTextureNumber = uiTextureNum;
+}
+
+_uint CGameObject::Get_TextureNumber(void)
+{
+	return m_iTextureNumber;
 }

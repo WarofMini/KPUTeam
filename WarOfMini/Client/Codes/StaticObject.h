@@ -25,6 +25,7 @@ protected:
 protected:
 	CTransform*		m_pTransform;
 	_uint			m_uiObjNum;
+
 };
 
 

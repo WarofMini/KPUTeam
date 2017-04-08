@@ -1,5 +1,4 @@
-MachineGun-png-0
-MachineGun1-png-0
-marauder_diffuse-png-0
+MachineGun-png-2
+SoldierTexture-png-2
 FutureSoldier_01_albedo-tga-0
 PulseGun_01_albedo-tga-0

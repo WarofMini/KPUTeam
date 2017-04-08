@@ -14,6 +14,7 @@ CMesh::CMesh(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
 , m_pBBoxVB(NULL)
 , m_pBBoxIB(NULL)
 , m_pVtxTex(NULL)
+, m_iTextureNumber(0)
 {
 }
 
@@ -132,4 +133,34 @@ _uint CMesh::GetVtxCnt(void)
 CTextures* CMesh::GetTexture(void)
 {
 	return m_pTexture;
+}
+
+void CMesh::SetMesh_TextureNumber(_uint iNumber)
+{
+	for (_uint uiSize = 0; uiSize < m_vecChild.size(); ++uiSize)
+		m_vecChild[uiSize]->m_iTextureNumber = iNumber;
+}
+
+_uint CMesh::GetMesh_TextureNumber(void)
+{
+	return m_vecChild[0]->m_iTextureNumber;
+}
+
+//n개 텍스쳐 구분하기위한 함수
+std::wstring CMesh::CompareTexture(_tchar* pTexName)
+{
+	wstring Number = L"0123456789";
+	wstring AddTex = pTexName;
+
+
+	wstring Temp(AddTex, AddTex.size() - 1, AddTex.size()); //메시의 텍스쳐이름의 마지막 문자열 저장
+
+
+	if (Number.find(Temp, 0) != -1) // 0~9까지 값이 있다면
+	{
+		AddTex.erase(AddTex.size() - 1);
+		m_iTextureNumber = _wtoi(Temp.c_str());
+	}
+
+	return AddTex;
 }

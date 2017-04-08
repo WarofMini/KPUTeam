@@ -25,7 +25,7 @@ public:
 
 public:
 	virtual CResource* Clone_Resource(void) PURE;
-	virtual void Render(_bool bColliderDraw = FALSE) PURE;
+	virtual void Render(_uint uiTextureNumber, _bool bColliderDraw = FALSE) PURE;
 	virtual void RenderInst(const vector<XMFLOAT4X4*>& vecObjWorld) PURE;
 	virtual void Release(void);
 
@@ -50,11 +50,18 @@ protected:
 	XMFLOAT3		m_vMax;
 	ID3D11Buffer*	m_pBBoxVB;
 	ID3D11Buffer*	m_pBBoxIB;
-
+	//텍스쳐 번호
+	_uint			m_iTextureNumber;
 public:
 	VTXTEX*			GetVtxTex(void);
 	_uint			GetVtxCnt(void);
 	CTextures*		GetTexture(void);
+
+	void			SetMesh_TextureNumber(_uint iNumber);
+	_uint			GetMesh_TextureNumber(void);
+
+	//n개 텍스쳐를 구분해주기 위한 함수
+	wstring			CompareTexture(_tchar* pTexName);
 };
 
 #endif // Mesh_h__

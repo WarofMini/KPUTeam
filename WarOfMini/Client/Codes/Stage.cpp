@@ -46,6 +46,7 @@ HRESULT CStage::Ready_Scene(void)
 
 _int CStage::Update(const _float& fTimeDelta)
 {
+
 	CScene::Update(fTimeDelta);
 	CCameraMgr::GetInstance()->Update_CurCamera(fTimeDelta);
 
@@ -62,6 +63,7 @@ HRESULT CStage::Ready_GameLogic(void)
 	pGameObject = CPlayer::Create(m_pGraphicDev, m_pContext);
 	if (NULL == pGameObject) return E_FAIL;
 	pLayer->Ready_Object(L"Player", pGameObject);
+
 
 	//g_Client.sendPacket(sizeof(CLayer), INIT_CLIENT, reinterpret_cast<BYTE*>(pGameObject->GetPacketData()->ID));
 

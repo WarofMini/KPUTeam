@@ -54,7 +54,8 @@ void CStaticObject::Render(void)
 		m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_Default"), NULL, 0);
 		m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
 
-		CMeshMgr::GetInstance()->Render_MeshMgr(m_uiObjNum, FALSE);
+
+		CMeshMgr::GetInstance()->Render_MeshMgr(m_uiObjNum, m_iTextureNumber, FALSE);
 	}
 
 	else
@@ -79,7 +80,8 @@ void CStaticObject::Render(void)
 		m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_Normal"), NULL, 0);
 		m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
 
-		CMeshMgr::GetInstance()->Render_MeshMgr(m_uiObjNum, FALSE);
+
+		CMeshMgr::GetInstance()->Render_MeshMgr(m_uiObjNum, m_iTextureNumber, FALSE);
 	}
 }
 

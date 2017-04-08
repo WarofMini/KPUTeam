@@ -2,6 +2,7 @@
 #include "Gun.h"
 #include "Transform.h"
 #include "Management.h"
+#include "MeshMgr.h"
 
 CGun::CGun(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
 : CEquipment(pContext)
@@ -40,6 +41,7 @@ HRESULT CGun::Initialize(void)
 
 INT CGun::Update(const FLOAT& fTimeDelta)
 {
+
 	CEquipment::Update(fTimeDelta);
 	XMStoreFloat4x4(&m_pTransform->m_matWorld, XMLoadFloat4x4(&m_pTransform->m_matWorld) * XMLoadFloat4x4(&m_matParent));
 
@@ -78,6 +80,7 @@ HRESULT CGun::Ready_Component(void)
 
 	return S_OK;
 }
+
 
 const XMFLOAT4X4* CGun::Get_WorldPointer(void)
 {
