@@ -168,7 +168,10 @@ bool CSoldierMove::MoveKeyCheck_Iron(void)
 		if (m_pInput->Get_DIKeyState(DIK_LSHIFT))
 		{
 			if (*m_pAniIdx != PLAYER_Iron_Sprint)
+			{
 				m_pSoldier->PlayAnimation(PLAYER_Iron_Sprint);
+				m_pSoldier->Set_Fire(false);
+			}
 		}
 		else
 		{
@@ -340,6 +343,8 @@ void CSoldierMove::ShootCheck(void)
 {
 	if (m_pSoldier->IsSoldier())
 	{
+		if (*m_pAniIdx == PLAYER_sprint)
+			return;
 		if (m_bShoot)
 		{
 			m_pSoldier->Set_Fire(true);
@@ -381,6 +386,8 @@ void CSoldierMove::ShootCheck(void)
 	}
 	else
 	{
+		if (*m_pAniIdx == PLAYER_Iron_Sprint)
+			return;
 		if (m_bShoot)
 		{
 			m_pSoldier->Set_Fire(true);
