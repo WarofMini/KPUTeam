@@ -30,8 +30,8 @@ public:
 	void Worker_thread();
 	
 	void Initialize(void);
-	void SendPacket(unsigned int id, const unsigned char* packet);
-	void ProcessPacket(const unsigned char* buf, const unsigned int& id);
+	void SendPacket(unsigned int id, const Packet* packet);
+	void ProcessPacket(const Packet* buf, const unsigned int& id);
 	
 
 public:

@@ -23,10 +23,10 @@ using namespace std;
 #define OP_SEND 2
 
 
-const DWORD KEY_UP		= 0x00000000;
-const DWORD KEY_DOWN	= 0x00000001;
-const DWORD KEY_LEFT	= 0x00000002;
-const DWORD KEY_RIGHT	= 0x00000004;
+//const DWORD KEY_UP		= 0x00000000;
+//const DWORD KEY_DOWN	= 0x00000001;
+//const DWORD KEY_LEFT	= 0x00000002;
+//const DWORD KEY_RIGHT	= 0x00000004;
 
 struct Overlap_ex
 {
@@ -89,3 +89,4 @@ struct Packet_remove_Player
 	WORD id;
 };
 
+using Packet = unsigned char;

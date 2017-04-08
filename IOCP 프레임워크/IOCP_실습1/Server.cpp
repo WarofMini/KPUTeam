@@ -197,7 +197,7 @@ void CServer::Accept_thread()
 		// 바로 패킷보내주는 작업을 하는게 그냥 내 기분에 좋으니까
 		// 나도 여기라 생각했는데 밑에 Recv는 하고 받야아할것같아서 그밑에다 할려그랬는데...ㅅㅂ
 
-		SendPacket(m_PlayerData->ID, User->Packetbuf);
+		SendPacket(m_PlayerData->ID, reinterpret_cast<Packet*>(m_PlayerData));
 
 		DWORD flags{ 0 };
 
@@ -373,7 +373,7 @@ void CServer::Worker_thread()
 
 
 }
-void CServer::SendPacket(unsigned int id, const unsigned char* packet)
+void CServer::SendPacket(unsigned int id, const Packet* packet)
 {	
 	Overlap_ex* overlap = new Overlap_ex;
 	//unsigned char* packetTemp = packet;
@@ -383,9 +383,10 @@ void CServer::SendPacket(unsigned int id, const unsigned char* packet)
 	// 현재 이놈 overlap 으로 내가 (서버가) 패킷을 보내는 것이다
 	// 하고 값을 적어주고 
 	overlap->operation_type = OP_SEND;
+	memcpy(overlap->IOCPbuf, packet, packet[0]);
+
 	overlap->wsabuf.buf = reinterpret_cast<char*>(overlap->IOCPbuf);
 	overlap->wsabuf.len = packet[0];
-	memcpy(overlap->IOCPbuf, packet, packet[0]);
 
 	DWORD flags{ 0 };
 
@@ -429,7 +430,7 @@ void CServer::SendPacket(unsigned int id, const unsigned char* packet)
 
 // 수신한 패킷을 잘 조립해서 끝냈으니, 이제 여기서 클라이언트가 보낸 값을 잘 읽기만 하고
 // 그 읽은값에 맞춰서 잘 데이터를 처리하는 공간인거야.
-void CServer::ProcessPacket(const unsigned char* buf, const unsigned int& id)	//근데 얘가 꼭 const인 이유가 있나 ?
+void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘가 꼭 const인 이유가 있나 ?
 {
 
 	//unsigned char m_sendbuf[256]{ 0 };
@@ -449,9 +450,6 @@ void CServer::ProcessPacket(const unsigned char* buf, const unsigned int& id)	//
 
 	case INIT_CLIENT:
 	{
-
-
-
 		//SendPacket(m_PlayerData->ID)
 
 		// 그러면, 여기 process packet 함수는 어디에 위치해 있냐하면
