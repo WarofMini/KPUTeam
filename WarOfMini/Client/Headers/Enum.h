@@ -31,16 +31,16 @@ enum ANIPLAYER {
 	, PLAYER_sprint
 	, PLAYER_Runback
 	, PLAYER_RunForward
-	, PLAYER_RunLeft
 	, PLAYER_RunRight
+	, PLAYER_RunLeft
 	, PLAYER_Jump				//이거 안쓰고	in loop out
 	, PLAYER_JumpIn
 	, PLAYER_JumpLoop
 	, PLAYER_JumpOut
 	, PLAYER_RollBack
 	, PLAYER_RollFront
-	, PLAYER_RollLeft
 	, PLAYER_RollRight
+	, PLAYER_RollLeft
 	, PLAYER_Damage
 	, PLAYER_Reload
 	, PLAYER_Shoot
@@ -50,8 +50,8 @@ enum ANIPLAYER {
 	, PLAYER_GetCoverOut//
 	, PLAYER_RunForwardShoot
 	, PLAYER_RunBackShoot
-	, PLAYER_RunLeftShoot
 	, PLAYER_RunRightShoot
+	, PLAYER_RunLeftShoot
 	, PLAYER_JumpAndShoot		//이거 안쓰고	in loop out
 	, PLAYER_JumpAndShootIn
 	, PLAYER_JumpAndShootLoop
@@ -63,20 +63,20 @@ enum ANIPLAYER {
 	, PLAYER_LyingShoot
 	, PLAYER_CrawlingFront
 	, PLAYER_CrawlingBack
-	, PLAYER_CrawlingLeft
 	, PLAYER_CrawlingRight
+	, PLAYER_CrawlingLeft
 	, PLAYER_END
 };
 
 enum ANIPLAYER_Iron {
 	PLAYER_Iron_RunForward
-	, PLAYER_Iron_RunLeft
 	, PLAYER_Iron_RunRight
+	, PLAYER_Iron_RunLeft
 	, PLAYER_Iron_RunBack
 	, PLAYER_Iron_Sprint
 	, PLAYER_Iron_RunForwardShoot
-	, PLAYER_Iron_RunLeftShoot
 	, PLAYER_Iron_RunRightShoot
+	, PLAYER_Iron_RunLeftShoot
 	, PLAYER_Iron_RunBackShoot
 	, PLAYER_Iron_Idle
 	, PLAYER_Iron_Idle2
@@ -89,15 +89,15 @@ enum ANIPLAYER_Iron {
 	, PLAYER_Iron_ShootFromCover
 	, PLAYER_Iron_RollFront
 	, PLAYER_Iron_RollBack
-	, PLAYER_Iron_RollLeft
 	, PLAYER_Iron_RollRight
+	, PLAYER_Iron_RollLeft
 	, PLAYER_Iron_DownLying
 	, PLAYER_Iron_Lying
 	, PLAYER_Iron_LyingShoot
 	, PLAYER_Iron_CrawlingReady
 	, PLAYER_Iron_CrawlingFront
-	, PLAYER_Iron_CrawlingLeft
 	, PLAYER_Iron_CrawlingRight
+	, PLAYER_Iron_CrawlingLeft
 	, PLAYER_Iron_CrawlingBack
 	, PLAYER_Iron_StandUp
 	, PLAYER_Iron_ReLoad

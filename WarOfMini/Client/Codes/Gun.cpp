@@ -8,6 +8,7 @@ CGun::CGun(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
 : CEquipment(pContext)
 , m_pGraphicDev(pGraphicDev)
 , m_fScale(0.4f)
+, m_iAmmo(60)
 {
 }
 
@@ -71,6 +72,21 @@ void CGun::ChangeWeapon(_uint uiObjNum)
 		m_pTransform->m_vPos = XMFLOAT3(-18.87f, -14.0603f, 9.62835f);
 		m_pTransform->m_vAngle = XMFLOAT3(140.575f, -25.445f, -160.962f);
 	}
+}
+
+_uint CGun::Fire(void)
+{
+	if (m_iAmmo == 0)
+		return m_iAmmo;
+	--m_iAmmo;
+	cout << m_iAmmo << endl;
+
+	return m_iAmmo;
+}
+
+void CGun::Reload(void)
+{
+	m_iAmmo = 60;
 }
 
 HRESULT CGun::Ready_Component(void)

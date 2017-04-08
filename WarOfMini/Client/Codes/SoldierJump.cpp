@@ -16,16 +16,25 @@ CSoldierJump::~CSoldierJump()
 
 int CSoldierJump::InState()
 {
-	m_bShoot = m_pInput->Get_DIMouseState(CInput::DIM_LB);
+	if (m_pSoldier->IsAbleReload())
+		m_bShoot = false;
+	else
+		m_bShoot = m_pInput->Get_DIMouseState(CInput::DIM_LB);
 
 	if (m_pSoldier->IsSoldier())
 	{
 		if (*m_pSoldier->Get_AniIdx() == PLAYER_JumpIn && m_pSoldier->Check_AnimationFrame())
 		{
 			if (m_bShoot)
+			{
 				m_pSoldier->PlayAnimation(PLAYER_JumpAndShootLoop);
+				m_pSoldier->Set_Fire(true);
+			}
 			else
+			{
 				m_pSoldier->PlayAnimation(PLAYER_JumpLoop);
+				m_pSoldier->Set_Fire(false);
+			}
 			return 0;
 		}
 	}
@@ -34,6 +43,8 @@ int CSoldierJump::InState()
 		if (*m_pSoldier->Get_AniIdx() == PLAYER_Iron_JumpandShootIn && m_pSoldier->Check_AnimationFrame())
 		{
 			m_pSoldier->PlayAnimation(PLAYER_Iron_JumpandShootLoop);
+			if (m_bShoot)	m_pSoldier->Set_Fire(true);
+			else			m_pSoldier->Set_Fire(false);
 			return 0;
 		}
 	}
@@ -43,7 +54,10 @@ int CSoldierJump::InState()
 
 int CSoldierJump::OnState()
 {
-	m_bShoot = m_pInput->Get_DIMouseState(CInput::DIM_LB);
+	if (m_pSoldier->IsAbleReload())
+		m_bShoot = false;
+	else
+		m_bShoot = m_pInput->Get_DIMouseState(CInput::DIM_LB);
 
 	if(m_pSoldier->IsSoldier())
 		LoopJump(m_bShoot);
@@ -51,6 +65,8 @@ int CSoldierJump::OnState()
 	{
 		if (m_pInput->Get_DIKeyState(DIK_SPACE) && !m_pSoldier->IsOnGround())
 			m_pSoldier->Soldier_Iron_AddVelocity(200.f);
+		if (m_bShoot)	m_pSoldier->Set_Fire(true);
+		else			m_pSoldier->Set_Fire(false);
 	}
 
 	if (EndJump())
@@ -84,12 +100,18 @@ void CSoldierJump::LoopJump(bool bShoot)
 	if (bShoot)
 	{
 		if (*m_pAniIdx == PLAYER_JumpLoop)
+		{
 			m_pSoldier->PlayAnimation(PLAYER_JumpAndShootLoop);
+			m_pSoldier->Set_Fire(true);
+		}
 	}
 	else
 	{
 		if (*m_pAniIdx == PLAYER_JumpAndShootLoop)
+		{
 			m_pSoldier->PlayAnimation(PLAYER_JumpLoop);
+			m_pSoldier->Set_Fire(false);
+		}
 	}
 }
 
@@ -97,6 +119,7 @@ bool CSoldierJump::EndJump(void)
 {
 	if (m_pSoldier->IsOnGround())
 	{
+		m_pSoldier->Set_Fire(false);
 		if(m_pSoldier->IsSoldier())
 			m_pSoldier->PlayAnimation(PLAYER_JumpOut);
 		else

@@ -16,13 +16,19 @@ CSoldierLying::~CSoldierLying()
 
 int CSoldierLying::InState()
 {
-	m_bShoot = m_pInput->Get_DIMouseState(CInput::DIM_LB);
+	if (m_pSoldier->IsAbleReload())
+		m_bShoot = false;
+	else
+		m_bShoot = m_pInput->Get_DIMouseState(CInput::DIM_LB);
 	return 0;
 }
 
 int CSoldierLying::OnState()
 {
-	m_bShoot = m_pInput->Get_DIMouseState(CInput::DIM_LB);
+	if (m_pSoldier->IsAbleReload())
+		m_bShoot = false;
+	else
+		m_bShoot = m_pInput->Get_DIMouseState(CInput::DIM_LB);
 	m_bIsLying = m_pInput->Get_DIKeyState(DIK_LCONTROL);
 
 	if (ISLying())
@@ -47,17 +53,29 @@ bool CSoldierLying::ISLying(void)
 		if (m_pSoldier->IsSoldier())
 		{
 			if (m_bShoot)
+			{
 				m_pSoldier->PlayAnimation(PLAYER_Shoot);
+				m_pSoldier->Set_Fire(true);
+			}
 			else
+			{
 				m_pSoldier->PlayAnimation(PLAYER_idle);
+				m_pSoldier->Set_Fire(false);
+			}
 			*(m_pSoldier->Get_State()) = CPlayer::SOLDIER_IDLE;
 		}
 		else
 		{
 			if (m_bShoot)
+			{
 				m_pSoldier->PlayAnimation(PLAYER_Iron_Shoot);
+				m_pSoldier->Set_Fire(true);
+			}
 			else
+			{
 				m_pSoldier->PlayAnimation(PLAYER_Iron_Idle);
+				m_pSoldier->Set_Fire(false);
+			}
 			*(m_pSoldier->Get_State()) = CPlayer::SOLDIER_IDLE;
 		}
 		return true;
@@ -149,10 +167,12 @@ void CSoldierLying::ShootCheck(void)
 		if (m_bShoot && *m_pAniIdx != PLAYER_LyingShoot)
 		{
 			m_pSoldier->PlayAnimation(PLAYER_LyingShoot);
+			m_pSoldier->Set_Fire(true);
 		}
 		else if (!m_bShoot && *m_pAniIdx == PLAYER_LyingShoot)
 		{
 			m_pSoldier->PlayAnimation(PLAYER_Lying);
+			m_pSoldier->Set_Fire(false);
 		}
 	}
 	else
@@ -160,10 +180,12 @@ void CSoldierLying::ShootCheck(void)
 		if (m_bShoot && *m_pAniIdx != PLAYER_Iron_LyingShoot)
 		{
 			m_pSoldier->PlayAnimation(PLAYER_Iron_LyingShoot);
+			m_pSoldier->Set_Fire(true);
 		}
 		else if (!m_bShoot && *m_pAniIdx == PLAYER_Iron_LyingShoot)
 		{
 			m_pSoldier->PlayAnimation(PLAYER_Iron_Lying);
+			m_pSoldier->Set_Fire(false);
 		}
 	}
 }

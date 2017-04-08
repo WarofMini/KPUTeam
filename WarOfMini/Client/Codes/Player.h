@@ -42,18 +42,22 @@ private:
 	void		KeyState(const FLOAT& fTimeDelta);
 	void		Soldier_Move(const FLOAT& fTimeDelta);
 	void		Soldier_Iron_Move(const FLOAT& fTimeDelta);
+	void		Soldier_Fire(const FLOAT& fTimeDelta);
 
 public:
 	CInput*		GetInput(void) { return m_pInput; }
 	void		PlayAnimation(DWORD dwAniIdx, bool bImmediate = true);
 	DWORD*		Get_State(void) { return &m_dwState; }
 	DWORD*		Get_AniIdx(void) { return &m_dwAniIdx; }
-	bool		Check_AnimationFrame(void);
-	bool		IsOnGround(void);
+	_bool		Check_AnimationFrame(void);
+	_bool		IsOnGround(void);
 	MOVE_DIR*	GetMoveDir(void);
 	void		SoldierChange(void);
-	bool		IsSoldier(void) { return m_bIsSoldier; }
+	_bool		IsSoldier(void) { return m_bIsSoldier; }
 	void		Soldier_Iron_AddVelocity(float fFallVel);
+	void		Set_Fire(_bool bFire) { m_bFire = bFire; }
+	_bool		IsAbleReload(void) { return m_bAbleReload; }
+	void		Reload(void);
 
 public:
 	void		UpdateDir(void);
@@ -88,6 +92,11 @@ private:
 	MATNODE*		m_pMatBoneNode_Iron;
 	_uint			m_uiObjNum_Normal;
 	_uint			m_uiObjNum_Iron;
+	FLOAT			m_fRollSpeed;
+	XMFLOAT3		m_fRollDir;
+	FLOAT			m_fRateOfFire;
+	_bool			m_bFire;
+	_bool			m_bAbleReload;
 
 //중력 & 충돌체크
 	CCalculator*	m_pCalculator;

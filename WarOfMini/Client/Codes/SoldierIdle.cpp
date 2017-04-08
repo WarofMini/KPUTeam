@@ -17,14 +17,20 @@ CSoldierIdle::~CSoldierIdle()
 
 int CSoldierIdle::InState()
 {
-	m_bShoot = m_pInput->Get_DIMouseState(CInput::DIM_LB);
+	if (m_pSoldier->IsAbleReload())
+		m_bShoot = false;
+	else
+		m_bShoot = m_pInput->Get_DIMouseState(CInput::DIM_LB);
 
 	return 0;
 }
 
 int CSoldierIdle::OnState()
 {
-	m_bShoot = m_pInput->Get_DIMouseState(CInput::DIM_LB);
+	if (m_pSoldier->IsAbleReload())
+		m_bShoot = false;
+	else
+		m_bShoot = m_pInput->Get_DIMouseState(CInput::DIM_LB);
 
 	ShootCheck();
 
@@ -73,16 +79,21 @@ void CSoldierIdle::ShootCheck(void)
 		if (*m_pAniIdx == PLAYER_Reload)
 		{
 			if (m_pSoldier->Check_AnimationFrame())
+			{
+				m_pSoldier->Reload();
 				m_pSoldier->PlayAnimation(PLAYER_idle);
+			}
 		}
 
 		if (m_bShoot && *m_pAniIdx != PLAYER_Shoot)
 		{
 			m_pSoldier->PlayAnimation(PLAYER_Shoot);
+			m_pSoldier->Set_Fire(true);
 		}
 		else if (!m_bShoot && *m_pAniIdx == PLAYER_Shoot)
 		{
 			m_pSoldier->PlayAnimation(PLAYER_idle);
+			m_pSoldier->Set_Fire(false);
 		}
 	}
 	else
@@ -94,16 +105,21 @@ void CSoldierIdle::ShootCheck(void)
 		if (*m_pAniIdx == PLAYER_Iron_ReLoad)
 		{
 			if (m_pSoldier->Check_AnimationFrame())
+			{
+				m_pSoldier->Reload();
 				m_pSoldier->PlayAnimation(PLAYER_Iron_Idle);
+			}
 		}
 
 		if (m_bShoot && *m_pAniIdx != PLAYER_Iron_Shoot)
 		{
 			m_pSoldier->PlayAnimation(PLAYER_Iron_Shoot);
+			m_pSoldier->Set_Fire(true);
 		}
 		else if (!m_bShoot && *m_pAniIdx == PLAYER_Iron_Shoot)
 		{
 			m_pSoldier->PlayAnimation(PLAYER_Iron_Idle);
+			m_pSoldier->Set_Fire(false);
 		}
 	}
 }

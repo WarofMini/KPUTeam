@@ -31,6 +31,10 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 	, m_bIsSoldier(true)
 	, m_fTimeDelta(0.f)
 	, m_iEquipBone(0)
+	, m_fRollSpeed(0.f)
+	, m_fRateOfFire(0.f)
+	, m_bFire(false)
+	, m_bAbleReload(false)
 {
 	m_pInput = CInput::GetInstance();
 	m_vLook = XMFLOAT3(0.f, 1.f, 0.f);
@@ -91,10 +95,6 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 
 INT CPlayer::Update(const FLOAT& fTimeDelta)
 {
-	if (m_pInput->GetDIKeyStateOnce(DIK_MINUS))
-	{
-		++m_iEquipBone;
-	}
 	m_fTimeDelta = fTimeDelta;
 
 	Collision_Field(fTimeDelta);
@@ -121,6 +121,7 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 
 	return 0;
 }
+
 void CPlayer::Release(void)
 {
 	CDynamicObject::Release();
@@ -166,7 +167,6 @@ void CPlayer::Update_Equipment(const FLOAT& fTimeDelta)
 
 	XMMATRIX matWorld = XMLoadFloat4x4(&m_pTransform->m_matWorld);
 	XMStoreFloat4x4(&m_matEquipBone[0], XMLoadFloat4x4(&m_matEquipBone[0]) * matWorld);
-
 	m_pEquipment[0]->SetParent(m_matEquipBone[0]);
 	m_pEquipment[0]->Update(fTimeDelta);
 }
@@ -217,7 +217,12 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 		if (m_dwState == SOLDIER_IDLE)
  			m_pComStateMachine->Enter_State(SOLDIER_IDLE);
 		if (m_dwState == SOLDIER_ROLL)
+		{
 			m_pComStateMachine->Enter_State(SOLDIER_ROLL);
+			m_pComGravity->Set_LandOff(30.f);				// 일단 이렇게
+			m_fRollSpeed = m_fSpeed * 2.f;
+			m_fRollDir = m_vMoveDir;
+		}
 		if (m_dwState == SOLDIER_JUMP)
 		{
 			m_pComStateMachine->Enter_State(SOLDIER_JUMP);
@@ -397,7 +402,7 @@ MOVE_DIR* CPlayer::GetMoveDir(void)
 }
 
 void CPlayer::SoldierChange(void)
-{
+{//처음에 좆같은거는 어떻게?
 	if (m_bIsSoldier)
 	{
 		m_bIsSoldier = false;
@@ -418,6 +423,7 @@ void CPlayer::SoldierChange(void)
 		((CGun*)m_pEquipment[0])->ChangeWeapon(MESHNUM_GUN);
 		m_iEquipBone = 0;
 	}
+	m_pAnimInfo->Update(1.f);
 }
 
 void CPlayer::KeyCheck(void)
@@ -520,17 +526,19 @@ void CPlayer::KeyState(const FLOAT& fTimeDelta)
 		Soldier_Move(fTimeDelta);
 	else
 		Soldier_Iron_Move(fTimeDelta);
+	Soldier_Fire(fTimeDelta);
 }
 
 void CPlayer::Soldier_Move(const FLOAT& fTimeDelta)
 {
 	m_fSpeed = 50.f;
-	XMVECTOR vDir = XMLoadFloat3(&m_vMoveDir);
+	XMVECTOR vDir;// = XMLoadFloat3(&m_vMoveDir);
 	XMVECTOR vPos = XMLoadFloat3(&m_pTransform->m_vPos);
 
 	switch (m_dwState)
 	{
 	case SOLDIER_MOVE:
+		vDir = XMLoadFloat3(&m_vMoveDir);
 		if (m_dwAniIdx == PLAYER_sprint)
 			vPos += vDir * m_fSpeed * fTimeDelta * 1.5f;
 		else
@@ -539,6 +547,7 @@ void CPlayer::Soldier_Move(const FLOAT& fTimeDelta)
 		m_pTransform->Update(fTimeDelta);
 		break;
 	case SOLDIER_LYING:
+		vDir = XMLoadFloat3(&m_vMoveDir);
 		if (m_dwAniIdx != PLAYER_Lying && m_dwAniIdx != PLAYER_LyingShoot)
 		{
 			vPos += vDir * m_fSpeed * fTimeDelta * 0.5f;
@@ -547,7 +556,15 @@ void CPlayer::Soldier_Move(const FLOAT& fTimeDelta)
 		}
 		break;
 	case SOLDIER_JUMP:
-		vPos += vDir * m_fSpeed * fTimeDelta * 0.5f;
+		vDir = XMLoadFloat3(&m_vMoveDir);
+		vPos += vDir * m_fSpeed * fTimeDelta;
+		XMStoreFloat3(&m_pTransform->m_vPos, vPos);
+		m_pTransform->Update(fTimeDelta);
+		break;
+	case SOLDIER_ROLL:
+		vDir = XMLoadFloat3(&m_fRollDir);
+		vPos += vDir * m_fRollSpeed * fTimeDelta;
+		m_fRollSpeed -= 20.f * fTimeDelta;
 		XMStoreFloat3(&m_pTransform->m_vPos, vPos);
 		m_pTransform->Update(fTimeDelta);
 		break;
@@ -557,12 +574,13 @@ void CPlayer::Soldier_Move(const FLOAT& fTimeDelta)
 void CPlayer::Soldier_Iron_Move(const FLOAT& fTimeDelta)
 {
 	m_fSpeed = 70.f;
-	XMVECTOR vDir = XMLoadFloat3(&m_vMoveDir);
+	XMVECTOR vDir;// = XMLoadFloat3(&m_vMoveDir);
 	XMVECTOR vPos = XMLoadFloat3(&m_pTransform->m_vPos);
 
 	switch (m_dwState)
 	{
 	case SOLDIER_MOVE:
+		vDir = XMLoadFloat3(&m_vMoveDir);
 		if (m_dwAniIdx == PLAYER_Iron_Sprint)
 			vPos += vDir * m_fSpeed * fTimeDelta * 1.5f;
 		else
@@ -571,6 +589,7 @@ void CPlayer::Soldier_Iron_Move(const FLOAT& fTimeDelta)
 		m_pTransform->Update(fTimeDelta);
 		break;
 	case SOLDIER_LYING:
+		vDir = XMLoadFloat3(&m_vMoveDir);
 		if (m_dwAniIdx != PLAYER_Iron_Lying && m_dwAniIdx != PLAYER_Iron_LyingShoot)
 		{
 			vPos += vDir * m_fSpeed * fTimeDelta * 0.5f;
@@ -579,16 +598,51 @@ void CPlayer::Soldier_Iron_Move(const FLOAT& fTimeDelta)
 		}
 		break;
 	case SOLDIER_JUMP:
-		vPos += vDir * m_fSpeed * fTimeDelta * 0.5f;
+		vDir = XMLoadFloat3(&m_vMoveDir);
+		vPos += vDir * m_fSpeed * fTimeDelta;
+		XMStoreFloat3(&m_pTransform->m_vPos, vPos);
+		m_pTransform->Update(fTimeDelta);
+		break;
+	case SOLDIER_ROLL:
+		vDir = XMLoadFloat3(&m_fRollDir);
+		vPos += vDir * m_fRollSpeed * fTimeDelta;
+		m_fRollSpeed -= 20.f * fTimeDelta;
 		XMStoreFloat3(&m_pTransform->m_vPos, vPos);
 		m_pTransform->Update(fTimeDelta);
 		break;
 	}
 }
 
+void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
+{
+	if (!m_bFire)
+	{
+		m_fRateOfFire = 0.f;
+		return;
+	}
+	m_fRateOfFire += fTimeDelta;
+	if (m_fRateOfFire >= 0.2f)
+	{
+		m_fRateOfFire = 0.1f;
+		if (((CGun*)m_pEquipment[0])->Fire())
+		{
+		}
+		else
+		{
+			m_bAbleReload = true;
+		}
+	}
+}
+
 void CPlayer::Soldier_Iron_AddVelocity(float fFallVel)
 {
 	m_pComGravity->Add_Velocity(fFallVel * m_fTimeDelta);
+}
+
+void CPlayer::Reload(void)
+{
+	((CGun*)m_pEquipment[0])->Reload();
+	m_bAbleReload = false;
 }
 
 void CPlayer::UpdateDir(void)

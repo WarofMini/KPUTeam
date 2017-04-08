@@ -25,6 +25,8 @@ public:
 
 public:
 	void	ChangeWeapon(_uint uiObjNum);
+	_uint	Fire(void);
+	void	Reload(void);
 
 private:
 	virtual HRESULT Ready_Component(void);
@@ -32,6 +34,7 @@ private:
 private:
 	ID3D11Device*	m_pGraphicDev;
 	float			m_fScale;
+	_uint			m_iAmmo;
 
 
 };
