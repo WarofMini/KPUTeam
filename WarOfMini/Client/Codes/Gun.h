@@ -23,6 +23,9 @@ public:
 	virtual INT Update(const FLOAT& fTimeDelta);
 	virtual void Release(void);
 
+public:
+	void	ChangeWeapon(_uint uiObjNum);
+
 private:
 	virtual HRESULT Ready_Component(void);
 

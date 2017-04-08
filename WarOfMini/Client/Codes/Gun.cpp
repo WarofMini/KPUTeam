@@ -3,8 +3,6 @@
 #include "Transform.h"
 #include "Management.h"
 
-
-
 CGun::CGun(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
 : CEquipment(pContext)
 , m_pGraphicDev(pGraphicDev)
@@ -56,6 +54,21 @@ void CGun::Release(void)
 
 
 	delete this;
+}
+
+void CGun::ChangeWeapon(_uint uiObjNum)
+{
+	m_uiObjNum = uiObjNum;
+	if (m_uiObjNum == MESHNUM_GUN)
+	{
+		m_pTransform->m_vPos = XMFLOAT3(0.252f, -17.72f, 10.575f);
+		m_pTransform->m_vAngle = XMFLOAT3(86.41f, -9.f, -176.67f);
+	}
+	else if (m_uiObjNum == MESHNUM_SPECIALGUN)
+	{
+		m_pTransform->m_vPos = XMFLOAT3(-18.87f, -14.0603f, 9.62835f);
+		m_pTransform->m_vAngle = XMFLOAT3(140.575f, -25.445f, -160.962f);
+	}
 }
 
 HRESULT CGun::Ready_Component(void)

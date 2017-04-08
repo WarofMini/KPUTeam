@@ -23,7 +23,7 @@ protected:
 	virtual void Release(void);
 
 private:
-	bool	MoveKeyCheck(void);
+	void	LoopJump(bool bShoot);
 	bool	EndJump(void);
 private:
 	CPlayer*	m_pSoldier;

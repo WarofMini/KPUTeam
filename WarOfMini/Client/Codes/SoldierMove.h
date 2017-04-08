@@ -24,6 +24,7 @@ protected:
 
 private:
 	bool	MoveKeyCheck(void);
+	bool	MoveKeyCheck_Iron(void);
 	bool	RollKeyCheck(void);
 	bool	LyingKeyCheck(void);
 	bool	IsSoldierJump(void);

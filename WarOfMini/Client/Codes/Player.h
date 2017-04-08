@@ -37,6 +37,10 @@ private:
 	HRESULT		Prepare_StateMachine(void);
 	void		Operate_StateMAchine(const FLOAT& fTimeDelta);
 	void		Collision_Field(const FLOAT& fTimeDelta);
+	void		KeyCheck(void);
+	void		KeyState(const FLOAT& fTimeDelta);
+	void		Soldier_Move(const FLOAT& fTimeDelta);
+	void		Soldier_Iron_Move(const FLOAT& fTimeDelta);
 
 public:
 	CInput*		GetInput(void) { return m_pInput; }
@@ -46,10 +50,9 @@ public:
 	bool		Check_AnimationFrame(void);
 	bool		IsOnGround(void);
 	MOVE_DIR*	GetMoveDir(void);
-
-	void		KeyCheck(void);
-	void		KeyState(const FLOAT& fTimeDelta);
-	void		Soldier_Move(const FLOAT& fTimeDelta);
+	void		SoldierChange(void);
+	bool		IsSoldier(void) { return m_bIsSoldier; }
+	void		Soldier_Iron_AddVelocity(float fFallVel);
 
 public:
 	void		UpdateDir(void);
@@ -63,9 +66,11 @@ private:
 
 	XMFLOAT4X4		m_matEquipBone[2];
 	CEquipment*		m_pEquipment[2];
+	_int			m_iEquipBone;
 
 	//Component
 	CGravity*		m_pComGravity;
+	FLOAT			m_fTimeDelta;
 
 	//Player Animation
 	DWORD			m_dwState;
@@ -74,11 +79,18 @@ private:
 	_bool			m_bKey[KEY_END];
 	MOVE_DIR		m_eMoveDir;
 	XMFLOAT3		m_vMoveDir;
+	//Player Mesh
+	_bool			m_bIsSoldier;
+	CAnimationInfo* m_pAnimInfo_Normal;
+	CAnimationInfo* m_pAnimInfo_Iron;
+	MATNODE*		m_pMatBoneNode_Normal;
+	MATNODE*		m_pMatBoneNode_Iron;
+	_uint			m_uiObjNum_Normal;
+	_uint			m_uiObjNum_Iron;
 
 //중력 & 충돌체크
 	CCalculator*	m_pCalculator;
 	CRigidBody*		m_pRigidBody;
-
 };
 
 #endif //

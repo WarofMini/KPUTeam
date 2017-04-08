@@ -27,6 +27,10 @@ private:
 	bool	IsSoldierLying(void);
 	bool	IsSoldierJump(void);
 
+	bool	IsSoldierIronMove(void);
+	bool	IsSoldierIronLying(void);
+	bool	IsSoldierIronJump(void);
+
 private:
 	CPlayer*	m_pSoldier;
 };

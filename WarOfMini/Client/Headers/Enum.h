@@ -68,6 +68,43 @@ enum ANIPLAYER {
 	, PLAYER_END
 };
 
+enum ANIPLAYER_Iron {
+	PLAYER_Iron_RunForward
+	, PLAYER_Iron_RunLeft
+	, PLAYER_Iron_RunRight
+	, PLAYER_Iron_RunBack
+	, PLAYER_Iron_Sprint
+	, PLAYER_Iron_RunForwardShoot
+	, PLAYER_Iron_RunLeftShoot
+	, PLAYER_Iron_RunRightShoot
+	, PLAYER_Iron_RunBackShoot
+	, PLAYER_Iron_Idle
+	, PLAYER_Iron_Idle2
+	, PLAYER_Iron_Shoot
+	, PLAYER_Iron_JumpandShoot
+	, PLAYER_Iron_JumpandShootIn
+	, PLAYER_Iron_JumpandShootLoop
+	, PLAYER_Iron_JumpandShootOut
+	, PLAYER_Iron_GetCover
+	, PLAYER_Iron_ShootFromCover
+	, PLAYER_Iron_RollFront
+	, PLAYER_Iron_RollBack
+	, PLAYER_Iron_RollLeft
+	, PLAYER_Iron_RollRight
+	, PLAYER_Iron_DownLying
+	, PLAYER_Iron_Lying
+	, PLAYER_Iron_LyingShoot
+	, PLAYER_Iron_CrawlingReady
+	, PLAYER_Iron_CrawlingFront
+	, PLAYER_Iron_CrawlingLeft
+	, PLAYER_Iron_CrawlingRight
+	, PLAYER_Iron_CrawlingBack
+	, PLAYER_Iron_StandUp
+	, PLAYER_Iron_ReLoad
+	, PLAYER_Iron_Damage
+	, PLAYER_Iron_Death
+	, PLAYER_Iron_Death2
+};
 
 enum eKey { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT, KEY_END };
 enum MOVE_DIR { DIR_U, DIR_UR, DIR_UL, DIR_R, DIR_L, DIR_D, DIR_DR, DIR_DL, DIR_END};
