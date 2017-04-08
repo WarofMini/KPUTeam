@@ -261,7 +261,9 @@ SOCKET * AsynchronousClientClass::GetServerSocket()
 
 void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 {
-	static int id;
+	//static int id;
+	int iA = 0;
+
 
 	switch (buf[1])
 	{
@@ -274,13 +276,25 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 				break;*/
 	case INIT_CLIENT:
 	{
-		Ser_PLAYER_DATA* m_pPlayerData = new Ser_PLAYER_DATA;
+ 		Ser_PLAYER_DATA* m_pPlayerData;
+ 
+ 		m_pPlayerData = reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)buf);
 
-		m_pPlayerData = reinterpret_cast<Ser_PLAYER_DATA*>(buf[2]);
+		int id = m_pPlayerData->ID;
 
-		//sendPacket(sizeof(Ser_PLAYER_DATA*), INIT_CLIENT, reinterpret_cast<BYTE*>(&m_pPlayerData->ID));
+		//cout << "id : " << id << endl;
 
-		//id = m_pPlayerData->ID;	//첫 입장시 플레이어 id 값. 여기로 값을 받으니까 요건 좀 이따 설명해야겠따.
+		/*
+		Ser_PLAYER_DATA* m_pPlayerData = NULL;
+
+		m_pPlayerData = reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)&buf[0]);
+
+		int id = m_pPlayerData->ID;
+
+		cout << "id : " << id << endl;
+		*/
+
+		//id = m_pPlayerData.ID;	//첫 입장시 플레이어 id 값. 여기로 값을 받으니까 요건 좀 이따 설명해야겠따.
 
 		// 여기서 언제 관련 패킷을 보냇엉
 		// 여기서 이제 sendpacket해야곘지 ?
@@ -318,30 +332,30 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 	break;
 	case INIT_OTHER_PLAYER:
 	{
-		int iA = 0;
-		if (m_eSceneID != SCENE_LOGO)
-		{
-			//내가건 주석
-			Ser_PLAYER_DATA* m_pPlayerData = CManagement::GetInstance()->Get_Server_Data(reinterpret_cast<Ser_PLAYER_DATA*>(buf[2])->ID);
+		//int iA = 0;
+		//if (m_eSceneID != SCENE_LOGO)
+		//{
+		//	//내가건 주석
+		//	Ser_PLAYER_DATA* m_pPlayerData = CManagement::GetInstance()->Get_Server_Data(reinterpret_cast<Ser_PLAYER_DATA*>(buf[2])->ID);
 
-			if (nullptr != m_pPlayerData)
-			{
-				break;
-			}
-			else
-			{
-				CGameObject* pGameObject = NULL;
+		//	if (nullptr != m_pPlayerData)
+		//	{
+		//		break;
+		//	}
+		//	else
+		//	{
+		//		CGameObject* pGameObject = NULL;
 
-				pGameObject = COtherPlayer::Create(CGraphicDev::GetInstance()->GetGraphicDevice(), CGraphicDev::GetInstance()->GetContext());
+		//		pGameObject = COtherPlayer::Create(CGraphicDev::GetInstance()->GetGraphicDevice(), CGraphicDev::GetInstance()->GetContext());
 
-				//pGameObject->SetPos(m_pPlayerData->vPos);
-				pGameObject->SetPacketData(reinterpret_cast<Ser_PLAYER_DATA*>(buf[2]));
+		//		//pGameObject->SetPos(m_pPlayerData->vPos);
+		//		pGameObject->SetPacketData(reinterpret_cast<Ser_PLAYER_DATA*>(buf[2]));
 
-				CScene* pScene = CManagement::GetInstance()->GetScene();
-				CLayer* pLayer = pScene->FindLayer(L"Layer_GameLogic");
-				pLayer->Ready_Object(L"OtherPlayer", pGameObject);
-			}
-		}
+		//		CScene* pScene = CManagement::GetInstance()->GetScene();
+		//		CLayer* pLayer = pScene->FindLayer(L"Layer_GameLogic");
+		//		pLayer->Ready_Object(L"OtherPlayer", pGameObject);
+		//	}
+		//}
 	}
 	case CLIENT_POSITION:
 
