@@ -5,6 +5,9 @@
 #include "OtherPlayer.h"
 #include "GraphicDev.h"
 
+int		g_myid;
+XMFLOAT3 g_vPos;
+
 AsynchronousClientClass::AsynchronousClientClass()
 {
 }
@@ -261,10 +264,9 @@ SOCKET * AsynchronousClientClass::GetServerSocket()
 
 void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 {
-	//static int id;
-	int iA = 0;
-
-
+	static bool first_time = true;
+	int id = 0;
+		
 	switch (buf[1])
 	{
 		//	case TEST:
@@ -276,12 +278,23 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 				break;*/
 	case INIT_CLIENT:
 	{
- 		Ser_PLAYER_DATA* m_pPlayerData;
  
  		m_pPlayerData = reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)buf);
 
-		int id = m_pPlayerData->ID;
+		//첫 입장시 플레이어 id 값. 
 
+		id = m_pPlayerData->ID;
+		if (first_time)
+		{
+			first_time = false;
+			g_myid = id;
+			g_vPos = m_pPlayerData->vPos;
+		}
+
+		if (g_myid == id)
+		{
+
+		}
 		//cout << "id : " << id << endl;
 
 		/*
@@ -294,7 +307,6 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 		cout << "id : " << id << endl;
 		*/
 
-		//id = m_pPlayerData.ID;	//첫 입장시 플레이어 id 값. 여기로 값을 받으니까 요건 좀 이따 설명해야겠따.
 
 		// 여기서 언제 관련 패킷을 보냇엉
 		// 여기서 이제 sendpacket해야곘지 ?

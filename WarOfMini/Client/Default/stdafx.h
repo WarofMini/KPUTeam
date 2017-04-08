@@ -62,6 +62,10 @@ using namespace std;
 
 #define WM_SOCKET (WM_USER + 1)
 static AsynchronousClientClass g_Client;
+
+extern int		g_myid;
+extern XMFLOAT3 g_vPos;
+
 ///////////////////////////////////////////
 
 #pragma warning(disable : 4005)

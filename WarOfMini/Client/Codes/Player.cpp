@@ -77,7 +77,8 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 	m_pTransform->m_vScale = XMFLOAT3(1.f, 1.f, 1.f);
 	m_pTransform->m_vAngle.x = 90.f;
 
-	m_pTransform->m_vPos = XMFLOAT3(20.f, 0.f, 20.f);
+	m_pTransform->m_vPos = g_vPos;
+
 	m_pTransform->m_vDir = XMFLOAT3(0.f, 0.f, -1.f);
 	m_pAnimInfo->Set_Key((_ushort)m_dwAniIdx);
 
@@ -466,6 +467,7 @@ void CPlayer::KeyCheck(void)
 	if (m_bKey[KEY_UP])
 	{
 		vMoveDir += vDir;
+
 		if (m_bKey[KEY_LEFT])
 		{
 			vMoveDir -= vRight;
@@ -569,6 +571,7 @@ void CPlayer::Soldier_Move(const FLOAT& fTimeDelta)
 		m_pTransform->Update(fTimeDelta);
 		break;
 	}
+	//g_Client.sendPacket(sizeof(char), CLIENT_POSITION, reinterpret_cast<BYTE*>(&m_pTransform->m_vPos));
 }
 
 void CPlayer::Soldier_Iron_Move(const FLOAT& fTimeDelta)

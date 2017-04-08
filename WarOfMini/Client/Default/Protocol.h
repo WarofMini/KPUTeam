@@ -14,16 +14,6 @@
 #define OP_SEND 2
 
 
-//struct  Ser_InitPlayer
-//{
-//	BYTE size;
-//	BYTE type;
-//	int ID;
-//	D3DXVECTOR3 vMove;
-//	D3DXVECTOR3 vDirection;
-//	D3DXVECTOR3 vRadian;
-//	int iPlayerstate;
-//};
 using namespace std;
 
 #define SERVER_PORT	9000
@@ -70,8 +60,8 @@ struct Ser_PLAYER_DATA
 	BYTE size;	// 이게 전체 size 이고
 	BYTE type;	// 너가 말한 서버의 buf[1] 이 요거고 -> 아까 process packet 에서 구분한 이벤트는 요 type 인거야.
 	int ID;	// 이게 클라이언트에게 줄 id 값이야
-			//XMFLOAT3 vPos;
-			//XMFLOAT3 vDir;
+	XMFLOAT3 vPos;
+	//XMFLOAT3 vDir;
 };
 
 //클라에서 보내온 정보들을 담아서 프로토콜로 뿌려주기 ?
