@@ -64,6 +64,16 @@ CPlayer* CPlayer::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContex
 	return pObject;
 }
 
+CPlayer* CPlayer::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, XMFLOAT3 vPos)
+{
+	CPlayer* pObject = new CPlayer(pContext);
+	pObject->m_pTransform->m_vPos = vPos;
+	if (FAILED(pObject->Initialize(pGraphicDev)))
+		Safe_Release(pObject);
+
+	return pObject;
+}
+
 HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 {
 	m_uiObjNum = MESHNUM_PLAYER;
@@ -76,8 +86,6 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 
 	m_pTransform->m_vScale = XMFLOAT3(1.f, 1.f, 1.f);
 	m_pTransform->m_vAngle.x = 90.f;
-
-	m_pTransform->m_vPos = g_vPos;
 
 	m_pTransform->m_vDir = XMFLOAT3(0.f, 0.f, -1.f);
 	m_pAnimInfo->Set_Key((_ushort)m_dwAniIdx);

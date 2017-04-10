@@ -223,6 +223,9 @@
     <Filter Include="02.Object\01.Soldier\00.SoldierMain\State\Jump">
       <UniqueIdentifier>{ce4a959d-2a2d-42f4-b6d6-daba1af031ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\04.Gabiscon">
+      <UniqueIdentifier>{76082c1c-f9ac-4efe-b7a9-4d020897f181}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -451,6 +454,9 @@
     <ClInclude Include="..\Codes\SoldierJump.h">
       <Filter>02.Object\01.Soldier\00.SoldierMain\State\Jump</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Gabiscon.h">
+      <Filter>02.Object\04.Gabiscon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -636,6 +642,9 @@
     <ClCompile Include="..\Codes\Gravity.cpp" />
     <ClCompile Include="..\Codes\SoldierJump.cpp">
       <Filter>02.Object\01.Soldier\00.SoldierMain\State\Jump</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Gabiscon.cpp">
+      <Filter>02.Object\04.Gabiscon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

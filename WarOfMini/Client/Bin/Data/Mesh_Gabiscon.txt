@@ -1,0 +1,12 @@
+0-125-Idle_Rifle_Hip_Break1-30
+126-182-Walk_Fwd_Rifle_Ironsights-30
+183-239-Walk_Bwd_Rifle_Ironsights-30
+240-296-Walk_Lt_Rifle_Ironsights-30
+297-353-Walk_Rt_Rifle_Ironsights-30
+354-384-Sprint_Fwd_Rifle-30
+385-425-Fire_Shotgun_Hip-30
+426-466-Fire_Shotgun_Ironsights-30
+467-476-anim_spear_ready-30
+477-507-anim_spear_throwing-30
+508-574-Reload_Rifle_Ironsights-30
+575-705-Reload_Shotgun_Ironsights-30

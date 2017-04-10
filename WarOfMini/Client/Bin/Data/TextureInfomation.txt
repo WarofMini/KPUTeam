@@ -2,3 +2,4 @@ MachineGun-png-2
 SoldierTexture-png-2
 FutureSoldier_01_albedo-tga-0
 PulseGun_01_albedo-tga-0
+GabisconSov-tga-0

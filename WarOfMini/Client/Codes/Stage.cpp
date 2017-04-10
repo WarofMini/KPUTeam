@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "Transform.h"
 #include "SphereMesh.h"
+#include "Gabiscon.h"
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
 	: CScene(pGraphicDev, pContext)
@@ -63,6 +64,10 @@ HRESULT CStage::Ready_GameLogic(void)
 	pGameObject = CPlayer::Create(m_pGraphicDev, m_pContext);
 	if (NULL == pGameObject) return E_FAIL;
 	pLayer->Ready_Object(L"Player", pGameObject);
+
+	pGameObject = CGabiscon::Create(m_pGraphicDev, m_pContext);
+	if (NULL == pGameObject) return E_FAIL;
+	pLayer->Ready_Object(L"NPC", pGameObject);
 
 
 	//g_Client.sendPacket(sizeof(CLayer), INIT_CLIENT, reinterpret_cast<BYTE*>(pGameObject->GetPacketData()->ID));
