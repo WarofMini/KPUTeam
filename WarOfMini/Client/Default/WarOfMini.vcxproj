@@ -176,6 +176,7 @@
     <ClInclude Include="..\Codes\FontMgr.h" />
     <ClInclude Include="..\Codes\Frame.h" />
     <ClInclude Include="..\Codes\FrameMgr.h" />
+    <ClInclude Include="..\Codes\Gabiscon.h" />
     <ClInclude Include="..\Codes\GameObject.h" />
     <ClInclude Include="..\Codes\GraphicDev.h" />
     <ClInclude Include="..\Codes\Gravity.h" />
@@ -254,6 +255,7 @@
     <ClCompile Include="..\Codes\FontMgr.cpp" />
     <ClCompile Include="..\Codes\Frame.cpp" />
     <ClCompile Include="..\Codes\FrameMgr.cpp" />
+    <ClCompile Include="..\Codes\Gabiscon.cpp" />
     <ClCompile Include="..\Codes\GameObject.cpp" />
     <ClCompile Include="..\Codes\GraphicDev.cpp" />
     <ClCompile Include="..\Codes\Gravity.cpp" />
