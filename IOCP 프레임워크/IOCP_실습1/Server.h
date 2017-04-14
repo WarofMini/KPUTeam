@@ -34,7 +34,7 @@ public:
 	void ProcessPacket(const Packet* buf, const unsigned int& id);
 	
 private:
-	list<Ser_PLAYER_DATA*> m_listPlayer;
+	vector<Ser_PLAYER_DATA> m_vecPlayer;
 
 public:
 	CServer();

@@ -182,13 +182,13 @@ void CServer::Accept_thread()
 		User->my_overapped.wsabuf.len = sizeof(User->my_overapped.IOCPbuf);
 		
 		//m_listPlayer
-		Ser_PLAYER_DATA* pPlayerTemp = new Ser_PLAYER_DATA;
-		pPlayerTemp->ID = User->id;
-		pPlayerTemp->size = sizeof(Ser_PLAYER_DATA);
-		pPlayerTemp->type = INIT_CLIENT;
-		pPlayerTemp->vPos = XMFLOAT3(20.f, 10.f, 20.f);
+		Ser_PLAYER_DATA PlayerTemp;
+		PlayerTemp.ID = User->id;
+		PlayerTemp.size = sizeof(Ser_PLAYER_DATA);
+		PlayerTemp.type = INIT_CLIENT;
+		PlayerTemp.vPos = XMFLOAT3(20.f * User->id, 20.f * User->id, 20.f * User->id);
 		
-		m_listPlayer.push_back(pPlayerTemp);
+		m_vecPlayer.push_back(PlayerTemp);
 
 		// 그리고 여기서 이제 전체 클라이언트 관리하는 녀석으로 값을 넣어주잖아.ㅇㅇ
 		m_Client.push_back(move(User));
@@ -201,18 +201,7 @@ void CServer::Accept_thread()
 		// 바로 패킷보내주는 작업을 하는게 그냥 내 기분에 좋으니까
 		// 나도 여기라 생각했는데 밑에 Recv는 하고 받야아할것같아서 그밑에다 할려그랬는데...ㅅㅂ
 
-		SendPacket(pPlayerTemp->ID, reinterpret_cast<Packet*>(pPlayerTemp));
-
-		list<Ser_PLAYER_DATA*>::iterator iter = m_listPlayer.begin();
-		list<Ser_PLAYER_DATA*>::iterator iter_end = m_listPlayer.end();
-
-		for (iter; iter != iter_end; ++iter)
-		{
-			if(pPlayerTemp == *iter)
-				continue;
-			(*iter)->type = INIT_OTHER_PLAYER;
-			SendPacket((*iter)->ID, reinterpret_cast<Packet*>(*iter));
-		}
+		SendPacket(PlayerTemp.ID, reinterpret_cast<Packet*>(&PlayerTemp));
 
 		DWORD flags{ 0 };
 
@@ -266,8 +255,6 @@ void CServer::Worker_thread()
 				int Error_no = WSAGetLastError();
 				error_display("WorkerThread Start GetQueuedCompletionStatus", Error_no);
 			}
-			// 그래서 여기가, 클라이언트가 갑자기 접속을 끊었을때 들어오는 위치인거야.
-			// result 값이 false 이고, iosize 즉, 처리한 패킷 수 값이 0 이면, 끊긴거라 생각하는거지
 			closesocket(m_Client[key]->sock);
 			m_Client[key]->connected = false;
 			cout << "[No. " << key << "] Disconnected "<< endl;
@@ -276,28 +263,12 @@ void CServer::Worker_thread()
 
 		}
 
-		// 그리고 여기에서 overlap 구조체가 리턴이 되었다면, overlap 에 있는 클라이언트 녀석이 이벤트를 발동시킨거야
-		// 그리고 operation_type 에 훨씬 이전에 너가 OP_RECV 로 초기화를 해주었기 때문에, 이게 리턴이 되는거지
-		// 이걸 왜 썼냐면, 이 overlap 모델에서 이벤트가 발생한다면, 이건 무조건 다른 클라에서 패킷을 보낸 것이다!!!
-		// 하고 구분하기 위해서 OP_RECV 라고 한거야.
-		// 여기서 타입을 비교해 보았더니, OP_RECV 가 아니니까 일단 넘어가지
-
-		// 그러면 SEND 는 간단하게 해제를 했지만
-		// OP_RECV 는 뭔가 다른 클라이언트에서 메시지를 날린거란 말이야
-		// 그 메세지는 패킷에 담겨 있지
-
 		else if (OP_RECV == overlap->operation_type)
 		{
-			// 여기에서는 buf_ptr 로 위치를 어딜 잡아주었냐면
-			// my_overapped.IOCPbuf 로 잡아준거야
-			// 이 버퍼는 뭐냐하면
 			unsigned char* buf_ptr = m_Client[key]->my_overapped.IOCPbuf;
 
 			int remained = iosize;
 
-			// 그래서 요 아래에 있는게 패킷들을 잘 분리하고 조립해서
-			// 우리가 정상적으로 읽을 수 있도록 만들어주는 loop while 문인 거야
-			// 다 여기 아래에서 패킷 조립하고, 정상적으로 패킷을 읽을 수 있도록 정상적인 값을 복사하고 읽으려고 만들어 둔거지
 			while (remained > 0)
 			{
 				if (m_Client[key]->curr_paket_size == 0)
@@ -310,10 +281,6 @@ void CServer::Worker_thread()
 				if (remained >= required)
 				{
 					memcpy(m_Client[key]->Packetbuf + m_Client[key]->prev_received, buf_ptr, required);
-					// 여기있어. 이게 무슨 의미냐 하면
-					// 그럼 패킷 조립을 존나게 해서
-					// process Packet 함수로 들어갔어
-					// 이게 그럼 무슨의미겠어
 					ProcessPacket(m_Client[key]->Packetbuf, key);
 
 
@@ -350,33 +317,10 @@ void CServer::Worker_thread()
 
 
 		}
-		// 그럼 이건 뭐겠어.
-		// 이 서버가, 이 overlap 모델로 SEND 했다는걸 알려주는 분기점인거지
-		// 게다가 위치도 잘못 썻네
-		// 슈바
-		// 이 위치에다가 하는거양ㅋㅇㅋ
-		// 어 시발 여기 보니까 여기에 OP_SEND 가 있네 ㅇㅋ 하고 여기로 들어가는거야.
 		else if (overlap->operation_type == OP_SEND)
 		{
-			//메세지를 보내면 해제.
-			// 여기서 왜 갑자기 delete 가 튀어나왔냐??
-			// 맞춰 볼래?
-			// 그렇기 때문에 그 할당했던것을 메모리 해제해 주어야 되니까
-			// 여기서 다 send 를 했다는 이야기나 다름이 없으니까
-			// 그냥 이제 더 할일 없어서 메모리 해제나 해주는거지
 			delete overlap;
 		}
-		// 자 그럼 이 else 는 뭐겠어. 시바 이벤트가 안들어왔을때겠지 클라가 아무런 메세지를 보내지 않았을때 ?
-		// 정말 이것도 틀리다니 유감이군
-		// 너는 OP_RECV 와 OP_SEND 두가지 경우만 코딩을 해줬고, 그리고 클라에서 일방적으로 끊었을때를 코드로 구현해 놓았찌만
-		// 만약 이거 외에 다른 값이 들어오면, 뭔가 잘못되도 한참 잘못된거지
-		// 그래서 여기 들어오면 쟞대도 존나 쟞댄거야
-		// 그 의미의 else 인거지
-		// 한방에 이해가 안되었을거 같은데 이해가 되었나?ㄷㄷ.. 아니 근데 여기가
-		// 서버에서 보낼게 없을 떄 들어오는곳인가 ? 와 씨바 모르곘네
-		// 그게 아니라, 위 GetQueuedCompletionStatus 이 함수에서 리턴할수 밖에 없는 경우는 현재 3가지 경우야
-		// 너가 초기화 할때, OP_RECV 해주고 WSARecv 함수를 걸어서, 클라이언트로 부터 패킷을 받을 경우 하나
-		// 아니면 OP_SEND
 		else
 		{
 			cout << "No Event !! " << endl;
@@ -465,6 +409,36 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 
 	case INIT_CLIENT:
 	{
+
+		Ser_PLAYER_DATA strPlayerData;
+		strPlayerData = *reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)&buf[2]);
+		cout << "[NO. " << strPlayerData.ID << "]ID value Recv.. " << endl;
+
+		for (int i = 0; i < m_vecPlayer.size(); ++i)
+		{
+			if (m_vecPlayer[i].ID == strPlayerData.ID)
+			{
+				Ser_Vec_PLAYER_DATA vecPlayerData;
+				vecPlayerData.ID = m_vecPlayer[i].ID;
+				vecPlayerData.size = sizeof(Ser_Vec_PLAYER_DATA);
+				vecPlayerData.type = INIT_OTHER_PLAYER;
+				vecPlayerData.PlayerSize = m_vecPlayer.size();
+
+				for (int i = 0; i < vecPlayerData.PlayerSize; ++i)
+				{
+					vecPlayerData.vecPlayerData[i].ID = m_vecPlayer[i].ID;
+					vecPlayerData.vecPlayerData[i].size = m_vecPlayer[i].size;
+					vecPlayerData.vecPlayerData[i].type = m_vecPlayer[i].type;
+					vecPlayerData.vecPlayerData[i].vPos = m_vecPlayer[i].vPos;
+				}
+				SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&vecPlayerData));
+			}
+			else
+			{
+				SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&strPlayerData));
+			}
+		}		
+		
 		//SendPacket(m_PlayerData->ID)
 
 		// 그러면, 여기 process packet 함수는 어디에 위치해 있냐하면
