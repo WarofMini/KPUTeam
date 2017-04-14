@@ -2,6 +2,9 @@
 #include "PlayerCamera.h"
 #include "Input.h"
 #include "Transform.h"
+#include "Management.h"
+#include "Scene.h"
+#include "Layer.h"
 
 CPlayerCamera::CPlayerCamera(ID3D11DeviceContext* pContext, const CTransform* pTargetTransform, _float fGap)
 	: CCamera(pContext)
@@ -30,6 +33,14 @@ CPlayerCamera* CPlayerCamera::Create(ID3D11DeviceContext* pContext, const CTrans
 
 _int CPlayerCamera::Update(const _float& fTimeDelta)
 {
+	if (m_pTargetTransform == NULL)
+	{
+		CScene* pScene = CManagement::GetInstance()->GetScene();//->(CComponent*)
+		CLayer* pLayer = pScene->FindLayer(L"Layer_GameLogic");
+		CComponent* pTransform = (CComponent*)pLayer->Get_Component(L"Player", L"Com_Transform");
+		m_pTargetTransform = (CTransform*)pTransform;
+	}
+
 	PlayerState(); //Player위치에 따른 보정
 
 	KeyState(fTimeDelta);
