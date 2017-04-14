@@ -14,6 +14,7 @@ protected:
 
 public:
 	static COtherPlayer* Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);
+	static COtherPlayer* Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, XMFLOAT3 vPos);
 
 public:
 	virtual HRESULT	Initialize(ID3D11Device* pGraphicDev);

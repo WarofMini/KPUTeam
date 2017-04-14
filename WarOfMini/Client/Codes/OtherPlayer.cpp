@@ -34,6 +34,18 @@ COtherPlayer* COtherPlayer::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContex
 	return pObject;
 }
 
+COtherPlayer* COtherPlayer::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, XMFLOAT3 vPos)
+{
+	COtherPlayer* pObject = new COtherPlayer(pContext);
+
+	if (FAILED(pObject->Initialize(pGraphicDev)))
+		Safe_Release(pObject);
+
+	pObject->m_pTransform->m_vPos = vPos;
+
+	return pObject;
+}
+
 HRESULT COtherPlayer::Initialize(ID3D11Device* pGraphicDev)
 {
 	if (FAILED(Ready_Component(pGraphicDev)))
@@ -43,9 +55,8 @@ HRESULT COtherPlayer::Initialize(ID3D11Device* pGraphicDev)
 	m_uiObjNum = MESHNUM_PLAYER;
 
 
-	m_pTransform->m_vScale = XMFLOAT3(0.06f, 0.06f, 0.06f);
+	m_pTransform->m_vScale = XMFLOAT3(1.f, 1.f, 1.f);
 	m_pTransform->m_vAngle.x = 90.f;
-	m_pTransform->m_vPos = XMFLOAT3(10.f, 10.f, 10.f);
 	m_pTransform->m_vDir = XMFLOAT3(0.f, 0.f, -1.f);
 	m_pAnimInfo->Set_Key(PLAYER_idle);
 

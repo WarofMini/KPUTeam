@@ -152,7 +152,7 @@ void AsynchronousClientClass::sendPacket_TEST()
 		// 비동기 소켓이라 그냥 리턴, 검사 해주어야 함
 		if (WSAGetLastError() != WSAEWOULDBLOCK) {
 			int err_no = WSAGetLastError();
-			error_quit(L"connect()", err_no);
+			error_quit(L"Sendpacket_TEST()", err_no);
 		}
 	}
 }
@@ -278,35 +278,29 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 				break;*/
 	case INIT_CLIENT:
 	{
- 
  		m_pPlayerData = reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)buf);
 
 		//첫 입장시 플레이어 id 값. 
 
 		id = m_pPlayerData->ID;
+
+//		sendPacket(sizeof(Ser_PLAYER_DATA), INIT_CLIENT, reinterpret_cast<BYTE*>(&id));
+
 		if (first_time)
 		{
 			first_time = false;
 			g_myid = id;
 			g_vPos = m_pPlayerData->vPos;
 		}
-
-		if (g_myid == id)
+		else
 		{
+			CGameObject* pGameObject = NULL;
+			pGameObject = COtherPlayer::Create(CGraphicDev::GetInstance()->GetGraphicDevice(), CGraphicDev::GetInstance()->GetContext(), m_pPlayerData->vPos);
 
+			CScene* pScene = CManagement::GetInstance()->GetScene();
+			CLayer* pLayer = pScene->FindLayer(L"Layer_GameLogic");
+			pLayer->Ready_Object(L"OtherPlayer", pGameObject);
 		}
-		//cout << "id : " << id << endl;
-
-		/*
-		Ser_PLAYER_DATA* m_pPlayerData = NULL;
-
-		m_pPlayerData = reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)&buf[0]);
-
-		int id = m_pPlayerData->ID;
-
-		cout << "id : " << id << endl;
-		*/
-
 
 		// 여기서 언제 관련 패킷을 보냇엉
 		// 여기서 이제 sendpacket해야곘지 ?
@@ -344,6 +338,25 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 	break;
 	case INIT_OTHER_PLAYER:
 	{
+		Ser_Vec_PLAYER_DATA vecPlayerData = *reinterpret_cast<Ser_Vec_PLAYER_DATA*>((Ser_Vec_PLAYER_DATA*)buf);
+
+		if (g_myid == vecPlayerData.ID)
+		{
+			Ser_PLAYER_DATA* pPlayerData = vecPlayerData.vecPlayerData;
+
+			for (int i = 0; i < vecPlayerData.PlayerSize; ++i)
+			{
+				if(g_myid == vecPlayerData.vecPlayerData[i].ID)
+					continue;
+				CGameObject* pGameObject = NULL;
+				pGameObject = COtherPlayer::Create(CGraphicDev::GetInstance()->GetGraphicDevice(), CGraphicDev::GetInstance()->GetContext(), m_pPlayerData->vPos);
+
+				CScene* pScene = CManagement::GetInstance()->GetScene();
+				CLayer* pLayer = pScene->FindLayer(L"Layer_GameLogic");
+				pLayer->Ready_Object(L"OtherPlayer", pGameObject);
+			}
+		}
+
 		//int iA = 0;
 		//if (m_eSceneID != SCENE_LOGO)
 		//{

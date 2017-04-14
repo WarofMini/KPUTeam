@@ -32,6 +32,9 @@ public:
 	HRESULT  LoadStageMap(void);
 
 	MESHNUM	 MatchingObject(wstring strMeshName);
+
+private:
+	bool	m_bTestInit;
 };
 
 

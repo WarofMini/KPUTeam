@@ -226,6 +226,9 @@
     <Filter Include="02.Object\04.Gabiscon">
       <UniqueIdentifier>{76082c1c-f9ac-4efe-b7a9-4d020897f181}</UniqueIdentifier>
     </Filter>
+    <Filter Include="95.Engine\00.Utility\16.Gravity">
+      <UniqueIdentifier>{7bb064b7-5a28-45a2-bcc0-5134297a7b3b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -450,12 +453,14 @@
     <ClInclude Include="..\Codes\xnacollision.h">
       <Filter>95.Engine\00.Utility\13.Collision\01.XNACollision</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\Gravity.h" />
     <ClInclude Include="..\Codes\SoldierJump.h">
       <Filter>02.Object\01.Soldier\00.SoldierMain\State\Jump</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Gabiscon.h">
       <Filter>02.Object\04.Gabiscon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Gravity.h">
+      <Filter>95.Engine\00.Utility\16.Gravity</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -639,12 +644,14 @@
     <ClCompile Include="..\Codes\xnacollision.cpp">
       <Filter>95.Engine\00.Utility\13.Collision\01.XNACollision</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\Gravity.cpp" />
     <ClCompile Include="..\Codes\SoldierJump.cpp">
       <Filter>02.Object\01.Soldier\00.SoldierMain\State\Jump</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Gabiscon.cpp">
       <Filter>02.Object\04.Gabiscon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Gravity.cpp">
+      <Filter>95.Engine\00.Utility\16.Gravity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

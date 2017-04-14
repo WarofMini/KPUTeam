@@ -67,9 +67,10 @@ CPlayer* CPlayer::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContex
 CPlayer* CPlayer::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, XMFLOAT3 vPos)
 {
 	CPlayer* pObject = new CPlayer(pContext);
-	pObject->m_pTransform->m_vPos = vPos;
 	if (FAILED(pObject->Initialize(pGraphicDev)))
 		Safe_Release(pObject);
+
+	pObject->m_pTransform->m_vPos = vPos;
 
 	return pObject;
 }

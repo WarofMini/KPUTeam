@@ -26,7 +26,7 @@ BOOL m_bLogoLoading;
 _bool g_bFocus;
 _bool g_bSetAquire;
 _bool g_bCollisionDraw;
-//AsynchronousClientClass g_Client;
+AsynchronousClientClass* g_Client = NULL;
 
 
 
@@ -66,7 +66,8 @@ int APIENTRY wWinMain( HINSTANCE hInstance,
 
 	if (m_bServerConnected == false)
 	{
-		g_Client.InitSock(g_hWnd);
+		g_Client = new AsynchronousClientClass;
+		g_Client->InitSock(g_hWnd);
 		m_bServerConnected = true;
 	}
 
@@ -130,6 +131,8 @@ int APIENTRY wWinMain( HINSTANCE hInstance,
 
 	Safe_Release(pMainApp);
 
+	delete g_Client;
+	g_Client = nullptr;
 
     return (int) msg.wParam;
 }
@@ -259,7 +262,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		PostQuitMessage(0);
 		break;
 	case WM_SOCKET:
-		g_Client.ProcessWinMessage(hWnd, message, wParam, lParam);
+		g_Client->ProcessWinMessage(hWnd, message, wParam, lParam);
 		return 0;
 		break;
 	default:

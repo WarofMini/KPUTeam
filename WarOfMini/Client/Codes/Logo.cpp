@@ -28,7 +28,6 @@ CLogo * CLogo::Create(ID3D11Device * pGraphicDev, ID3D11DeviceContext * pContext
 		MSG_BOX(L"LogoScene Create Failed");
 		Safe_Release(pScene);
 	}
-
 	return pScene;
 }
 
@@ -49,12 +48,11 @@ HRESULT CLogo::Ready_Scene(void)
 
 _int CLogo::Update(const _float & fTimeDelta)
 {
-
 	CScene::Update(fTimeDelta);
 
 	if (m_pLoading->GetComplete() == true && (GetAsyncKeyState(VK_RETURN)))
 	{
-		CManagement::GetInstance()->Change_Scene(CSceneSelector(SCENE_STAGE));
+		CManagement::GetInstance()->Change_Scene(CSceneSelector(SCENE_STAGE));		
 	}
 	
 	return 0;

@@ -12,6 +12,7 @@
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
 	: CScene(pGraphicDev, pContext)
+	, m_bTestInit(false)
 {
 }
 
@@ -47,6 +48,16 @@ HRESULT CStage::Ready_Scene(void)
 
 _int CStage::Update(const _float& fTimeDelta)
 {
+	if (m_bTestInit == false)
+	{
+		Ser_PLAYER_DATA m_pPlayerData;
+		m_pPlayerData.size = sizeof(Ser_PLAYER_DATA);
+		m_pPlayerData.type = INIT_CLIENT;
+		m_pPlayerData.ID = g_myid;
+		m_pPlayerData.vPos = g_vPos;
+		g_Client->sendPacket(sizeof(Ser_PLAYER_DATA), INIT_CLIENT, reinterpret_cast<BYTE*>(&m_pPlayerData));
+		m_bTestInit = true;
+	}
 
 	CScene::Update(fTimeDelta);
 	CCameraMgr::GetInstance()->Update_CurCamera(fTimeDelta);
@@ -59,15 +70,14 @@ HRESULT CStage::Ready_GameLogic(void)
 	CLayer* pLayer = CLayer::Create();
 	CGameObject* pGameObject = NULL;
 
-
-
-	pGameObject = CPlayer::Create(m_pGraphicDev, m_pContext);
+	pGameObject = CPlayer::Create(m_pGraphicDev, m_pContext, g_vPos);
 	if (NULL == pGameObject) return E_FAIL;
 	pLayer->Ready_Object(L"Player", pGameObject);
 
-	pGameObject = CGabiscon::Create(m_pGraphicDev, m_pContext);
-	if (NULL == pGameObject) return E_FAIL;
-	pLayer->Ready_Object(L"NPC", pGameObject);
+
+// 	pGameObject = CGabiscon::Create(m_pGraphicDev, m_pContext);
+// 	if (NULL == pGameObject) return E_FAIL;
+// 	pLayer->Ready_Object(L"NPC", pGameObject);
 
 
 	//g_Client.sendPacket(sizeof(CLayer), INIT_CLIENT, reinterpret_cast<BYTE*>(pGameObject->GetPacketData()->ID));
