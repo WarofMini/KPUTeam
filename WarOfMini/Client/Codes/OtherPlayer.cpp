@@ -57,7 +57,7 @@ HRESULT COtherPlayer::Initialize(ID3D11Device* pGraphicDev)
 
 	m_pTransform->m_vScale = XMFLOAT3(1.f, 1.f, 1.f);
 	m_pTransform->m_vAngle.x = 90.f;
-	m_pTransform->m_vDir = XMFLOAT3(0.f, 0.f, -1.f);
+	//m_pTransform->m_vDir = XMFLOAT3(0.f, 0.f, -1.f);
 	m_pAnimInfo->Set_Key(PLAYER_idle);
 
 	return S_OK;
@@ -118,9 +118,10 @@ void COtherPlayer::InputKey(const FLOAT& fTimeDelta)
 
 }
 
-void COtherPlayer::SetPlayerData(XMFLOAT3 vPos)
+void COtherPlayer::SetPlayerData(XMFLOAT3 vPos, XMFLOAT3 vDir)
 {
 	m_pTransform->m_vPos = vPos;
+	m_pTransform->m_vAngle = vDir;
 }
 
 void COtherPlayer::Move(const FLOAT& fTimeDelta)

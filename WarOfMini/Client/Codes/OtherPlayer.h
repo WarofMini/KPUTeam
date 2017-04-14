@@ -31,7 +31,7 @@ protected:
 
 public:
 	int		GetID(void) { return m_iID; }
-	void	SetPlayerData(XMFLOAT3 vPos);
+	void	SetPlayerData(XMFLOAT3 vPos, XMFLOAT3 vDir);
 
 private:
 	int				m_iID;

@@ -545,6 +545,7 @@ void CPlayer::KeyState(const FLOAT& fTimeDelta)
 		m_pPlayerData.type = CLIENT_POSITION;
 		m_pPlayerData.ID = g_myid;
 		m_pPlayerData.vPos = m_pTransform->m_vPos;
+		m_pPlayerData.vDir = m_pTransform->m_vAngle;
 		g_Client->sendPacket(sizeof(Ser_PLAYER_DATA), CLIENT_POSITION, reinterpret_cast<BYTE*>(&m_pPlayerData));
 	}
 

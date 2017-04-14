@@ -402,7 +402,7 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 		{
 			if (((COtherPlayer*)*iter)->GetID() == m_pPlayerData->ID)
 			{
-				((COtherPlayer*)*iter)->SetPlayerData(m_pPlayerData->vPos);
+				((COtherPlayer*)*iter)->SetPlayerData(m_pPlayerData->vPos, m_pPlayerData->vDir);
 			}
 		}
 	}
