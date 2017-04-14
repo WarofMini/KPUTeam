@@ -439,8 +439,6 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 			}
 		}		
 		
-		//SendPacket(m_PlayerData->ID)
-
 		// 그러면, 여기 process packet 함수는 어디에 위치해 있냐하면
 		// 그러면, 만약에 여기서 클라이언트에게 초기화 하는 코드를 보내주고 싶다고 한다면..
 		// 어떻게 해야 이 안으로 들어오겠어?
@@ -478,85 +476,26 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 		// 한번 간단히 코드 몇줄 쳐봐
 
 		//
-		////id = reinterpret_cast<int>(m_PlayerData->ID);
+		////id = reinterpret_cast<int>(m_PlayerData->I D);
 		// m_PlayerData->ID = id;
 
 		// SendPacket(m_PlayerData->ID, buf);
 
-		// 자, 우리 형배를 위해서, 다시 포인터로 넘어가야겠네
-		// 안그래도 좀전까지 상직이 포인터 알려주다가 암걸려 사망할뻔했는데
-
-		// 굳이 그림을 그려주자면
-		// [][][][] 이렇게 공간을 차지하지
-
-		// 그리고 char 는 1 byte 를 냠냠하는 녀석이야
-
-		// 그렇다면, char c 를 int a 에 넣을 수 있을까?
-		// 답은 넣을 수 있다야.
-		// 왜냐하면 int 는 4바이트를 차지하고, char 는 1바이트라서 
-		// 무려 4개나 쳐넣을 수 있거든
-
-		// 포인터는? 그냥 주소 값이야. 사실 앞에 붙는 int 니 char 니, 구조체니 클래스니 등은
-		// 존나 아무 관계가 없어, 그냥 명시적으로, 이 포인터는 int 형 데이터를 쓰는 포인터야
-		// 이 포인터는 char 형을 가르키는 포인터야. 라고 명시해줘서
-		// 존나 말도안되는 이상한 값을 가르키면, 스스로 매칭해서 에러를 내뱉는 것일 뿐이지
-
-		// 강제캐스팅 하면, 컴파일러 이새낀 장님이라, 포인터 강제 캐스팅하면 몰라 걍 써버려
-		// 예를 들어보도록 하자
-
-		// 위에 a 를 선언했으니, 한번 c 를 4개 넣어 보자
-		// 이게 ptr 변수는 a 주소값을 담는거야
-		// 근데 컴파일러는 존나 불편하지. 왜냐?
-		// 시발 a 가 int 형인데, char 포인터 변수에 넣으려고 하니까
-		// 지가 척 보니까 존나 말도 안되는거야
-		// 그래서 불편한거지
-
-		// 근데 이렇게 하면 존나 장님이 돼.
-		// 왜냐하면 내가 강제 캐스팅으로 이 a 라는 놈은 char 라고 거짓말을 쳤거든
-		// 그럼 이 ptr 안에 a 의 주소값이 들어가는데, char 주소값으로 알고있는거야
-		// 그래서 이런 수식이 가능하지
-		// 그러면...
-		
-		// 이게 돼. 왜냐? ptr 0 번째 위치에는 char 1 바이트가 들어가지거든
-		// 그럼 int a 에는 4byte 가 있어 [] [] [] []
-		// 이렇게 있는건데
-		// 맨 앞에는 [c] [] [] [] 
-		// 이렇게 값이 들어간거야
-		// 여기 까지 이해가 되었니?ㅇㅇ
-
-		// 그러면 똑같이
-
-		// 이렇게 넣어서 4개 모두 [c][c][c][c] 이게 가능해져
-		// 어렵지 않지?ㅇㅇㅇ
-
-		// 자 그러면, 이제 int 를 char 배열에 넣어보자
-		// int a 를 아까 m_sendbuf 에 넣어보자
-
-		// m_Sendbuf 라는 놈은 1 바이트 녀석이 256개 나란히 붙은 놈이고
-		// int a 는 4바이트 녀석이 끼리끼리 붙은 놈들이야
-
-		// 그러면, 위의 예제를 참고해서, m_sendbuf 에다가 한번 넣어봐
-		
-		// 자 위에서는 ptr 이라는 포인터 변수에다가 a 의 주소값을 넣었어
-		// 그러면 이번엔, a의 값을 한번 c 에다 넣어보렴
-		// 이거 먼저 하고 난 다음에 다음껄 하자
-		// int 형의 변수 값을, c 변수에 넣으려면 어떻게 해야할까
-		//강제캐스팅하면 안돼 ?
-		// 그래 이건 a 변수를 강제 캐스팅 해서 넣은거야
-
-		// 잘했어
-		// 그러면 조금 난이도를 높여 보도록 하지
-		// 자 이번엔
-		
-		// 저 i_ptr 값을 넣어보렴
-		// 이렇게 하면 c에 &a 의 주소가 담긴거잖아.
-		// a의 주소가 아니라, i_ptr 포인터 변수의 주소값을 charㅇ 로 강제 캐스팅 한거야
-
+	
 	}
 	break;
 	case CLIENT_POSITION:
 	{
-		int iA = 0;
+		Ser_PLAYER_DATA strPlayerData;
+		strPlayerData = *reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)&buf[2]);
+
+		for (int i = 0; i < m_vecPlayer.size(); ++i)
+		{
+			if(m_vecPlayer[i].ID == strPlayerData.ID)
+				continue;
+			m_vecPlayer[i].type = CLIENT_POSITION;
+			SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&strPlayerData));
+		}
 	}
 	break;
 	}
