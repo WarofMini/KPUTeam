@@ -342,14 +342,14 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 
 		if (g_myid == vecPlayerData.ID)
 		{
-			Ser_PLAYER_DATA* pPlayerData = vecPlayerData.vecPlayerData;
+			//Ser_PLAYER_DATA* pPlayerData = vecPlayerData.vecPlayerData;
+			CGameObject* pGameObject = NULL;
 
 			for (int i = 0; i < vecPlayerData.PlayerSize; ++i)
 			{
 				if(g_myid == vecPlayerData.vecPlayerData[i].ID)
 					continue;
-				CGameObject* pGameObject = NULL;
-				pGameObject = COtherPlayer::Create(CGraphicDev::GetInstance()->GetGraphicDevice(), CGraphicDev::GetInstance()->GetContext(), m_pPlayerData->vPos);
+				pGameObject = COtherPlayer::Create(CGraphicDev::GetInstance()->GetGraphicDevice(), CGraphicDev::GetInstance()->GetContext(), vecPlayerData.vecPlayerData[i].vPos);
 
 				CScene* pScene = CManagement::GetInstance()->GetScene();
 				CLayer* pLayer = pScene->FindLayer(L"Layer_GameLogic");
