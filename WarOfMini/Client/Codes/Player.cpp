@@ -537,6 +537,17 @@ void CPlayer::KeyState(const FLOAT& fTimeDelta)
 		Soldier_Move(fTimeDelta);
 	else
 		Soldier_Iron_Move(fTimeDelta);
+
+	if (m_eMoveDir != DIR_END)
+	{
+		Ser_PLAYER_DATA m_pPlayerData;
+		m_pPlayerData.size = sizeof(Ser_PLAYER_DATA);
+		m_pPlayerData.type = CLIENT_POSITION;
+		m_pPlayerData.ID = g_myid;
+		m_pPlayerData.vPos = m_pTransform->m_vPos;
+		g_Client->sendPacket(sizeof(Ser_PLAYER_DATA), CLIENT_POSITION, reinterpret_cast<BYTE*>(&m_pPlayerData));
+	}
+
 	Soldier_Fire(fTimeDelta);
 }
 

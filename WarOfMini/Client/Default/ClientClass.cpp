@@ -266,7 +266,10 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 {
 	static bool first_time = true;
 	int id = 0;
-		
+
+	CScene* pScene = NULL;
+	CLayer* pLayer = NULL;
+
 	switch (buf[1])
 	{
 		//	case TEST:
@@ -295,10 +298,10 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 		else
 		{
 			CGameObject* pGameObject = NULL;
-			pGameObject = COtherPlayer::Create(CGraphicDev::GetInstance()->GetGraphicDevice(), CGraphicDev::GetInstance()->GetContext(), m_pPlayerData->vPos);
+			pGameObject = COtherPlayer::Create(CGraphicDev::GetInstance()->GetGraphicDevice(), CGraphicDev::GetInstance()->GetContext(), m_pPlayerData->vPos, m_pPlayerData->ID);
 
-			CScene* pScene = CManagement::GetInstance()->GetScene();
-			CLayer* pLayer = pScene->FindLayer(L"Layer_GameLogic");
+			pScene = CManagement::GetInstance()->GetScene();
+			pLayer = pScene->FindLayer(L"Layer_GameLogic");
 			pLayer->Ready_Object(L"OtherPlayer", pGameObject);
 		}
 
@@ -349,10 +352,10 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 			{
 				if(g_myid == vecPlayerData.vecPlayerData[i].ID)
 					continue;
-				pGameObject = COtherPlayer::Create(CGraphicDev::GetInstance()->GetGraphicDevice(), CGraphicDev::GetInstance()->GetContext(), vecPlayerData.vecPlayerData[i].vPos);
+				pGameObject = COtherPlayer::Create(CGraphicDev::GetInstance()->GetGraphicDevice(), CGraphicDev::GetInstance()->GetContext(), vecPlayerData.vecPlayerData[i].vPos, vecPlayerData.vecPlayerData[i].ID);
 
-				CScene* pScene = CManagement::GetInstance()->GetScene();
-				CLayer* pLayer = pScene->FindLayer(L"Layer_GameLogic");
+				pScene = CManagement::GetInstance()->GetScene();
+				pLayer = pScene->FindLayer(L"Layer_GameLogic");
 				pLayer->Ready_Object(L"OtherPlayer", pGameObject);
 			}
 		}
@@ -383,7 +386,26 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 		//}
 	}
 	case CLIENT_POSITION:
+	{
+		m_pPlayerData = reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)buf);
 
+		pScene = CManagement::GetInstance()->GetScene();
+		pLayer = pScene->FindLayer(L"Layer_GameLogic");
+		list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"OtherPlayer");
+		if (pObjList == NULL)
+			break;
+
+		list<CGameObject*>::iterator iter = pObjList->begin();
+		list<CGameObject*>::iterator iter_end = pObjList->end();
+
+		for (iter; iter != iter_end; ++iter)
+		{
+			if (((COtherPlayer*)*iter)->GetID() == m_pPlayerData->ID)
+			{
+				((COtherPlayer*)*iter)->SetPlayerData(m_pPlayerData->vPos);
+			}
+		}
+	}
 		break;
 	case CLIENT_DIRECTION:
 

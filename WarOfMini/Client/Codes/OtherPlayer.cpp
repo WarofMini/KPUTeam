@@ -34,7 +34,7 @@ COtherPlayer* COtherPlayer::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContex
 	return pObject;
 }
 
-COtherPlayer* COtherPlayer::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, XMFLOAT3 vPos)
+COtherPlayer* COtherPlayer::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, XMFLOAT3 vPos, int iID)
 {
 	COtherPlayer* pObject = new COtherPlayer(pContext);
 
@@ -42,7 +42,7 @@ COtherPlayer* COtherPlayer::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContex
 		Safe_Release(pObject);
 
 	pObject->m_pTransform->m_vPos = vPos;
-
+	pObject->m_iID = iID;
 	return pObject;
 }
 
@@ -116,6 +116,11 @@ void COtherPlayer::Update_Equipment(const FLOAT& fTimeDelta)
 void COtherPlayer::InputKey(const FLOAT& fTimeDelta)
 {
 
+}
+
+void COtherPlayer::SetPlayerData(XMFLOAT3 vPos)
+{
+	m_pTransform->m_vPos = vPos;
 }
 
 void COtherPlayer::Move(const FLOAT& fTimeDelta)

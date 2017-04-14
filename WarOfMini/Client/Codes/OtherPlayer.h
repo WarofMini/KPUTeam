@@ -14,7 +14,7 @@ protected:
 
 public:
 	static COtherPlayer* Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);
-	static COtherPlayer* Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, XMFLOAT3 vPos);
+	static COtherPlayer* Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, XMFLOAT3 vPos, int iID);
 
 public:
 	virtual HRESULT	Initialize(ID3D11Device* pGraphicDev);
@@ -29,7 +29,13 @@ protected:
 	void Move(const FLOAT& fTimeDelta);
 	void InputKey(const FLOAT& fTimeDelta);
 
+public:
+	int		GetID(void) { return m_iID; }
+	void	SetPlayerData(XMFLOAT3 vPos);
+
 private:
+	int				m_iID;
+
 	XMFLOAT3		m_vLook;
 
 	XMFLOAT4X4		m_matEquipBone[2];
