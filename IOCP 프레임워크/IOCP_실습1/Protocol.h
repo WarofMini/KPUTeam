@@ -69,6 +69,16 @@ struct Ser_Vec_PLAYER_DATA
 	Ser_PLAYER_DATA vecPlayerData[10];
 };
 
+struct Ser_ANIMATION_DATA
+{
+	BYTE size;	// 이게 전체 size 이고
+	BYTE type;	// 너가 말한 서버의 buf[1] 이 요거고 -> 아까 process packet 에서 구분한 이벤트는 요 type 인거야.
+	int ID;	// 이게 클라이언트에게 줄 id 값이야
+	bool bImmediate;
+	DWORD dwAniIdx;
+	bool bIsSoldier;
+};
+
 //클라에서 보내온 정보들을 담아서 프로토콜로 뿌려주기 ?
 
 
@@ -88,6 +98,7 @@ enum ProcessPacket
 	INIT_OTHER_PLAYER,	 // 다른 플레이어가 들어오게 만든다.
 	CLIENT_POSITION,	 // 좌표를 주고받자.
 	CLIENT_DIRECTION,	 // direction 값을 받아오자.
+	CLIENT_ANIMATION,
 	PLAYER_DISCONNECTED, // 연결이 끊기면 삭제시켜주자.
 	SEND_POSITION,
 };

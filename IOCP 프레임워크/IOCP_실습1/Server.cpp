@@ -498,6 +498,20 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//±Ùµ¥ ¾ê
 		}
 	}
 	break;
+	case CLIENT_ANIMATION:
+	{
+		Ser_ANIMATION_DATA strAnimationData;
+		strAnimationData = *reinterpret_cast<Ser_ANIMATION_DATA*>((Ser_ANIMATION_DATA*)&buf[2]);
+
+		for (int i = 0; i < m_vecPlayer.size(); ++i)
+		{
+			if (m_vecPlayer[i].ID == strAnimationData.ID)
+				continue;
+			m_vecPlayer[i].type = CLIENT_ANIMATION;
+			SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&strAnimationData));
+		}
+	}
+	break;
 	}
 	
 }
