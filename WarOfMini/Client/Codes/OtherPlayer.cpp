@@ -9,6 +9,9 @@
 
 COtherPlayer::COtherPlayer(ID3D11DeviceContext* pContext)
 	: CDynamicObject(pContext)
+	, m_iEquipBone(0)
+	, m_dwAniIdx(PLAYER_idle)
+	, m_bIsSoldier(true)
 {
 	m_vLook = XMFLOAT3(0.f, 0.f, -1.f);
 
@@ -48,17 +51,18 @@ COtherPlayer* COtherPlayer::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContex
 
 HRESULT COtherPlayer::Initialize(ID3D11Device* pGraphicDev)
 {
+	m_uiObjNum = MESHNUM_PLAYER;
+	m_uiObjNum_Iron = MESHNUM_PLAYER2;
+
 	if (FAILED(Ready_Component(pGraphicDev)))
 		return E_FAIL;
 
-
-	m_uiObjNum = MESHNUM_PLAYER;
-
-
 	m_pTransform->m_vScale = XMFLOAT3(1.f, 1.f, 1.f);
 	m_pTransform->m_vAngle.x = 90.f;
-	//m_pTransform->m_vDir = XMFLOAT3(0.f, 0.f, -1.f);
-	m_pAnimInfo->Set_Key(PLAYER_idle);
+	m_pAnimInfo->Set_Key(m_dwAniIdx);
+
+	// Equipment
+	m_pEquipment[0] = CGun::Create(pGraphicDev, m_pContext);
 
 	return S_OK;
 }
@@ -69,16 +73,10 @@ INT COtherPlayer::Update(const FLOAT& fTimeDelta)
 
 	// Temp	-------------------------------------------------------------------------------
 
-	g_vPlayerPos = m_pTransform->m_vPos;
-
-
 	// Update
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
 
-	m_pTransform->m_vDir = XMFLOAT3(m_pTransform->m_matWorld._31, m_pTransform->m_matWorld._32, m_pTransform->m_matWorld._33);
-	XMStoreFloat3(&m_pTransform->m_vDir, XMVector3Normalize(XMLoadFloat3(&m_pTransform->m_vDir)));
-
-	//m_pTransform->Update_MatrixNotXRot();
+	UpdateDir();
 
 	Update_Equipment(fTimeDelta);
 
@@ -90,19 +88,45 @@ void COtherPlayer::Release(void)
 	Safe_Release(m_pEquipment[0]);
 }
 
+void COtherPlayer::UpdateDir(void)
+{
+	XMVECTOR vDir;
+
+	vDir = XMLoadFloat3(&m_pTransform->m_vDir);
+
+	vDir = XMVector3TransformNormal(XMLoadFloat3(&m_vLook), XMLoadFloat4x4(&m_pTransform->m_matWorld));
+
+	vDir = XMVector3Normalize(vDir);
+
+	XMStoreFloat3(&m_pTransform->m_vDir, vDir);
+}
+
 HRESULT COtherPlayer::Ready_Component(ID3D11Device* pGraphicDev)
 {
 	if (FAILED(CDynamicObject::Ready_Component()))
 		return E_FAIL;
-	// Equipment
-	m_pEquipment[0] = CGun::Create(pGraphicDev, m_pContext);
+
+	m_pAnimInfo_Normal = m_pAnimInfo;
+	m_pMatBoneNode_Normal = m_pMatBoneNode;
+	m_uiObjNum_Normal = m_uiObjNum;
+
+	CComponent* pComponent = NULL;
+
+	// AnimationInfo	Iron
+	pComponent = CAnimationInfo::Create(MESHNUM(m_uiObjNum_Iron));
+	m_pAnimInfo_Iron = dynamic_cast<CAnimationInfo*>(pComponent);
+	if (pComponent == NULL) return E_FAIL;
+	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_AnimInfo_Iron", pComponent));
+	// Matrix Bone		Iron
+	m_pMatBoneNode_Iron = new MATNODE;
+	CMeshMgr::GetInstance()->CreateBoneNode(m_uiObjNum_Iron, m_pMatBoneNode_Iron);
 
 	return S_OK;
 }
 
 void COtherPlayer::Update_Equipment(const FLOAT& fTimeDelta)
 {
-	m_matEquipBone[0] = CMeshMgr::GetInstance()->Get_TransMeshBone(m_uiObjNum, 0, 24, m_pMatBoneNode);
+	m_matEquipBone[0] = CMeshMgr::GetInstance()->Get_TransMeshBone(m_uiObjNum, 0, m_iEquipBone, m_pMatBoneNode);
 
 	XMMATRIX matWorld = XMLoadFloat4x4(&m_pTransform->m_matWorld);
 	XMStoreFloat4x4(&m_matEquipBone[0], XMLoadFloat4x4(&m_matEquipBone[0]) * matWorld);
@@ -113,18 +137,41 @@ void COtherPlayer::Update_Equipment(const FLOAT& fTimeDelta)
 
 }
 
-void COtherPlayer::InputKey(const FLOAT& fTimeDelta)
-{
-
-}
-
 void COtherPlayer::SetPlayerData(XMFLOAT3 vPos, XMFLOAT3 vDir)
 {
 	m_pTransform->m_vPos = vPos;
 	m_pTransform->m_vAngle = vDir;
 }
 
-void COtherPlayer::Move(const FLOAT& fTimeDelta)
+void COtherPlayer::PlayAnimation(DWORD dwAniIdx, bool bImmediate)
 {
+	if (bImmediate)
+		m_pAnimInfo->Set_KeyImm((_ushort)dwAniIdx);
+	m_pAnimInfo->Set_Key((_ushort)dwAniIdx);
+	m_dwAniIdx = dwAniIdx;
+}
 
+void COtherPlayer::SoldierChange(void)
+{
+	if (m_bIsSoldier)
+	{
+		m_bIsSoldier = false;
+		m_uiObjNum = m_uiObjNum_Iron;
+		m_pAnimInfo = m_pAnimInfo_Iron;
+		m_pMatBoneNode = m_pMatBoneNode_Iron;
+		PlayAnimation((_ushort)PLAYER_Iron_Idle, true);
+		((CGun*)m_pEquipment[0])->ChangeWeapon(MESHNUM_SPECIALGUN);
+		m_iEquipBone = 2;
+	}
+	else
+	{
+		m_bIsSoldier = true;
+		m_uiObjNum = m_uiObjNum_Normal;
+		m_pAnimInfo = m_pAnimInfo_Normal;
+		m_pMatBoneNode = m_pMatBoneNode_Normal;
+		PlayAnimation((_ushort)PLAYER_idle, true);
+		((CGun*)m_pEquipment[0])->ChangeWeapon(MESHNUM_GUN);
+		m_iEquipBone = 0;
+	}
+	m_pAnimInfo->Update(1.f);
 }

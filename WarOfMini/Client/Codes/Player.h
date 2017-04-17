@@ -66,6 +66,9 @@ public:
 	//현재 카메라 상태가 Dynamic일 경우  Player Update 실행X
 	_bool		DynamicCameraCheck(void); 
 
+	//server
+	void		SendPacketAlways(void);
+
 private:
 	CInput*			m_pInput;
 	XMFLOAT3		m_vLook;

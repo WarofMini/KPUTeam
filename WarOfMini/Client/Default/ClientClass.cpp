@@ -408,11 +408,33 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 	}
 		break;
 	case CLIENT_DIRECTION:
+		break;
+	case CLIENT_ANIMATION:
+	{
+		Ser_ANIMATION_DATA AnimationData = *reinterpret_cast<Ser_ANIMATION_DATA*>((Ser_ANIMATION_DATA*)buf);
 
+		pScene = CManagement::GetInstance()->GetScene();
+		pLayer = pScene->FindLayer(L"Layer_GameLogic");
+		list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"OtherPlayer");
+		if (pObjList == NULL)
+			break;
 
+		list<CGameObject*>::iterator iter = pObjList->begin();
+		list<CGameObject*>::iterator iter_end = pObjList->end();
+
+		for (iter; iter != iter_end; ++iter)
+		{
+			if (((COtherPlayer*)*iter)->GetID() == AnimationData.ID)
+			{
+				if (((COtherPlayer*)*iter)->IsSoldier() == AnimationData.bIsSoldier)
+					((COtherPlayer*)*iter)->PlayAnimation(AnimationData.dwAniIdx, AnimationData.bImmediate);
+				else
+					((COtherPlayer*)*iter)->SoldierChange();
+			}
+		}
+	}
 		break;
 	case PLAYER_DISCONNECTED:
-
 		break;
 	}
 }

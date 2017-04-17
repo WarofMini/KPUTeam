@@ -116,6 +116,7 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 	{
 		Operate_StateMAchine(fTimeDelta);
 		KeyState(fTimeDelta);
+		SendPacketAlways();
 	}
 
 	// Temp	----------------------------------------------------------------------------
@@ -125,7 +126,6 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 
 
 	UpdateDir();
-
 
 	Update_Equipment(fTimeDelta);
 
@@ -392,6 +392,16 @@ void CPlayer::PlayAnimation(DWORD dwAniIdx, bool bImmediate)
 		m_pAnimInfo->Set_KeyImm((_ushort)dwAniIdx);
 	m_pAnimInfo->Set_Key((_ushort)dwAniIdx);
 	m_dwAniIdx = dwAniIdx;
+
+	Ser_ANIMATION_DATA m_AnimationData;
+	m_AnimationData.size = sizeof(Ser_ANIMATION_DATA);
+	m_AnimationData.type = CLIENT_ANIMATION;
+	m_AnimationData.ID = g_myid;
+	m_AnimationData.bImmediate = bImmediate;
+	m_AnimationData.dwAniIdx = dwAniIdx;
+	m_AnimationData.bIsSoldier = m_bIsSoldier;
+	g_Client->sendPacket(sizeof(Ser_ANIMATION_DATA), CLIENT_ANIMATION, reinterpret_cast<BYTE*>(&m_AnimationData));
+
 }
 
 bool CPlayer::Check_AnimationFrame(void)
@@ -538,17 +548,6 @@ void CPlayer::KeyState(const FLOAT& fTimeDelta)
 	else
 		Soldier_Iron_Move(fTimeDelta);
 
-	if (m_eMoveDir != DIR_END)
-	{
-		Ser_PLAYER_DATA m_pPlayerData;
-		m_pPlayerData.size = sizeof(Ser_PLAYER_DATA);
-		m_pPlayerData.type = CLIENT_POSITION;
-		m_pPlayerData.ID = g_myid;
-		m_pPlayerData.vPos = m_pTransform->m_vPos;
-		m_pPlayerData.vDir = m_pTransform->m_vAngle;
-		g_Client->sendPacket(sizeof(Ser_PLAYER_DATA), CLIENT_POSITION, reinterpret_cast<BYTE*>(&m_pPlayerData));
-	}
-
 	Soldier_Fire(fTimeDelta);
 }
 
@@ -592,7 +591,6 @@ void CPlayer::Soldier_Move(const FLOAT& fTimeDelta)
 		m_pTransform->Update(fTimeDelta);
 		break;
 	}
-	//g_Client.sendPacket(sizeof(char), CLIENT_POSITION, reinterpret_cast<BYTE*>(&m_pTransform->m_vPos));
 }
 
 void CPlayer::Soldier_Iron_Move(const FLOAT& fTimeDelta)
@@ -673,7 +671,6 @@ void CPlayer::UpdateDir(void)
 {
 	XMVECTOR vDir;
 
-
 	vDir = XMLoadFloat3(&m_pTransform->m_vDir);
 
 	vDir = XMVector3TransformNormal(XMLoadFloat3(&m_vLook), XMLoadFloat4x4(&m_pTransform->m_matWorld));
@@ -691,4 +688,15 @@ _bool CPlayer::DynamicCameraCheck(void)
 	}
 
 	return false;
+}
+
+void CPlayer::SendPacketAlways(void)
+{
+	Ser_PLAYER_DATA m_pPlayerData;
+	m_pPlayerData.size = sizeof(Ser_PLAYER_DATA);
+	m_pPlayerData.type = CLIENT_POSITION;
+	m_pPlayerData.ID = g_myid;
+	m_pPlayerData.vPos = m_pTransform->m_vPos;
+	m_pPlayerData.vDir = m_pTransform->m_vAngle;
+	g_Client->sendPacket(sizeof(Ser_PLAYER_DATA), CLIENT_POSITION, reinterpret_cast<BYTE*>(&m_pPlayerData));
 }
