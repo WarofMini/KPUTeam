@@ -46,7 +46,7 @@ HRESULT CTextures::Create_Texture(TEXTURETYPE eTextureType, const _tchar* pFileP
 	TexMetadata info;
 
 	size_t iTextureCnt = 1;
-	if (wCnt > 0) 
+	if (wCnt > 0)
 		iTextureCnt = wCnt;
 
 	m_vecTexture.reserve(iTextureCnt);
@@ -73,7 +73,7 @@ HRESULT CTextures::Create_Texture(TEXTURETYPE eTextureType, const _tchar* pFileP
 
 		case TYPE_DDSCUBE:
 			hr = LoadFromDDSFile(szFullPath, DDS_FLAGS_NONE, &info, image);
-			if (FAILED(hr))	
+			if (FAILED(hr))
 				break;
 
 			info.miscFlags &= ~TEX_MISC_TEXTURECUBE;

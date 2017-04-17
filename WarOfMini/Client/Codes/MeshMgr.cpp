@@ -125,3 +125,13 @@ VTXTEX* CMeshMgr::Get_MeshVtxTex(_uint uiObjNum)
 {
 	return m_vecMeshData[uiObjNum]->pMesh->GetVtxTex();
 }
+
+PxVec3* CMeshMgr::Get_MeshPxVtx(_uint uiObjNum)
+{
+	return m_vecMeshData[uiObjNum]->pMesh->GetPxVtx();
+}
+
+PxU32* CMeshMgr::Get_MeshPxIndex(_uint uiObjNum)
+{
+	return  m_vecMeshData[uiObjNum]->pMesh->GetPxIndex();
+}

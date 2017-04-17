@@ -44,7 +44,7 @@
 using namespace XNA;
 
 //ÇÇÁ÷½º================================================//
-#include "PxPhysicsAPI.h"
+#include <PxPhysicsAPI.h>
 using namespace physx;
 //=====================================================//
 

@@ -23,8 +23,6 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 	, m_dwState(SOLDIER_IDLE)
 	, m_dwAniIdx(PLAYER_idle)
 	, m_pComStateMachine(NULL)
-	, m_pCalculator(NULL)
-	, m_pRigidBody(NULL)
 	, m_pComGravity(NULL)
 	, m_eMoveDir(DIR_END)
 	, m_vMoveDir(0.f, 0.f, 0.f)
@@ -35,6 +33,8 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 	, m_fRateOfFire(0.f)
 	, m_bFire(false)
 	, m_bAbleReload(false)
+	, m_pPxActor(NULL)
+	, m_pPxCharacterController(NULL)
 {
 	m_pInput = CInput::GetInstance();
 	m_vLook = XMFLOAT3(0.f, 1.f, 0.f);
@@ -88,6 +88,10 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 	m_pTransform->m_vScale = XMFLOAT3(1.f, 1.f, 1.f);
 	m_pTransform->m_vAngle.x = 90.f;
 
+	//m_pTransform->m_vPos = g_vPos;
+
+	m_pTransform->m_vPos = XMFLOAT3(10.0f, 0.0f, 10.0f);
+
 	m_pTransform->m_vDir = XMFLOAT3(0.f, 0.f, -1.f);
 	m_pAnimInfo->Set_Key((_ushort)m_dwAniIdx);
 
@@ -107,10 +111,27 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 {
 	m_fTimeDelta = fTimeDelta;
 
-	Collision_Field(fTimeDelta);
-	
+	//if (m_pInput->Get_DIKeyState(DIK_C)) //디버그용
+	//{
+	//	m_pPxCharacterController->setPosition(PxExtendedVec3(10.f, 50.f, 10.f));
+	//}
+
+	//Collision_Field(fTimeDelta);	
 	CDynamicObject::Update(fTimeDelta);
 	
+
+
+	//임시로 만든 Jump
+	if (m_pInput->Get_DIKeyState(DIK_C))
+	{
+		m_pPxCharacterController->move(PxVec3(0.0f, 1.0f, 0.0f) * m_fSpeed * fTimeDelta * 5.f, 0, fTimeDelta, PxControllerFilters());
+	}
+
+
+
+	//PhysX 함수
+	PhysXUpdate(fTimeDelta);
+
 	//Dynamic카메라 체크 함수(Dynamic 카메라일시 Update 안돌린다.
 	if (!DynamicCameraCheck())
 	{
@@ -270,121 +291,9 @@ void CPlayer::Collision_Field(const FLOAT& fTimeDelta)
 		m_pComGravity->Set_LandOn();
 	}
 
-
-
-	////반직선의 원점, 방향, 삼각형 정점0, 1, 2, 교점의 매개변수
-
-	//CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
-
-	//if (pLayer == NULL)
-	//	return;
-
-	//list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"StaticObject");
-
-	//if (pObjList == NULL)
-	//	return;
-
-	//list<CGameObject*>::iterator iter = pObjList->begin();
-	//list<CGameObject*>::iterator iter_end = pObjList->end();
-
-
-	//_float tmin = 1000.0f;
-	//XMVECTOR vRayDir = XMVectorSet(0.0f, -1.0f, 0.0f, 0.0f);
-	//XMVECTOR vOrigin = XMLoadFloat3(&m_pTransform->m_vPos);
-
-
-	//for (iter; iter != iter_end; ++iter) //배치된 오브젝트를 순회
-	//{
-
-	//	int nOffset = 3;
-
-	//	int nPrimitives = CMeshMgr::GetInstance()->Get_MeshVtxCnt(((CDefaultObj*)(*iter))->GetObjNum()) / 3;
-
-	//	VTXTEX*	m_pTex = CMeshMgr::GetInstance()->Get_MeshVtxTex(((CDefaultObj*)(*iter))->GetObjNum());
-
-
-	//	if (m_pTex == NULL)
-	//		continue;
-
-	//	XMVECTOR v0, v1, v2;
-
-
-	//	XMMATRIX	matWorld;
-	//	XMVECTOR    vecTest, vecLocalPos, vecLocalDir;
-
-	//	//객체의 로컬행렬을 구한다
-	//	matWorld = XMLoadFloat4x4(&((CTransform*)((CDefaultObj*)(*iter))->Get_Component(L"Com_Transform"))->m_matWorld);
-	//	matWorld = XMMatrixInverse(&vecTest, matWorld);
-
-	//	//로컬 위치, 방향을 구한다
-	//	vecLocalPos = XMVector3TransformCoord(vOrigin, matWorld);
-	//	vecLocalDir = XMVector3TransformNormal(vRayDir, matWorld);
-	//	vecLocalDir = XMVector3Normalize(vecLocalDir);
-
-
-
-
-	//	//객체의 폴리곤을 순회
-	//	for (int i = 0; i < nPrimitives; ++i)
-	//	{
-
-	//		v0 = XMLoadFloat3(&m_pTex[i * nOffset + 0].vPos);
-	//		v1 = XMLoadFloat3(&m_pTex[i * nOffset + 1].vPos);
-	//		v2 = XMLoadFloat3(&m_pTex[i * nOffset + 2].vPos);
-
-	//		
-	//		float fDist = 0.0f;
-
-
-	//		if (XNA::IntersectRayTriangle(vecLocalPos, vecLocalDir, v0, v1, v2, &fDist))
-	//		{
-	//			if (fDist < tmin)
-	//			{
-	//				tmin = fDist;
-	//			
-	//				m_pComGravity->Set_GroundDist(tmin);
-
-
-	//				m_pComGravity->Set_BeforePos(vOrigin);
-	//			}
-	//		}
-	//	}
-
-	//}
-
-	//if (m_pComGravity->Get_GroundDist() != 0.0f && tmin == 1000.0f)
-	//{
-	//	m_pComGravity->Set_LandOn(); //착지 한걸로 하자
-
-	//	XMVECTOR dist = (vRayDir * m_pComGravity->Get_GroundDist()) * 0.3f;
-	//	XMVECTOR beforepos = m_pComGravity->Get_BeforePos();
-
-	//	XMVECTOR vPos = beforepos + dist;
-	//	XMStoreFloat3(&m_pTransform->m_vPos, vPos);
-	//	
-	//	_float fdist = 0.0f;
-	//	m_pComGravity->Set_GroundDist(fdist);
-	//}
-	//else
-	//{
-	//	//이부분을 메시충돌로 하자
-	//	if (tmin <= 0.1f)
-	//	{
-	//		_float fdist = 0.0f;
-	//		m_pComGravity->Set_GroundDist(fdist);
-
-	//		tmin = 0.0f;
-	//		m_pComGravity->Set_LandOn(); //착지 한걸로 하자
-	//		XMVECTOR vPos = vOrigin + (vRayDir * tmin);
-	//		XMStoreFloat3(&m_pTransform->m_vPos, vPos);
-	//	}
-	//	else
-	//	{
-	//		m_pComGravity->Set_OnGround(false); //아직 착지 안함
-	//	}
-	//}
-
 }
+
+
 
 void CPlayer::PlayAnimation(DWORD dwAniIdx, bool bImmediate)
 {
@@ -557,38 +466,48 @@ void CPlayer::Soldier_Move(const FLOAT& fTimeDelta)
 	XMVECTOR vDir;// = XMLoadFloat3(&m_vMoveDir);
 	XMVECTOR vPos = XMLoadFloat3(&m_pTransform->m_vPos);
 
+
+
 	switch (m_dwState)
 	{
 	case SOLDIER_MOVE:
 		vDir = XMLoadFloat3(&m_vMoveDir);
 		if (m_dwAniIdx == PLAYER_sprint)
-			vPos += vDir * m_fSpeed * fTimeDelta * 1.5f;
+			//vPos += vDir * m_fSpeed * fTimeDelta * 1.5f;
+		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 1.5f, 0, fTimeDelta, PxControllerFilters());
 		else
-			vPos += vDir * m_fSpeed * fTimeDelta;
-		XMStoreFloat3(&m_pTransform->m_vPos, vPos);
-		m_pTransform->Update(fTimeDelta);
+			//vPos += vDir * m_fSpeed * fTimeDelta;
+		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
+		//XMStoreFloat3(&m_pTransform->m_vPos, vPos);
+		//m_pTransform->Update(fTimeDelta);
 		break;
 	case SOLDIER_LYING:
 		vDir = XMLoadFloat3(&m_vMoveDir);
 		if (m_dwAniIdx != PLAYER_Lying && m_dwAniIdx != PLAYER_LyingShoot)
 		{
-			vPos += vDir * m_fSpeed * fTimeDelta * 0.5f;
-			XMStoreFloat3(&m_pTransform->m_vPos, vPos);
-			m_pTransform->Update(fTimeDelta);
+			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 0.5f, 0, fTimeDelta, PxControllerFilters());
+			//vPos += vDir * m_fSpeed * fTimeDelta * 0.5f;
+			//XMStoreFloat3(&m_pTransform->m_vPos, vPos);
+			//m_pTransform->Update(fTimeDelta);
 		}
 		break;
 	case SOLDIER_JUMP:
 		vDir = XMLoadFloat3(&m_vMoveDir);
-		vPos += vDir * m_fSpeed * fTimeDelta;
-		XMStoreFloat3(&m_pTransform->m_vPos, vPos);
-		m_pTransform->Update(fTimeDelta);
+		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
+		//vPos += vDir * m_fSpeed * fTimeDelta;
+		//XMStoreFloat3(&m_pTransform->m_vPos, vPos);
+		//m_pTransform->Update(fTimeDelta);
 		break;
 	case SOLDIER_ROLL:
 		vDir = XMLoadFloat3(&m_fRollDir);
-		vPos += vDir * m_fRollSpeed * fTimeDelta;
+
+		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fRollSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
+
+		//vPos += vDir * m_fRollSpeed * fTimeDelta;
 		m_fRollSpeed -= 20.f * fTimeDelta;
-		XMStoreFloat3(&m_pTransform->m_vPos, vPos);
-		m_pTransform->Update(fTimeDelta);
+		//XMStoreFloat3(&m_pTransform->m_vPos, vPos);
+		//m_pTransform->Update(fTimeDelta);
+		
 		break;
 	}
 }
@@ -604,33 +523,39 @@ void CPlayer::Soldier_Iron_Move(const FLOAT& fTimeDelta)
 	case SOLDIER_MOVE:
 		vDir = XMLoadFloat3(&m_vMoveDir);
 		if (m_dwAniIdx == PLAYER_Iron_Sprint)
-			vPos += vDir * m_fSpeed * fTimeDelta * 1.5f;
+			//vPos += vDir * m_fSpeed * fTimeDelta * 1.5f;
+			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 1.5f, 0, fTimeDelta, PxControllerFilters());
 		else
-			vPos += vDir * m_fSpeed * fTimeDelta;
-		XMStoreFloat3(&m_pTransform->m_vPos, vPos);
-		m_pTransform->Update(fTimeDelta);
+			//vPos += vDir * m_fSpeed * fTimeDelta;
+			//XMStoreFloat3(&m_pTransform->m_vPos, vPos);
+			//m_pTransform->Update(fTimeDelta);
+			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
 		break;
 	case SOLDIER_LYING:
 		vDir = XMLoadFloat3(&m_vMoveDir);
 		if (m_dwAniIdx != PLAYER_Iron_Lying && m_dwAniIdx != PLAYER_Iron_LyingShoot)
 		{
-			vPos += vDir * m_fSpeed * fTimeDelta * 0.5f;
-			XMStoreFloat3(&m_pTransform->m_vPos, vPos);
-			m_pTransform->Update(fTimeDelta);
+			//vPos += vDir * m_fSpeed * fTimeDelta * 0.5f;
+			//XMStoreFloat3(&m_pTransform->m_vPos, vPos);
+			//m_pTransform->Update(fTimeDelta);
+			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 0.5f, 0, fTimeDelta, PxControllerFilters());
 		}
 		break;
 	case SOLDIER_JUMP:
 		vDir = XMLoadFloat3(&m_vMoveDir);
-		vPos += vDir * m_fSpeed * fTimeDelta;
-		XMStoreFloat3(&m_pTransform->m_vPos, vPos);
-		m_pTransform->Update(fTimeDelta);
+		//vPos += vDir * m_fSpeed * fTimeDelta;
+		//XMStoreFloat3(&m_pTransform->m_vPos, vPos);
+		//m_pTransform->Update(fTimeDelta);
+		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
 		break;
 	case SOLDIER_ROLL:
 		vDir = XMLoadFloat3(&m_fRollDir);
-		vPos += vDir * m_fRollSpeed * fTimeDelta;
+		//vPos += vDir * m_fRollSpeed * fTimeDelta;
+		//m_fRollSpeed -= 20.f * fTimeDelta;
+		//XMStoreFloat3(&m_pTransform->m_vPos, vPos);
+		//m_pTransform->Update(fTimeDelta);
+		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fRollSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
 		m_fRollSpeed -= 20.f * fTimeDelta;
-		XMStoreFloat3(&m_pTransform->m_vPos, vPos);
-		m_pTransform->Update(fTimeDelta);
 		break;
 	}
 }
@@ -688,6 +613,72 @@ _bool CPlayer::DynamicCameraCheck(void)
 	}
 
 	return false;
+}
+
+void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, PxControllerManager *pPxControllerManager)
+{
+	//XMFLOAT3 vMin = *(CMeshMgr::GetInstance()->Get_MeshMin(m_uiObjNum));
+	//XMFLOAT3 vMax = *(CMeshMgr::GetInstance()->Get_MeshMax(m_uiObjNum));
+
+	//XMFLOAT3 _d3dxvExtents =
+	//	XMFLOAT3((abs(vMin.x) + abs(vMax.x)) / 2, (abs(vMin.y) + abs(vMax.y)) / 2, (abs(vMin.z) + abs(vMax.z)) / 2);
+
+	//Player의 바운딩 박스 생성
+	//PxBoxControllerDesc PxBoxdesc;
+	//PxBoxdesc.position = PxExtendedVec3(0, 0, 0);
+	//PxBoxdesc.halfForwardExtent = _d3dxvExtents.y / 2;
+	//PxBoxdesc.halfSideExtent = _d3dxvExtents.z / 2;
+	//PxBoxdesc.halfHeight = _d3dxvExtents.x / 2;
+	//PxBoxdesc.slopeLimit = 10;
+	//PxBoxdesc.contactOffset = 0.00001;
+	//PxBoxdesc.upDirection = PxVec3(0, 1, 0);
+	//PxBoxdesc.material = pPxMaterial;
+
+	PxCapsuleControllerDesc	PxCapsuledesc;
+	PxCapsuledesc.position = PxExtendedVec3(0, 0, 0);
+	PxCapsuledesc.radius = 5.0f;
+	PxCapsuledesc.height = 5.0f;
+	PxCapsuledesc.slopeLimit = 10;
+	PxCapsuledesc.upDirection = PxVec3(0, 1, 0);
+	PxCapsuledesc.contactOffset = 0.00001;
+	PxCapsuledesc.material = pPxMaterial;
+
+
+	m_pPxCharacterController = pPxControllerManager->createController(PxCapsuledesc);
+
+}
+
+void CPlayer::SetPosition(XMFLOAT3 vPosition)
+{
+	m_pPxCharacterController->setPosition(PxExtendedVec3(vPosition.x, vPosition.y, vPosition.z));
+}
+
+void CPlayer::SetRotate(XMFLOAT3 vRot)
+{
+
+}
+
+//PhysX 함수
+void CPlayer::PhysXUpdate(const FLOAT& fTimeDelta)
+{
+	//PhysX에 값을 전달해준다. 중력
+	m_pPxCharacterController->move(PxVec3(0, -9.8f, 0) * fTimeDelta * 4.f, 0, fTimeDelta, PxControllerFilters());
+	
+
+	//현재 PhysX의 값으로 객체의 월드행렬을 만들어준다.
+	m_pTransform->m_vPos = XMFLOAT3(m_pPxCharacterController->getFootPosition().x, m_pPxCharacterController->getFootPosition().y, m_pPxCharacterController->getFootPosition().z);
+
+	_float m_fRevice = 0.5f; //Player의 Y보정값(발이 지면에 안박히게 보정)
+	
+	XMMATRIX matTrans = XMMatrixTranslation(m_pPxCharacterController->getFootPosition().x, m_pPxCharacterController->getFootPosition().y + m_fRevice, m_pPxCharacterController->getFootPosition().z);
+	XMMATRIX matScale = XMMatrixScaling(m_pTransform->m_vScale.x, m_pTransform->m_vScale.y, m_pTransform->m_vScale.z);
+
+	XMMATRIX matRotX = XMMatrixRotationX((_float)D3DXToRadian(m_pTransform->m_vAngle.x));
+	XMMATRIX matRotY = XMMatrixRotationY((_float)D3DXToRadian(m_pTransform->m_vAngle.y));
+	XMMATRIX matRotZ = XMMatrixRotationZ((_float)D3DXToRadian(m_pTransform->m_vAngle.z));
+
+	XMStoreFloat4x4(&m_pTransform->m_matWorld, matScale * matRotX * matRotY * matRotZ * matTrans);
+
 }
 
 void CPlayer::SendPacketAlways(void)

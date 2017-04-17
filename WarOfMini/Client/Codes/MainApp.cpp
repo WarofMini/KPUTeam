@@ -13,10 +13,13 @@
 #include "FontMgr.h"
 #include "Input.h"
 
+
 CMainApp::CMainApp(void)
 : m_dwRenderCnt(0)
 , m_fTime(0.0f)
+, m_pPVDConnection(NULL)
 {
+
 	ZeroMemory(&m_szFPS, sizeof(_tchar) * 128);
 	//콘솔창===================================
 	/*AllocConsole();
@@ -49,6 +52,10 @@ HRESULT CMainApp::Initialize(void)
 	// Resource
 	CResourcesMgr::GetInstance()->Reserve_ContainerSize(RESOURCE_END);
 
+	//Physx SDK Engine Init=========================
+	InitializePhysxEngine();
+
+
 	//텍스쳐 준비, tga, dds 모두 사용가능
 	Ready_TextureFromFile(pGraphicDev, pContext);
 
@@ -57,7 +64,7 @@ HRESULT CMainApp::Initialize(void)
 	CResourcesMgr::GetInstance()->Ready_Buffer(pGraphicDev, pContext, RESOURCE_STAGE, CResourcesMgr::BUFFER_CUBE, L"Buffer_CubeTex");
 
 	// Management
-	if (FAILED(CManagement::GetInstance()->Ready_Management(pGraphicDev, pContext)))
+	if (FAILED(CManagement::GetInstance()->Ready_Management(pGraphicDev, pContext, m_pPxPhysicsSDK, m_pPxScene, m_pPxControllerManager, m_pCooking)))
 	{
 		MSG_BOX(L"Ready_Management Failed");
 		return E_FAIL;
@@ -89,11 +96,18 @@ INT CMainApp::Update(const _float& fTimeDelta)
 {
 	m_fTime += fTimeDelta;
 
+	if (m_pPxScene)
+	{
+		m_pPxScene->simulate(fTimeDelta);
+		m_pPxScene->fetchResults(true);
+	}
 
 	CInput::GetInstance()->SetInputState();
 		// 인풋 장치 소실 잡아 주는 함수.
 	Set_Focus();
 	Debug_KeyCheck();
+
+
 
 	return CManagement::GetInstance()->Update(fTimeDelta);
 
@@ -159,6 +173,10 @@ void CMainApp::Release(void)
 	CShaderMgr::GetInstance()->DestroyInstance();
 	CRenderTargetMgr::GetInstance()->DestroyInstance();
 	CManagement::GetInstance()->DestroyInstance();
+
+	//Physx SDK Release=======================
+	ReleasePhysxEngine();
+	//========================================
 
 	CFrameMgr::GetInstance()->DestroyInstance();
 	CTimeMgr::GetInstance()->DestroyInstance();
@@ -325,4 +343,66 @@ void CMainApp::Debug_KeyCheck(void)
 		else
 			g_bCollisionDraw = TRUE;
 	}
+}
+
+void CMainApp::InitializePhysxEngine()
+{
+
+	m_pPxFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_PxDefaultAllocatorCallback, m_PxDefaultErrorCallback);
+	PxTolerancesScale PxScale = PxTolerancesScale();
+	PxScale.length /= 100;
+	PxScale.mass /= 100;
+	PxScale.speed /= 100;
+	m_pPxPhysicsSDK = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pPxFoundation, PxScale, false);
+	
+
+	//Cooking Init
+	PxCookingParams params(PxScale);
+	params.meshWeldTolerance = 0.001f;
+	params.meshPreprocessParams = PxMeshPreprocessingFlags(PxMeshPreprocessingFlag::eWELD_VERTICES | PxMeshPreprocessingFlag::eREMOVE_UNREFERENCED_VERTICES | PxMeshPreprocessingFlag::eREMOVE_DUPLICATED_TRIANGLES);
+	m_pCooking = PxCreateCooking(PX_PHYSICS_VERSION, *m_pPxFoundation, params);
+
+
+	if (FAILED(m_pPxPhysicsSDK == NULL))
+	{
+		MSG_BOX(L"PhysicsSDK Initialize Failed");
+	}
+
+	PxInitExtensions(*m_pPxPhysicsSDK);
+	PxSceneDesc sceneDesc(m_pPxPhysicsSDK->getTolerancesScale());
+	sceneDesc.gravity = PxVec3(0.0f, -9.8f, 0.0f);
+
+	if (!sceneDesc.cpuDispatcher)
+	{
+		PxDefaultCpuDispatcher* pCpuDispatcher = PxDefaultCpuDispatcherCreate(1);
+		sceneDesc.cpuDispatcher = pCpuDispatcher;
+	}
+
+	if (!sceneDesc.filterShader)
+		sceneDesc.filterShader = PxDefaultSimulationFilterShader;
+
+	m_pPxScene = m_pPxPhysicsSDK->createScene(sceneDesc);
+	m_pPxControllerManager = PxCreateControllerManager(*m_pPxScene);
+
+
+	// Physx Visual Debuggerに連結
+	if (NULL == m_pPxPhysicsSDK->getPvdConnectionManager())
+	{
+		cout << "PVD Connect Failed" << endl;
+		return;
+	}
+	PxVisualDebuggerConnectionFlags connectionFlags = PxVisualDebuggerExt::getAllConnectionFlags();
+	m_pPxPhysicsSDK->getVisualDebugger()->setVisualDebuggerFlag(PxVisualDebuggerFlag::eTRANSMIT_SCENEQUERIES, true);
+	m_pPVDConnection = PxVisualDebuggerExt::createConnection(m_pPxPhysicsSDK->getPvdConnectionManager(), "127.0.0.1", 5425, 1000, connectionFlags);
+
+}
+
+void CMainApp::ReleasePhysxEngine()
+{
+	if (m_pPVDConnection) m_pPVDConnection->release();
+	if (m_pPxControllerManager) m_pPxControllerManager->release();
+	if (m_pPxScene) m_pPxScene->release();
+	if (m_pPxFoundation) m_pPxFoundation->release();
+	if (m_pPxPhysicsSDK) m_pPxPhysicsSDK->release();
+	if (m_pCooking) m_pCooking->release();
 }

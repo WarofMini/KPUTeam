@@ -10,6 +10,10 @@ CManagement::CManagement(void)
 , m_pRenderer(NULL)
 , m_pGraphicDev(NULL)
 , m_pContext(NULL)
+, m_pPxPhysicsSDK(NULL)
+, m_pPxScene(NULL)
+, m_pPxControllerManager(NULL)
+, m_pCooking(NULL)
 {
 }
 
@@ -29,10 +33,15 @@ void CManagement::Add_RenderInstGroup(CRenderer::RENDERTYPE eType, UINT uiObjNum
 		m_pRenderer->Add_RenderInstGroup(eType, uiObjNum, pMatWorld);
 }
 
-HRESULT CManagement::Ready_Management(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
+HRESULT CManagement::Ready_Management(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysics, PxScene* pPxScene, PxControllerManager* pPxControllerManager, PxCooking* pCooking)
 {
 	m_pGraphicDev = pGraphicDev;
 	m_pContext = pContext;
+
+	m_pPxPhysicsSDK = pPxPhysics;
+	m_pPxScene = pPxScene;
+	m_pPxControllerManager = pPxControllerManager;
+	m_pCooking = pCooking;
 
 	m_pRenderer = CRenderer::Create(pGraphicDev, pContext);
 	NULL_CHECK_RETURN_MSG(m_pRenderer, E_FAIL, L"Renderer Create Failed");

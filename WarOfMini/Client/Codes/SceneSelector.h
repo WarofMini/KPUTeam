@@ -14,7 +14,7 @@ public:
 
 
 public:
-	HRESULT operator () (CScene** ppScene, ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
+	HRESULT operator () (CScene** ppScene, ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics*	pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 	{
 		switch (m_eSceneID)
 		{
@@ -23,11 +23,11 @@ public:
 			break;
 
 		case SCENE_LOGO:
-			*ppScene = CLogo::Create(pGraphicDev, pContext);
+			*ppScene = CLogo::Create(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking);
 			break;
 
 		case SCENE_STAGE:
-			*ppScene = CStage::Create(pGraphicDev, pContext);
+			*ppScene = CStage::Create(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking);
 			break;
 		}
 

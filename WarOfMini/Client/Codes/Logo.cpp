@@ -9,8 +9,8 @@
 #include "ResourcesMgr.h"
 #include "CameraMgr.h"
 
-CLogo::CLogo(ID3D11Device * pGraphicDev, ID3D11DeviceContext * pContext)
-: CScene(pGraphicDev, pContext)
+CLogo::CLogo(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
+: CScene(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking)
 , m_pLoading(NULL)
 {
 }
@@ -19,9 +19,9 @@ CLogo::~CLogo(void)
 {
 }
 
-CLogo * CLogo::Create(ID3D11Device * pGraphicDev, ID3D11DeviceContext * pContext)
+CLogo * CLogo::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 {
-	CLogo* pScene = new CLogo(pGraphicDev, pContext);
+	CLogo* pScene = new CLogo(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking);
 
 	if (FAILED(pScene->Ready_Scene()))
 	{

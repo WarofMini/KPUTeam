@@ -42,8 +42,11 @@ protected:
 	ID3D11Buffer*	m_pIB;
 	_uint			m_uiVtxCnt;
 	_uint			m_uiIdxCnt;
+
 	VTXTEX*			m_pVtxTex;
 
+	PxVec3*			m_pPxVtx;
+	PxU32*			m_pPxIndex;
 
 protected:
 	XMFLOAT3		m_vMin;
@@ -56,6 +59,10 @@ public:
 	VTXTEX*			GetVtxTex(void);
 	_uint			GetVtxCnt(void);
 	CTextures*		GetTexture(void);
+
+
+	PxVec3*			GetPxVtx(void);
+	PxU32*			GetPxIndex(void);
 
 	void			SetMesh_TextureNumber(_uint iNumber);
 	_uint			GetMesh_TextureNumber(void);

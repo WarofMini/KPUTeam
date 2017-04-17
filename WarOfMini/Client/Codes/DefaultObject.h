@@ -3,6 +3,7 @@
 
 #include "GameObject.h"
 
+
 class CTransform;
 class CSphereMesh;
 
@@ -36,6 +37,15 @@ public:
 	_uint			GetObjNum(void);
 	void			ComputeCollider(void);
 
+	//Physx SDK Member Variables =========================
+private:
+	PxRigidStatic	*m_pPxActor;
+
+
+public:
+	void			BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, XMFLOAT3 vScale, PxCooking* pCooking,  const char* name);
+	void			SetPosition(XMFLOAT3 vPosition);
+	void			SetRotate(XMFLOAT3 vRot);
 };
 
 #endif // DefaultObj_h__

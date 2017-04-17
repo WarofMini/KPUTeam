@@ -233,11 +233,13 @@ void CResourcesMgr::Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 	_tchar wstrTextureName[MAX_PATH];
 	ZeroMemory(wstrTextureName, sizeof(_tchar) * MAX_PATH);
 
+
+
 	if (pFbxNodeAttribute != nullptr && pFbxNodeAttribute->GetAttributeType() == FbxNodeAttribute::eMesh)
 	{
 		FbxMesh* pMesh = (FbxMesh*)pNode->GetNodeAttribute();
 
-
+		
 		// Compute Bounding Box
 		pMesh->ComputeBBox();
 
@@ -258,9 +260,15 @@ void CResourcesMgr::Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 		FbxVector4* pVertices = pMesh->GetControlPoints();
 
 		uiVtxCnt = pMesh->GetPolygonCount() * 3;
+
 		pVtxTex = new VTXTEX[uiVtxCnt];
 		ZeroMemory(pVtxTex, sizeof(VTXTEX) * uiVtxCnt);
 
+
+		//Index
+		uiIdxCnt = uiVtxCnt;
+		pIndex = new _uint[uiIdxCnt];
+		ZeroMemory(pIndex, sizeof(_uint) * uiIdxCnt);
 
 		// Vertex
 		//for (UINT i = 0; i < uiVtxCnt; ++i)
@@ -282,6 +290,8 @@ void CResourcesMgr::Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 
 			for (int k = 0; k < iNumVertices; k++) // 폴리곤을 구성하는 버텍스의 인덱스
 			{
+				//인덱스
+				pIndex[iVTXCounter] = iVTXCounter;
 
 				//정점 데이터 얻는곳
 				int iControlPointIndex = pMesh->GetPolygonVertex(uiPolygonIndex, k); // 컨트롤 포인트 = 하나의 버텍스
@@ -400,9 +410,6 @@ void CResourcesMgr::Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 				iVTXCounter += 1;
 			}
 		}
-
-
-
 
 
 		//// UV

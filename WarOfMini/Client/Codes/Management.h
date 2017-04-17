@@ -18,7 +18,7 @@ public:
 	void Add_RenderInstGroup(CRenderer::RENDERTYPE eType, UINT uiObjNum, XMFLOAT4X4* pMatWorld);
 
 public:
-	HRESULT Ready_Management(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);
+	HRESULT Ready_Management(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysics, PxScene* pPxScene, PxControllerManager* pPxControllerManager, PxCooking* pCooking);
 	_int Update(const _float& fTimeDelta);
 	void Render(void);
 	void Release(void);
@@ -35,6 +35,14 @@ private:
 	ID3D11Device*			m_pGraphicDev;
 	ID3D11DeviceContext*	m_pContext;
 
+	//Physx SDK Member Variables =========================
+	PxPhysics*						m_pPxPhysicsSDK;
+	PxScene*						m_pPxScene;
+	PxControllerManager*			m_pPxControllerManager;
+	PxCooking*						m_pCooking;
+	//=====================================================
+
+
 public:
 	CRenderer*			GetRenderer(void);
 	CScene*				GetScene(void) { return m_pScene; }
@@ -48,7 +56,7 @@ HRESULT CManagement::Change_Scene(T& Functor)
 	if (m_pScene != NULL)
 		Safe_Release(m_pScene);
 
-	FAILED_CHECK_RETURN(Functor(&m_pScene, m_pGraphicDev, m_pContext), E_FAIL);
+	FAILED_CHECK_RETURN(Functor(&m_pScene, m_pGraphicDev, m_pContext, m_pPxPhysicsSDK, m_pPxScene, m_pPxControllerManager, m_pCooking), E_FAIL);
 
 	m_pRenderer->Clear_RenderGroup();
 

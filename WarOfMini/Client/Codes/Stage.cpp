@@ -10,8 +10,8 @@
 #include "SphereMesh.h"
 #include "Gabiscon.h"
 
-CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
-	: CScene(pGraphicDev, pContext)
+CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
+: CScene(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking)
 	, m_bTestInit(false)
 {
 }
@@ -20,10 +20,10 @@ CStage::~CStage(void)
 {
 }
 
-CStage* CStage::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
+CStage* CStage::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 {
 
-	CStage* pScene = new CStage(pGraphicDev, pContext);
+	CStage* pScene = new CStage(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking);
 
 	if (FAILED(pScene->Ready_Scene()))
 	{
@@ -36,6 +36,8 @@ CStage* CStage::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
 
 HRESULT CStage::Ready_Scene(void)
 {
+	m_pPxMaterial = m_pPxPhysicsSDK->createMaterial(0.9f, 0.9f, 0.001f);
+
 	if (FAILED(Ready_GameLogic()))		return E_FAIL;
 	if (FAILED(Ready_Environment()))	return E_FAIL;
 
@@ -70,8 +72,18 @@ HRESULT CStage::Ready_GameLogic(void)
 	CLayer* pLayer = CLayer::Create();
 	CGameObject* pGameObject = NULL;
 
-	pGameObject = CPlayer::Create(m_pGraphicDev, m_pContext, g_vPos);
-	if (NULL == pGameObject) return E_FAIL;
+
+	//Player
+	pGameObject = CPlayer::Create(m_pGraphicDev, m_pContext);
+	
+	if (NULL == pGameObject) 
+		return E_FAIL;
+
+
+
+	((CPlayer*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, m_pPxControllerManager);
+	((CPlayer*)pGameObject)->SetPosition(XMFLOAT3(10.f, 80.f, 10.f));
+
 	pLayer->Ready_Object(L"Player", pGameObject);
 
 
@@ -119,32 +131,51 @@ void CStage::Release(void)
 //바닥 생성
 HRESULT CStage::InitFloor(void)
 {
+
 	CLayer* pLayer = FindLayer(L"Layer_GameLogic");
 
 
 	CGameObject* pGameObject = NULL;
 	//InitFloor
-	float m_iSize = 500.f;
-	float m_fSize = 0.4f;
+	float m_iSize = 195.f;
+	float m_fSize = 1.01f;
 
 	m_iSize *= m_fSize;
+
+	pGameObject = CDefaultObj::Create(m_pContext);
+	if (NULL == pGameObject)
+		return E_FAIL;
+
+
+	((CDefaultObj*)pGameObject)->SetObjNum(MESHNUM_FLOOR1);
+
 
 	for (int i = 0; i < 8; ++i)
 	{
 		for (int j = 0; j < 6; ++j)
 		{
 			pGameObject = CDefaultObj::Create(m_pContext);
+
 			if (NULL == pGameObject)
 				return E_FAIL;
+
 
 			((CDefaultObj*)pGameObject)->SetObjNum(MESHNUM_FLOOR1);
 
 
-			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle = XMFLOAT3(270.f, 90.f, 0.f);
+			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle = XMFLOAT3(270.f, 0.f, 0.f);
 			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale = XMFLOAT3(m_fSize, m_fSize, m_fSize);
-			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos = XMFLOAT3((j % 6) * m_iSize, 0.f, i * m_iSize);
+			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos = XMFLOAT3((j % 6) * m_iSize + 100.f, 0.f, i * m_iSize - 100.f);
+
+			((CDefaultObj*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(m_fSize, m_fSize, m_fSize), m_pCooking, "Floor");
+
+
+			//x, y, z, = x,z, y축으로 돌아간다...
+			((CDefaultObj*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(270.f), (_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f)));
+			((CDefaultObj*)pGameObject)->SetPosition(XMFLOAT3((j % 6) * m_iSize + 100.f, 0.f, i * m_iSize - 100.f));
 			
-			((CDefaultObj*)pGameObject)->ComputeCollider();
+
+
 			pLayer->Ready_Object(L"StaticObject", pGameObject);
 
 		}
@@ -161,8 +192,8 @@ HRESULT CStage::InitToiletFloor(void)
 	CGameObject* pGameObject = NULL;
 
 	//InitFloor
-	float m_iSize = 500.f;
-	float m_fSize = 0.4f;
+	float m_iSize = 195.f;
+	float m_fSize = 1.01f;
 
 	m_iSize *= m_fSize;
 
@@ -178,11 +209,17 @@ HRESULT CStage::InitToiletFloor(void)
 
 			((CDefaultObj*)pGameObject)->SetObjNum(MESHNUM_FLOOR2);
 
-			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle = XMFLOAT3(270.f, 90.f, 0.f);
+			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle = XMFLOAT3(270.f, 0.f, 0.f);
 			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale = XMFLOAT3(m_fSize, m_fSize, m_fSize);
-			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos = XMFLOAT3((j % 4) * m_iSize + 1182.f, 0.1f, i * m_iSize + 400.f);
+			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos = XMFLOAT3((j % 4) * m_iSize + 1282.f, 0.1f, i * m_iSize + 300.f);
 
-			((CDefaultObj*)pGameObject)->ComputeCollider();
+
+
+			((CDefaultObj*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(m_fSize, m_fSize, m_fSize), m_pCooking, "Floor2");
+			((CDefaultObj*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(270.f), (_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f)));
+			((CDefaultObj*)pGameObject)->SetPosition(XMFLOAT3((j % 4) * m_iSize + 1282.f, 0.1f, i * m_iSize + 300.f));
+
+
 			pLayer->Ready_Object(L"StaticObject", pGameObject);
 
 		}
@@ -248,7 +285,16 @@ HRESULT CStage::LoadStageMap(void)
 			XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle, vAngle);
 			XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale, vScale);
 
-			((CDefaultObj*)pGameObject)->ComputeCollider();
+			XMFLOAT3 m_vScale, m_vPos, m_vAngle;
+			XMStoreFloat3(&m_vScale, vScale);
+			XMStoreFloat3(&m_vPos, vPos);
+			XMStoreFloat3(&m_vAngle, vAngle);
+			//
+			((CDefaultObj*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, m_vScale, m_pCooking, "StaticObject");
+			((CDefaultObj*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(m_vAngle.x), (_float)D3DXToRadian(m_vAngle.z), (_float)D3DXToRadian(m_vAngle.y)));
+			((CDefaultObj*)pGameObject)->SetPosition(m_vPos);
+
+			//((CDefaultObj*)pGameObject)->ComputeCollider();
 			pLayer->Ready_Object(L"StaticObject", pGameObject);
 		}
 

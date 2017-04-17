@@ -6,7 +6,7 @@
 class CScene
 {
 protected:
-	explicit CScene(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);
+	explicit CScene(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking);
 	virtual ~CScene(void);
 
 public:
@@ -22,6 +22,14 @@ public:
 protected:
 	ID3D11Device*			m_pGraphicDev;
 	ID3D11DeviceContext*	m_pContext;
+
+	//Physx SDK Member Variables =========================
+	PxPhysics*						m_pPxPhysicsSDK;
+	PxScene*						m_pPxScene;
+	PxControllerManager*			m_pPxControllerManager;
+	PxMaterial*						m_pPxMaterial;
+	PxCooking*						m_pCooking;
+	//=====================================================
 
 protected:
 	typedef map<const _tchar*, CLayer*>   MAPLAYER;

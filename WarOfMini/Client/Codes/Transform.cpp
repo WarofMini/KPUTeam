@@ -27,7 +27,8 @@ _int  CTransform::Update(const _float& fTime)
 
 	XMMATRIX matTrans = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
 
-	XMStoreFloat4x4(&m_matWorld, matScale * matRotX * matRotY * matRotZ * matTrans);
+	XMStoreFloat4x4(&m_matWorld, matScale *  matRotX * matRotY * matRotZ * matTrans);
+
 	XMStoreFloat4x4(&m_matNRotWorld, matScale * matTrans);
 	XMStoreFloat4x4(&m_matNScaleWorld, matRotX * matRotY * matRotZ * matTrans);
 

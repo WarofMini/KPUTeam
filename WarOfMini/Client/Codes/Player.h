@@ -74,7 +74,7 @@ private:
 	XMFLOAT3		m_vLook;
 
 	XMFLOAT4X4		m_matEquipBone[2];
-	CGun*		m_pEquipment[2];
+	CGun*			m_pEquipment[2];
 	_int			m_iEquipBone;
 
 	//Component
@@ -102,9 +102,16 @@ private:
 	_bool			m_bFire;
 	_bool			m_bAbleReload;
 
-//중력 & 충돌체크
-	CCalculator*	m_pCalculator;
-	CRigidBody*		m_pRigidBody;
+	//Physx SDK Member Variables =========================
+private:
+	PxRigidDynamic*		m_pPxActor;
+	PxController*		m_pPxCharacterController;
+public:
+	void	BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, PxControllerManager *pPxControllerManager);
+	void	SetPosition(XMFLOAT3 vPosition);
+	void	SetRotate(XMFLOAT3 vRot);
+	void	PhysXUpdate(const FLOAT& fTimeDelta);
+
 };
 
 #endif //

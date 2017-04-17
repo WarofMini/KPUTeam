@@ -34,6 +34,11 @@ public:
 	_uint	Get_MeshVtxCnt(_uint uiObjNum);
 	VTXTEX*	Get_MeshVtxTex(_uint uiObjNum);
 
+//피직스 관련 함수
+public:
+	PxVec3*	 Get_MeshPxVtx(_uint uiObjNum);
+	PxU32*	 Get_MeshPxIndex(_uint uiObjNum);
+
 private:
 	vector<MESHDATA*>	m_vecMeshData;
 };

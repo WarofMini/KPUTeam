@@ -2,9 +2,14 @@
 #include "Scene.h"
 #include "Layer.h"
 
-CScene::CScene(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
+CScene::CScene(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 : m_pGraphicDev(pGraphicDev)
 , m_pContext(pContext)
+, m_pPxPhysicsSDK(pPxPhysicsSDK)
+, m_pPxScene(pPxScene)
+, m_pPxControllerManager(pPxControllerManager)
+, m_pPxMaterial(NULL)
+, m_pCooking(pCooking)
 {
 }
 

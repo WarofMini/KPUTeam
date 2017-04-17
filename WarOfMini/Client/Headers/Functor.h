@@ -74,4 +74,5 @@
 		_uint				m_uiNum;
 	};
 
+
 #endif

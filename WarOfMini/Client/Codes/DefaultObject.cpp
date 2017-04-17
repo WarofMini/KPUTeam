@@ -14,6 +14,7 @@ CDefaultObj::CDefaultObj(ID3D11DeviceContext* pContext)
 , m_fRadius(0.f)
 , m_pTransform(NULL)
 , m_pSphereMesh(NULL)
+, m_pPxActor(NULL)
 {
 }
 
@@ -42,15 +43,16 @@ HRESULT CDefaultObj::Initialize()
 
 _int CDefaultObj::Update(const _float& fTimeDelta)
 {
+	//m_pTransform->m_vAngle.y += 1.f;
 
 	CGameObject::Update(fTimeDelta);
+
 
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
 
 
 	//if (m_pSphereMesh != NULL && g_bCollisionDraw)
-	//	m_pSphereMesh->Update(fTimeDelta);
-	
+	//	m_pSphereMesh->Update(fTimeDelta);	
 	
 	return 0;
 }
@@ -76,7 +78,7 @@ void CDefaultObj::Render(void)
 	m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
 
 
-	CMeshMgr::GetInstance()->Render_MeshMgr(m_uiObjNum, m_iTextureNumber, FALSE);
+	CMeshMgr::GetInstance()->Render_MeshMgr(m_uiObjNum, m_iTextureNumber, TRUE);
 
 
 	//if (m_pSphereMesh != NULL && g_bCollisionDraw)
@@ -125,10 +127,111 @@ void CDefaultObj::ComputeCollider(void)
 	vMax.z * m_pTransform->m_vScale.z);
 
 
-
 	m_fRadius = (vMax.x > vMax.y) ? vMax.x : vMax.y;
 	m_fRadius = (vMax.z > m_fRadius) ? vMax.z : m_fRadius;
 
 
 	m_pSphereMesh = CSphereMesh::Create(m_pContext, m_fRadius , &m_pTransform->m_vPos);
+}
+
+void CDefaultObj::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, XMFLOAT3 vScale, PxCooking* pCooking, const char* name)
+{
+	PxTriangleMeshDesc meshDesc;
+
+	PxVec3*			m_pVtxTex;
+	PxU32*			m_pIndex;
+
+	_uint			m_iCount;
+
+	
+	//Mesh vertex Count
+	m_iCount = CMeshMgr::GetInstance()->Get_MeshVtxCnt(m_uiObjNum);
+
+	m_pVtxTex = CMeshMgr::GetInstance()->Get_MeshPxVtx(m_uiObjNum);
+	m_pIndex = CMeshMgr::GetInstance()->Get_MeshPxIndex(m_uiObjNum);
+	
+	meshDesc.points.count = m_iCount;
+	meshDesc.triangles.count = m_iCount/3;
+	meshDesc.points.stride = sizeof(PxVec3);
+	meshDesc.triangles.stride = sizeof(PxU32) * 3;
+	meshDesc.points.data = &(*m_pVtxTex);
+	meshDesc.triangles.data = &(*m_pIndex);
+	meshDesc.flags = PxMeshFlags(0);
+
+
+	PxDefaultMemoryOutputStream stream;
+	bool ok = pCooking->cookTriangleMesh(meshDesc, stream);
+	
+	if (!ok)
+		return ;
+
+	PxDefaultMemoryInputData rb(stream.getData(), stream.getSize());
+
+	PxTriangleMesh* triangleMesh = pPxPhysics->createTriangleMesh(rb);
+
+
+	PxVec3 ScaleTemp = PxVec3(vScale.x, vScale.y, vScale.z);
+
+	//Scale
+	PxMeshScale PxScale;
+	PxScale.scale = ScaleTemp;
+	
+	PxTriangleMeshGeometry meshGeom(triangleMesh, PxScale);
+
+	PxTransform _PxTransform(0, 0, 0);
+	m_pPxActor = PxCreateStatic(*pPxPhysics, _PxTransform, meshGeom, *pPxMaterial);
+
+	m_pPxActor->setName(name);
+	pPxScene->addActor(*m_pPxActor);
+
+	
+	//바운딩박스
+	//XMFLOAT3 vMin = *(CMeshMgr::GetInstance()->Get_MeshMin(m_uiObjNum));
+
+	//vMin.x *= vScale.x;	 vMin.y *= vScale.y;  vMin.z *= vScale.z;
+
+	//
+	//XMFLOAT3 vMax = *(CMeshMgr::GetInstance()->Get_MeshMax(m_uiObjNum));
+	//vMax.x *= vScale.x;	 vMax.y *= vScale.y;  vMax.z *= vScale.z;
+
+
+	//XMFLOAT3 _d3dxvExtents =
+	//	XMFLOAT3((abs(vMin.x) + abs(vMax.x)) / 2, (abs(vMin.y) + abs(vMax.y)) / 2, (abs(vMin.z) + abs(vMax.z)) / 2);
+
+	////이게 객체의 최종행렬
+	//PxTransform _PxTransform(0, 0, 0);
+
+	//PxBoxGeometry _PxBoxGeometry(_d3dxvExtents.x, _d3dxvExtents.y, _d3dxvExtents.z);
+	//m_pPxActor = PxCreateStatic(*pPxPhysics, _PxTransform, _PxBoxGeometry, *pPxMaterial);
+	//m_pPxActor->setName(name);
+	//pPxScene->addActor(*m_pPxActor);
+}
+
+void CDefaultObj::SetPosition(XMFLOAT3 vPosition)
+{
+
+	PxTransform _PxTransform = m_pPxActor->getGlobalPose();
+
+	_PxTransform.p = PxVec3(vPosition.x, vPosition.y, vPosition.z);
+
+
+	XMFLOAT3 vMin = *(CMeshMgr::GetInstance()->Get_MeshMin(m_uiObjNum));
+	XMFLOAT3 vMax = *(CMeshMgr::GetInstance()->Get_MeshMax(m_uiObjNum));
+
+	D3DXVECTOR3 _d3dxvExtents =
+	D3DXVECTOR3((abs(vMin.x) + abs(vMax.x)) / 2, (abs(vMin.y) + abs(vMax.y)) / 2, (abs(vMin.z) + abs(vMax.z)) / 2);
+
+	m_pPxActor->setGlobalPose(_PxTransform);
+}
+
+void CDefaultObj::SetRotate(XMFLOAT3 vRot)
+{
+	PxTransform _PxTransform = m_pPxActor->getGlobalPose();
+
+	_PxTransform.q *= PxQuat(vRot.x, PxVec3(1, 0, 0));
+	_PxTransform.q *= PxQuat(vRot.y, PxVec3(0, 1, 0));
+	_PxTransform.q *= PxQuat(vRot.z, PxVec3(0, 0, 1));
+
+	m_pPxActor->setGlobalPose(_PxTransform);
+
 }

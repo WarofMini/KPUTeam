@@ -3,6 +3,7 @@
 
 #include "Include.h"
 
+
 class CMainApp
 {
 private:
@@ -23,6 +24,18 @@ private:
 	_tchar							m_szFPS[128];
 	_float							m_fTime;
 
+
+	//Physx SDK Member Variables =========================
+	PxPhysics*						m_pPxPhysicsSDK;
+	PxScene*						m_pPxScene;
+	PxControllerManager*			m_pPxControllerManager;
+	PxFoundation*					m_pPxFoundation;
+	PxDefaultErrorCallback			m_PxDefaultErrorCallback;
+	PxDefaultAllocator				m_PxDefaultAllocatorCallback;
+	PxVisualDebuggerConnection*     m_pPVDConnection;
+	PxCooking*						m_pCooking;
+	//====================================================
+
 private:	//인풋 장치 소실 했을때 다시 찾는 함수.
 	void		Set_Focus(void);
 
@@ -39,6 +52,13 @@ public:
 	void Stage_DebugInfo(void);
 
 	void Debug_KeyCheck(void);
+
+public:
+	/////////////// Physx SDK Member Function ///////////////
+	void InitializePhysxEngine();
+	void ReleasePhysxEngine();
 };
+
+
 
 #endif // MainApp_h__

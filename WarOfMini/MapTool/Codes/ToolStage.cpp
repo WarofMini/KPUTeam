@@ -428,8 +428,8 @@ void CToolStage::InitFloor(void)
 {
 	wstring strName = L"Mesh_Floor1";
 
-	float m_iSize = 500.f;
-	float m_fSize = 0.4f;
+	float m_iSize = 195.f;
+	float m_fSize = 1.01f;
 
 	m_iSize *= m_fSize;
 
@@ -445,7 +445,7 @@ void CToolStage::InitFloor(void)
 			pObject->GetInfo()->m_vScale = D3DXVECTOR3(m_fSize, m_fSize, m_fSize);
 			((CToolStaticObject*)pObject)->SetMode(MODE_FIX);
 
-			pObject->GetInfo()->m_vPos = D3DXVECTOR3((j % 6) * m_iSize, 0.f, i * m_iSize);
+			pObject->GetInfo()->m_vPos = D3DXVECTOR3((j % 6) * m_iSize + 100.f, 0.f, i * m_iSize - 100.f);
 
 			CObjMgr::GetInstance()->AddObject(L"StaticObject", pObject);
 		}
@@ -456,8 +456,8 @@ void CToolStage::InitToiletFloor(void)
 {
 	wstring strName = L"Mesh_Floor2";
 
-	float m_iSize = 500.f;
-	float m_fSize = 0.4f;
+	float m_iSize = 195.f;
+	float m_fSize = 1.01f;
 
 	m_iSize *= m_fSize;
 
@@ -473,7 +473,7 @@ void CToolStage::InitToiletFloor(void)
 			pObject->GetInfo()->m_vScale = D3DXVECTOR3(m_fSize, m_fSize, m_fSize);
 			((CToolStaticObject*)pObject)->SetMode(MODE_FIX);
 
-			pObject->GetInfo()->m_vPos = D3DXVECTOR3((j % 4) * m_iSize + 1182.f, 0.1f, i * m_iSize + 400.f);
+			pObject->GetInfo()->m_vPos = D3DXVECTOR3((j % 4) * m_iSize + 1282.f, 0.1f, i * m_iSize + 300.f);
 
 			CObjMgr::GetInstance()->AddObject(L"StaticObject", pObject);
 		}

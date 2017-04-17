@@ -50,6 +50,24 @@ HRESULT CStaticMesh::Create_Buffer(const VTXTEX* pVB, const _uint& uiVtxCnt, con
 
 		memcpy(m_pVtxTex, pVB, sizeof(VTXTEX) * m_uiVtxCnt);
 
+		//피직스 관련 Vertex, Index
+		m_pPxVtx = new PxVec3[m_uiVtxCnt];
+		ZeroMemory(m_pPxVtx, sizeof(PxVec3) * m_uiVtxCnt);
+
+		m_pPxIndex = new PxU32[m_uiIdxCnt];
+		ZeroMemory(m_pPxIndex, sizeof(PxU32) * m_uiIdxCnt);
+
+		for (int i = 0; i < m_uiVtxCnt; ++i)
+		{
+			m_pPxVtx[i].x = m_pVtxTex[i].vPos.x;
+			m_pPxVtx[i].y = m_pVtxTex[i].vPos.y;
+			m_pPxVtx[i].z = m_pVtxTex[i].vPos.z;
+
+			m_pPxIndex[i] = pIB[i];
+		}
+
+
+		//====================================================
 
 		D3D11_BUFFER_DESC tBufferDesc;
 

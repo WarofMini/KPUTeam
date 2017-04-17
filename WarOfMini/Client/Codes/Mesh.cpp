@@ -15,6 +15,8 @@ CMesh::CMesh(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
 , m_pBBoxIB(NULL)
 , m_pVtxTex(NULL)
 , m_iTextureNumber(0)
+, m_pPxVtx(NULL)
+, m_pPxIndex(NULL)
 {
 }
 
@@ -105,6 +107,9 @@ void CMesh::Release(void)
 
 	Safe_Delete_Array(m_pVtxTex);
 
+	Safe_Delete_Array(m_pPxVtx);
+	Safe_Delete_Array(m_pPxIndex);
+		
 	if (m_dwRefCount == NULL)
 	{
 		Safe_Release(m_pTexture);
@@ -125,6 +130,8 @@ VTXTEX* CMesh::GetVtxTex(void)
 	return m_vecChild[0]->m_pVtxTex;
 }
 
+
+
 _uint CMesh::GetVtxCnt(void)
 {
 	return m_vecChild[0]->m_uiVtxCnt;
@@ -133,6 +140,16 @@ _uint CMesh::GetVtxCnt(void)
 CTextures* CMesh::GetTexture(void)
 {
 	return m_pTexture;
+}
+
+PxVec3* CMesh::GetPxVtx(void)
+{
+	return m_vecChild[0]->m_pPxVtx;
+}
+
+PxU32* CMesh::GetPxIndex(void)
+{
+	return m_vecChild[0]->m_pPxIndex;
 }
 
 void CMesh::SetMesh_TextureNumber(_uint iNumber)
@@ -151,7 +168,6 @@ std::wstring CMesh::CompareTexture(_tchar* pTexName)
 {
 	wstring Number = L"0123456789";
 	wstring AddTex = pTexName;
-
 
 	wstring Temp(AddTex, AddTex.size() - 1, AddTex.size()); //메시의 텍스쳐이름의 마지막 문자열 저장
 
