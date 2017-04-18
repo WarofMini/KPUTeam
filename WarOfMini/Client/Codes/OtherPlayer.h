@@ -18,12 +18,12 @@ public:
 
 public:
 	virtual HRESULT	Initialize(ID3D11Device* pGraphicDev);
-	virtual INT Update(const FLOAT& fTimeDelta);
-	virtual void Release(void);
-	void		UpdateDir(void);
+	virtual INT     Update(const FLOAT& fTimeDelta);
+	virtual void    Release(void);
+	void		    UpdateDir(void);
 protected:
 	virtual HRESULT Ready_Component(ID3D11Device* pGraphicDev);
-	virtual void Update_Equipment(const FLOAT& fTimeDelta);
+	virtual void    Update_Equipment(const FLOAT& fTimeDelta);
 
 public:
 	int		GetID(void) { return m_iID; }

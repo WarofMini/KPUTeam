@@ -477,6 +477,32 @@ ID3D11DeviceContext * CGraphicDev::GetContext()
 	return m_pContext;
 }
 
+
+void CGraphicDev::ChangeScreenMode(void)
+{
+	BOOL m_bScreenState = FALSE;
+
+	
+	m_pSwapChain->GetFullscreenState(&m_bScreenState, NULL);
+
+
+	if (!m_bScreenState)
+	{
+
+		DXGI_MODE_DESC dxgiTargetParameters;
+		dxgiTargetParameters.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		dxgiTargetParameters.Width = WINCX;
+		dxgiTargetParameters.Height = WINCY;
+		dxgiTargetParameters.RefreshRate.Numerator = 0;
+		dxgiTargetParameters.RefreshRate.Denominator = 0;
+		dxgiTargetParameters.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+		dxgiTargetParameters.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+		m_pSwapChain->ResizeTarget(&dxgiTargetParameters);
+	}
+	m_pSwapChain->SetFullscreenState(!m_bScreenState, NULL);
+
+}
+
 void CGraphicDev::Release(void)
 {
 	if (Safe_Com_Release(m_pNoneCullRS))

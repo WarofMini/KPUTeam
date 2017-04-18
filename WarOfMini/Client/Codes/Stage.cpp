@@ -61,6 +61,7 @@ _int CStage::Update(const _float& fTimeDelta)
 		m_bTestInit = true;
 	}
 
+
 	CScene::Update(fTimeDelta);
 	CCameraMgr::GetInstance()->Update_CurCamera(fTimeDelta);
 
@@ -75,16 +76,18 @@ HRESULT CStage::Ready_GameLogic(void)
 
 	//Player
 	pGameObject = CPlayer::Create(m_pGraphicDev, m_pContext);
-	
-	if (NULL == pGameObject) 
-		return E_FAIL;
 
+	if (NULL == pGameObject)
+		return E_FAIL;
 
 
 	((CPlayer*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, m_pPxControllerManager);
 	((CPlayer*)pGameObject)->SetPosition(XMFLOAT3(10.f, 80.f, 10.f));
 
 	pLayer->Ready_Object(L"Player", pGameObject);
+
+
+
 
 
 // 	pGameObject = CGabiscon::Create(m_pGraphicDev, m_pContext);

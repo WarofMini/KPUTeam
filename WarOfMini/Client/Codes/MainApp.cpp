@@ -103,10 +103,9 @@ INT CMainApp::Update(const _float& fTimeDelta)
 	}
 
 	CInput::GetInstance()->SetInputState();
-		// 인풋 장치 소실 잡아 주는 함수.
+	// 인풋 장치 소실 잡아 주는 함수.
 	Set_Focus();
 	Debug_KeyCheck();
-
 
 
 	return CManagement::GetInstance()->Update(fTimeDelta);
@@ -331,6 +330,10 @@ void CMainApp::Stage_DebugInfo(void)
 
 	CFontMgr::GetInstance()->Render_Font(L"고딕", strOnOff.c_str(), 15.f, 130.f, 252.f, OnOffColor);
 
+
+	CFontMgr::GetInstance()->Render_Font(L"고딕", L"F4 : 화면크기 조절", 15.f, 10.f, 275.f, D3DXCOLOR(0.0f, 0.0f, 1.f, 1.f));
+
+
 }
 
 //디버그 On/Off 체크
@@ -342,6 +345,12 @@ void CMainApp::Debug_KeyCheck(void)
 			g_bCollisionDraw = FALSE;
 		else
 			g_bCollisionDraw = TRUE;
+	}
+
+	//창크기 조절 (전체화면, 창화면)
+	if (GetAsyncKeyState(VK_F4) & 1)
+	{
+		CGraphicDev::GetInstance()->ChangeScreenMode();
 	}
 }
 
@@ -372,6 +381,7 @@ void CMainApp::InitializePhysxEngine()
 	PxSceneDesc sceneDesc(m_pPxPhysicsSDK->getTolerancesScale());
 	sceneDesc.gravity = PxVec3(0.0f, -9.8f, 0.0f);
 
+
 	if (!sceneDesc.cpuDispatcher)
 	{
 		PxDefaultCpuDispatcher* pCpuDispatcher = PxDefaultCpuDispatcherCreate(1);
@@ -385,7 +395,7 @@ void CMainApp::InitializePhysxEngine()
 	m_pPxControllerManager = PxCreateControllerManager(*m_pPxScene);
 
 
-	// Physx Visual Debuggerに連結
+	// Physx Visual Debugger
 	if (NULL == m_pPxPhysicsSDK->getPvdConnectionManager())
 	{
 		cout << "PVD Connect Failed" << endl;

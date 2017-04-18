@@ -45,7 +45,6 @@ private:
 	_ushort							m_usFPS; //디스플레이 모드 갱신율
 	_bool							m_bWireEnable;
 
-
 private:
 	HRESULT Set_SwapChain(DXGI_SWAP_CHAIN_DESC& sd, WINMODE eWinMode, HWND hWnd
 					 , const _ushort& wSizeX, const _ushort& wSizeY);
@@ -72,10 +71,12 @@ public:
 	ID3D11Buffer*					GetInstShaderCB();
 	ID3D11Buffer*					GetDynamicShaderCB();
 	ID3D11SamplerState*				GetBaseSampler();
-
-
 	ID3D11Device*					GetGraphicDevice();
 	ID3D11DeviceContext*			GetContext();
+
+public:
+	void							ChangeScreenMode(void);
+
 
 public:
 	void							Release(void);
