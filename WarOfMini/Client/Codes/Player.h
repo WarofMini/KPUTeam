@@ -106,6 +106,9 @@ private:
 private:
 	PxRigidDynamic*		m_pPxActor;
 	PxController*		m_pPxCharacterController;
+	//Physx객체의 현재 상태를 알수 있는 변수
+	PxControllerState*  m_pPxState;
+
 public:
 	void	BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, PxControllerManager *pPxControllerManager);
 	void	SetPosition(XMFLOAT3 vPosition);

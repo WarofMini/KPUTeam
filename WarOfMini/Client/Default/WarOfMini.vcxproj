@@ -95,14 +95,14 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>../Headers/;../Codes/;../Bin/ShaderCode/;../ThirdParty/Vld/;../ThirdParty/FMOD/;../ThirdParty/Font/;../ThirdParty/PhysX/Include/;../ThirdParty/PhysX/Lib/;../ThirdParty/Direct/;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Headers/;../Codes/;../Bin/ShaderCode/;../ThirdParty/Vld/;../ThirdParty/FMOD/;../ThirdParty/Font/;../ThirdParty/PhysX/Include/;../ThirdParty/PhysX/Lib/Debug/;../ThirdParty/Direct/</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>dinput8.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;winmm.lib;dxgi.lib;comctl32.lib;libfbxsdk-mt.lib;vldmtdll.lib;fmodex_vc.lib;FW1FontWrapper.lib;DirectXTex.lib;PhysX3ExtensionsDEBUG.lib;physx3DEBUG_x86.lib;physx3commonDEBUG_x86.lib;PhysXVisualDebuggerSDKDEBUG.lib;PhysX3CharacterKinematicDEBUG_x86.lib;PxTaskDEBUG.lib;PhysXProfileSDKDEBUG.lib;PhysX3CookingDEBUG_x86.lib;LowLevelClothDEBUG.lib;LowLevelDEBUG.lib;physX3VehicleDEBUG.lib;PvdRuntimeDEBUG.lib;SceneQueryDEBUG.lib;SimulationControllerDEBUG.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../Library/Debug/;../ThirdParty/Vld/;../ThirdParty/Direct/;../ThirdParty/FMOD/;../ThirdParty/Font/;../ThirdParty/PhysX/Lib/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../Library/Debug/;../ThirdParty/Vld/;../ThirdParty/Direct/;../ThirdParty/FMOD/;../ThirdParty/Font/;../ThirdParty/PhysX/Lib/Debug/</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -127,17 +127,17 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>../Headers/;../Codes/;../Bin/ShaderCode/;../ThirdParty/Vld/;../ThirdParty/FMOD/;../ThirdParty/Font/;../ThirdParty/PhysX/Include/;../ThirdParty/PhysX/Lib/;../ThirdParty/Direct/;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Headers/;../Codes/;../Bin/ShaderCode/;../ThirdParty/Vld/;../ThirdParty/FMOD/;../ThirdParty/Font/;../ThirdParty/PhysX/Include/;../ThirdParty/PhysX/Lib/Release/;../ThirdParty/Direct/</AdditionalIncludeDirectories>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>dinput8.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;winmm.lib;dxgi.lib;comctl32.lib;libfbxsdk-mt.lib;vldmtdll.lib;fmodex_vc.lib;FW1FontWrapper.lib;DirectXTex.lib;PhysX3ExtensionsDEBUG.lib;physx3DEBUG_x86.lib;physx3commonDEBUG_x86.lib;PhysXVisualDebuggerSDKDEBUG.lib;PhysX3CharacterKinematicDEBUG_x86.lib;PxTaskDEBUG.lib;PhysXProfileSDKDEBUG.lib;PhysX3CookingDEBUG_x86.lib;LowLevelClothDEBUG.lib;LowLevelDEBUG.lib;physX3VehicleDEBUG.lib;PvdRuntimeDEBUG.lib;SceneQueryDEBUG.lib;SimulationControllerDEBUG.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../Library/Release/;../ThirdParty/Vld/;../ThirdParty/Direct/;../ThirdParty/FMOD/;../ThirdParty/Font/;../ThirdParty/PhysX/Lib/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>dinput8.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;winmm.lib;dxgi.lib;comctl32.lib;libfbxsdk-mt.lib;vldmtdll.lib;fmodex_vc.lib;FW1FontWrapper.lib;DirectXTex.lib;PhysX3Extensions.lib;physx3_x86.lib;physx3common_x86.lib;PhysXVisualDebuggerSDK.lib;PhysX3CharacterKinematic_x86.lib;PxTask.lib;PhysXProfileSDK.lib;PhysX3Cooking_x86.lib;LowLevelCloth.lib;LowLevel.lib;physX3Vehicle.lib;PvdRuntime.lib;SceneQuery.lib;SimulationController.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../Library/Release/;../ThirdParty/Vld/;../ThirdParty/Direct/;../ThirdParty/FMOD/;../ThirdParty/Font/;../ThirdParty/PhysX/Lib/Release/</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

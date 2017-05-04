@@ -35,6 +35,7 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 	, m_bAbleReload(false)
 	, m_pPxActor(NULL)
 	, m_pPxCharacterController(NULL)
+	, m_pPxState(NULL)
 {
 	m_pInput = CInput::GetInstance();
 	m_vLook = XMFLOAT3(0.f, 1.f, 0.f);
@@ -638,7 +639,22 @@ void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *
 	PxCapsuledesc.position = PxExtendedVec3(0, 0, 0);
 	PxCapsuledesc.radius = 5.0f;
 	PxCapsuledesc.height = 5.0f;
-	PxCapsuledesc.slopeLimit = 10;
+
+	//캐릭터가 올라갈 수있는 장애물의 최대 높이를 정의합니다. 
+	PxCapsuledesc.stepOffset = 4.f;
+
+	//등반모드
+	PxCapsuledesc.climbingMode = PxCapsuleClimbingMode::eCONSTRAINED;
+	PxCapsuledesc.nonWalkableMode = PxControllerNonWalkableMode::eFORCE_SLIDING;
+	
+	//캐시 된 볼륨 증가. 
+	//성능을 향상시키기 위해 캐싱하는 컨트롤러 주변의 공간입니다.  이것은 1.0f보다 커야하지만 너무 크지 않아야하며, 2.0f보다 낮아야합니다.
+	PxCapsuledesc.volumeGrowth = 1.9f;
+
+
+	//캐릭터가 걸어 갈 수있는 최대 경사. 
+	PxCapsuledesc.slopeLimit = 5.f;
+	
 	PxCapsuledesc.upDirection = PxVec3(0, 1, 0);
 	PxCapsuledesc.contactOffset = 0.00001;
 	PxCapsuledesc.material = pPxMaterial;
@@ -646,6 +662,8 @@ void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *
 
 	m_pPxCharacterController = pPxControllerManager->createController(PxCapsuledesc);
 
+	//피직스 객체의 상태값을 m_pPxState에 넣어준다.
+	m_pPxCharacterController->getState(*m_pPxState);
 }
 
 void CPlayer::SetPosition(XMFLOAT3 vPosition)
@@ -661,9 +679,19 @@ void CPlayer::SetRotate(XMFLOAT3 vRot)
 //PhysX 함수
 void CPlayer::PhysXUpdate(const FLOAT& fTimeDelta)
 {
+
 	//PhysX에 값을 전달해준다. 중력
-	m_pPxCharacterController->move(PxVec3(0, -9.8f, 0) * fTimeDelta * 4.f, 0, fTimeDelta, PxControllerFilters());
-	
+	m_pPxCharacterController->move(PxVec3(0, -9.8f, 0) * fTimeDelta * 6.f, 0, fTimeDelta, PxControllerFilters());
+
+
+
+	//PxControllerCollisionFlag::eCOLLISION_SIDES = 1 //옆에서 충돌이 날경우
+	//PxControllerCollisionFlag::eCOLLISION_UP  = 2 //위에서 충돌이 날경우
+	//PxControllerCollisionFlag::eCOLLISION_DOWN = 4 //아래에서 충돌이 날경우
+	//collisionFloags : 이변수가 충돌상태를 flag로 보여준다.
+	if (m_pPxState->collisionFlags == PxControllerCollisionFlag::eCOLLISION_DOWN)
+	{ }
+
 
 	//현재 PhysX의 값으로 객체의 월드행렬을 만들어준다.
 	m_pTransform->m_vPos = XMFLOAT3(m_pPxCharacterController->getFootPosition().x, m_pPxCharacterController->getFootPosition().y, m_pPxCharacterController->getFootPosition().z);

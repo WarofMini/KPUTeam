@@ -464,9 +464,4 @@
       <Filter>99.Default</Filter>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="..\ShaderCode\Shader.fx">
-      <Filter>95.Resources\02.Shader\00.ShaderCode</Filter>
-    </FxCompile>
-  </ItemGroup>
 </Project>

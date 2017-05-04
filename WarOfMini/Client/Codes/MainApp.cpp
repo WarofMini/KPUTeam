@@ -19,7 +19,7 @@ CMainApp::CMainApp(void)
 , m_fTime(0.0f)
 , m_pPVDConnection(NULL)
 {
-
+	
 	ZeroMemory(&m_szFPS, sizeof(_tchar) * 128);
 	//ÄÜ¼ÖÃ¢===================================
 	/*AllocConsole();
