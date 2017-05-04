@@ -35,7 +35,6 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 	, m_bAbleReload(false)
 	, m_pPxActor(NULL)
 	, m_pPxCharacterController(NULL)
-	, m_pPxState(NULL)
 {
 	m_pInput = CInput::GetInstance();
 	m_vLook = XMFLOAT3(0.f, 1.f, 0.f);
@@ -662,8 +661,6 @@ void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *
 
 	m_pPxCharacterController = pPxControllerManager->createController(PxCapsuledesc);
 
-	//피직스 객체의 상태값을 m_pPxState에 넣어준다.
-	m_pPxCharacterController->getState(*m_pPxState);
 }
 
 void CPlayer::SetPosition(XMFLOAT3 vPosition)
@@ -685,13 +682,23 @@ void CPlayer::PhysXUpdate(const FLOAT& fTimeDelta)
 
 
 
+	//건희형 이부분이요----------------------------------------------------------
+	//Physx객체의 현재 상태를 알수 있는 변수
+	PxControllerState   m_pPxState;
+
+	m_pPxCharacterController->getState(m_pPxState);
+
+	//피직스 객체의 상태값을 m_pPxState에 넣어준다.
+	m_pPxCharacterController->getState(m_pPxState);
 	//PxControllerCollisionFlag::eCOLLISION_SIDES = 1 //옆에서 충돌이 날경우
 	//PxControllerCollisionFlag::eCOLLISION_UP  = 2 //위에서 충돌이 날경우
 	//PxControllerCollisionFlag::eCOLLISION_DOWN = 4 //아래에서 충돌이 날경우
 	//collisionFloags : 이변수가 충돌상태를 flag로 보여준다.
-	if (m_pPxState->collisionFlags == PxControllerCollisionFlag::eCOLLISION_DOWN)
-	{ }
-
+	if (m_pPxState.collisionFlags == PxControllerCollisionFlag::eCOLLISION_DOWN)
+	{ 
+		int i = 0; //땅에 닿으면 여기 중단점 걸려요
+	}
+	//--------------------------------------------------------------------------------
 
 	//현재 PhysX의 값으로 객체의 월드행렬을 만들어준다.
 	m_pTransform->m_vPos = XMFLOAT3(m_pPxCharacterController->getFootPosition().x, m_pPxCharacterController->getFootPosition().y, m_pPxCharacterController->getFootPosition().z);
