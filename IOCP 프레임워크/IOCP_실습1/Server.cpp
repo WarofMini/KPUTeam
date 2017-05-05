@@ -218,7 +218,6 @@ void CServer::Accept_thread()
 		}
 	}
 
-
 }
 
 void CServer::Worker_thread()
@@ -247,8 +246,12 @@ void CServer::Worker_thread()
 				int Error_no = WSAGetLastError();
 				error_display("WorkerThread Start GetQueuedCompletionStatus", Error_no);
 			}
+
+			SendRemovePlayerPacket(key);
+
 			closesocket(m_Client[key]->sock);
 			m_Client[key]->connected = false;
+
 			cout << "[No. " << key << "] Disconnected "<< endl;
 
 			continue;
@@ -324,6 +327,21 @@ void CServer::Worker_thread()
 
 
 }
+void CServer::SendRemovePlayerPacket(DWORD dwKey)
+{
+	Ser_Packet_Remove_Player packet;
+	packet.id = dwKey;
+	packet.size = sizeof(packet);
+	packet.type = PLAYER_DISCONNECTED;
+
+	for (int i = 0; i <= playerIndex; ++i)
+	{
+		if (m_Client[i]->id == dwKey ||
+			m_Client[i]->connected == false)
+			continue;
+		SendPacket(i, reinterpret_cast<Packet*>(&packet));
+	}
+}
 void CServer::SendPacket(unsigned int id, const Packet* packet)
 {	
 	Overlap_ex* overlap = new Overlap_ex;
@@ -383,6 +401,12 @@ void CServer::SendPacket(unsigned int id, const Packet* packet)
 // 그 읽은값에 맞춰서 잘 데이터를 처리하는 공간인거야.
 void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘가 꼭 const인 이유가 있나 ?
 {
+	vector<int> vecID;
+	for (int i = 0; i <= playerIndex; ++i)
+	{
+		if (m_Client[i]->connected)
+			vecID.push_back(i);
+	}
 
 	//unsigned char m_sendbuf[256]{ 0 };
 
@@ -401,79 +425,61 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 
 	case INIT_CLIENT:
 	{
-
 		Ser_PLAYER_DATA strPlayerData;
 		strPlayerData = *reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)&buf[2]);
 		cout << "[NO. " << strPlayerData.ID << "]ID value Recv.. " << endl;
 
-		for (int i = 0; i < m_vecPlayer.size(); ++i)
-		{
-			if (m_vecPlayer[i].ID == strPlayerData.ID)
-			{
-				Ser_Vec_PLAYER_DATA vecPlayerData;
-				vecPlayerData.ID = m_vecPlayer[i].ID;
-				vecPlayerData.size = sizeof(Ser_Vec_PLAYER_DATA);
-				vecPlayerData.type = INIT_OTHER_PLAYER;
-				vecPlayerData.PlayerSize = m_vecPlayer.size();
+ 		for (int i = 0; i <= playerIndex; ++i)
+ 		{
+ 			if (m_Client[i]->connected == false)
+ 				continue;
+ 			if (m_vecPlayer[i].ID == strPlayerData.ID)
+ 			{
+ 				Ser_Vec_PLAYER_DATA vecPlayerData;
+ 				vecPlayerData.ID = m_vecPlayer[i].ID;
+ 				vecPlayerData.size = sizeof(Ser_Vec_PLAYER_DATA);
+ 				vecPlayerData.type = INIT_OTHER_PLAYER;
+ 				vecPlayerData.PlayerSize = vecID.size();
 
-				for (int i = 0; i < vecPlayerData.PlayerSize; ++i)
+				for (int j = 0; j < vecPlayerData.PlayerSize; ++j)
 				{
-					vecPlayerData.vecPlayerData[i].ID = m_vecPlayer[i].ID;
-					vecPlayerData.vecPlayerData[i].size = m_vecPlayer[i].size;
-					vecPlayerData.vecPlayerData[i].type = m_vecPlayer[i].type;
-					vecPlayerData.vecPlayerData[i].vPos = m_vecPlayer[i].vPos;
+					vecPlayerData.vecPlayerData[j].ID = m_vecPlayer[vecID[j]].ID;
+					vecPlayerData.vecPlayerData[j].size = m_vecPlayer[vecID[j]].size;
+					vecPlayerData.vecPlayerData[j].type = m_vecPlayer[vecID[j]].type;
+					vecPlayerData.vecPlayerData[j].vPos = m_vecPlayer[vecID[j]].vPos;
 				}
 				SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&vecPlayerData));
-			}
-			else
-			{
-				SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&strPlayerData));
-			}
-		}		
-		
-		// 그러면, 여기 process packet 함수는 어디에 위치해 있냐하면
-		// 그러면, 만약에 여기서 클라이언트에게 초기화 하는 코드를 보내주고 싶다고 한다면..
-		// 어떻게 해야 이 안으로 들어오겠어?
-		// 똑같은 크기로 id값을 처리 해줘야곘지 ?;;
-		// 이해를 잘못했나보네 그게 아니라, 이 INIT_CLIENT 위치로 들어와서 값을 초기화 하는 패킷을 클라에게 보내주고 싶다면
-		// 어쨌든 이 processPacket 함수 내로 들어오고, 그 다음에 INIT_CLIENT 라는 패킷을 분류해야 여길 들어오잖아
-		// 그러면..
+ 			}
+ 			else
+ 			{
+ 				SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&strPlayerData));
+ 			}
+ 		}
 
-		// 처음 서버가 실행되고, accept 한 다음에 어떤 순서로 진행이 되어야
-		// 이 함수의 INIT_CLIENT 코드 내부로 들어오겠엉?
-		// 클라에서 메시지를 보내야 그 데이터들을 처리하고서 Processpacket으로 들어오겠지
-
-		// 그래 매우 훌륭하군
-		// 박수를 쳐줘야 겠어
-		// 짝짝짝작
-
-		// 그러니까 다시 말하게 되면, 서버에서 accept 를 하고 나서 그냥 아무것도 안하고
-		// 클라이언트에서 먼저 INIT_CLIENT 패킷이 날아와야
-		// 여기서 일처리를 하고 다시 보내줄 수 있다는 말이 되는거지
-		// 여기까지는 이해가 되었니?ㅇㅇㅇ
-
-		// 그래 그러면
-		// 클라이언트에서 INIT_CLIENT 관련 패킷을 구현해서 보내야 하는게 맞지만..
-		// 접속을 하고, 바로 클라이언트에 서버가 그냥 보내줘도 되는 정보잖아
-		// 왜냐하면 어차피 여기 서버 데이터를 클라에게 보내줘야 하는거니까
-
-		// 이해가 되었을라나?
-		// 다시 말하면, 애초에 이 process packet 내부에 들어오지 않고
-		// 그냥 바로 accept 해서 새로운 클라가 들어오자마자, 바로 초기화 값을 보내주면 되는거지
-		// 잠마.. 그럼
-		// 아까 저기 클라에서 Init_client를 id값을 보냈지
-		// 그러고서 여기서 응 잘받앗어 하고 여기서도 그 받은 id 값을 보내주면 되는거 아냐 ?
-
-		// 여기서 너가 클라이언트로 패킷을 보내고 싶어
-		// 한번 간단히 코드 몇줄 쳐봐
-
-		//
-		////id = reinterpret_cast<int>(m_PlayerData->I D);
-		// m_PlayerData->ID = id;
-
-		// SendPacket(m_PlayerData->ID, buf);
-
-	
+// 		for (int i = 0; i < m_vecPlayer.size(); ++i)
+// 		{
+// 			if (m_vecPlayer[i].ID == strPlayerData.ID)
+// 			{
+// 				Ser_Vec_PLAYER_DATA vecPlayerData;
+// 				vecPlayerData.ID = m_vecPlayer[i].ID;
+// 				vecPlayerData.size = sizeof(Ser_Vec_PLAYER_DATA);
+// 				vecPlayerData.type = INIT_OTHER_PLAYER;
+// 				vecPlayerData.PlayerSize = m_vecPlayer.size();
+// 
+// 				for (int i = 0; i < vecPlayerData.PlayerSize; ++i)
+// 				{
+// 					vecPlayerData.vecPlayerData[i].ID = m_vecPlayer[i].ID;
+// 					vecPlayerData.vecPlayerData[i].size = m_vecPlayer[i].size;
+// 					vecPlayerData.vecPlayerData[i].type = m_vecPlayer[i].type;
+// 					vecPlayerData.vecPlayerData[i].vPos = m_vecPlayer[i].vPos;
+// 				}
+// 				SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&vecPlayerData));
+// 			}
+// 			else
+// 			{
+// 				SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&strPlayerData));
+// 			}
+// 		}		
 	}
 	break;
 	case CLIENT_POSITION:
@@ -481,12 +487,12 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 		Ser_PLAYER_DATA strPlayerData;
 		strPlayerData = *reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)&buf[2]);
 
-		for (int i = 0; i < m_vecPlayer.size(); ++i)
+		for (int i = 0; i < vecID.size(); ++i)
 		{
-			if(m_vecPlayer[i].ID == strPlayerData.ID)
+			if(m_vecPlayer[vecID[i]].ID == strPlayerData.ID)
 				continue;
-			m_vecPlayer[i].type = CLIENT_POSITION;
-			SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&strPlayerData));
+			m_vecPlayer[vecID[i]].type = CLIENT_POSITION;
+			SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strPlayerData));
 		}
 	}
 	break;
@@ -495,13 +501,28 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 		Ser_ANIMATION_DATA strAnimationData;
 		strAnimationData = *reinterpret_cast<Ser_ANIMATION_DATA*>((Ser_ANIMATION_DATA*)&buf[2]);
 
+		for (int i = 0; i < vecID.size(); ++i)
+		{
+			if (m_vecPlayer[vecID[i]].ID == strAnimationData.ID)
+				continue;
+			m_vecPlayer[vecID[i]].type = CLIENT_ANIMATION;
+			SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strAnimationData));
+		}
+	}
+	break;
+	case PLAYER_DISCONNECTED:
+	{
+	/*	Ser_Packet_Remove_Player RemovePlayer;
+		RemovePlayer = *reinterpret_cast<Ser_Packet_Remove_Player*>((Ser_Packet_Remove_Player*)&buf[2]);
+
 		for (int i = 0; i < m_vecPlayer.size(); ++i)
 		{
-			if (m_vecPlayer[i].ID == strAnimationData.ID)
+			if (m_vecPlayer[i].ID == RemovePlayer.id)
 				continue;
-			m_vecPlayer[i].type = CLIENT_ANIMATION;
-			SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&strAnimationData));
+			m_vecPlayer[i].type = PLAYER_DISCONNECTED;
+			SendRemovePlayerPacket(i, i);
 		}
+*/
 	}
 	break;
 	}

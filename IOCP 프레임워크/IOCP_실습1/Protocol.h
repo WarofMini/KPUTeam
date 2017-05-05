@@ -10,7 +10,13 @@
 #include <xnamath.h>
 #include <list>
 
+
+
+
 using namespace std;
+
+// packet[1] operation
+#define DISCONNECTED 0
 
 #define SERVER_PORT	9000
 #define SERVER_IP "127,0,0,1"
@@ -79,6 +85,12 @@ struct Ser_ANIMATION_DATA
 	bool bIsSoldier;
 };
 
+struct Ser_Packet_Remove_Player
+{
+	BYTE size;
+	BYTE type;
+	WORD id;
+};
 //클라에서 보내온 정보들을 담아서 프로토콜로 뿌려주기 ?
 
 

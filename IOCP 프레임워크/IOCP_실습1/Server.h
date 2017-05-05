@@ -29,6 +29,9 @@ public:
 	void Accept_thread();
 	void Worker_thread();
 	
+	void SendRemovePlayerPacket(DWORD dwKey);
+
+
 	void Initialize(void);
 	void SendPacket(unsigned int id, const Packet* packet);
 	void ProcessPacket(const Packet* buf, const unsigned int& id);
