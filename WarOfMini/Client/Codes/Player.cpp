@@ -617,47 +617,45 @@ _bool CPlayer::DynamicCameraCheck(void)
 
 void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, PxControllerManager *pPxControllerManager)
 {
-	//XMFLOAT3 vMin = *(CMeshMgr::GetInstance()->Get_MeshMin(m_uiObjNum));
-	//XMFLOAT3 vMax = *(CMeshMgr::GetInstance()->Get_MeshMax(m_uiObjNum));
+	/*
+	XMFLOAT3 vMin = *(CMeshMgr::GetInstance()->Get_MeshMin(m_uiObjNum));
+	XMFLOAT3 vMax = *(CMeshMgr::GetInstance()->Get_MeshMax(m_uiObjNum));
 
-	//XMFLOAT3 _d3dxvExtents =
-	//	XMFLOAT3((abs(vMin.x) + abs(vMax.x)) / 2, (abs(vMin.y) + abs(vMax.y)) / 2, (abs(vMin.z) + abs(vMax.z)) / 2);
+	XMFLOAT3 _d3dxvExtents =
+		XMFLOAT3((abs(vMin.x) + abs(vMax.x)) / 2, (abs(vMin.y) + abs(vMax.y)) / 2, (abs(vMin.z) + abs(vMax.z)) / 2);
 
 	//Player의 바운딩 박스 생성
-	//PxBoxControllerDesc PxBoxdesc;
-	//PxBoxdesc.position = PxExtendedVec3(0, 0, 0);
-	//PxBoxdesc.halfForwardExtent = _d3dxvExtents.y / 2;
-	//PxBoxdesc.halfSideExtent = _d3dxvExtents.z / 2;
-	//PxBoxdesc.halfHeight = _d3dxvExtents.x / 2;
-	//PxBoxdesc.slopeLimit = 10;
-	//PxBoxdesc.contactOffset = 0.00001;
-	//PxBoxdesc.upDirection = PxVec3(0, 1, 0);
-	//PxBoxdesc.material = pPxMaterial;
-
+	PxBoxControllerDesc PxBoxdesc;
+	PxBoxdesc.position = PxExtendedVec3(0, 0, 0);
+	PxBoxdesc.halfForwardExtent = _d3dxvExtents.y / 2;
+	PxBoxdesc.halfSideExtent = _d3dxvExtents.z / 2;
+	PxBoxdesc.halfHeight = _d3dxvExtents.x / 2;
+	PxBoxdesc.slopeLimit = 10;
+	PxBoxdesc.contactOffset = 0.00001;
+	PxBoxdesc.upDirection = PxVec3(0, 1, 0);
+	PxBoxdesc.material = pPxMaterial;
+	*/
+		
 	PxCapsuleControllerDesc	PxCapsuledesc;
 	PxCapsuledesc.position = PxExtendedVec3(0, 0, 0);
 	PxCapsuledesc.radius = 5.0f;
 	PxCapsuledesc.height = 5.0f;
-
 	//캐릭터가 올라갈 수있는 장애물의 최대 높이를 정의합니다. 
 	PxCapsuledesc.stepOffset = 4.f;
-
+	PxCapsuledesc.invisibleWallHeight = 0.0f;
 	//등반모드
 	PxCapsuledesc.climbingMode = PxCapsuleClimbingMode::eCONSTRAINED;
 	PxCapsuledesc.nonWalkableMode = PxControllerNonWalkableMode::eFORCE_SLIDING;
-	
 	//캐시 된 볼륨 증가. 
 	//성능을 향상시키기 위해 캐싱하는 컨트롤러 주변의 공간입니다.  이것은 1.0f보다 커야하지만 너무 크지 않아야하며, 2.0f보다 낮아야합니다.
 	PxCapsuledesc.volumeGrowth = 1.9f;
-
-
 	//캐릭터가 걸어 갈 수있는 최대 경사. 
 	PxCapsuledesc.slopeLimit = 5.f;
-	
 	PxCapsuledesc.upDirection = PxVec3(0, 1, 0);
-	PxCapsuledesc.contactOffset = 0.00001;
+	PxCapsuledesc.contactOffset = 0.05f; //접촉 오프셋
+	//
 	PxCapsuledesc.material = pPxMaterial;
-
+	
 
 	m_pPxCharacterController = pPxControllerManager->createController(PxCapsuledesc);
 
@@ -678,27 +676,23 @@ void CPlayer::PhysXUpdate(const FLOAT& fTimeDelta)
 {
 
 	//PhysX에 값을 전달해준다. 중력
-	m_pPxCharacterController->move(PxVec3(0, -9.8f, 0) * fTimeDelta * 6.f, 0, fTimeDelta, PxControllerFilters());
+	m_pPxCharacterController->move(PxVec3(0, -9.8f, 0) * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
 
 
-
-	//건희형 이부분이요----------------------------------------------------------
 	//Physx객체의 현재 상태를 알수 있는 변수
-	PxControllerState   m_pPxState;
+	//PxControllerState   m_pPxState;
 
-	m_pPxCharacterController->getState(m_pPxState);
-
+	//m_pPxCharacterController->getState(m_pPxState);
 	//피직스 객체의 상태값을 m_pPxState에 넣어준다.
-	m_pPxCharacterController->getState(m_pPxState);
+	//m_pPxCharacterController->getState(m_pPxState);
 	//PxControllerCollisionFlag::eCOLLISION_SIDES = 1 //옆에서 충돌이 날경우
 	//PxControllerCollisionFlag::eCOLLISION_UP  = 2 //위에서 충돌이 날경우
 	//PxControllerCollisionFlag::eCOLLISION_DOWN = 4 //아래에서 충돌이 날경우
 	//collisionFloags : 이변수가 충돌상태를 flag로 보여준다.
-	if (m_pPxState.collisionFlags == PxControllerCollisionFlag::eCOLLISION_DOWN)
+	/*if (m_pPxState.collisionFlags == PxControllerCollisionFlag::eCOLLISION_DOWN)
 	{ 
-		int i = 0; //땅에 닿으면 여기 중단점 걸려요
 	}
-	//--------------------------------------------------------------------------------
+	*/
 
 	//현재 PhysX의 값으로 객체의 월드행렬을 만들어준다.
 	m_pTransform->m_vPos = XMFLOAT3(m_pPxCharacterController->getFootPosition().x, m_pPxCharacterController->getFootPosition().y, m_pPxCharacterController->getFootPosition().z);
