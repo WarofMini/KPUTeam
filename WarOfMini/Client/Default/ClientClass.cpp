@@ -205,7 +205,7 @@ void AsynchronousClientClass::InputServerIP()
 void AsynchronousClientClass::InputServerIP_ReadtxtFile()
 {
 	ifstream getServerIP;
-	getServerIP.open("ServerIP.txt", ios::in);
+	getServerIP.open("../ServerIP.txt", ios::in);
 	getServerIP.getline(m_serverIP, 32);
 	getServerIP.close();
 }
@@ -359,31 +359,6 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 				pLayer->Ready_Object(L"OtherPlayer", pGameObject);
 			}
 		}
-
-		//int iA = 0;
-		//if (m_eSceneID != SCENE_LOGO)
-		//{
-		//	//내가건 주석
-		//	Ser_PLAYER_DATA* m_pPlayerData = CManagement::GetInstance()->Get_Server_Data(reinterpret_cast<Ser_PLAYER_DATA*>(buf[2])->ID);
-
-		//	if (nullptr != m_pPlayerData)
-		//	{
-		//		break;
-		//	}
-		//	else
-		//	{
-		//		CGameObject* pGameObject = NULL;
-
-		//		pGameObject = COtherPlayer::Create(CGraphicDev::GetInstance()->GetGraphicDevice(), CGraphicDev::GetInstance()->GetContext());
-
-		//		//pGameObject->SetPos(m_pPlayerData->vPos);
-		//		pGameObject->SetPacketData(reinterpret_cast<Ser_PLAYER_DATA*>(buf[2]));
-
-		//		CScene* pScene = CManagement::GetInstance()->GetScene();
-		//		CLayer* pLayer = pScene->FindLayer(L"Layer_GameLogic");
-		//		pLayer->Ready_Object(L"OtherPlayer", pGameObject);
-		//	}
-		//}
 	}
 	case CLIENT_POSITION:
 	{
