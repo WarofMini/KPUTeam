@@ -44,11 +44,8 @@ HRESULT CSphereMesh::Initialize()
 _int CSphereMesh::Update(const _float& fTimeDelta)
 {
 
-	//m_pTransform->m_vPos = (*m_vPos);
+	m_pTransform->m_vPos = (*m_vPos);
 
-	m_pTransform->m_vPos = XMFLOAT3(0.0f, 10.0f, 0.0f);
-
-	//m_pTransform->m_vPos.y += 30.f;
 
 	CGameObject::Update(fTimeDelta);
 

@@ -63,7 +63,7 @@ public:
 
 	//현재 카메라 상태가 Dynamic일 경우  Player Update 실행X
 	_bool		DynamicCameraCheck(void); 
-
+	XMFLOAT3 testpos;
 	//server
 	void		SendPacketAlways(void);
 
@@ -99,6 +99,8 @@ private:
 	_bool			m_bAbleReload;
 	FLOAT			m_fFallvelocity;
 	FLOAT			m_fFallAcceleration;
+
+	PxScene*		m_pScene;
 
 	//Physx SDK Member Variables =========================
 private:

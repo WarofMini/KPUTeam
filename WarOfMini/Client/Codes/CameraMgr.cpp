@@ -82,6 +82,16 @@ _float CCameraMgr::Get_CurrentCameraSpeed(void)
 	return m_vecCamera[m_eCurCamera]->GetCameraSpeed();
 }
 
+XMFLOAT3 CCameraMgr::Get_CurCameraLookAt(void)
+{
+	return m_vecCamera[m_eCurCamera]->GetCameraLookAt();
+}
+
+XMFLOAT3 CCameraMgr::Get_CurCameraEye(void)
+{
+	return m_vecCamera[m_eCurCamera]->GetCameraEye();
+}
+
 void CCameraMgr::Set_CurCamera(CAMERALIST eCameraName)
 {
 	m_eCurCamera = eCameraName;

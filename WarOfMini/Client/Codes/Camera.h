@@ -50,6 +50,12 @@ public:
 	void		AddCameraSpeed(_float fSpeed);
 
 	_float		GetCameraSpeed(void);
+
+	XMFLOAT3	GetCameraLookAt(void);
+
+
+	XMFLOAT3	GetCameraEye(void);
+
 };
 
 #endif Camera_h__

@@ -121,3 +121,19 @@ _float CCamera::GetCameraSpeed(void)
 {
 	return m_fCameraSpeed;
 }
+
+XMFLOAT3 CCamera::GetCameraLookAt(void)
+{
+	XMFLOAT3 LookAt;
+
+	XMStoreFloat3(&LookAt, XMLoadFloat3(m_pAt) - XMLoadFloat3(m_pEye));
+
+	XMStoreFloat3(&LookAt, XMVector3Normalize(XMLoadFloat3(&LookAt)));
+
+	return LookAt;
+}
+
+XMFLOAT3 CCamera::GetCameraEye(void)
+{
+	return *m_pEye;
+}

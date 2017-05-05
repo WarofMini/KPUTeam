@@ -32,6 +32,9 @@ public:
 	const _bool*	Get_CurCameraFixMouseCheck(void);
 
 	_float Get_CurrentCameraSpeed(void);
+
+	XMFLOAT3		Get_CurCameraLookAt(void);
+	XMFLOAT3		Get_CurCameraEye(void);
 public:
 	void Set_CurCamera(CAMERALIST eCameraName);
 

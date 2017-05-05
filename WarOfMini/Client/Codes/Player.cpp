@@ -14,6 +14,7 @@
 #include "DefaultObject.h"
 #include "Management.h"
 #include "Scene.h"
+#include "SphereMesh.h"
 
 XMFLOAT3		g_vPlayerPos;
 
@@ -141,6 +142,8 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 
 	// Temp	----------------------------------------------------------------------------
 	
+
+
 	// Update
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
 
@@ -248,12 +251,15 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 			m_fRollSpeed = m_fSpeed * 2.f;
 			m_fRollDir = m_vMoveDir;
 		}
+
 		if (m_dwState == SOLDIER_JUMP)
 		{
 			m_pComStateMachine->Enter_State(SOLDIER_JUMP);
 			m_fFallvelocity = 200.f;
 		}
+
 		break;
+
 	case SOLDIER_LYING:
 		if (m_dwState == SOLDIER_IDLE)
 			m_pComStateMachine->Enter_State(SOLDIER_IDLE);
@@ -552,6 +558,35 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 		m_fRateOfFire = 0.1f;
 		if (((CGun*)m_pEquipment[0])->Fire())
 		{
+
+			XMFLOAT3 vDir = CCameraMgr::GetInstance()->Get_CurCameraLookAt();
+			XMFLOAT3 vPos = CCameraMgr::GetInstance()->Get_CurCameraEye();
+
+			PxVec3 OriginPos = PxVec3(vPos.x, vPos.y, vPos.z);
+			PxVec3 Dir		 = PxVec3(vDir.x, vDir.y, vDir.z);
+
+
+			PxReal maxDistance = 1000.0f;
+			PxRaycastBuffer hit;
+			PxQueryFilterData fd;
+			fd.flags |= PxQueryFlag::eANY_HIT;
+
+			bool status = false;
+			status = m_pScene->raycast(OriginPos, Dir, maxDistance, hit, PxHitFlags(PxHitFlag::eDEFAULT), fd);
+
+			if (status == true)
+			{
+
+				testpos = XMFLOAT3(hit.block.position.x, hit.block.position.y, hit.block.position.z);
+
+				CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
+
+				CGameObject* pGameObject = CSphereMesh::Create(m_pContext, 2.f, &testpos);
+
+
+				pLayer->Ready_Object(L"test", pGameObject);
+
+			}
 		}
 		else
 		{
@@ -612,7 +647,9 @@ void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *
 	//PxBoxdesc.contactOffset = 0.00001;
 	//PxBoxdesc.upDirection = PxVec3(0, 1, 0);
 	//PxBoxdesc.material = pPxMaterial;
-
+	
+	m_pScene = pPxScene;
+		
 	PxCapsuleControllerDesc	PxCapsuledesc;
 	PxCapsuledesc.position = PxExtendedVec3(0, 0, 0);
 	PxCapsuledesc.radius = 5.0f;
@@ -635,6 +672,7 @@ void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *
 	
 	PxCapsuledesc.upDirection = PxVec3(0, 1, 0);
 	PxCapsuledesc.contactOffset = 0.00001;
+	PxCapsuledesc.contactOffset = 0.05f; //접촉 오프셋
 	PxCapsuledesc.material = pPxMaterial;
 
 
@@ -670,24 +708,6 @@ void CPlayer::PhysXUpdate(const FLOAT& fTimeDelta)
 	if (m_pPxState.collisionFlags == PxControllerCollisionFlag::eCOLLISION_DOWN)
 		m_fFallvelocity = 0.f;
 
-
-	//건희형 이부분이요----------------------------------------------------------
-	//Physx객체의 현재 상태를 알수 있는 변수
-	//PxControllerState   m_pPxState;
-
-	//m_pPxCharacterController->getState(m_pPxState);
-
-	////피직스 객체의 상태값을 m_pPxState에 넣어준다.
-	//m_pPxCharacterController->getState(m_pPxState);
-	//PxControllerCollisionFlag::eCOLLISION_SIDES = 1 //옆에서 충돌이 날경우
-	//PxControllerCollisionFlag::eCOLLISION_UP  = 2 //위에서 충돌이 날경우
-	//PxControllerCollisionFlag::eCOLLISION_DOWN = 4 //아래에서 충돌이 날경우
-	//collisionFloags : 이변수가 충돌상태를 flag로 보여준다.
-	//if (m_pPxState.collisionFlags == PxControllerCollisionFlag::eCOLLISION_DOWN)
-	//{ 
-	//	int i = 0; //땅에 닿으면 여기 중단점 걸려요
-	//}
-	//--------------------------------------------------------------------------------
 
 	//현재 PhysX의 값으로 객체의 월드행렬을 만들어준다.
 	m_pTransform->m_vPos = XMFLOAT3(m_pPxCharacterController->getFootPosition().x, m_pPxCharacterController->getFootPosition().y, m_pPxCharacterController->getFootPosition().z);
