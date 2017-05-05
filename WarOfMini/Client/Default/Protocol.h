@@ -2,24 +2,16 @@
 
 
 #define SERVERPORT 9000
-#define MAX_BUF_SIZE 256
-#define MAX_PACKET_SIZE 255
-#define MAX_USER 500
+
 
 // packet[1] operation
 #define DISCONNECTED 0
-
-// iocp buf operation
-#define OP_RECV 1
-#define OP_SEND 2
-
 
 using namespace std;
 
 #define SERVER_PORT	9000
 #define SERVER_IP "127,0,0,1"
-
-#define MAX_BUFFER_SIZE	4000
+#define MAX_BUF_SIZE 256
 #define MAX_PACKET_SIZE 255
 
 #define MAX_USER 10
@@ -38,7 +30,7 @@ struct Overlap_ex
 	WSAOVERLAPPED Original_Overlap;
 	int operation_type;
 	WSABUF wsabuf;
-	unsigned char IOCPbuf[MAX_BUFFER_SIZE]; // 바로 요 버퍼를 잡아준거야. -> 이 버퍼로 모든 클라이언트 패킷이 담기도록 공간을 잡기위해 패킷이 여러개 있는고야
+	unsigned char IOCPbuf[MAX_BUF_SIZE]; // 바로 요 버퍼를 잡아준거야. -> 이 버퍼로 모든 클라이언트 패킷이 담기도록 공간을 잡기위해 패킷이 여러개 있는고야
 };
 
 struct PLAYER_INFO
@@ -82,7 +74,13 @@ struct Ser_ANIMATION_DATA
 	DWORD dwAniIdx;
 	bool bIsSoldier;//군바리변신
 };
-
+struct Ser_Packet_Remove_Player
+{
+	BYTE size;
+	BYTE type;
+	WORD id;
+	Ser_PLAYER_DATA vecPlayerData[10];
+};
 //클라에서 보내온 정보들을 담아서 프로토콜로 뿌려주기 ?
 
 

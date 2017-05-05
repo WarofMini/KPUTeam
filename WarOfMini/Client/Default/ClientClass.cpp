@@ -269,6 +269,8 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 
 	CScene* pScene = NULL;
 	CLayer* pLayer = NULL;
+	CGameObject* pGameObject = NULL;
+
 
 	switch (buf[1])
 	{
@@ -343,14 +345,12 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 	{
 		Ser_Vec_PLAYER_DATA vecPlayerData = *reinterpret_cast<Ser_Vec_PLAYER_DATA*>((Ser_Vec_PLAYER_DATA*)buf);
 
+
 		if (g_myid == vecPlayerData.ID)
 		{
-			//Ser_PLAYER_DATA* pPlayerData = vecPlayerData.vecPlayerData;
-			CGameObject* pGameObject = NULL;
-
 			for (int i = 0; i < vecPlayerData.PlayerSize; ++i)
 			{
-				if(g_myid == vecPlayerData.vecPlayerData[i].ID)
+				if (g_myid == vecPlayerData.vecPlayerData[i].ID)
 					continue;
 				pGameObject = COtherPlayer::Create(CGraphicDev::GetInstance()->GetGraphicDevice(), CGraphicDev::GetInstance()->GetContext(), vecPlayerData.vecPlayerData[i].vPos, vecPlayerData.vecPlayerData[i].ID);
 
@@ -410,6 +410,29 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 	}
 		break;
 	case PLAYER_DISCONNECTED:
+	{
+
+		Ser_Packet_Remove_Player PlayerRemove = *reinterpret_cast<Ser_Packet_Remove_Player*>((Ser_Packet_Remove_Player*)buf);
+
+		
+		pScene = CManagement::GetInstance()->GetScene();
+		pLayer = pScene->FindLayer(L"Layer_GameLogic");
+		list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"OtherPlayer");
+		list<CGameObject*>::iterator iter = pObjList->begin();
+		list<CGameObject*>::iterator iter_end = pObjList->end();
+
+		for (iter; iter != iter_end; ++iter)
+		{
+			if (((COtherPlayer*)*iter)->GetID() == PlayerRemove.id)
+			{
+				Safe_Release(*iter);
+				pObjList->erase(iter);
+				break;
+			}
+		}
+
+	//	list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"")
+	}
 		break;
 	}
 }
