@@ -10,7 +10,6 @@
 #include "StateMachine.h"
 #include "SoldierDefine.h"
 #include "CameraMgr.h"
-#include "Gravity.h"
 #include "Layer.h"
 #include "DefaultObject.h"
 #include "Management.h"
@@ -23,7 +22,6 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 	, m_dwState(SOLDIER_IDLE)
 	, m_dwAniIdx(PLAYER_idle)
 	, m_pComStateMachine(NULL)
-	, m_pComGravity(NULL)
 	, m_eMoveDir(DIR_END)
 	, m_vMoveDir(0.f, 0.f, 0.f)
 	, m_bIsSoldier(true)
@@ -35,6 +33,8 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 	, m_bAbleReload(false)
 	, m_pPxActor(NULL)
 	, m_pPxCharacterController(NULL)
+	, m_fFallAcceleration(9.8f)
+	, m_fFallvelocity(0.f)
 {
 	m_pInput = CInput::GetInstance();
 	m_vLook = XMFLOAT3(0.f, 1.f, 0.f);
@@ -116,7 +116,6 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 	//	m_pPxCharacterController->setPosition(PxExtendedVec3(10.f, 50.f, 10.f));
 	//}
 
-	//Collision_Field(fTimeDelta);	
 	CDynamicObject::Update(fTimeDelta);
 	
 
@@ -184,11 +183,6 @@ HRESULT CPlayer::Ready_Component(ID3D11Device* pGraphicDev)
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"StateMachine", pComponent));
 
-	//Gravity
-	pComponent = m_pComGravity = CGravity::Create(100.f);
-	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Gravity", pComponent));
-
 	return S_OK;
 }
 
@@ -241,7 +235,7 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 		if (m_dwState == SOLDIER_JUMP)
 		{
 			m_pComStateMachine->Enter_State(SOLDIER_JUMP);
-			m_pComGravity->Set_LandOff(50.f);				// 일단 이렇게
+			m_fFallvelocity = 200.f;
 		}
 		break;
 	case SOLDIER_MOVE:
@@ -250,14 +244,14 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 		if (m_dwState == SOLDIER_ROLL)
 		{
 			m_pComStateMachine->Enter_State(SOLDIER_ROLL);
-			m_pComGravity->Set_LandOff(30.f);				// 일단 이렇게
+			m_fFallvelocity = 70.f;
 			m_fRollSpeed = m_fSpeed * 2.f;
 			m_fRollDir = m_vMoveDir;
 		}
 		if (m_dwState == SOLDIER_JUMP)
 		{
 			m_pComStateMachine->Enter_State(SOLDIER_JUMP);
-			m_pComGravity->Set_LandOff(50.f);				// 일단 이렇게
+			m_fFallvelocity = 200.f;
 		}
 		break;
 	case SOLDIER_LYING:
@@ -279,21 +273,6 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 	}
 	m_pComStateMachine->Update_State(dwState);
 }
-
-void CPlayer::Collision_Field(const FLOAT& fTimeDelta)
-{
-	m_pComGravity->Move_Inertia(fTimeDelta, &m_pTransform->m_vPos);//로봇 날아다닐때 쓰면 좋을듯. Add_Velocity
-
-	
-	if (m_pTransform->m_vPos.y <= 0.f)
-	{
-		m_pTransform->m_vPos.y = 0.f;
-		m_pComGravity->Set_LandOn();
-	}
-
-}
-
-
 
 void CPlayer::PlayAnimation(DWORD dwAniIdx, bool bImmediate)
 {
@@ -322,7 +301,17 @@ bool CPlayer::Check_AnimationFrame(void)
 
 bool CPlayer::IsOnGround(void)
 {
-	return m_pComGravity->Get_OnGround();
+	PxControllerState   m_pPxState;
+
+	m_pPxCharacterController->getState(m_pPxState);
+
+	//피직스 객체의 상태값을 m_pPxState에 넣어준다.
+	m_pPxCharacterController->getState(m_pPxState);
+
+	/*return m_pComGravity->Get_OnGround();*/
+	if (m_pPxState.collisionFlags == PxControllerCollisionFlag::eCOLLISION_DOWN)
+		return true;
+	return false;
 }
 
 MOVE_DIR* CPlayer::GetMoveDir(void)
@@ -473,10 +462,8 @@ void CPlayer::Soldier_Move(const FLOAT& fTimeDelta)
 	case SOLDIER_MOVE:
 		vDir = XMLoadFloat3(&m_vMoveDir);
 		if (m_dwAniIdx == PLAYER_sprint)
-			//vPos += vDir * m_fSpeed * fTimeDelta * 1.5f;
 		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 1.5f, 0, fTimeDelta, PxControllerFilters());
 		else
-			//vPos += vDir * m_fSpeed * fTimeDelta;
 		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
 		//XMStoreFloat3(&m_pTransform->m_vPos, vPos);
 		//m_pTransform->Update(fTimeDelta);
@@ -507,7 +494,6 @@ void CPlayer::Soldier_Move(const FLOAT& fTimeDelta)
 		m_fRollSpeed -= 20.f * fTimeDelta;
 		//XMStoreFloat3(&m_pTransform->m_vPos, vPos);
 		//m_pTransform->Update(fTimeDelta);
-		
 		break;
 	}
 }
@@ -523,12 +509,8 @@ void CPlayer::Soldier_Iron_Move(const FLOAT& fTimeDelta)
 	case SOLDIER_MOVE:
 		vDir = XMLoadFloat3(&m_vMoveDir);
 		if (m_dwAniIdx == PLAYER_Iron_Sprint)
-			//vPos += vDir * m_fSpeed * fTimeDelta * 1.5f;
 			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 1.5f, 0, fTimeDelta, PxControllerFilters());
 		else
-			//vPos += vDir * m_fSpeed * fTimeDelta;
-			//XMStoreFloat3(&m_pTransform->m_vPos, vPos);
-			//m_pTransform->Update(fTimeDelta);
 			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
 		break;
 	case SOLDIER_LYING:
@@ -543,9 +525,6 @@ void CPlayer::Soldier_Iron_Move(const FLOAT& fTimeDelta)
 		break;
 	case SOLDIER_JUMP:
 		vDir = XMLoadFloat3(&m_vMoveDir);
-		//vPos += vDir * m_fSpeed * fTimeDelta;
-		//XMStoreFloat3(&m_pTransform->m_vPos, vPos);
-		//m_pTransform->Update(fTimeDelta);
 		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
 		break;
 	case SOLDIER_ROLL:
@@ -583,7 +562,7 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 
 void CPlayer::Soldier_Iron_AddVelocity(float fFallVel)
 {
-	m_pComGravity->Add_Velocity(fFallVel * m_fTimeDelta);
+	m_fFallvelocity += 1000.f * m_fTimeDelta;
 }
 
 void CPlayer::Reload(void)
@@ -617,45 +596,47 @@ _bool CPlayer::DynamicCameraCheck(void)
 
 void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, PxControllerManager *pPxControllerManager)
 {
-	/*
-	XMFLOAT3 vMin = *(CMeshMgr::GetInstance()->Get_MeshMin(m_uiObjNum));
-	XMFLOAT3 vMax = *(CMeshMgr::GetInstance()->Get_MeshMax(m_uiObjNum));
+	//XMFLOAT3 vMin = *(CMeshMgr::GetInstance()->Get_MeshMin(m_uiObjNum));
+	//XMFLOAT3 vMax = *(CMeshMgr::GetInstance()->Get_MeshMax(m_uiObjNum));
 
-	XMFLOAT3 _d3dxvExtents =
-		XMFLOAT3((abs(vMin.x) + abs(vMax.x)) / 2, (abs(vMin.y) + abs(vMax.y)) / 2, (abs(vMin.z) + abs(vMax.z)) / 2);
+	//XMFLOAT3 _d3dxvExtents =
+	//	XMFLOAT3((abs(vMin.x) + abs(vMax.x)) / 2, (abs(vMin.y) + abs(vMax.y)) / 2, (abs(vMin.z) + abs(vMax.z)) / 2);
 
 	//Player의 바운딩 박스 생성
-	PxBoxControllerDesc PxBoxdesc;
-	PxBoxdesc.position = PxExtendedVec3(0, 0, 0);
-	PxBoxdesc.halfForwardExtent = _d3dxvExtents.y / 2;
-	PxBoxdesc.halfSideExtent = _d3dxvExtents.z / 2;
-	PxBoxdesc.halfHeight = _d3dxvExtents.x / 2;
-	PxBoxdesc.slopeLimit = 10;
-	PxBoxdesc.contactOffset = 0.00001;
-	PxBoxdesc.upDirection = PxVec3(0, 1, 0);
-	PxBoxdesc.material = pPxMaterial;
-	*/
-		
+	//PxBoxControllerDesc PxBoxdesc;
+	//PxBoxdesc.position = PxExtendedVec3(0, 0, 0);
+	//PxBoxdesc.halfForwardExtent = _d3dxvExtents.y / 2;
+	//PxBoxdesc.halfSideExtent = _d3dxvExtents.z / 2;
+	//PxBoxdesc.halfHeight = _d3dxvExtents.x / 2;
+	//PxBoxdesc.slopeLimit = 10;
+	//PxBoxdesc.contactOffset = 0.00001;
+	//PxBoxdesc.upDirection = PxVec3(0, 1, 0);
+	//PxBoxdesc.material = pPxMaterial;
+
 	PxCapsuleControllerDesc	PxCapsuledesc;
 	PxCapsuledesc.position = PxExtendedVec3(0, 0, 0);
 	PxCapsuledesc.radius = 5.0f;
 	PxCapsuledesc.height = 5.0f;
+
 	//캐릭터가 올라갈 수있는 장애물의 최대 높이를 정의합니다. 
 	PxCapsuledesc.stepOffset = 4.f;
-	PxCapsuledesc.invisibleWallHeight = 0.0f;
+
 	//등반모드
 	PxCapsuledesc.climbingMode = PxCapsuleClimbingMode::eCONSTRAINED;
 	PxCapsuledesc.nonWalkableMode = PxControllerNonWalkableMode::eFORCE_SLIDING;
+	
 	//캐시 된 볼륨 증가. 
 	//성능을 향상시키기 위해 캐싱하는 컨트롤러 주변의 공간입니다.  이것은 1.0f보다 커야하지만 너무 크지 않아야하며, 2.0f보다 낮아야합니다.
 	PxCapsuledesc.volumeGrowth = 1.9f;
+
+
 	//캐릭터가 걸어 갈 수있는 최대 경사. 
 	PxCapsuledesc.slopeLimit = 5.f;
-	PxCapsuledesc.upDirection = PxVec3(0, 1, 0);
-	PxCapsuledesc.contactOffset = 0.05f; //접촉 오프셋
-	//
-	PxCapsuledesc.material = pPxMaterial;
 	
+	PxCapsuledesc.upDirection = PxVec3(0, 1, 0);
+	PxCapsuledesc.contactOffset = 0.00001;
+	PxCapsuledesc.material = pPxMaterial;
+
 
 	m_pPxCharacterController = pPxControllerManager->createController(PxCapsuledesc);
 
@@ -674,25 +655,39 @@ void CPlayer::SetRotate(XMFLOAT3 vRot)
 //PhysX 함수
 void CPlayer::PhysXUpdate(const FLOAT& fTimeDelta)
 {
-
 	//PhysX에 값을 전달해준다. 중력
-	m_pPxCharacterController->move(PxVec3(0, -9.8f, 0) * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
+	m_fFallvelocity -= m_fFallAcceleration * fTimeDelta * 50.f;
+	if (m_fFallvelocity < -1000.f)
+		m_fFallvelocity = -1000.f;
+	m_pPxCharacterController->move(PxVec3(0, 1.f, 0) * fTimeDelta * m_fFallvelocity, 0, fTimeDelta, PxControllerFilters());
+
+	PxControllerState   m_pPxState;
+
+	m_pPxCharacterController->getState(m_pPxState);
+
+	//피직스 객체의 상태값을 m_pPxState에 넣어준다.
+	m_pPxCharacterController->getState(m_pPxState);
+	if (m_pPxState.collisionFlags == PxControllerCollisionFlag::eCOLLISION_DOWN)
+		m_fFallvelocity = 0.f;
 
 
+	//건희형 이부분이요----------------------------------------------------------
 	//Physx객체의 현재 상태를 알수 있는 변수
 	//PxControllerState   m_pPxState;
 
 	//m_pPxCharacterController->getState(m_pPxState);
-	//피직스 객체의 상태값을 m_pPxState에 넣어준다.
+
+	////피직스 객체의 상태값을 m_pPxState에 넣어준다.
 	//m_pPxCharacterController->getState(m_pPxState);
 	//PxControllerCollisionFlag::eCOLLISION_SIDES = 1 //옆에서 충돌이 날경우
 	//PxControllerCollisionFlag::eCOLLISION_UP  = 2 //위에서 충돌이 날경우
 	//PxControllerCollisionFlag::eCOLLISION_DOWN = 4 //아래에서 충돌이 날경우
 	//collisionFloags : 이변수가 충돌상태를 flag로 보여준다.
-	/*if (m_pPxState.collisionFlags == PxControllerCollisionFlag::eCOLLISION_DOWN)
-	{ 
-	}
-	*/
+	//if (m_pPxState.collisionFlags == PxControllerCollisionFlag::eCOLLISION_DOWN)
+	//{ 
+	//	int i = 0; //땅에 닿으면 여기 중단점 걸려요
+	//}
+	//--------------------------------------------------------------------------------
 
 	//현재 PhysX의 값으로 객체의 월드행렬을 만들어준다.
 	m_pTransform->m_vPos = XMFLOAT3(m_pPxCharacterController->getFootPosition().x, m_pPxCharacterController->getFootPosition().y, m_pPxCharacterController->getFootPosition().z);

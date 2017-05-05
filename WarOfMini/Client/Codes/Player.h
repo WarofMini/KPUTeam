@@ -9,7 +9,6 @@ class CInput;
 class CCalculator;
 class CRigidBody;
 
-class CGravity;
 class CGun;
 
 class CPlayer
@@ -38,7 +37,6 @@ protected:
 private:
 	HRESULT		Prepare_StateMachine(void);
 	void		Operate_StateMAchine(const FLOAT& fTimeDelta);
-	void		Collision_Field(const FLOAT& fTimeDelta);
 	void		KeyCheck(void);
 	void		KeyState(const FLOAT& fTimeDelta);
 	void		Soldier_Move(const FLOAT& fTimeDelta);
@@ -77,8 +75,6 @@ private:
 	CGun*			m_pEquipment[2];
 	_int			m_iEquipBone;
 
-	//Component
-	CGravity*		m_pComGravity;
 	FLOAT			m_fTimeDelta;
 
 	//Player Animation
@@ -101,6 +97,8 @@ private:
 	FLOAT			m_fRateOfFire;
 	_bool			m_bFire;
 	_bool			m_bAbleReload;
+	FLOAT			m_fFallvelocity;
+	FLOAT			m_fFallAcceleration;
 
 	//Physx SDK Member Variables =========================
 private:
