@@ -229,6 +229,15 @@
     <Filter Include="95.Engine\00.Utility\16.Gravity">
       <UniqueIdentifier>{7bb064b7-5a28-45a2-bcc0-5134297a7b3b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\05.Tank">
+      <UniqueIdentifier>{012b215f-2d8a-4355-bf2b-6aecb507cd0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\05.Tank\Truck">
+      <UniqueIdentifier>{a7d1d4d5-c8af-4f81-a700-e8b92948c1b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\05.Tank\Tire">
+      <UniqueIdentifier>{02cbc07f-7aa5-44f1-96c1-58b1e5bf773b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -462,6 +471,15 @@
     <ClInclude Include="..\Codes\Gravity.h">
       <Filter>95.Engine\00.Utility\16.Gravity</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Tank.h">
+      <Filter>02.Object\05.Tank</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Truck.h">
+      <Filter>02.Object\05.Tank\Truck</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Tire.h">
+      <Filter>02.Object\05.Tank\Tire</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -652,6 +670,15 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Gravity.cpp">
       <Filter>95.Engine\00.Utility\16.Gravity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Tank.cpp">
+      <Filter>02.Object\05.Tank</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Truck.cpp">
+      <Filter>02.Object\05.Tank\Truck</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Tire.cpp">
+      <Filter>02.Object\05.Tank\Tire</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

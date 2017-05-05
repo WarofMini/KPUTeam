@@ -218,10 +218,13 @@
     <ClInclude Include="..\Codes\PlayerCamera.h" />
     <ClInclude Include="..\Codes\StaticMesh.h" />
     <ClInclude Include="..\Codes\StaticObject.h" />
+    <ClInclude Include="..\Codes\Tank.h" />
     <ClInclude Include="..\Codes\Texture.h" />
     <ClInclude Include="..\Codes\Timer_Manager.h" />
     <ClInclude Include="..\Codes\Timer.h" />
+    <ClInclude Include="..\Codes\Tire.h" />
     <ClInclude Include="..\Codes\Transform.h" />
+    <ClInclude Include="..\Codes\Truck.h" />
     <ClInclude Include="..\Codes\xnacollision.h" />
     <ClInclude Include="..\Headers\Enum.h" />
     <ClInclude Include="..\Headers\Function.h" />
@@ -295,10 +298,13 @@
     <ClCompile Include="..\Codes\PlayerCamera.cpp" />
     <ClCompile Include="..\Codes\StaticMesh.cpp" />
     <ClCompile Include="..\Codes\StaticObject.cpp" />
+    <ClCompile Include="..\Codes\Tank.cpp" />
     <ClCompile Include="..\Codes\Texture.cpp" />
     <ClCompile Include="..\Codes\Timer_Manager.cpp" />
     <ClCompile Include="..\Codes\Timer.cpp" />
+    <ClCompile Include="..\Codes\Tire.cpp" />
     <ClCompile Include="..\Codes\Transform.cpp" />
+    <ClCompile Include="..\Codes\Truck.cpp" />
     <ClCompile Include="..\Codes\xnacollision.cpp" />
     <ClCompile Include="ClientClass.cpp" />
     <ClCompile Include="stdafx.cpp">

@@ -1,3 +1,5 @@
 Soldier1-0-0
 Soldier2-0-0
 Gabiscon-0-0
+Tire-0-0
+Truck-0-0
