@@ -121,7 +121,6 @@ void CServer::Accept_thread()
 	{
 		int err_no = WSAGetLastError();
 		error_display("socket()", err_no);
-
 	};
 
 	//bind()
@@ -217,13 +216,6 @@ void CServer::Accept_thread()
 				error_display("Accept_WSARecv", err_no);
 			}
 		}
-
-		//여기에 넣으면
-		// 쟞댄다일ㄷ
-		// 왜냐?
-		// 음... 상관없나//// 상관이 없을수도 있긴 하겠지만.
-		// 위에서 해주는게
-
 	}
 
 
