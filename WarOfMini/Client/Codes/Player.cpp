@@ -112,25 +112,11 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 {
 	m_fTimeDelta = fTimeDelta;
 
-	//if (m_pInput->Get_DIKeyState(DIK_C)) //디버그용
-	//{
-	//	m_pPxCharacterController->setPosition(PxExtendedVec3(10.f, 50.f, 10.f));
-	//}
-
 	CDynamicObject::Update(fTimeDelta);
 	
-
-
-	//임시로 만든 Jump
-	if (m_pInput->Get_DIKeyState(DIK_C))
-	{
-		m_pPxCharacterController->move(PxVec3(0.0f, 1.0f, 0.0f) * m_fSpeed * fTimeDelta * 5.f, 0, fTimeDelta, PxControllerFilters());
-	}
-
-
-
 	//PhysX 함수
 	PhysXUpdate(fTimeDelta);
+
 
 	//Dynamic카메라 체크 함수(Dynamic 카메라일시 Update 안돌린다.
 	if (!DynamicCameraCheck())
@@ -138,10 +124,7 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 		Operate_StateMAchine(fTimeDelta);
 		KeyState(fTimeDelta);
 		SendPacketAlways();
-	}
-
-	// Temp	----------------------------------------------------------------------------
-	
+	}	
 
 
 	// Update
