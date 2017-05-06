@@ -454,35 +454,24 @@ void CPlayer::Soldier_Move(const FLOAT& fTimeDelta)
 		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 1.5f, 0, fTimeDelta, PxControllerFilters());
 		else
 		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
-		//XMStoreFloat3(&m_pTransform->m_vPos, vPos);
-		//m_pTransform->Update(fTimeDelta);
 		break;
 	case SOLDIER_LYING:
 		vDir = XMLoadFloat3(&m_vMoveDir);
 		if (m_dwAniIdx != PLAYER_Lying && m_dwAniIdx != PLAYER_LyingShoot)
 		{
 			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 0.5f, 0, fTimeDelta, PxControllerFilters());
-			//vPos += vDir * m_fSpeed * fTimeDelta * 0.5f;
-			//XMStoreFloat3(&m_pTransform->m_vPos, vPos);
-			//m_pTransform->Update(fTimeDelta);
 		}
 		break;
 	case SOLDIER_JUMP:
 		vDir = XMLoadFloat3(&m_vMoveDir);
 		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
-		//vPos += vDir * m_fSpeed * fTimeDelta;
-		//XMStoreFloat3(&m_pTransform->m_vPos, vPos);
-		//m_pTransform->Update(fTimeDelta);
 		break;
 	case SOLDIER_ROLL:
 		vDir = XMLoadFloat3(&m_fRollDir);
 
 		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fRollSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
 
-		//vPos += vDir * m_fRollSpeed * fTimeDelta;
 		m_fRollSpeed -= 20.f * fTimeDelta;
-		//XMStoreFloat3(&m_pTransform->m_vPos, vPos);
-		//m_pTransform->Update(fTimeDelta);
 		break;
 	}
 }
@@ -506,9 +495,6 @@ void CPlayer::Soldier_Iron_Move(const FLOAT& fTimeDelta)
 		vDir = XMLoadFloat3(&m_vMoveDir);
 		if (m_dwAniIdx != PLAYER_Iron_Lying && m_dwAniIdx != PLAYER_Iron_LyingShoot)
 		{
-			//vPos += vDir * m_fSpeed * fTimeDelta * 0.5f;
-			//XMStoreFloat3(&m_pTransform->m_vPos, vPos);
-			//m_pTransform->Update(fTimeDelta);
 			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 0.5f, 0, fTimeDelta, PxControllerFilters());
 		}
 		break;
@@ -518,10 +504,6 @@ void CPlayer::Soldier_Iron_Move(const FLOAT& fTimeDelta)
 		break;
 	case SOLDIER_ROLL:
 		vDir = XMLoadFloat3(&m_fRollDir);
-		//vPos += vDir * m_fRollSpeed * fTimeDelta;
-		//m_fRollSpeed -= 20.f * fTimeDelta;
-		//XMStoreFloat3(&m_pTransform->m_vPos, vPos);
-		//m_pTransform->Update(fTimeDelta);
 		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fRollSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
 		m_fRollSpeed -= 20.f * fTimeDelta;
 		break;
@@ -688,8 +670,9 @@ void CPlayer::PhysXUpdate(const FLOAT& fTimeDelta)
 
 	//피직스 객체의 상태값을 m_pPxState에 넣어준다.
 	m_pPxCharacterController->getState(m_pPxState);
-	if (m_pPxState.collisionFlags == PxControllerCollisionFlag::eCOLLISION_DOWN)
+	if (m_pPxState.collisionFlags == PxControllerCollisionFlag::eCOLLISION_DOWN)//아래쪽 충돌
 		m_fFallvelocity = 0.f;
+
 
 
 	//현재 PhysX의 값으로 객체의 월드행렬을 만들어준다.

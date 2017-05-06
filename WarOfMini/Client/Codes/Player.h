@@ -63,7 +63,7 @@ public:
 
 	//현재 카메라 상태가 Dynamic일 경우  Player Update 실행X
 	_bool		DynamicCameraCheck(void); 
-	XMFLOAT3 testpos;
+	XMFLOAT3	testpos; //레이캐스팅 테스트를 위한 변수
 	//server
 	void		SendPacketAlways(void);
 
