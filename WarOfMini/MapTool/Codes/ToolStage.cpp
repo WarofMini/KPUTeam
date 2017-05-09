@@ -450,6 +450,36 @@ void CToolStage::InitFloor(void)
 			CObjMgr::GetInstance()->AddObject(L"StaticObject", pObject);
 		}
 	}
+
+
+	strName = L"Mesh_Ceiling";
+
+
+	m_iSize = 195.f;
+	m_fSize = 1.01f;
+
+	m_iSize *= m_fSize;
+
+
+	for (int i = 0; i < 8; ++i)
+	{
+		for (int j = 0; j < 6; ++j)
+		{
+			CObj* pObject = NULL;
+
+			pObject = CToolStaticObject::Create(strName);
+
+			pObject->GetInfo()->m_fAngle[ANGLE_X] += (float)(D3DXToRadian(90.f));
+			pObject->GetInfo()->m_vScale = D3DXVECTOR3(m_fSize, m_fSize, m_fSize);
+			((CToolStaticObject*)pObject)->SetMode(MODE_FIX);
+
+			pObject->GetInfo()->m_vPos = D3DXVECTOR3((j % 6) * m_iSize + 100.f, 366.f, i * m_iSize - 100.f);
+
+			CObjMgr::GetInstance()->AddObject(L"StaticObject", pObject);
+		}
+	}
+
+
 }
 
 void CToolStage::InitToiletFloor(void)
@@ -474,6 +504,35 @@ void CToolStage::InitToiletFloor(void)
 			((CToolStaticObject*)pObject)->SetMode(MODE_FIX);
 
 			pObject->GetInfo()->m_vPos = D3DXVECTOR3((j % 4) * m_iSize + 1282.f, 0.1f, i * m_iSize + 300.f);
+
+			CObjMgr::GetInstance()->AddObject(L"StaticObject", pObject);
+		}
+	}
+
+
+
+
+
+	strName = L"Mesh_Ceiling";
+
+	m_iSize = 195.f;
+	m_fSize = 1.01f;
+
+	m_iSize *= m_fSize;
+
+	for (int i = 0; i < 4; ++i)
+	{
+		for (int j = 0; j < 4; ++j)
+		{
+			CObj* pObject = NULL;
+
+			pObject = CToolStaticObject::Create(strName);
+
+			pObject->GetInfo()->m_fAngle[ANGLE_X] += (float)(D3DXToRadian(90.f));
+			pObject->GetInfo()->m_vScale = D3DXVECTOR3(m_fSize, m_fSize, m_fSize);
+			((CToolStaticObject*)pObject)->SetMode(MODE_FIX);
+
+			pObject->GetInfo()->m_vPos = D3DXVECTOR3((j % 4) * m_iSize + 1282.f, 366.f, i * m_iSize + 300.f);
 
 			CObjMgr::GetInstance()->AddObject(L"StaticObject", pObject);
 		}
@@ -913,6 +972,15 @@ void CToolStage::InitEtc(void)
 		, L"Mesh_Sinks"
 		, "../Resource/Mesh/"
 		, "Sinks.FBX");
+	FAILED_CHECK_RETURN(hr, );
+
+
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_Ceiling"
+		, "../Resource/Mesh/"
+		, "Ceiling.FBX");
 	FAILED_CHECK_RETURN(hr, );
 }
 

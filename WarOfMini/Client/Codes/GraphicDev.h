@@ -77,6 +77,8 @@ public:
 public:
 	void							ChangeScreenMode(void);
 
+	void							OnResizeBackBuffers(void);
+
 
 public:
 	void							Release(void);

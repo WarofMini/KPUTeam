@@ -503,6 +503,77 @@ void CGraphicDev::ChangeScreenMode(void)
 
 }
 
+void CGraphicDev::OnResizeBackBuffers(void)
+{
+	if (m_pContext == NULL)
+		return;
+
+	m_pContext->OMSetRenderTargets(0, NULL, NULL);
+
+	if (m_pDepthStencilBuffer)
+		m_pDepthStencilBuffer->Release();
+
+	if (m_pRenderTargetView)
+		m_pRenderTargetView->Release();
+
+	if (m_pDepthStencilView)
+		m_pDepthStencilView->Release();
+
+	m_pSwapChain->ResizeBuffers(1, 0, 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+
+
+
+	//렌더 타겟 뷰 생성
+	//반드시 자원에 대한 뷰를 생성하고 그 뷰를 파이프라인 단계에 묶어야 한다.
+	//후면 버퍼를 파이프라인 출력 병합기(output merger) 단계에 묶어야 버퍼에 먼가를 그릴수 있게 된다.
+	//그럴려면 후면 버퍼에 대한 렌더 대상 뷰를 생성해야한다.
+	ID3D11Texture2D* pBackBuffer;
+	m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&pBackBuffer));
+
+
+	//렌더타겟뷰 생성 메서드
+	//1.렌더 대상 자원, 
+	//2.D3D11_RENDER_TARGET_VIEW_DESC 구조체를 가리키는 포인터
+	//만약 형식을 완전히 지정해서 자원을 생성했다면 NULL지정해도 된다.
+	//3.생성된 렌더 대상 뷰 반환
+	m_pGraphicDev->CreateRenderTargetView(pBackBuffer, 0, &m_pRenderTargetView);
+	//후면 버퍼 해제
+	Safe_Release(pBackBuffer);
+	//=======================================================================================
+
+
+	//깊이 스텐실 버퍼 생성========================================================================
+	//깊이 버퍼는 깊이 정보를 담는 2차원 텍스처
+	D3D11_TEXTURE2D_DESC td;
+	//D3D11_TEXTURE2D_DESC 구조체의 정보를 채워주는 함수
+	Set_DepthStencil(td, WINCX, WINCY);
+
+	if (FAILED(m_pGraphicDev->CreateTexture2D(&td, 0, &m_pDepthStencilBuffer)))
+	{
+		MSG_BOX(L"DepthStenciBuffer Created Failed");
+	}
+
+	if (FAILED(m_pGraphicDev->CreateDepthStencilView(m_pDepthStencilBuffer, 0, &m_pDepthStencilView)))
+	{
+		MSG_BOX(L"DepthStencilView Created Failed");
+	}
+
+	//후면 버퍼와 깊이 스텐실 버퍼에 대한 뷰들을 생성했으니
+	//이 뷰들을 파이프라인의 출력 병합기 단계에 묶는다.
+	m_pContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+	//1.묶고자 하는 렌더 대상의 개수, 2.파이프라인에 묶을 렌더 대상 뷰 포인터, 3. 스텐실 뷰 포인터
+
+	//★ 렌더 대상 뷰는 여러개를 배열에 담아서 한 번에 묶을수 있지만, 깊이 스텐실 뷰는 하나만 묶을수 있다.
+
+
+	// 뷰포트 설정=================================================
+	D3D11_VIEWPORT vp;
+	Set_Viewport(vp, WINCX, WINCY);
+	//Directx3D에게 뷰포트를 알려준다.
+	m_pContext->RSSetViewports(1, &vp);
+
+}
+
 void CGraphicDev::Release(void)
 {
 	if (Safe_Com_Release(m_pNoneCullRS))

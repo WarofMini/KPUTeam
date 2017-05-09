@@ -59,7 +59,9 @@ HRESULT CDynaicMesh::Create_Buffer(const VTXBONE* pVB, const _uint& uiVtxCnt, co
 		m_pIndex = new UINT[m_uiIdxCnt];
 		memcpy(m_pIndex, pIB, sizeof(UINT) * m_uiIdxCnt);
 
+		
 		m_vPivotPos = pVB[0].vPos;
+			
 
 		D3D11_BUFFER_DESC tBufferDesc;
 
@@ -139,6 +141,7 @@ void CDynaicMesh::Render(_uint uiTextureNumber, _bool bColliderDraw)
 			// Animation
 			if (m_pAnimation)
 				m_pAnimation->UpdateSubresource(nullptr);
+
 
 			// Mesh
 			m_pContext->IASetVertexBuffers(0, 1, &m_pVB, &uiStride, &uiOffset);
@@ -392,15 +395,21 @@ void CDynaicMesh::CreateBoneNode(MATNODE* pMatNode)
 
 XMFLOAT4X4 CDynaicMesh::Get_TransBoneMatrix(_int iIndex, _int iIndex2, MATNODE* pMatNode)
 {
+
 	if (iIndex != -1)
 		return dynamic_cast<CDynaicMesh*>(m_vecChild[iIndex])->Get_TransBoneMatrix(-1, iIndex2, pMatNode->vecNode[iIndex]);
-
 	else
 	{
-		XMFLOAT4X4 matTransBone;
-		XMStoreFloat4x4(&matTransBone, XMMatrixTranslationFromVector(XMLoadFloat3(&m_vPivotPos)) * XMLoadFloat4x4(&pMatNode->matBone[iIndex2]));
-		return matTransBone;
+		XMFLOAT4X4 matTrans;
+		//XMStoreFloat4x4(&matTransBone, XMMatrixTranslationFromVector(XMLoadFloat3(&m_vPivotPos)) * XMLoadFloat4x4(&pMatNode->matBone[iIndex2]));
+		//XMStoreFloat4x4(&matTransBone, XMLoadFloat4x4(&pMatNode->matBone[iIndex2]));
+		
+
+		XMStoreFloat4x4(&matTrans, XMMatrixTranslationFromVector(XMLoadFloat3(&m_vPivotPos)) * XMLoadFloat4x4(&pMatNode->matBone[iIndex2]));
+
+		return matTrans;
 	}
+
 }
 
 
@@ -427,7 +436,7 @@ void CDynaicMesh::Add_ObbCheckList(const XMFLOAT4X4* pWorld, const CGameObject* 
 					matTrans.m[i][j] += pMatNode->matBone[pOriVertex[uiIndex].uiBones[0]].m[i][j] * pOriVertex[uiIndex].fWeights[0];
 					matTrans.m[i][j] += pMatNode->matBone[pOriVertex[uiIndex].uiBones[1]].m[i][j] * pOriVertex[uiIndex].fWeights[1];
 					matTrans.m[i][j] += pMatNode->matBone[pOriVertex[uiIndex].uiBones[2]].m[i][j] * pOriVertex[uiIndex].fWeights[2];
-					matTrans.m[i][j] += pMatNode->matBone[pOriVertex[uiIndex].uiBones[3]].m[i][j] * pOriVertex[uiIndex].fWeights[3];
+					matTrans.m[i][j] += pMatNode->matBone[pOriVertex[uiIndex].uiBones[3]].m[i][j] * pOriVertex[uiIndex].fWeights[3]; 
 				}
 			}
 

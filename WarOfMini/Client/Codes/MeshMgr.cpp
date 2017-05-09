@@ -4,6 +4,7 @@
 #include "DynamicMesh.h"
 #include "Texture.h"
 #include "GraphicDev.h"
+#include "Animation.h"
 
 IMPLEMENT_SINGLETON(CMeshMgr)
 
@@ -20,6 +21,7 @@ void CMeshMgr::CreateBoneNode(_uint uiObjNum, MATNODE* pMatNode)
 {
 	if (dynamic_cast<CDynaicMesh*>(m_vecMeshData[uiObjNum]->pMesh))
 		dynamic_cast<CDynaicMesh*>(m_vecMeshData[uiObjNum]->pMesh)->CreateBoneNode(pMatNode);
+
 }
 
 
@@ -53,6 +55,7 @@ _bool CMeshMgr::Get_MeshUseAlpha(_uint uiObjNum)
 {
 	return m_vecMeshData[uiObjNum]->bAlpha;
 }
+
 
 void CMeshMgr::Ready_MeshMgr(MESHDATA* pMeshData)
 {

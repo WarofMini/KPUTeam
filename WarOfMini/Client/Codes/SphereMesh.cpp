@@ -12,6 +12,17 @@ CSphereMesh::CSphereMesh(ID3D11DeviceContext* pContext, _float fRadius, XMFLOAT3
 	, m_fRadius(fRadius)
 	, m_pTransform(NULL)
 	, m_vPos(pPos)
+	, m_matWorld(NULL)
+{
+	m_uiObjNum = MESHNUM_SPHERE;
+}
+
+CSphereMesh::CSphereMesh(ID3D11DeviceContext * pContext, _float fRadius)
+: CGameObject(pContext)
+, m_fRadius(fRadius)
+, m_pTransform(NULL)
+, m_matWorld(NULL)
+, m_vPos(NULL)
 {
 	m_uiObjNum = MESHNUM_SPHERE;
 }
@@ -23,6 +34,16 @@ CSphereMesh::~CSphereMesh(void)
 CSphereMesh* CSphereMesh::Create(ID3D11DeviceContext* pContext, _float fRadius, XMFLOAT3* pPos)
 {
 	CSphereMesh* pObject = new CSphereMesh(pContext, fRadius, pPos);
+
+	if (FAILED(pObject->Initialize()))
+		Safe_Release(pObject);
+
+	return pObject;
+}
+
+CSphereMesh * CSphereMesh::Create(ID3D11DeviceContext * pContext, _float fRadius)
+{
+	CSphereMesh* pObject = new CSphereMesh(pContext, fRadius);
 
 	if (FAILED(pObject->Initialize()))
 		Safe_Release(pObject);
@@ -43,12 +64,23 @@ HRESULT CSphereMesh::Initialize()
 
 _int CSphereMesh::Update(const _float& fTimeDelta)
 {
-
-	m_pTransform->m_vPos = (*m_vPos);
+	if(m_vPos != NULL)
+		m_pTransform->m_vPos = (*m_vPos);
 
 
 	CGameObject::Update(fTimeDelta);
 
+	if (m_matWorld != NULL)
+	{
+		XMStoreFloat4x4(&m_pTransform->m_matWorld, XMLoadFloat4x4(m_matWorld));
+
+		XMMATRIX matScale = XMMatrixScaling(m_fRadius, m_fRadius, m_fRadius);
+
+		if(m_fRadius > 0.0f)
+			XMStoreFloat4x4(&m_pTransform->m_matWorld, matScale * XMLoadFloat4x4(&m_pTransform->m_matWorld));
+
+	}
+		
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
 
 	return 0;
@@ -106,4 +138,9 @@ HRESULT CSphereMesh::Ready_Component()
 void CSphereMesh::SetObjNum(_uint uNum)
 {
 	m_uiObjNum = uNum;
+}
+
+void CSphereMesh::SetmatWorld(XMFLOAT4X4 * matWorld)
+{
+	m_matWorld = matWorld;
 }

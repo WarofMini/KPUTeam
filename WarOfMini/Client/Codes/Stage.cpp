@@ -151,8 +151,6 @@ HRESULT CStage::InitFloor(void)
 		return E_FAIL;
 
 
-	((CDefaultObj*)pGameObject)->SetObjNum(MESHNUM_FLOOR1);
-
 
 	for (int i = 0; i < 8; ++i)
 	{
@@ -184,6 +182,42 @@ HRESULT CStage::InitFloor(void)
 
 		}
 	}
+
+
+
+	m_iSize = 195.f;
+	m_fSize = 1.01f;
+
+	m_iSize *= m_fSize;
+
+
+	for (int i = 0; i < 8; ++i)
+	{
+		for (int j = 0; j < 6; ++j)
+		{
+			pGameObject = CDefaultObj::Create(m_pContext);
+
+			if (NULL == pGameObject)
+				return E_FAIL;
+
+			((CDefaultObj*)pGameObject)->SetObjNum(MESHNUM_CEILING);
+
+			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle = XMFLOAT3(270.f, 0.f, 0.f);
+			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale = XMFLOAT3(m_fSize, m_fSize, m_fSize);
+			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos = XMFLOAT3((j % 6) * m_iSize + 100.f, 366.f, i * m_iSize - 100.f);
+
+			((CDefaultObj*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(m_fSize, m_fSize, m_fSize), m_pCooking, "Floor");
+
+			//x, y, z, = x,z, y축으로 돌아간다...
+			((CDefaultObj*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(270.f), (_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f)));
+			((CDefaultObj*)pGameObject)->SetPosition(XMFLOAT3((j % 6) * m_iSize + 100.f, 366.f, i * m_iSize - 100.f));
+
+			pLayer->Ready_Object(L"StaticObject", pGameObject);
+		}
+	}
+
+
+
 
 	return S_OK;
 }
@@ -222,6 +256,41 @@ HRESULT CStage::InitToiletFloor(void)
 			((CDefaultObj*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(m_fSize, m_fSize, m_fSize), m_pCooking, "Floor2");
 			((CDefaultObj*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(270.f), (_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f)));
 			((CDefaultObj*)pGameObject)->SetPosition(XMFLOAT3((j % 4) * m_iSize + 1282.f, 0.1f, i * m_iSize + 300.f));
+
+
+			pLayer->Ready_Object(L"StaticObject", pGameObject);
+
+		}
+	}
+
+
+
+	m_iSize = 195.f;
+	m_fSize = 1.01f;
+
+	m_iSize *= m_fSize;
+
+
+	for (int i = 0; i < 4; ++i)
+	{
+		for (int j = 0; j < 4; ++j)
+		{
+			pGameObject = CDefaultObj::Create(m_pContext);
+
+			if (NULL == pGameObject)
+				return E_FAIL;
+
+			((CDefaultObj*)pGameObject)->SetObjNum(MESHNUM_CEILING);
+
+			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle = XMFLOAT3(270.f, 0.f, 0.f);
+			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale = XMFLOAT3(m_fSize, m_fSize, m_fSize);
+			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos = XMFLOAT3((j % 4) * m_iSize + 1282.f, 366.f, i * m_iSize + 300.f);
+
+
+
+			((CDefaultObj*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(m_fSize, m_fSize, m_fSize), m_pCooking, "Floor2");
+			((CDefaultObj*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(270.f), (_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f)));
+			((CDefaultObj*)pGameObject)->SetPosition(XMFLOAT3((j % 4) * m_iSize + 1282.f, 366.f, i * m_iSize + 300.f));
 
 
 			pLayer->Ready_Object(L"StaticObject", pGameObject);

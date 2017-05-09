@@ -166,7 +166,7 @@ void CDynamicCamera::FixMouse(void)
 	POINT ptMouse;
 	ZeroMemory(&ptMouse, sizeof(POINT));
 
-	ptMouse = { WINCX >> 1, WINCY >> 1 };
+	ptMouse = { (long)WINCX >> 1, (long)WINCY >> 1 };
 
 	ClientToScreen(g_hWnd, &ptMouse);
 

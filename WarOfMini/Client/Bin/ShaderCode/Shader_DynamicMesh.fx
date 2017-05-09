@@ -32,10 +32,12 @@ VS_OUTPUT VS(float4 vPos : POSITION, float2 vTexUV : TEXCOORD0, float3 vNormal :
 
 	matrix matTrans = (matrix)0;
 
+	
 	matTrans += matBoneWorld[uiBones.x] * vWeights.x;
 	matTrans += matBoneWorld[uiBones.y] * vWeights.y;
 	matTrans += matBoneWorld[uiBones.z] * vWeights.z;
 	matTrans += matBoneWorld[uiBones.w] * vWeights.w;
+	
 
 	matTrans = mul(matTrans, matWorld);
 	output.vPos = mul(vPos, matTrans);

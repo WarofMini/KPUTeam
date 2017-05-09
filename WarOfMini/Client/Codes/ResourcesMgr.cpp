@@ -812,6 +812,8 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 										FbxAMatrix lRefGeometry;
 
 
+										lRefGeometry = GetGeometry(pMesh->GetNode()); //대부분 단위행렬
+
 										//============================================================
 										//GetTransformMatrix : 전체 메시의 Global Transform이고,
 										//모든 cluster는 정확하게 같은 TransformMatrix를 가진다.
@@ -824,7 +826,7 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 										pCluster->GetTransformLinkMatrix(LinkBoneMtx);
 										//============================================================
 
-										lRefGeometry = GetGeometry(pMesh->GetNode()); //대부분 단위행렬
+										
 
 										//시간에 따른 EvaluateGlobalTransform
 										lClusterGlobalCurPos = GetGlobalPosition(pCluster->GetLink(), pTime, pPose);

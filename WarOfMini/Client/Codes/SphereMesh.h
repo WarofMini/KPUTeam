@@ -10,10 +10,13 @@ class CSphereMesh
 {
 private:
 	explicit CSphereMesh(ID3D11DeviceContext* pContext, _float fRadius, XMFLOAT3* pPos);
+	explicit CSphereMesh(ID3D11DeviceContext* pContext, _float fRadius);
 	virtual ~CSphereMesh(void);
 
 public:
 	static CSphereMesh* Create(ID3D11DeviceContext* pContext, _float fRadius, XMFLOAT3* pPos);
+
+	static CSphereMesh* Create(ID3D11DeviceContext* pContext, _float fRadius);
 
 public:
 	virtual HRESULT	Initialize(void);
@@ -30,8 +33,10 @@ private:
 	_float			m_fRadius;
 	CTransform*		m_pTransform;
 	XMFLOAT3*		m_vPos;
+	XMFLOAT4X4*		m_matWorld;
 public:
 	void			SetObjNum(_uint uNum);
+	void			SetmatWorld(XMFLOAT4X4* matWorld);
 
 };
 

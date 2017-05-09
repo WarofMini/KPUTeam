@@ -32,4 +32,8 @@ extern _bool		g_bSetAquire;
 
 extern _bool		g_bCollisionDraw;
 
+
+extern _uint		WINCX;
+extern _uint		WINCY;
+
 #endif

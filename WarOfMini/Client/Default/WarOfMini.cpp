@@ -26,6 +26,9 @@ BOOL m_bLogoLoading;
 _bool g_bFocus;
 _bool g_bSetAquire;
 _bool g_bCollisionDraw;
+_uint WINCX;
+_uint WINCY;
+
 AsynchronousClientClass* g_Client = NULL;
 
 
@@ -51,6 +54,8 @@ int APIENTRY wWinMain( HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_WAROFMINI, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
+
+	WINCX = 1600, WINCY = 900;
 
     // 응용 프로그램 초기화를 수행합니다.
     if (!InitInstance (hInstance, nCmdShow))
@@ -222,7 +227,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_SETFOCUS:
 		g_bFocus = true;
 		break;
-
+	case WM_SIZE:
+	{
+		WINCX = LOWORD(lParam);
+		WINCY = HIWORD(lParam);
+		CGraphicDev::GetInstance()->OnResizeBackBuffers();
+		break;
+	}
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);

@@ -63,7 +63,7 @@ public:
 
 	//현재 카메라 상태가 Dynamic일 경우  Player Update 실행X
 	_bool		DynamicCameraCheck(void); 
-	XMFLOAT3	testpos; //레이캐스팅 테스트를 위한 변수
+	XMFLOAT3	m_vtestpos; //레이캐스팅 테스트를 위한 변수
 	//server
 	void		SendPacketAlways(void);
 
@@ -106,6 +106,16 @@ private:
 private:
 	PxRigidDynamic*		m_pPxActor;
 	PxController*		m_pPxCharacterController;
+
+	//객체에 충돌박스 입히기===============================
+	CGameObject*		pSphereMesh;
+private:
+	XMFLOAT4X4			m_matBone;
+	_int				m_iBoneNum;
+
+public:
+	virtual void		Render(void);
+
 
 public:
 	void	BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, PxControllerManager *pPxControllerManager);

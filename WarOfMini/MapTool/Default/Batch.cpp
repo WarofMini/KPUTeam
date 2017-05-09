@@ -700,6 +700,15 @@ void CBatch::InitTreeObject(void)
 	hPhotocopier1 = m_ctrlTreeObject.InsertItem(L"Mesh_Photocopier", 1/* nImage */, 1/* nSelectedImage */, hPhotocopier, TVI_LAST);
 
 
+	//Photocopier
+	HTREEITEM  hCeiling;
+	hCeiling = m_ctrlTreeObject.InsertItem(L"Ceiling", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+	//Photocopier1
+	HTREEITEM  hCeiling1;
+	hCeiling1 = m_ctrlTreeObject.InsertItem(L"Mesh_Ceiling", 1/* nImage */, 1/* nSelectedImage */, hCeiling, TVI_LAST);
+
+
 }
 
 //»ý¼º

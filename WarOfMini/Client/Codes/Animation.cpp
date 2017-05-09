@@ -39,14 +39,12 @@ void CAnimation::UpdateSubresource(CAnimationInfo* pAnimInfo, XMFLOAT4X4* pBoneW
 
 		for (size_t iCluster = 0; iCluster < uiClusterSize; ++iCluster)
 		{
+
 			XMMATRIX matRot = XMMatrixRotationQuaternion(XMLoadFloat4(&m_vecAnimData[wCurKey][wCurFrame][iCluster].R));
 			XMMATRIX matRot2 = XMMatrixRotationQuaternion(XMLoadFloat4(&m_vecAnimData[wNextKey][wNextFrame][iCluster].R));
 
-			//XMMATRIX matRot = XMMatrixRotationQuaternion(XMQuaternionSlerp(XMLoadFloat4(&m_vecAnimData[wCurKey][wCurFrame][iCluster].R)
-			//	, XMLoadFloat4(&m_vecAnimData[wNextKey][wNextFrame][iCluster].R), fRatio));
-
-
-
+			//XMMATRIX matRot3 = XMMatrixRotationQuaternion(XMQuaternionSlerp(XMLoadFloat4(&m_vecAnimData[wCurKey][wCurFrame][iCluster].R)
+			//		, XMLoadFloat4(&m_vecAnimData[wNextKey][wNextFrame][iCluster].R), fRatio));
 
 
 			XMMATRIX matTrans = XMMatrixTranslationFromVector(XMLoadFloat3(&m_vecAnimData[wCurKey][wCurFrame][iCluster].T));
@@ -66,8 +64,15 @@ void CAnimation::UpdateSubresource(CAnimationInfo* pAnimInfo, XMFLOAT4X4* pBoneW
 			}
 
 
+		
 			XMStoreFloat4x4(&matBoneWorld[iCluster], XMMatrixTranspose(matScale * matRot * matTrans));
-			XMStoreFloat4x4(&pBoneWorld[iCluster], matScale * matRot * matTrans);
+		
+			//XMVECTOR dd = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+			//matRot = XMMatrixInverse(&dd, matRot);
+			//matTrans = XMMatrixInverse(&dd, matTrans);
+			//matScale = XMMatrixInverse(&dd, matScale);
+		
+			XMStoreFloat4x4(&pBoneWorld[iCluster], matScale * matRot * matTrans );
 		}
 	}
 

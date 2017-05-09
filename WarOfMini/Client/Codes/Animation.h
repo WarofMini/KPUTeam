@@ -22,6 +22,7 @@ public:
 	void Push_AnimData(ANIMDATA& tAniData);
 	void UpdateSubresource(CAnimationInfo* pAnimInfo, XMFLOAT4X4* pBoneWorld = nullptr);
 
+
 public:
 	static CAnimation* Create(ID3D11DeviceContext* pContext);
 	void Release(void);
@@ -31,6 +32,7 @@ private:
 
 private:
 	vector<ANIMDATA>	m_vecAnimData;
+
 };
 
 #endif // Animation_h__

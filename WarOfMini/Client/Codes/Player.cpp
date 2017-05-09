@@ -19,23 +19,23 @@
 XMFLOAT3		g_vPlayerPos;
 
 CPlayer::CPlayer(ID3D11DeviceContext* pContext)
-	: CDynamicObject(pContext)
-	, m_dwState(SOLDIER_IDLE)
-	, m_dwAniIdx(PLAYER_idle)
-	, m_pComStateMachine(NULL)
-	, m_eMoveDir(DIR_END)
-	, m_vMoveDir(0.f, 0.f, 0.f)
-	, m_bIsSoldier(true)
-	, m_fTimeDelta(0.f)
-	, m_iEquipBone(0)
-	, m_fRollSpeed(0.f)
-	, m_fRateOfFire(0.f)
-	, m_bFire(false)
-	, m_bAbleReload(false)
-	, m_pPxActor(NULL)
-	, m_pPxCharacterController(NULL)
-	, m_fFallAcceleration(9.8f)
-	, m_fFallvelocity(0.f)
+: CDynamicObject(pContext)
+, m_dwState(SOLDIER_IDLE)
+, m_dwAniIdx(PLAYER_idle)
+, m_pComStateMachine(NULL)
+, m_eMoveDir(DIR_END)
+, m_vMoveDir(0.f, 0.f, 0.f)
+, m_bIsSoldier(true)
+, m_fTimeDelta(0.f)
+, m_iEquipBone(0)
+, m_fRollSpeed(0.f)
+, m_fRateOfFire(0.f)
+, m_bFire(false)
+, m_bAbleReload(false)
+, m_pPxActor(NULL)
+, m_pPxCharacterController(NULL)
+, m_fFallAcceleration(9.8f)
+, m_fFallvelocity(0.f)
 {
 	m_pInput = CInput::GetInstance();
 	m_vLook = XMFLOAT3(0.f, 1.f, 0.f);
@@ -49,6 +49,11 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 	m_pServer_PlayerData = new Ser_PLAYER_DATA;
 
 	m_fSpeed = 50.f;
+
+
+	XMStoreFloat4x4(&m_matBone, XMMatrixIdentity());
+	m_iBoneNum = 0;
+	pSphereMesh = CSphereMesh::Create(m_pContext, 1.f);
 }
 
 CPlayer::~CPlayer(void)
@@ -126,6 +131,18 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 		SendPacketAlways();
 	}	
 
+	if (GetAsyncKeyState('G') & 1)
+	{
+		m_iBoneNum += 1;
+		cout << "BoneNum" << m_iBoneNum << endl;
+	}
+	if (GetAsyncKeyState('H') & 1)
+	{
+		m_iBoneNum -= 1;
+		cout << "BoneNum" << m_iBoneNum << endl;
+	}
+
+
 
 	// Update
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
@@ -134,6 +151,9 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 	UpdateDir();
 
 	Update_Equipment(fTimeDelta);
+
+
+	pSphereMesh->Update(fTimeDelta);
 
 	return 0;
 }
@@ -176,8 +196,15 @@ void CPlayer::Update_Equipment(const FLOAT& fTimeDelta)
 {
 	m_matEquipBone[0] = CMeshMgr::GetInstance()->Get_TransMeshBone(m_uiObjNum, 0, m_iEquipBone, m_pMatBoneNode);
 
+	m_matBone = CMeshMgr::GetInstance()->Get_TransMeshBone(m_uiObjNum, 0, m_iBoneNum, m_pMatBoneNode);
+
+
 	XMMATRIX matWorld = XMLoadFloat4x4(&m_pTransform->m_matWorld);
 	XMStoreFloat4x4(&m_matEquipBone[0], XMLoadFloat4x4(&m_matEquipBone[0]) * matWorld);
+
+	XMStoreFloat4x4(&m_matBone, XMLoadFloat4x4(&m_matBone) * matWorld);
+	((CSphereMesh*)pSphereMesh)->SetmatWorld(&m_matBone);
+
 	m_pEquipment[0]->SetParent(m_matEquipBone[0]);
 	m_pEquipment[0]->Update(fTimeDelta);
 }
@@ -291,8 +318,6 @@ bool CPlayer::Check_AnimationFrame(void)
 bool CPlayer::IsOnGround(void)
 {
 	PxControllerState   m_pPxState;
-
-	m_pPxCharacterController->getState(m_pPxState);
 
 	//피직스 객체의 상태값을 m_pPxState에 넣어준다.
 	m_pPxCharacterController->getState(m_pPxState);
@@ -542,14 +567,14 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 			if (status == true)
 			{
 
-				testpos = XMFLOAT3(hit.block.position.x, hit.block.position.y, hit.block.position.z);
+				m_vtestpos = XMFLOAT3(hit.block.position.x, hit.block.position.y, hit.block.position.z);
 
 				CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
 
-				CGameObject* pGameObject = CSphereMesh::Create(m_pContext, 2.f, &testpos);
+				CGameObject* pGameObject = CSphereMesh::Create(m_pContext, 2.f, &m_vtestpos);
 
 
-				pLayer->Ready_Object(L"test", pGameObject);
+				pLayer->Ready_Object(L"TestPos", pGameObject);
 
 			}
 		}
@@ -594,6 +619,13 @@ _bool CPlayer::DynamicCameraCheck(void)
 	return false;
 }
 
+void CPlayer::Render(void)
+{
+	CDynamicObject::Render();
+
+	pSphereMesh->Render();
+}
+
 void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, PxControllerManager *pPxControllerManager)
 {
 	//XMFLOAT3 vMin = *(CMeshMgr::GetInstance()->Get_MeshMin(m_uiObjNum));
@@ -613,33 +645,26 @@ void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *
 	//PxBoxdesc.upDirection = PxVec3(0, 1, 0);
 	//PxBoxdesc.material = pPxMaterial;
 	
+
 	m_pScene = pPxScene;
-		
+
 	PxCapsuleControllerDesc	PxCapsuledesc;
 	PxCapsuledesc.position = PxExtendedVec3(0, 0, 0);
-	PxCapsuledesc.radius = 5.0f;
-	PxCapsuledesc.height = 5.0f;
+	PxCapsuledesc.radius = 3.0f;
+	PxCapsuledesc.height = 14.0f;
 
 	//캐릭터가 올라갈 수있는 장애물의 최대 높이를 정의합니다. 
-	PxCapsuledesc.stepOffset = 4.f;
+	PxCapsuledesc.stepOffset = 3.f;
 
-	//등반모드
-	PxCapsuledesc.climbingMode = PxCapsuleClimbingMode::eCONSTRAINED;
-	PxCapsuledesc.nonWalkableMode = PxControllerNonWalkableMode::eFORCE_SLIDING;
-	
 	//캐시 된 볼륨 증가. 
 	//성능을 향상시키기 위해 캐싱하는 컨트롤러 주변의 공간입니다.  이것은 1.0f보다 커야하지만 너무 크지 않아야하며, 2.0f보다 낮아야합니다.
 	PxCapsuledesc.volumeGrowth = 1.9f;
-
-
 	//캐릭터가 걸어 갈 수있는 최대 경사. 
-	PxCapsuledesc.slopeLimit = 5.f;
+	PxCapsuledesc.slopeLimit = cosf(XMConvertToRadians(30.f));
 	
 	PxCapsuledesc.upDirection = PxVec3(0, 1, 0);
-	PxCapsuledesc.contactOffset = 0.00001;
 	PxCapsuledesc.contactOffset = 0.05f; //접촉 오프셋
 	PxCapsuledesc.material = pPxMaterial;
-
 
 	m_pPxCharacterController = pPxControllerManager->createController(PxCapsuledesc);
 
@@ -658,6 +683,7 @@ void CPlayer::SetRotate(XMFLOAT3 vRot)
 //PhysX 함수
 void CPlayer::PhysXUpdate(const FLOAT& fTimeDelta)
 {
+
 	//PhysX에 값을 전달해준다. 중력
 	m_fFallvelocity -= m_fFallAcceleration * fTimeDelta * 50.f;
 	if (m_fFallvelocity < -1000.f)
@@ -665,8 +691,6 @@ void CPlayer::PhysXUpdate(const FLOAT& fTimeDelta)
 	m_pPxCharacterController->move(PxVec3(0, 1.f, 0) * fTimeDelta * m_fFallvelocity, 0, fTimeDelta, PxControllerFilters());
 
 	PxControllerState   m_pPxState;
-
-	m_pPxCharacterController->getState(m_pPxState);
 
 	//피직스 객체의 상태값을 m_pPxState에 넣어준다.
 	m_pPxCharacterController->getState(m_pPxState);

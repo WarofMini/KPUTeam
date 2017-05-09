@@ -50,9 +50,6 @@ _int CDefaultObj::Update(const _float& fTimeDelta)
 
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
 
-
-	//if (m_pSphereMesh != NULL && g_bCollisionDraw)
-	//	m_pSphereMesh->Update(fTimeDelta);	
 	
 	return 0;
 }
@@ -80,11 +77,6 @@ void CDefaultObj::Render(void)
 
 	CMeshMgr::GetInstance()->Render_MeshMgr(m_uiObjNum, m_iTextureNumber, TRUE);
 
-
-	//if (m_pSphereMesh != NULL && g_bCollisionDraw)
-	//{
-	//	m_pSphereMesh->Render();
-	//}
 }
 
 void CDefaultObj::Release(void)
@@ -183,9 +175,12 @@ void CDefaultObj::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMateri
 	m_pPxActor = PxCreateStatic(*pPxPhysics, _PxTransform, meshGeom, *pPxMaterial);
 
 	m_pPxActor->setName(name);
+
+
 	pPxScene->addActor(*m_pPxActor);
 
-	
+	PxSetGroup(*m_pPxActor, 0);
+
 	//바운딩박스
 	//XMFLOAT3 vMin = *(CMeshMgr::GetInstance()->Get_MeshMin(m_uiObjNum));
 

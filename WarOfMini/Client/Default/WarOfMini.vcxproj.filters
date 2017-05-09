@@ -211,12 +211,6 @@
     <Filter Include="95.Engine\00.Utility\13.Collision\00.CollisionSphere">
       <UniqueIdentifier>{2de7f605-75c7-453d-90e5-f7fcc0ac14c2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="95.Engine\00.Utility\15.Calculator">
-      <UniqueIdentifier>{bdfd5042-36dd-4688-af6e-761a340919bc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="95.Engine\00.Utility\14.RigidBody">
-      <UniqueIdentifier>{e6dedf2d-0711-4f3f-bf9c-e618ba4fbd58}</UniqueIdentifier>
-    </Filter>
     <Filter Include="95.Engine\00.Utility\13.Collision\01.XNACollision">
       <UniqueIdentifier>{aeeb79a8-5700-4378-a64e-b185ba0e0a36}</UniqueIdentifier>
     </Filter>
@@ -453,12 +447,6 @@
     <ClInclude Include="..\Codes\SphereMesh.h">
       <Filter>95.Engine\00.Utility\13.Collision\00.CollisionSphere</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\RigidBody.h">
-      <Filter>95.Engine\00.Utility\14.RigidBody</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Codes\Calculator.h">
-      <Filter>95.Engine\00.Utility\15.Calculator</Filter>
-    </ClInclude>
     <ClInclude Include="..\Codes\xnacollision.h">
       <Filter>95.Engine\00.Utility\13.Collision\01.XNACollision</Filter>
     </ClInclude>
@@ -652,12 +640,6 @@
     </ClCompile>
     <ClCompile Include="..\Codes\SphereMesh.cpp">
       <Filter>95.Engine\00.Utility\13.Collision\00.CollisionSphere</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\RigidBody.cpp">
-      <Filter>95.Engine\00.Utility\14.RigidBody</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\Calculator.cpp">
-      <Filter>95.Engine\00.Utility\15.Calculator</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\xnacollision.cpp">
       <Filter>95.Engine\00.Utility\13.Collision\01.XNACollision</Filter>

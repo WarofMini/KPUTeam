@@ -8,8 +8,6 @@
 
 #define MAXFRAME 5			  //프레임자리수
 
-const _uint WINCX = 1600;
-const _uint WINCY = 900;
 
 const _uint	BONE_MATRIX_NUM = 128;
 const _ubyte MAX_NAME = 128;
