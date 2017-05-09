@@ -231,7 +231,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		WINCX = LOWORD(lParam);
 		WINCY = HIWORD(lParam);
-		CGraphicDev::GetInstance()->OnResizeBackBuffers();
+		//¼öÁ¤Áß
+		//CGraphicDev::GetInstance()->OnResizeBackBuffers();
 		break;
 	}
     case WM_COMMAND:
