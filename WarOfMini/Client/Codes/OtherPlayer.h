@@ -16,6 +16,7 @@ public:
 	static COtherPlayer* Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);
 	static COtherPlayer* Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, XMFLOAT3 vPos, int iID);
 
+
 public:
 	virtual HRESULT	Initialize(ID3D11Device* pGraphicDev);
 	virtual INT     Update(const FLOAT& fTimeDelta);
@@ -48,6 +49,15 @@ private:
 	MATNODE*		m_pMatBoneNode_Iron;
 	_uint			m_uiObjNum_Normal;
 	_uint			m_uiObjNum_Iron;
+
+//Physx SDK Member Variables =========================
+private:
+	PxRigidDynamic*		m_pPxActor;
+	PxController*		m_pPxCharacterController;
+
+public:
+	void	BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, PxControllerManager *pPxControllerManager);
+
 };
 
 #endif //

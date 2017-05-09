@@ -303,6 +303,10 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 			pGameObject = COtherPlayer::Create(CGraphicDev::GetInstance()->GetGraphicDevice(), CGraphicDev::GetInstance()->GetContext(), m_pPlayerData->vPos, m_pPlayerData->ID);
 
 			pScene = CManagement::GetInstance()->GetScene();
+
+			((COtherPlayer*)pGameObject)->BuildObject(pScene->GetPhysicsSDK(), pScene->GetPhysicsScene(), pScene->GetPxMaterial(), pScene->GetPxControllerManager());
+
+
 			pLayer = pScene->FindLayer(L"Layer_GameLogic");
 			pLayer->Ready_Object(L"OtherPlayer", pGameObject);
 		}
@@ -355,6 +359,10 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 				pGameObject = COtherPlayer::Create(CGraphicDev::GetInstance()->GetGraphicDevice(), CGraphicDev::GetInstance()->GetContext(), vecPlayerData.vecPlayerData[i].vPos, vecPlayerData.vecPlayerData[i].ID);
 
 				pScene = CManagement::GetInstance()->GetScene();
+
+				((COtherPlayer*)pGameObject)->BuildObject(pScene->GetPhysicsSDK(), pScene->GetPhysicsScene(), pScene->GetPxMaterial(), pScene->GetPxControllerManager());
+
+
 				pLayer = pScene->FindLayer(L"Layer_GameLogic");
 				pLayer->Ready_Object(L"OtherPlayer", pGameObject);
 			}

@@ -37,6 +37,12 @@ protected:
 
 public:
 	CLayer*		FindLayer(const _tchar* LayerName);
+	PxPhysics*  GetPhysicsSDK(void) { return m_pPxPhysicsSDK; }
+	PxScene*	GetPhysicsScene(void) { return m_pPxScene; }
+	PxControllerManager* GetPxControllerManager(void) { return m_pPxControllerManager; }
+	PxMaterial* GetPxMaterial(void) { return m_pPxMaterial; }
+	PxCooking*  GetCooking(void) { return m_pCooking; }
+
 	//MAPLAYER*	GetMapLayer(void) { return &m_mapLayer; }
 };
 
