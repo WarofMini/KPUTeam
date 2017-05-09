@@ -96,7 +96,7 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 
 	//m_pTransform->m_vPos = g_vPos;
 
-	m_pTransform->m_vPos = XMFLOAT3(10.0f, 0.0f, 10.0f);
+	m_pTransform->m_vPos = XMFLOAT3(10.0f, 80.0f, 10.0f);
 
 	m_pTransform->m_vDir = XMFLOAT3(0.f, 0.f, -1.f);
 	m_pAnimInfo->Set_Key((_ushort)m_dwAniIdx);
@@ -628,30 +628,31 @@ void CPlayer::Render(void)
 
 void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, PxControllerManager *pPxControllerManager)
 {
-	//XMFLOAT3 vMin = *(CMeshMgr::GetInstance()->Get_MeshMin(m_uiObjNum));
-	//XMFLOAT3 vMax = *(CMeshMgr::GetInstance()->Get_MeshMax(m_uiObjNum));
+	/*
+	XMFLOAT3 vMin = *(CMeshMgr::GetInstance()->Get_MeshMin(m_uiObjNum));
+	XMFLOAT3 vMax = *(CMeshMgr::GetInstance()->Get_MeshMax(m_uiObjNum));
 
-	//XMFLOAT3 _d3dxvExtents =
-	//	XMFLOAT3((abs(vMin.x) + abs(vMax.x)) / 2, (abs(vMin.y) + abs(vMax.y)) / 2, (abs(vMin.z) + abs(vMax.z)) / 2);
+	XMFLOAT3 _d3dxvExtents =
+		XMFLOAT3((abs(vMin.x) + abs(vMax.x)) / 2, (abs(vMin.y) + abs(vMax.y)) / 2, (abs(vMin.z) + abs(vMax.z)) / 2);
 
-	//Player의 바운딩 박스 생성
-	//PxBoxControllerDesc PxBoxdesc;
-	//PxBoxdesc.position = PxExtendedVec3(0, 0, 0);
-	//PxBoxdesc.halfForwardExtent = _d3dxvExtents.y / 2;
-	//PxBoxdesc.halfSideExtent = _d3dxvExtents.z / 2;
-	//PxBoxdesc.halfHeight = _d3dxvExtents.x / 2;
-	//PxBoxdesc.slopeLimit = 10;
-	//PxBoxdesc.contactOffset = 0.00001;
-	//PxBoxdesc.upDirection = PxVec3(0, 1, 0);
-	//PxBoxdesc.material = pPxMaterial;
-	
+	Player의 바운딩 박스 생성
+	PxBoxControllerDesc PxBoxdesc;
+	PxBoxdesc.position = PxExtendedVec3(0, 0, 0);
+	PxBoxdesc.halfForwardExtent = _d3dxvExtents.y / 2;
+	PxBoxdesc.halfSideExtent = _d3dxvExtents.z / 2;
+	PxBoxdesc.halfHeight = _d3dxvExtents.x / 2;
+	PxBoxdesc.slopeLimit = 10;
+	PxBoxdesc.contactOffset = 0.00001;
+	PxBoxdesc.upDirection = PxVec3(0, 1, 0);
+	PxBoxdesc.material = pPxMaterial;
+	*/
 
 	m_pScene = pPxScene;
 
 	PxCapsuleControllerDesc	PxCapsuledesc;
 	PxCapsuledesc.position = PxExtendedVec3(0, 0, 0);
-	PxCapsuledesc.radius = 3.0f;
-	PxCapsuledesc.height = 14.0f;
+	PxCapsuledesc.radius = 5.0f;
+	PxCapsuledesc.height = 10.0f;
 
 	//캐릭터가 올라갈 수있는 장애물의 최대 높이를 정의합니다. 
 	PxCapsuledesc.stepOffset = 3.f;
@@ -661,18 +662,16 @@ void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *
 	PxCapsuledesc.volumeGrowth = 1.9f;
 	//캐릭터가 걸어 갈 수있는 최대 경사. 
 	PxCapsuledesc.slopeLimit = cosf(XMConvertToRadians(30.f));
-	
 	PxCapsuledesc.upDirection = PxVec3(0, 1, 0);
 	PxCapsuledesc.contactOffset = 0.05f; //접촉 오프셋
 	PxCapsuledesc.material = pPxMaterial;
 
 	m_pPxCharacterController = pPxControllerManager->createController(PxCapsuledesc);
-
 }
 
 void CPlayer::SetPosition(XMFLOAT3 vPosition)
 {
-	m_pPxCharacterController->setPosition(PxExtendedVec3(vPosition.x, vPosition.y, vPosition.z));
+	m_pPxCharacterController->setFootPosition(PxExtendedVec3(vPosition.x, vPosition.y, vPosition.z));
 }
 
 void CPlayer::SetRotate(XMFLOAT3 vRot)
@@ -698,13 +697,16 @@ void CPlayer::PhysXUpdate(const FLOAT& fTimeDelta)
 		m_fFallvelocity = 0.f;
 
 
-
 	//현재 PhysX의 값으로 객체의 월드행렬을 만들어준다.
 	m_pTransform->m_vPos = XMFLOAT3(m_pPxCharacterController->getFootPosition().x, m_pPxCharacterController->getFootPosition().y, m_pPxCharacterController->getFootPosition().z);
 
+
 	_float m_fRevice = 0.5f; //Player의 Y보정값(발이 지면에 안박히게 보정)
-	
-	XMMATRIX matTrans = XMMatrixTranslation(m_pPxCharacterController->getFootPosition().x, m_pPxCharacterController->getFootPosition().y + m_fRevice, m_pPxCharacterController->getFootPosition().z);
+
+	if (!m_bIsSoldier)
+		m_fRevice = 0.0f;
+
+	XMMATRIX matTrans = XMMatrixTranslation(m_pTransform->m_vPos.x, m_pTransform->m_vPos.y + m_fRevice, m_pTransform->m_vPos.z);
 	XMMATRIX matScale = XMMatrixScaling(m_pTransform->m_vScale.x, m_pTransform->m_vScale.y, m_pTransform->m_vScale.z);
 
 	XMMATRIX matRotX = XMMatrixRotationX((_float)D3DXToRadian(m_pTransform->m_vAngle.x));

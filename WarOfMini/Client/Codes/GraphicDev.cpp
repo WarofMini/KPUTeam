@@ -508,6 +508,7 @@ void CGraphicDev::OnResizeBackBuffers(void)
 	if (m_pContext == NULL)
 		return;
 
+
 	m_pContext->OMSetRenderTargets(0, NULL, NULL);
 
 	if (m_pDepthStencilBuffer)
@@ -520,7 +521,6 @@ void CGraphicDev::OnResizeBackBuffers(void)
 		m_pDepthStencilView->Release();
 
 	m_pSwapChain->ResizeBuffers(1, 0, 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
-
 
 
 	//·»´õ Å¸°Ù ºä »ý¼º
@@ -564,15 +564,13 @@ void CGraphicDev::OnResizeBackBuffers(void)
 	//1.¹­°íÀÚ ÇÏ´Â ·»´õ ´ë»óÀÇ °³¼ö, 2.ÆÄÀÌÇÁ¶óÀÎ¿¡ ¹­À» ·»´õ ´ë»ó ºä Æ÷ÀÎÅÍ, 3. ½ºÅÙ½Ç ºä Æ÷ÀÎÅÍ
 
 	//¡Ú ·»´õ ´ë»ó ºä´Â ¿©·¯°³¸¦ ¹è¿­¿¡ ´ã¾Æ¼­ ÇÑ ¹ø¿¡ ¹­À»¼ö ÀÖÁö¸¸, ±íÀÌ ½ºÅÙ½Ç ºä´Â ÇÏ³ª¸¸ ¹­À»¼ö ÀÖ´Ù.
-
-
 	// ºäÆ÷Æ® ¼³Á¤=================================================
 	D3D11_VIEWPORT vp;
 	Set_Viewport(vp, WINCX, WINCY);
 	//Directx3D¿¡°Ô ºäÆ÷Æ®¸¦ ¾Ë·ÁÁØ´Ù.
 	m_pContext->RSSetViewports(1, &vp);
-
 }
+
 
 void CGraphicDev::Release(void)
 {

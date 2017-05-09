@@ -9,6 +9,7 @@
 #include "Transform.h"
 #include "SphereMesh.h"
 #include "Tank.h"
+#include "OtherPlayer.h"
 
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
@@ -86,9 +87,6 @@ HRESULT CStage::Ready_GameLogic(void)
 	((CPlayer*)pGameObject)->SetPosition(XMFLOAT3(10.f, 80.f, 10.f));
 
 	pLayer->Ready_Object(L"Player", pGameObject);
-
-
-
 
 
 	pGameObject = CTank::Create(m_pGraphicDev, m_pContext);

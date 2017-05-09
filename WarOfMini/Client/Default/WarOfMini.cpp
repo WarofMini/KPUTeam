@@ -231,7 +231,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		WINCX = LOWORD(lParam);
 		WINCY = HIWORD(lParam);
-		//¼öÁ¤Áß
+		
 		//CGraphicDev::GetInstance()->OnResizeBackBuffers();
 		break;
 	}

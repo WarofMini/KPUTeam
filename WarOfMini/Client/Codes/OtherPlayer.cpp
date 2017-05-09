@@ -141,11 +141,17 @@ void COtherPlayer::Update_Equipment(const FLOAT& fTimeDelta)
 
 void COtherPlayer::SetPlayerData(XMFLOAT3 vPos, XMFLOAT3 vDir)
 {
-	m_pTransform->m_vPos = vPos;
+	m_pPxCharacterController->setFootPosition(PxExtendedVec3(vPos.x, vPos.y, vPos.z));
+
+	_float m_fRevice = 0.5f; //Player의 Y보정값(발이 지면에 안박히게 보정)
+
+	if (!m_bIsSoldier)
+		m_fRevice = 0.0f;
+
+	m_pTransform->m_vPos = XMFLOAT3(m_pPxCharacterController->getFootPosition().x, m_pPxCharacterController->getFootPosition().y + m_fRevice, m_pPxCharacterController->getFootPosition().z);
+	m_pTransform->m_vPos.y += m_fRevice;
 	m_pTransform->m_vAngle = vDir;
 
-
-	m_pPxCharacterController->setFootPosition(PxExtendedVec3(m_pTransform->m_vPos.x, m_pTransform->m_vPos.y, m_pTransform->m_vPos.z));
 }
 
 void COtherPlayer::PlayAnimation(DWORD dwAniIdx, bool bImmediate)
@@ -185,22 +191,25 @@ void COtherPlayer::BuildObject(PxPhysics * pPxPhysics, PxScene * pPxScene, PxMat
 {
 	PxCapsuleControllerDesc	PxCapsuledesc;
 	PxCapsuledesc.position = PxExtendedVec3(0, 0, 0);
-	PxCapsuledesc.radius = 3.0f;
-	PxCapsuledesc.height = 14.0f;
+	PxCapsuledesc.radius = 5.0f;
+	PxCapsuledesc.height = 10.0f;
+
 
 	//캐릭터가 올라갈 수있는 장애물의 최대 높이를 정의합니다. 
 	PxCapsuledesc.stepOffset = 3.f;
-
+	
 	//캐시 된 볼륨 증가. 
 	//성능을 향상시키기 위해 캐싱하는 컨트롤러 주변의 공간입니다.  이것은 1.0f보다 커야하지만 너무 크지 않아야하며, 2.0f보다 낮아야합니다.
 	PxCapsuledesc.volumeGrowth = 1.9f;
 	//캐릭터가 걸어 갈 수있는 최대 경사. 
 	PxCapsuledesc.slopeLimit = cosf(XMConvertToRadians(30.f));
-
 	PxCapsuledesc.upDirection = PxVec3(0, 1, 0);
 	PxCapsuledesc.contactOffset = 0.05f; //접촉 오프셋
 	PxCapsuledesc.material = pPxMaterial;
 
 	m_pPxCharacterController = pPxControllerManager->createController(PxCapsuledesc);
 
+
+	m_pPxCharacterController->setFootPosition(PxExtendedVec3(20.f, 0.f, 10.f));
+	m_pTransform->m_vPos = XMFLOAT3(20.f, 0.f, 10.f);
 }

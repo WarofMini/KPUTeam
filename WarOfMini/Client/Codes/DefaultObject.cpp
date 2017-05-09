@@ -171,6 +171,7 @@ void CDefaultObj::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMateri
 	
 	PxTriangleMeshGeometry meshGeom(triangleMesh, PxScale);
 
+
 	PxTransform _PxTransform(0, 0, 0);
 	m_pPxActor = PxCreateStatic(*pPxPhysics, _PxTransform, meshGeom, *pPxMaterial);
 
@@ -178,8 +179,6 @@ void CDefaultObj::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMateri
 
 
 	pPxScene->addActor(*m_pPxActor);
-
-	PxSetGroup(*m_pPxActor, 0);
 
 	//바운딩박스
 	//XMFLOAT3 vMin = *(CMeshMgr::GetInstance()->Get_MeshMin(m_uiObjNum));
@@ -210,12 +209,13 @@ void CDefaultObj::SetPosition(XMFLOAT3 vPosition)
 
 	_PxTransform.p = PxVec3(vPosition.x, vPosition.y, vPosition.z);
 
-
+	/*
 	XMFLOAT3 vMin = *(CMeshMgr::GetInstance()->Get_MeshMin(m_uiObjNum));
 	XMFLOAT3 vMax = *(CMeshMgr::GetInstance()->Get_MeshMax(m_uiObjNum));
 
 	D3DXVECTOR3 _d3dxvExtents =
 	D3DXVECTOR3((abs(vMin.x) + abs(vMax.x)) / 2, (abs(vMin.y) + abs(vMax.y)) / 2, (abs(vMin.z) + abs(vMax.z)) / 2);
+	*/
 
 	m_pPxActor->setGlobalPose(_PxTransform);
 }
