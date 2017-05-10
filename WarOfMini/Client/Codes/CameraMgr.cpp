@@ -22,17 +22,17 @@ CCameraMgr::~CCameraMgr(void)
 {
 }
 
-void CCameraMgr::Ready_DynamicCamera(ID3D11DeviceContext* pContext, CAMERALIST eCameraName, _float fNear, _float fFar, XMFLOAT3& vPos, XMFLOAT3& vTarget)
+void CCameraMgr::Ready_DynamicCamera(ID3D11DeviceContext* pContext, PxScene* pPxScene, CAMERALIST eCameraName, _float fNear, _float fFar, XMFLOAT3& vPos, XMFLOAT3& vTarget)
 {
 	if (m_vecCamera[eCameraName] == nullptr)
-		m_vecCamera[eCameraName] = CDynamicCamera::Create(pContext, fNear, fFar, vPos, vTarget);
+		m_vecCamera[eCameraName] = CDynamicCamera::Create(pContext, pPxScene, fNear, fFar, vPos, vTarget);
 }
 
 
-void CCameraMgr::Ready_StaticCamera(ID3D11DeviceContext* pContext, CAMERALIST eCameraName, const CTransform* pTargetTransform, _float fGap, _float fNear, _float fFar, XMFLOAT3& vEye, XMFLOAT3& vAt)
+void CCameraMgr::Ready_StaticCamera(ID3D11DeviceContext* pContext, PxScene* pPxScene, CAMERALIST eCameraName, const CTransform* pTargetTransform, _float fGap, _float fNear, _float fFar, XMFLOAT3& vEye, XMFLOAT3& vAt)
 {
 	if (m_vecCamera[eCameraName] == nullptr)
-		m_vecCamera[eCameraName] = CPlayerCamera::Create(pContext, pTargetTransform, fGap, fNear, fFar, vEye, vAt);
+		m_vecCamera[eCameraName] = CPlayerCamera::Create(pContext, pPxScene, pTargetTransform, fGap, fNear, fFar, vEye, vAt);
 }
 
 void CCameraMgr::Update_CurCamera(const FLOAT& fTimeDelta)
@@ -92,6 +92,11 @@ XMFLOAT3 CCameraMgr::Get_CurCameraEye(void)
 	return m_vecCamera[m_eCurCamera]->GetCameraEye();
 }
 
+void CCameraMgr::Set_CurCameraEye(XMFLOAT3 eye)
+{
+	m_vecCamera[m_eCurCamera]->SetCameraEye(eye);
+}
+
 void CCameraMgr::Set_CurCamera(CAMERALIST eCameraName)
 {
 	m_eCurCamera = eCameraName;
@@ -102,4 +107,9 @@ void CCameraMgr::Set_CurCamera(CAMERALIST eCameraName)
 CCameraMgr::CAMERALIST CCameraMgr::Get_CurCamera(void)
 {
 	return m_eCurCamera;
+}
+
+_float CCameraMgr::Get_StaticCameraGap(void)
+{
+	return ((CPlayerCamera*)m_vecCamera[m_eCurCamera])->GetGap();
 }

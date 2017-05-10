@@ -122,6 +122,7 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 	//PhysX 함수
 	PhysXUpdate(fTimeDelta);
 
+	//==========================
 
 	//Dynamic카메라 체크 함수(Dynamic 카메라일시 Update 안돌린다.
 	if (!DynamicCameraCheck())

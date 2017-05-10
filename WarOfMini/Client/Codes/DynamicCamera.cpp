@@ -2,18 +2,19 @@
 #include "DynamicCamera.h"
 #include "Input.h"
 
-CDynamicCamera::CDynamicCamera(ID3D11DeviceContext* pContext)
+CDynamicCamera::CDynamicCamera(ID3D11DeviceContext* pContext, PxScene* pPxScene)
 : CCamera(pContext)
 {
+	m_pPxScene = pPxScene;
 }
 
 CDynamicCamera::~CDynamicCamera(void)
 {
 }
 
-CDynamicCamera* CDynamicCamera::Create(ID3D11DeviceContext* pContext, _float fNear, _float fFar, XMFLOAT3& vEye, XMFLOAT3& vAt)
+CDynamicCamera* CDynamicCamera::Create(ID3D11DeviceContext* pContext, PxScene* pPxScene, _float fNear, _float fFar, XMFLOAT3& vEye, XMFLOAT3& vAt)
 {
-	CDynamicCamera* pCamera = new CDynamicCamera(pContext);
+	CDynamicCamera* pCamera = new CDynamicCamera(pContext, pPxScene);
 
 	if (FAILED(pCamera->Initialize(fNear, fFar, vEye, vAt)))
 		Safe_Release(pCamera);

@@ -10,11 +10,11 @@ class CPlayerCamera
 	: public CCamera
 {
 private:
-	explicit CPlayerCamera(ID3D11DeviceContext* pContext, const CTransform* pTargetTransform, _float fGap);
+	explicit CPlayerCamera(ID3D11DeviceContext* pContext, PxScene* pPxScene, const CTransform* pTargetTransform, _float fGap);
 	virtual ~CPlayerCamera(void);
 
 public:
-	static CPlayerCamera* Create(ID3D11DeviceContext* pContext, const CTransform* pTargetTransform, _float fGap,
+	static CPlayerCamera* Create(ID3D11DeviceContext* pContext, PxScene* pPxScene, const CTransform* pTargetTransform, _float fGap,
 		_float fNear, _float fFar, XMFLOAT3& vEye, XMFLOAT3& vAt);
 
 public:
@@ -33,7 +33,8 @@ public:
 	void				PlayerState(void);
 	void				FixMouse(void);
 	void				KeyState(const _float& fTimeDelta);
-
+	_float				GetGap(void) { return m_fGap; }
+	void				CheckCollision(void);
 };
 
 

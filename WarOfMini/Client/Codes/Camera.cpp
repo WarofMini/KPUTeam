@@ -12,6 +12,7 @@ CCamera::CCamera(ID3D11DeviceContext* pContext)
 , m_fFar(0.0f)
 , m_fCameraSpeed(100.0f)
 , m_bMouseFix(false)
+, m_pPxScene(NULL)
 {
 }
 
@@ -131,6 +132,11 @@ XMFLOAT3 CCamera::GetCameraLookAt(void)
 	XMStoreFloat3(&LookAt, XMVector3Normalize(XMLoadFloat3(&LookAt)));
 
 	return LookAt;
+}
+
+void CCamera::SetCameraEye(XMFLOAT3 eye)
+{
+	*m_pEye = eye;
 }
 
 XMFLOAT3 CCamera::GetCameraEye(void)

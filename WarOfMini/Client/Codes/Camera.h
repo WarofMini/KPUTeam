@@ -36,7 +36,7 @@ protected:
 	_float					m_fFar;
 	_float					m_fCameraSpeed;
 	_bool					m_bMouseFix;
-
+	PxScene*				m_pPxScene;
 public:
 	void		MakeView(void);
 	void		MakeProjection(void);
@@ -53,7 +53,7 @@ public:
 
 	XMFLOAT3	GetCameraLookAt(void);
 
-
+	void		SetCameraEye(XMFLOAT3 eye);
 	XMFLOAT3	GetCameraEye(void);
 
 };

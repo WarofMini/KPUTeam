@@ -124,14 +124,14 @@ HRESULT CStage::Ready_Environment(void)
 	CGameObject* pGameObject = NULL;
 
 	//다이나믹 카메라 적용
-	CCameraMgr::GetInstance()->Ready_DynamicCamera(m_pContext, CCameraMgr::CAMERA_DYNAMIC, 0.1f, 10000.f, XMFLOAT3(0.f, 5.f, -10.f), XMFLOAT3(0.f, 0.f, 0.f));
+	CCameraMgr::GetInstance()->Ready_DynamicCamera(m_pContext, m_pPxScene, CCameraMgr::CAMERA_DYNAMIC, 0.1f, 10000.f, XMFLOAT3(0.f, 5.f, -10.f), XMFLOAT3(0.f, 0.f, 0.f));
 
 	//플레이어 카메라 적용
 	CComponent* pTransform = (CComponent*)FindLayer(L"Layer_GameLogic")->Get_Component(L"Player", L"Com_Transform");
 
 	if (pTransform != NULL)
 	{
-		CCameraMgr::GetInstance()->Ready_StaticCamera(m_pContext, CCameraMgr::CAMERA_STATIC, NULL/*(CTransform*)pTransform*/, 41.f, 0.1f, 10000.f, XMFLOAT3(0.f, 5.f, -10.f), XMFLOAT3(0.f, 0.f, 0.f));
+		CCameraMgr::GetInstance()->Ready_StaticCamera(m_pContext, m_pPxScene, CCameraMgr::CAMERA_STATIC, NULL/*(CTransform*)pTransform*/, 41.f, 0.1f, 10000.f, XMFLOAT3(0.f, 5.f, -10.f), XMFLOAT3(0.f, 0.f, 0.f));
 	}
 
 	m_mapLayer.insert(MAPLAYER::value_type(L"Layer_Environment", pLayer));

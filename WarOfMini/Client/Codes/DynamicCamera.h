@@ -7,11 +7,11 @@ class CDynamicCamera
 	: public CCamera
 {
 private:
-	explicit CDynamicCamera(ID3D11DeviceContext* pContext);
+	explicit CDynamicCamera(ID3D11DeviceContext* pContext, PxScene* pPxScene);
 	virtual ~CDynamicCamera(void);
 
 public:
-	static CDynamicCamera* Create(ID3D11DeviceContext* pContext, _float fNear, _float fFar, XMFLOAT3& vEye, XMFLOAT3& vAt);
+	static CDynamicCamera* Create(ID3D11DeviceContext* pContext, PxScene* pPxScene, _float fNear, _float fFar, XMFLOAT3& vEye, XMFLOAT3& vAt);
 
 public:
 	virtual _int Update(const _float& fTimeDelta);

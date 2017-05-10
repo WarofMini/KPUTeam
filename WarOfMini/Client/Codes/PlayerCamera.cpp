@@ -6,13 +6,14 @@
 #include "Scene.h"
 #include "Layer.h"
 
-CPlayerCamera::CPlayerCamera(ID3D11DeviceContext* pContext, const CTransform* pTargetTransform, _float fGap)
+CPlayerCamera::CPlayerCamera(ID3D11DeviceContext* pContext, PxScene* pPxScene, const CTransform* pTargetTransform, _float fGap)
 	: CCamera(pContext)
 	, m_pTargetTransform(pTargetTransform)
 	, m_fGap(fGap)
 	, m_fAngleY(0.f)
 {
 	m_fEpsilonY = 15.f;
+	m_pPxScene = pPxScene;
 
 }
 
@@ -21,9 +22,9 @@ CPlayerCamera::~CPlayerCamera(void)
 
 }
 
-CPlayerCamera* CPlayerCamera::Create(ID3D11DeviceContext* pContext, const CTransform* pTargetTransform, _float fGap, _float fNear, _float fFar, XMFLOAT3& vEye, XMFLOAT3& vAt)
+CPlayerCamera* CPlayerCamera::Create(ID3D11DeviceContext* pContext, PxScene* pPxScene, const CTransform* pTargetTransform, _float fGap, _float fNear, _float fFar, XMFLOAT3& vEye, XMFLOAT3& vAt)
 {
-	CPlayerCamera* pCamera = new CPlayerCamera(pContext, pTargetTransform, fGap);
+	CPlayerCamera* pCamera = new CPlayerCamera(pContext, pPxScene, pTargetTransform, fGap);
 
 	if (FAILED(pCamera->Initialize(fNear, fFar, vEye, vAt)))
 		Safe_Release(pCamera);
@@ -43,7 +44,11 @@ _int CPlayerCamera::Update(const _float& fTimeDelta)
 
 	PlayerState(); //Player위치에 따른 보정
 
+
+
 	KeyState(fTimeDelta);
+
+	CheckCollision();
 
 	MakeView();
 	FixMouse();
@@ -142,4 +147,44 @@ void CPlayerCamera::KeyState(const _float& fTimeDelta)
 		if (m_fAngleY >= 80.f)
 			m_fAngleY = 80.f;
 	}
+}
+
+void CPlayerCamera::CheckCollision(void)
+{	
+		XMFLOAT3 m_vDir;
+		XMStoreFloat3(&m_vDir, XMLoadFloat3(m_pEye) - XMLoadFloat3(m_pAt));
+		XMStoreFloat3(&m_vDir, XMVector3Normalize(XMLoadFloat3(&m_vDir)));
+
+
+		PxVec3 OriginPos = PxVec3((*m_pAt).x, (*m_pAt).y, (*m_pAt).z);
+		PxVec3 m_vPxDir = PxVec3(m_vDir.x, m_vDir.y, m_vDir.z);
+
+
+		PxReal maxDistance = 9999.f;
+		PxRaycastBuffer hit;
+		PxQueryFilterData fd;
+		fd.flags |= PxQueryFlag::eANY_HIT;
+
+
+		_bool m_bstatus = false;
+
+		if (m_pPxScene == NULL)
+			return;
+
+		m_bstatus = m_pPxScene->raycast(OriginPos, m_vPxDir, maxDistance, hit, PxHitFlags(PxHitFlag::eDEFAULT), fd);
+
+		if (m_bstatus == true)
+		{
+
+			if ((hit.block.distance < m_fGap + 1.f))
+			{	
+				
+				XMFLOAT3 m_vNewEye = XMFLOAT3(hit.block.position.x + hit.block.normal.x, 
+										   hit.block.position.y + hit.block.normal.y, 
+										   hit.block.position.z + hit.block.normal.z);
+								
+				XMStoreFloat3(m_pEye, XMLoadFloat3(&m_vNewEye));
+			}
+		}
+	
 }
