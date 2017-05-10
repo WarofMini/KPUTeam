@@ -664,7 +664,7 @@ void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *
 	PxCapsuledesc.slopeLimit = cosf(XMConvertToRadians(15.f));
 	PxCapsuledesc.nonWalkableMode = PxControllerNonWalkableMode::eFORCE_SLIDING;
 	PxCapsuledesc.upDirection = PxVec3(0, 1, 0);
-	PxCapsuledesc.contactOffset = 0.05f; //Á¢ÃË ¿ÀÇÁ¼Â
+	PxCapsuledesc.contactOffset = 0.5f; //Á¢ÃË ¿ÀÇÁ¼Â
 	PxCapsuledesc.material = pPxMaterial;
 
 	m_pPxCharacterController = pPxControllerManager->createController(PxCapsuledesc);

@@ -9,8 +9,7 @@
 #include "Transform.h"
 #include "SphereMesh.h"
 #include "Tank.h"
-#include "OtherPlayer.h"
-
+#include "PhysicsObect.h"
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 : CScene(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking)
@@ -92,6 +91,23 @@ HRESULT CStage::Ready_GameLogic(void)
 	pGameObject = CTank::Create(m_pGraphicDev, m_pContext);
 	if (NULL == pGameObject) return E_FAIL;
 	pLayer->Ready_Object(L"NPC", pGameObject);
+
+
+
+	pGameObject = CPhysicsObect::Create(m_pContext);
+	((CPhysicsObect*)pGameObject)->SetObjNum(MESHNUM_BOOK1);
+
+	((CPhysicsObect*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(2.f, 2.f, 2.f), m_pCooking, "Physics");
+
+
+	//x, y, z, = x,z, y축으로 돌아간다...
+	//((CPhysicsObect*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f)));
+	((CPhysicsObect*)pGameObject)->SetPosition(XMFLOAT3(30.f, 100.f, 30.f));
+	pLayer->Ready_Object(L"PhysicsObject", pGameObject);
+
+
+
+
 
 
 	//g_Client.sendPacket(sizeof(CLayer), INIT_CLIENT, reinterpret_cast<BYTE*>(pGameObject->GetPacketData()->ID));

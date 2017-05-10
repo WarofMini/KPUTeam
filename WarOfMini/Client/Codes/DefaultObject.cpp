@@ -162,7 +162,6 @@ void CDefaultObj::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMateri
 	PxTriangleMesh* triangleMesh = pPxPhysics->createTriangleMesh(rb);
 
 
-
 	PxVec3 ScaleTemp = PxVec3(vScale.x, vScale.y, vScale.z);
 
 	//Scale
