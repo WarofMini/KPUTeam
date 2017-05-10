@@ -196,17 +196,17 @@ void COtherPlayer::BuildObject(PxPhysics * pPxPhysics, PxScene * pPxScene, PxMat
 
 
 	//캐릭터가 올라갈 수있는 장애물의 최대 높이를 정의합니다. 
-	PxCapsuledesc.stepOffset = 3.f;
+	PxCapsuledesc.stepOffset = 2.f;
 	
 	//캐시 된 볼륨 증가. 
 	//성능을 향상시키기 위해 캐싱하는 컨트롤러 주변의 공간입니다.  이것은 1.0f보다 커야하지만 너무 크지 않아야하며, 2.0f보다 낮아야합니다.
 	PxCapsuledesc.volumeGrowth = 1.9f;
 	//캐릭터가 걸어 갈 수있는 최대 경사. 
-	PxCapsuledesc.slopeLimit = cosf(XMConvertToRadians(30.f));
+	PxCapsuledesc.slopeLimit = cosf(XMConvertToRadians(15.f));
 	PxCapsuledesc.upDirection = PxVec3(0, 1, 0);
 	PxCapsuledesc.contactOffset = 0.05f; //접촉 오프셋
 	PxCapsuledesc.material = pPxMaterial;
-
+	PxCapsuledesc.nonWalkableMode = PxControllerNonWalkableMode::eFORCE_SLIDING;
 	m_pPxCharacterController = pPxControllerManager->createController(PxCapsuledesc);
 
 

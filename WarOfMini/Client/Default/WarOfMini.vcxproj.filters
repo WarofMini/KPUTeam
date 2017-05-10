@@ -232,6 +232,9 @@
     <Filter Include="02.Object\05.Tank\Tire">
       <UniqueIdentifier>{02cbc07f-7aa5-44f1-96c1-58b1e5bf773b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\06.PhysicsObject">
+      <UniqueIdentifier>{7eb471a7-adf7-4860-a28a-1bc118b5946b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -468,6 +471,9 @@
     <ClInclude Include="..\Codes\Tire.h">
       <Filter>02.Object\05.Tank\Tire</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\PhysicsObect.h">
+      <Filter>02.Object\06.PhysicsObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -661,6 +667,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Tire.cpp">
       <Filter>02.Object\05.Tank\Tire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\PhysicsObject.cpp">
+      <Filter>02.Object\06.PhysicsObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
