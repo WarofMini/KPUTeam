@@ -434,7 +434,7 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
  			if (m_Client[i]->connected == false)
  				continue;
  			if (m_vecPlayer[i].ID == strPlayerData.ID)
- 			{
+ 			{//내가 접속하는거면 다른 플레이어들 생성
  				Ser_Vec_PLAYER_DATA vecPlayerData;
  				vecPlayerData.ID = m_vecPlayer[i].ID;
  				vecPlayerData.size = sizeof(Ser_Vec_PLAYER_DATA);
@@ -451,7 +451,7 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 				SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&vecPlayerData));
  			}
  			else
- 			{
+ 			{//다른놈이 들어오면 그놈 생성
  				SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&strPlayerData));
  			}
  		}
