@@ -84,7 +84,7 @@ HRESULT CStage::Ready_GameLogic(void)
 
 
 	((CPlayer*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, m_pPxControllerManager);
-	((CPlayer*)pGameObject)->SetPosition(XMFLOAT3(10.f, 80.f, 10.f));
+	((CPlayer*)pGameObject)->SetPosition(g_vPos);
 
 	pLayer->Ready_Object(L"Player", pGameObject);
 

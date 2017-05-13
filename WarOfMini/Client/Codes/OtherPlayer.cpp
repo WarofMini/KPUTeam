@@ -71,6 +71,8 @@ HRESULT COtherPlayer::Initialize(ID3D11Device* pGraphicDev)
 	else
 		m_iTextureNumber = 1;
 
+	//m_pPxCharacterController->setFootPosition(PxExtendedVec3(m_pTransform->m_vPos.x, m_pTransform->m_vPos.y, m_pTransform->m_vPos.z));
+
 	return S_OK;
 }
 
@@ -215,6 +217,6 @@ void COtherPlayer::BuildObject(PxPhysics * pPxPhysics, PxScene * pPxScene, PxMat
 	m_pPxCharacterController = pPxControllerManager->createController(PxCapsuledesc);
 
 
-	m_pPxCharacterController->setFootPosition(PxExtendedVec3(20.f, 0.f, 10.f));
-	m_pTransform->m_vPos = XMFLOAT3(20.f, 0.f, 10.f);
+	m_pPxCharacterController->setFootPosition(PxExtendedVec3(m_pTransform->m_vPos.x, m_pTransform->m_vPos.y, m_pTransform->m_vPos.z));
+	//m_pTransform->m_vPos = XMFLOAT3(20.f, 0.f, 10.f);
 }

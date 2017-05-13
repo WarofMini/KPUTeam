@@ -96,7 +96,7 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 
 	//m_pTransform->m_vPos = g_vPos;
 
-	m_pTransform->m_vPos = XMFLOAT3(10.0f, 80.0f, 10.0f);
+	m_pTransform->m_vPos = XMFLOAT3(g_vPos);
 
 	m_pTransform->m_vDir = XMFLOAT3(0.f, 0.f, -1.f);
 	m_pAnimInfo->Set_Key((_ushort)m_dwAniIdx);
@@ -136,7 +136,6 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 		KeyState(fTimeDelta);
 		SendPacketAlways();
 	}	
-
 
 	/* 본행렬 찾기 위한 디버그
 	if (GetAsyncKeyState('G') & 1)

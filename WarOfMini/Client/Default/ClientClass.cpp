@@ -306,7 +306,6 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 
 			((COtherPlayer*)pGameObject)->BuildObject(pScene->GetPhysicsSDK(), pScene->GetPhysicsScene(), pScene->GetPxMaterial(), pScene->GetPxControllerManager());
 
-
 			pLayer = pScene->FindLayer(L"Layer_GameLogic");
 			pLayer->Ready_Object(L"OtherPlayer", pGameObject);
 		}
