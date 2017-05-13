@@ -57,7 +57,7 @@ int CSoldierIdle::OnState()
 			return 0;
 	}
 
-	if (m_pInput->GetDIKeyStateOnce(DIK_Q))
+	if (m_pInput->GetDIKeyStateOnce(DIK_Q)) //º¯½Å
 		m_pSoldier->SoldierChange();
 
 	return 1;

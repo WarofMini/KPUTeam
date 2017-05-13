@@ -272,7 +272,6 @@
     <ClCompile Include="..\Codes\Mesh.cpp" />
     <ClCompile Include="..\Codes\MeshMgr.cpp" />
     <ClCompile Include="..\Codes\OtherPlayer.cpp" />
-    <ClCompile Include="..\Codes\PhysicsObect.cpp" />
     <ClCompile Include="..\Codes\PhysicsObject.cpp" />
     <ClCompile Include="..\Codes\Player.cpp" />
     <ClCompile Include="..\Codes\RcTex.cpp" />

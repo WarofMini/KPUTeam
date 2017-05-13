@@ -204,7 +204,7 @@ void COtherPlayer::BuildObject(PxPhysics * pPxPhysics, PxScene * pPxScene, PxMat
 	//캐릭터가 걸어 갈 수있는 최대 경사. 
 	PxCapsuledesc.slopeLimit = cosf(XMConvertToRadians(15.f));
 	PxCapsuledesc.upDirection = PxVec3(0, 1, 0);
-	PxCapsuledesc.contactOffset = 0.5f; //접촉 오프셋
+	PxCapsuledesc.contactOffset = 0.1f; //접촉 오프셋
 	PxCapsuledesc.material = pPxMaterial;
 	PxCapsuledesc.nonWalkableMode = PxControllerNonWalkableMode::eFORCE_SLIDING;
 	m_pPxCharacterController = pPxControllerManager->createController(PxCapsuledesc);

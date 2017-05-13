@@ -10,6 +10,7 @@
 #include "SphereMesh.h"
 #include "Tank.h"
 #include "PhysicsObect.h"
+#include "OtherPlayer.h"
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 : CScene(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking)
@@ -88,10 +89,10 @@ HRESULT CStage::Ready_GameLogic(void)
 	pLayer->Ready_Object(L"Player", pGameObject);
 
 
-	pGameObject = CTank::Create(m_pGraphicDev, m_pContext);
-	if (NULL == pGameObject) return E_FAIL;
-	pLayer->Ready_Object(L"NPC", pGameObject);
+	pGameObject = CPlayer::Create(m_pGraphicDev, m_pContext);
 
+	if (NULL == pGameObject)
+		return E_FAIL;
 
 
 	pGameObject = CPhysicsObect::Create(m_pContext);
@@ -381,7 +382,6 @@ HRESULT CStage::LoadStageMap(void)
 			((CDefaultObj*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(m_vAngle.x), (_float)D3DXToRadian(m_vAngle.z), (_float)D3DXToRadian(m_vAngle.y)));
 			((CDefaultObj*)pGameObject)->SetPosition(m_vPos);
 
-			//((CDefaultObj*)pGameObject)->ComputeCollider();
 			pLayer->Ready_Object(L"StaticObject", pGameObject);
 		}
 

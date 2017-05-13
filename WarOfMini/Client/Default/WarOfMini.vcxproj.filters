@@ -671,7 +671,6 @@
     <ClCompile Include="..\Codes\PhysicsObject.cpp">
       <Filter>02.Object\06.PhysicsObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\PhysicsObect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">

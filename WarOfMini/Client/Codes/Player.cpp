@@ -53,7 +53,7 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 
 	XMStoreFloat4x4(&m_matBone, XMMatrixIdentity());
 	m_iBoneNum = 0;
-	pSphereMesh = CSphereMesh::Create(m_pContext, 1.f);
+	//pSphereMesh = CSphereMesh::Create(m_pContext, 1.f);
 }
 
 CPlayer::~CPlayer(void)
@@ -83,7 +83,7 @@ CPlayer* CPlayer::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContex
 
 HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 {
-	m_uiObjNum = MESHNUM_PLAYER;
+	m_uiObjNum		= MESHNUM_PLAYER;
 	m_uiObjNum_Iron = MESHNUM_PLAYER2;
 
 	if (FAILED(Ready_Component(pGraphicDev)))
@@ -132,6 +132,8 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 		SendPacketAlways();
 	}	
 
+
+	/* 본행렬 찾기 위한 디버그
 	if (GetAsyncKeyState('G') & 1)
 	{
 		m_iBoneNum += 1;
@@ -142,7 +144,7 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 		m_iBoneNum -= 1;
 		cout << "BoneNum" << m_iBoneNum << endl;
 	}
-
+	*/
 
 
 	// Update
@@ -154,7 +156,7 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 	Update_Equipment(fTimeDelta);
 
 
-	pSphereMesh->Update(fTimeDelta);
+	//pSphereMesh->Update(fTimeDelta);
 
 	return 0;
 }
@@ -197,14 +199,18 @@ void CPlayer::Update_Equipment(const FLOAT& fTimeDelta)
 {
 	m_matEquipBone[0] = CMeshMgr::GetInstance()->Get_TransMeshBone(m_uiObjNum, 0, m_iEquipBone, m_pMatBoneNode);
 
+	if (XMMatrixIsIdentity(XMLoadFloat4x4(&m_matEquipBone[0])))
+		return;
+
+
 	m_matBone = CMeshMgr::GetInstance()->Get_TransMeshBone(m_uiObjNum, 0, m_iBoneNum, m_pMatBoneNode);
 
 
 	XMMATRIX matWorld = XMLoadFloat4x4(&m_pTransform->m_matWorld);
 	XMStoreFloat4x4(&m_matEquipBone[0], XMLoadFloat4x4(&m_matEquipBone[0]) * matWorld);
 
-	XMStoreFloat4x4(&m_matBone, XMLoadFloat4x4(&m_matBone) * matWorld);
-	((CSphereMesh*)pSphereMesh)->SetmatWorld(&m_matBone);
+	//XMStoreFloat4x4(&m_matBone, XMLoadFloat4x4(&m_matBone) * matWorld);
+	//((CSphereMesh*)pSphereMesh)->SetmatWorld(&m_matBone);
 
 	m_pEquipment[0]->SetParent(m_matEquipBone[0]);
 	m_pEquipment[0]->Update(fTimeDelta);
@@ -356,6 +362,7 @@ void CPlayer::SoldierChange(void)
 		((CGun*)m_pEquipment[0])->ChangeWeapon(MESHNUM_GUN);
 		m_iEquipBone = 0;
 	}
+
 	m_pAnimInfo->Update(1.f);
 }
 
@@ -557,12 +564,13 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 			PxVec3 Dir		 = PxVec3(vDir.x, vDir.y, vDir.z);
 
 
-			PxReal maxDistance = 1000.0f;
+			PxReal maxDistance = 1000.f;
 			PxRaycastBuffer hit;
 			PxQueryFilterData fd;
 			fd.flags |= PxQueryFlag::eANY_HIT;
 
 			bool status = false;
+
 			status = m_pScene->raycast(OriginPos, Dir, maxDistance, hit, PxHitFlags(PxHitFlag::eDEFAULT), fd);
 
 			if (status == true)
@@ -573,7 +581,6 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 				CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
 
 				CGameObject* pGameObject = CSphereMesh::Create(m_pContext, 2.f, &m_vtestpos);
-
 
 				pLayer->Ready_Object(L"TestPos", pGameObject);
 
@@ -624,7 +631,7 @@ void CPlayer::Render(void)
 {
 	CDynamicObject::Render();
 
-	pSphereMesh->Render();
+	//pSphereMesh->Render();
 }
 
 void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, PxControllerManager *pPxControllerManager)
@@ -654,9 +661,9 @@ void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *
 	PxCapsuledesc.position = PxExtendedVec3(0, 0, 0);
 	PxCapsuledesc.radius = 5.0f;
 	PxCapsuledesc.height = 10.0f;
-
 	//캐릭터가 올라갈 수있는 장애물의 최대 높이를 정의합니다. 
 	PxCapsuledesc.stepOffset = 2.f;
+
 
 	//캐시 된 볼륨 증가. 
 	//성능을 향상시키기 위해 캐싱하는 컨트롤러 주변의 공간입니다.  이것은 1.0f보다 커야하지만 너무 크지 않아야하며, 2.0f보다 낮아야합니다.
@@ -665,10 +672,11 @@ void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *
 	PxCapsuledesc.slopeLimit = cosf(XMConvertToRadians(15.f));
 	PxCapsuledesc.nonWalkableMode = PxControllerNonWalkableMode::eFORCE_SLIDING;
 	PxCapsuledesc.upDirection = PxVec3(0, 1, 0);
-	PxCapsuledesc.contactOffset = 0.5f; //접촉 오프셋
+	PxCapsuledesc.contactOffset = 0.1f; //접촉 오프셋
 	PxCapsuledesc.material = pPxMaterial;
 
 	m_pPxCharacterController = pPxControllerManager->createController(PxCapsuledesc);
+
 }
 
 void CPlayer::SetPosition(XMFLOAT3 vPosition)
@@ -684,7 +692,6 @@ void CPlayer::SetRotate(XMFLOAT3 vRot)
 //PhysX 함수
 void CPlayer::PhysXUpdate(const FLOAT& fTimeDelta)
 {
-
 	//PhysX에 값을 전달해준다. 중력
 	m_fFallvelocity -= m_fFallAcceleration * fTimeDelta * 50.f;
 	if (m_fFallvelocity < -1000.f)

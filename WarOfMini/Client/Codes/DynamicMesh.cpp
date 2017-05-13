@@ -401,11 +401,20 @@ XMFLOAT4X4 CDynaicMesh::Get_TransBoneMatrix(_int iIndex, _int iIndex2, MATNODE* 
 	else
 	{
 		XMFLOAT4X4 matTrans;
+
+
+		XMStoreFloat4x4(&matTrans, XMMatrixIdentity());
+		if(XMMatrixIsIdentity(XMLoadFloat4x4(&pMatNode->matBone[iIndex2])))
+		{
+			return matTrans;
+		}
+
+
 		//XMStoreFloat4x4(&matTransBone, XMMatrixTranslationFromVector(XMLoadFloat3(&m_vPivotPos)) * XMLoadFloat4x4(&pMatNode->matBone[iIndex2]));
 		//XMStoreFloat4x4(&matTransBone, XMLoadFloat4x4(&pMatNode->matBone[iIndex2]));
-		
 
 		XMStoreFloat4x4(&matTrans, XMMatrixTranslationFromVector(XMLoadFloat3(&m_vPivotPos)) * XMLoadFloat4x4(&pMatNode->matBone[iIndex2]));
+
 
 		return matTrans;
 	}

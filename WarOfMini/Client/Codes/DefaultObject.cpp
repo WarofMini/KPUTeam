@@ -130,6 +130,7 @@ void CDefaultObj::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMateri
 {
 	PxTriangleMeshDesc meshDesc;
 
+
 	PxVec3*			m_pVtxTex;
 	PxU32*			m_pIndex;
 
@@ -141,7 +142,8 @@ void CDefaultObj::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMateri
 
 	m_pVtxTex = CMeshMgr::GetInstance()->Get_MeshPxVtx(m_uiObjNum);
 	m_pIndex = CMeshMgr::GetInstance()->Get_MeshPxIndex(m_uiObjNum);
-	
+
+
 	meshDesc.points.count = m_iCount;
 	meshDesc.triangles.count = m_iCount/3;
 	meshDesc.points.stride = sizeof(PxVec3);
@@ -149,7 +151,6 @@ void CDefaultObj::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMateri
 	meshDesc.points.data = &(*m_pVtxTex);
 	meshDesc.triangles.data = &(*m_pIndex);
 	meshDesc.flags = PxMeshFlags(0);
-
 
 	PxDefaultMemoryOutputStream stream;
 	bool ok = pCooking->cookTriangleMesh(meshDesc, stream);
@@ -169,7 +170,6 @@ void CDefaultObj::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMateri
 	PxScale.scale = ScaleTemp;
 	
 	PxTriangleMeshGeometry meshGeom(triangleMesh, PxScale);
-
 
 	PxTransform _PxTransform(0, 0, 0);
 	m_pPxActor = PxCreateStatic(*pPxPhysics, _PxTransform, meshGeom, *pPxMaterial);

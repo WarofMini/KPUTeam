@@ -290,13 +290,13 @@ void CResourcesMgr::Load_StaticMesh(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 
 			for (int k = 0; k < iNumVertices; k++) // 폴리곤을 구성하는 버텍스의 인덱스
 			{
-				//인덱스
-				pIndex[iVTXCounter] = iVTXCounter;
 
 				//정점 데이터 얻는곳
 				int iControlPointIndex = pMesh->GetPolygonVertex(uiPolygonIndex, k); // 컨트롤 포인트 = 하나의 버텍스
 				int iTextureUVIndex = pMesh->GetTextureUVIndex(uiPolygonIndex, k);  // Control = Vertex
 
+				//인덱스
+				pIndex[iVTXCounter] = iVTXCounter;
 
 				pVtxTex[iVTXCounter].vPos = XMFLOAT3((_float)pVertices[iControlPointIndex].mData[0],
 					(_float)pVertices[iControlPointIndex].mData[1],

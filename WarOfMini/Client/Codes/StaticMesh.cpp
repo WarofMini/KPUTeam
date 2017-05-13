@@ -91,19 +91,20 @@ HRESULT CStaticMesh::Create_Buffer(const VTXTEX* pVB, const _uint& uiVtxCnt, con
 			return E_FAIL;
 		}
 
+		/*
+		tBufferDesc.ByteWidth = sizeof(_uint) * m_uiIdxCnt;
+		tBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
-		//tBufferDesc.ByteWidth = sizeof(_uint) * m_uiIdxCnt;
-		//tBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+		tSubData.pSysMem = pIB;
 
-		//tSubData.pSysMem = pIB;
+		hr = m_pGraphicDev->CreateBuffer(&tBufferDesc, &tSubData, &m_pIB);
 
-		//hr = m_pGraphicDev->CreateBuffer(&tBufferDesc, &tSubData, &m_pIB);
-
-		//if (FAILED(hr) == TRUE)
-		//{
-		//	MSG_BOX(L"CMesh IB CreateBuffer Failed");
-		//	return E_FAIL;
-		//}
+		if (FAILED(hr) == TRUE)
+		{
+			MSG_BOX(L"CMesh IB CreateBuffer Failed");
+			return E_FAIL;
+		}
+		*/
 
 		wstring wstrTexName = L"Texture_";
 
