@@ -185,7 +185,7 @@ void CServer::Accept_thread()
 		PlayerTemp.ID = User->id;
 		PlayerTemp.size = sizeof(Ser_PLAYER_DATA);
 		PlayerTemp.type = INIT_CLIENT;
-		PlayerTemp.vPos = XMFLOAT3(20.f * User->id, 20.f * User->id, 20.f * User->id);
+		PlayerTemp.vPos = XMFLOAT3(20.f * User->id, 0.f, 0.f);
 		
 		m_vecPlayer.push_back(PlayerTemp);
 
@@ -248,9 +248,6 @@ void CServer::Worker_thread()
 			}
 
 			SendRemovePlayerPacket(key);
-
-			closesocket(m_Client[key]->sock);
-			m_Client[key]->connected = false;
 
 			cout << "[No. " << key << "] Disconnected "<< endl;
 
@@ -336,10 +333,15 @@ void CServer::SendRemovePlayerPacket(DWORD dwKey)
 
 	for (int i = 0; i <= playerIndex; ++i)
 	{
-		if (m_Client[i]->id == dwKey ||
-			m_Client[i]->connected == false)
+		if (m_Client[i]->connected == false)
 			continue;
-		SendPacket(i, reinterpret_cast<Packet*>(&packet));
+		if (m_Client[i]->id == dwKey)
+		{
+			closesocket(m_Client[i]->sock);
+			m_Client[i]->connected = false;
+			continue;
+		}
+		SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&packet));
 	}
 }
 void CServer::SendPacket(unsigned int id, const Packet* packet)
@@ -401,7 +403,7 @@ void CServer::SendPacket(unsigned int id, const Packet* packet)
 // 그 읽은값에 맞춰서 잘 데이터를 처리하는 공간인거야.
 void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘가 꼭 const인 이유가 있나 ?
 {
-	vector<int> vecID;
+	vector<int> vecID;//연결되있는 클라이언트들
 	for (int i = 0; i <= playerIndex; ++i)
 	{
 		if (m_Client[i]->connected)
@@ -429,33 +431,53 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 		strPlayerData = *reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)&buf[2]);
 		cout << "[NO. " << strPlayerData.ID << "]ID value Recv.. " << endl;
 
- 		for (int i = 0; i <= playerIndex; ++i)
- 		{
- 			if (m_Client[i]->connected == false)
- 				continue;
- 			if (m_vecPlayer[i].ID == strPlayerData.ID)
- 			{//내가 접속하는거면 다른 플레이어들 생성
- 				Ser_Vec_PLAYER_DATA vecPlayerData;
- 				vecPlayerData.ID = m_vecPlayer[i].ID;
- 				vecPlayerData.size = sizeof(Ser_Vec_PLAYER_DATA);
- 				vecPlayerData.type = INIT_OTHER_PLAYER;
- 				vecPlayerData.PlayerSize = vecID.size();
-
-				for (int j = 0; j < vecPlayerData.PlayerSize; ++j)
+		for (int i = 0; i < vecID.size(); ++i)
+		{
+			if (m_Client[vecID[i]]->id == strPlayerData.ID)
+			{
+				for (int j = 0; j < vecID.size(); ++j)
 				{
-					vecPlayerData.vecPlayerData[j].ID = m_vecPlayer[vecID[j]].ID;
-					vecPlayerData.vecPlayerData[j].size = m_vecPlayer[vecID[j]].size;
-					vecPlayerData.vecPlayerData[j].type = m_vecPlayer[vecID[j]].type;
-					vecPlayerData.vecPlayerData[j].vPos = m_vecPlayer[vecID[j]].vPos;
+					if (m_Client[vecID[j]]->id == strPlayerData.ID)
+						continue;
+					m_vecPlayer[vecID[j]].type = INIT_CLIENT;
+					SendPacket(strPlayerData.ID, reinterpret_cast<Packet*>(&m_vecPlayer[vecID[j]]));
 				}
-				SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&vecPlayerData));
- 			}
- 			else
- 			{//다른놈이 들어오면 그놈 생성
- 				SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&strPlayerData));
- 			}
- 		}
+			}
+			else
+			{
+				SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strPlayerData));
+			}
+		}
 
+		//전에꺼 코드
+//  		for (int i = 0; i <= playerIndex; ++i)
+//  		{
+//  			if (m_Client[i]->connected == false)
+//  				continue;
+//  			if (m_vecPlayer[i].ID == strPlayerData.ID)
+//  			{//내가 접속하는거면 다른 플레이어들 생성
+//  				Ser_Vec_PLAYER_DATA vecPlayerData;
+//  				vecPlayerData.ID = m_vecPlayer[i].ID;
+//  				vecPlayerData.size = sizeof(Ser_Vec_PLAYER_DATA);
+//  				vecPlayerData.type = INIT_OTHER_PLAYER;
+//  				vecPlayerData.PlayerSize = vecID.size();
+// 
+// 				for (int j = 0; j < vecPlayerData.PlayerSize; ++j)
+// 				{
+// 					vecPlayerData.vecPlayerData[j].ID = m_vecPlayer[vecID[j]].ID;
+// 					vecPlayerData.vecPlayerData[j].size = m_vecPlayer[vecID[j]].size;
+// 					vecPlayerData.vecPlayerData[j].type = m_vecPlayer[vecID[j]].type;
+// 					vecPlayerData.vecPlayerData[j].vPos = m_vecPlayer[vecID[j]].vPos;
+// 				}
+// 				SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&vecPlayerData));
+//  			}
+//  			else
+//  			{//다른놈이 들어오면 그놈 생성
+//  				SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&strPlayerData));
+//  			}
+//  		}
+
+		//그 전에꺼
 // 		for (int i = 0; i < m_vecPlayer.size(); ++i)
 // 		{
 // 			if (m_vecPlayer[i].ID == strPlayerData.ID)
@@ -486,18 +508,23 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 	{
 		Ser_PLAYER_DATA strPlayerData;
 		strPlayerData = *reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)&buf[2]);
-
 		for (int i = 0; i < vecID.size(); ++i)
 		{
-			if(m_vecPlayer[vecID[i]].ID == strPlayerData.ID)
-				continue;
-			m_vecPlayer[vecID[i]].type = CLIENT_POSITION;
-			SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strPlayerData));
+			if (m_vecPlayer[vecID[i]].ID == strPlayerData.ID)
+			{
+				m_vecPlayer[vecID[i]].vDir = strPlayerData.vDir;
+				m_vecPlayer[vecID[i]].vPos = strPlayerData.vPos;
+			}
+			else
+			{
+				m_vecPlayer[vecID[i]].type = CLIENT_POSITION;
+				SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strPlayerData));
+			}
 		}
 	}
 	break;
 	case CLIENT_ANIMATION:
-	{
+	{//일단냅두고
 		Ser_ANIMATION_DATA strAnimationData;
 		strAnimationData = *reinterpret_cast<Ser_ANIMATION_DATA*>((Ser_ANIMATION_DATA*)&buf[2]);
 
