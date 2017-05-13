@@ -14,7 +14,7 @@
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 : CScene(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking)
-	, m_bTestInit(false)
+	, m_bEnterGame(false)
 {
 }
 
@@ -52,7 +52,7 @@ HRESULT CStage::Ready_Scene(void)
 
 _int CStage::Update(const _float& fTimeDelta)
 {
-	if (m_bTestInit == false)
+	if (m_bEnterGame == false)
 	{
 		Ser_PLAYER_DATA m_pPlayerData;
 		m_pPlayerData.size = sizeof(Ser_PLAYER_DATA);
@@ -60,7 +60,7 @@ _int CStage::Update(const _float& fTimeDelta)
 		m_pPlayerData.ID = g_myid;
 		m_pPlayerData.vPos = g_vPos;
 		g_Client->sendPacket(sizeof(Ser_PLAYER_DATA), INIT_CLIENT, reinterpret_cast<BYTE*>(&m_pPlayerData));
-		m_bTestInit = true;
+		m_bEnterGame = true;
 	}
 
 

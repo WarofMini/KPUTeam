@@ -34,7 +34,7 @@ public:
 	MESHNUM	 MatchingObject(wstring strMeshName);
 
 private:
-	bool	m_bTestInit;
+	bool	m_bEnterGame;
 };
 
 

@@ -42,12 +42,12 @@ COtherPlayer* COtherPlayer::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContex
 COtherPlayer* COtherPlayer::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, XMFLOAT3 vPos, int iID)
 {
 	COtherPlayer* pObject = new COtherPlayer(pContext);
+	pObject->m_iID = iID;
 
 	if (FAILED(pObject->Initialize(pGraphicDev)))
 		Safe_Release(pObject);
 
 	pObject->m_pTransform->m_vPos = vPos;
-	pObject->m_iID = iID;
 	return pObject;
 }
 
@@ -65,6 +65,11 @@ HRESULT COtherPlayer::Initialize(ID3D11Device* pGraphicDev)
 
 	// Equipment
 	m_pEquipment[0] = CGun::Create(pGraphicDev, m_pContext);
+
+	if (m_iID % 2 == 0)
+		m_iTextureNumber = 0;
+	else
+		m_iTextureNumber = 1;
 
 	return S_OK;
 }

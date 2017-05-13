@@ -110,6 +110,11 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 	// Equipment
 	m_pEquipment[0] = CGun::Create(pGraphicDev, m_pContext);
 
+	if(g_myid % 2 == 0)
+		m_iTextureNumber = 0;
+	else 
+		m_iTextureNumber = 1;
+
 	return S_OK;
 }
 
