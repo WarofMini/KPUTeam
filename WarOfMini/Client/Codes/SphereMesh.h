@@ -37,6 +37,7 @@ private:
 public:
 	void			SetObjNum(_uint uNum);
 	void			SetmatWorld(XMFLOAT4X4* matWorld);
+	void			SetPosition(XMFLOAT3 vPos);
 
 };
 

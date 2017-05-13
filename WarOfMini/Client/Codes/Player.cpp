@@ -346,7 +346,7 @@ MOVE_DIR* CPlayer::GetMoveDir(void)
 }
 
 void CPlayer::SoldierChange(void)
-{//처음에 좆같은거는 어떻게?
+{
 	if (m_bIsSoldier)
 	{
 		m_bIsSoldier = false;
@@ -580,15 +580,26 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 
 			if (status == true)
 			{
+				CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
+
+				list<CGameObject*>* m_pObject = pLayer->Find_ObjectList(L"TestPos");
 
 				m_vtestpos = XMFLOAT3(hit.block.position.x, hit.block.position.y, hit.block.position.z);
 
-				CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
+				if (m_pObject == NULL)
+				{
+					
+					CGameObject* pGameObject = CSphereMesh::Create(m_pContext, 2.f, &m_vtestpos);
+					pLayer->Ready_Object(L"TestPos", pGameObject);
+				}
+				else
+				{
 
-				CGameObject* pGameObject = CSphereMesh::Create(m_pContext, 2.f, &m_vtestpos);
+					list<CGameObject*>::iterator iter = m_pObject->begin();
 
-				pLayer->Ready_Object(L"TestPos", pGameObject);
+					((CSphereMesh*)(*iter))->SetPosition(m_vtestpos);
 
+				}
 			}
 		}
 		else
@@ -699,15 +710,20 @@ void CPlayer::PhysXUpdate(const FLOAT& fTimeDelta)
 {
 	//PhysX에 값을 전달해준다. 중력
 	m_fFallvelocity -= m_fFallAcceleration * fTimeDelta * 50.f;
+
 	if (m_fFallvelocity < -1000.f)
 		m_fFallvelocity = -1000.f;
+
 	m_pPxCharacterController->move(PxVec3(0, 1.f, 0) * fTimeDelta * m_fFallvelocity, 0, fTimeDelta, PxControllerFilters());
 
 	PxControllerState   m_pPxState;
 
 	//피직스 객체의 상태값을 m_pPxState에 넣어준다.
 	m_pPxCharacterController->getState(m_pPxState);
-	if (m_pPxState.collisionFlags == PxControllerCollisionFlag::eCOLLISION_DOWN)//아래쪽 충돌
+
+	//윗쪽 충돌하거나 아랫쪽 충돌하면 m_fFallvelocity = 0.0f
+	if (m_pPxState.collisionFlags == PxControllerCollisionFlag::eCOLLISION_DOWN || 
+		m_pPxState.collisionFlags == PxControllerCollisionFlag::eCOLLISION_UP)
 		m_fFallvelocity = 0.f;
 
 

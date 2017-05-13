@@ -128,6 +128,7 @@ void CDefaultObj::ComputeCollider(void)
 
 void CDefaultObj::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, XMFLOAT3 vScale, PxCooking* pCooking, const char* name)
 {
+
 	PxTriangleMeshDesc meshDesc;
 
 
@@ -179,26 +180,28 @@ void CDefaultObj::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMateri
 
 	pPxScene->addActor(*m_pPxActor);
 
+	/*
 	//바운딩박스
-	//XMFLOAT3 vMin = *(CMeshMgr::GetInstance()->Get_MeshMin(m_uiObjNum));
+	XMFLOAT3 vMin = *(CMeshMgr::GetInstance()->Get_MeshMin(m_uiObjNum));
 
-	//vMin.x *= vScale.x;	 vMin.y *= vScale.y;  vMin.z *= vScale.z;
+	vMin.x *= vScale.x;	 vMin.y *= vScale.y;  vMin.z *= vScale.z;
 
-	//
-	//XMFLOAT3 vMax = *(CMeshMgr::GetInstance()->Get_MeshMax(m_uiObjNum));
-	//vMax.x *= vScale.x;	 vMax.y *= vScale.y;  vMax.z *= vScale.z;
+	
+	XMFLOAT3 vMax = *(CMeshMgr::GetInstance()->Get_MeshMax(m_uiObjNum));
+	vMax.x *= vScale.x;	 vMax.y *= vScale.y;  vMax.z *= vScale.z;
 
 
-	//XMFLOAT3 _d3dxvExtents =
-	//	XMFLOAT3((abs(vMin.x) + abs(vMax.x)) / 2, (abs(vMin.y) + abs(vMax.y)) / 2, (abs(vMin.z) + abs(vMax.z)) / 2);
+	XMFLOAT3 _d3dxvExtents =
+		XMFLOAT3((abs(vMin.x) + abs(vMax.x)) / 2, (abs(vMin.y) + abs(vMax.y)) / 2, (abs(vMin.z) + abs(vMax.z)) / 2);
 
-	////이게 객체의 최종행렬
-	//PxTransform _PxTransform(0, 0, 0);
+	//이게 객체의 최종행렬
+	PxTransform _PxTransform(0, 0, 0);
 
-	//PxBoxGeometry _PxBoxGeometry(_d3dxvExtents.x, _d3dxvExtents.y, _d3dxvExtents.z);
-	//m_pPxActor = PxCreateStatic(*pPxPhysics, _PxTransform, _PxBoxGeometry, *pPxMaterial);
-	//m_pPxActor->setName(name);
-	//pPxScene->addActor(*m_pPxActor);
+	PxBoxGeometry _PxBoxGeometry(_d3dxvExtents.x, _d3dxvExtents.y, _d3dxvExtents.z);
+	m_pPxActor = PxCreateStatic(*pPxPhysics, _PxTransform, _PxBoxGeometry, *pPxMaterial);
+	m_pPxActor->setName(name);
+	pPxScene->addActor(*m_pPxActor);
+	*/
 }
 
 void CDefaultObj::SetPosition(XMFLOAT3 vPosition)

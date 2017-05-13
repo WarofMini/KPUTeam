@@ -144,3 +144,8 @@ void CSphereMesh::SetmatWorld(XMFLOAT4X4 * matWorld)
 {
 	m_matWorld = matWorld;
 }
+
+void CSphereMesh::SetPosition(XMFLOAT3 vPos)
+{
+	m_pTransform->m_vPos = vPos;
+}
