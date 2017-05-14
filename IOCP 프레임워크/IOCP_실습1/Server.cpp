@@ -607,6 +607,18 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//±Ùµ¥ ¾ê
 		}
 	}
 	break;
+	case COLLISION_LAY:
+		Ser_COLLLAY_DATA strColData;
+		strColData = *reinterpret_cast<Ser_COLLLAY_DATA*>((Ser_COLLLAY_DATA*)&buf[2]);
+
+		for (int i = 0; i < vecID.size(); ++i)
+		{
+			if (m_vecPlayer[vecID[i]].ID == strColData.ID)
+			{
+				SendPacket(strColData.ID, reinterpret_cast<Packet*>(&strColData));
+			}
+		}
+		break;
 	case PLAYER_DISCONNECTED:
 	{
 	/*	Ser_Packet_Remove_Player RemovePlayer;

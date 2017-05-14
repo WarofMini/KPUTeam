@@ -88,6 +88,13 @@ struct Ser_ANIMATION_DATA
 	bool bIsSoldier;
 };
 
+struct Ser_COLLLAY_DATA
+{
+	BYTE size;	// 이게 전체 size 이고
+	BYTE type;	// 너가 말한 서버의 buf[1] 이 요거고 -> 아까 process packet 에서 구분한 이벤트는 요 type 인거야.
+	int ID;	// 이게 클라이언트에게 줄 id 값이야
+};
+
 struct Ser_Packet_Remove_Player
 {
 	BYTE size;
@@ -131,6 +138,7 @@ enum ProcessPacket
 	CLIENT_POSITION,	 // 좌표를 주고받자.
 	CLIENT_DIRECTION,	 // direction 값을 받아오자.
 	CLIENT_ANIMATION,
+	COLLISION_LAY,
 	PLAYER_DISCONNECTED, // 연결이 끊기면 삭제시켜주자.
 	SEND_POSITION,
 };
