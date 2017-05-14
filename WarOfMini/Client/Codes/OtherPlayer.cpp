@@ -137,6 +137,9 @@ void COtherPlayer::Update_Equipment(const FLOAT& fTimeDelta)
 {
 	m_matEquipBone[0] = CMeshMgr::GetInstance()->Get_TransMeshBone(m_uiObjNum, 0, m_iEquipBone, m_pMatBoneNode);
 
+	if (XMMatrixIsIdentity(XMLoadFloat4x4(&m_matEquipBone[0])))
+		return;
+
 	XMMATRIX matWorld = XMLoadFloat4x4(&m_pTransform->m_matWorld);
 	XMStoreFloat4x4(&m_matEquipBone[0], XMLoadFloat4x4(&m_matEquipBone[0]) * matWorld);
 
