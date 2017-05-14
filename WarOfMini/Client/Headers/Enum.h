@@ -70,13 +70,13 @@ enum ANIPLAYER {
 
 enum ANIPLAYER_Iron {
 	PLAYER_Iron_RunForward
-	, PLAYER_Iron_RunRight
 	, PLAYER_Iron_RunLeft
+	, PLAYER_Iron_RunRight
 	, PLAYER_Iron_RunBack
 	, PLAYER_Iron_Sprint
 	, PLAYER_Iron_RunForwardShoot
-	, PLAYER_Iron_RunRightShoot
 	, PLAYER_Iron_RunLeftShoot
+	, PLAYER_Iron_RunRightShoot
 	, PLAYER_Iron_RunBackShoot
 	, PLAYER_Iron_Idle
 	, PLAYER_Iron_Idle2
@@ -125,3 +125,44 @@ enum eKey { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT, KEY_END };
 enum MOVE_DIR { DIR_U, DIR_UR, DIR_UL, DIR_R, DIR_L, DIR_D, DIR_DR, DIR_DL, DIR_END};
 
 #endif
+/*
+0-30-idle-40
+31-91-idle2-40
+92-122-sprint-40
+123-153-Runback-40
+154-184-RunForward-40
+185-215-RunLeft-40
+216-246-RunLight-40
+247-277-Jump-40
+278-283-JumpIn-40
+284-299-JumpLoop-40
+300-309-JumpOut-40
+310-330-RollBack-30
+331-351-RollFront-30
+352-372-RollLeft-30
+373-393-RollRight-30
+394-403-Damage-30
+404-494-Reload-40
+495-525-Shoot-40
+526-577-GetCover-30
+578-588-GetCoverIn-30
+589-619-GetCoverLoop-30
+620-630-GetCoverOut-30
+631-661-RunForwardShoot-40
+662-692-RunBackShoot-40
+693-723-RunLeftShoot-40
+724-754-RunRightShoot-40
+755-785-JumpAndShoot-40
+786-791-JumpAndShootIn-40
+792-807-JumpAndShootLoop-40
+808-817-JumpAndShootOut-40
+818-848-ShootFromCover-30
+849-869-Death-30
+870-896-Death2-30
+897-927-Lying-40
+928-958-LyingShoot-40
+959-989-CrawlingFront-40
+990-1020-CrawlingBack-40
+1021-1051-CrawlingLeft-40
+1052-1082-CrawlingRight-40
+*/

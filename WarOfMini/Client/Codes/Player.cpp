@@ -49,7 +49,7 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 
 	m_pServer_PlayerData = new Ser_PLAYER_DATA;
 
-	m_fSpeed = 50.f;
+	m_fSpeed = 40.f;
 
 
 	XMStoreFloat4x4(&m_matBone, XMMatrixIdentity());
@@ -103,10 +103,6 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 	m_pAnimInfo->Set_Key((_ushort)m_dwAniIdx);
 
 	m_pComStateMachine->Enter_State(SOLDIER_IDLE);
-
-	//m_pServer_PlayerData->vPos = m_pTransform->m_vPos;
-
-	//g_Client.sendPacket(sizeof(XMFLOAT3),INIT_CLIENT,)
 
 	// Equipment
 	m_pEquipment[0] = CGun::Create(pGraphicDev, m_pContext);
@@ -207,9 +203,7 @@ void CPlayer::Update_Equipment(const FLOAT& fTimeDelta)
 	if (XMMatrixIsIdentity(XMLoadFloat4x4(&m_matEquipBone[0])))
 		return;
 
-
 	m_matBone = CMeshMgr::GetInstance()->Get_TransMeshBone(m_uiObjNum, 0, m_iBoneNum, m_pMatBoneNode);
-
 
 	XMMATRIX matWorld = XMLoadFloat4x4(&m_pTransform->m_matWorld);
 	XMStoreFloat4x4(&m_matEquipBone[0], XMLoadFloat4x4(&m_matEquipBone[0]) * matWorld);
@@ -246,16 +240,12 @@ HRESULT CPlayer::Prepare_StateMachine(void)
 
 void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 {
-	KeyCheck();
-
-	DWORD dwState = m_pComStateMachine->Get_State();
-
 	if (m_iHP < 0)
 	{
 		if (m_dwState != SOLDIER_DEAD)
 		{
 			m_dwState = SOLDIER_DEAD;
-			PlayAnimation(PLAYER_Death);
+			PlayAnimation(PLAYER_Death2);
 		}
 		else
 		{
@@ -264,11 +254,16 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 				m_iHP = 5;
 				m_dwState = SOLDIER_IDLE;
 				PlayAnimation(PLAYER_idle);
+				m_pComStateMachine->Enter_State(SOLDIER_IDLE);
 			}
 		}
 	}
 	else
 	{
+		KeyCheck();
+
+		DWORD dwState = m_pComStateMachine->Get_State();
+
 		switch (dwState)
 		{
 		case SOLDIER_IDLE:
@@ -279,7 +274,7 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 			if (m_dwState == SOLDIER_JUMP)
 			{
 				m_pComStateMachine->Enter_State(SOLDIER_JUMP);
-				m_fFallvelocity = 200.f;
+				m_fFallvelocity = 120.f;
 			}
 			break;
 		case SOLDIER_MOVE:
@@ -288,15 +283,15 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 			if (m_dwState == SOLDIER_ROLL)
 			{
 				m_pComStateMachine->Enter_State(SOLDIER_ROLL);
-				m_fFallvelocity = 70.f;
-				m_fRollSpeed = m_fSpeed * 2.f;
+				m_fFallvelocity = 60.f;
+				m_fRollSpeed = m_fSpeed * 1.7f;
 				m_fRollDir = m_vMoveDir;
 			}
 
 			if (m_dwState == SOLDIER_JUMP)
 			{
 				m_pComStateMachine->Enter_State(SOLDIER_JUMP);
-				m_fFallvelocity = 200.f;
+				m_fFallvelocity = 120.f;
 			}
 
 			break;
@@ -318,9 +313,8 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 		default:
 			break;
 		}
+		m_pComStateMachine->Update_State(dwState);
 	}
-
-	m_pComStateMachine->Update_State(dwState);
 }
 
 void CPlayer::PlayAnimation(DWORD dwAniIdx, bool bImmediate)
@@ -499,36 +493,33 @@ void CPlayer::KeyState(const FLOAT& fTimeDelta)
 
 void CPlayer::Soldier_Move(const FLOAT& fTimeDelta)
 {
-	m_fSpeed = 50.f;
-	XMVECTOR vDir;// = XMLoadFloat3(&m_vMoveDir);
-	XMVECTOR vPos = XMLoadFloat3(&m_pTransform->m_vPos);
-
-
-
+	//XMVECTOR vDir;// = XMLoadFloat3(&m_vMoveDir);
+	//XMVECTOR vPos = XMLoadFloat3(&m_pTransform->m_vPos);
 	switch (m_dwState)
 	{
 	case SOLDIER_MOVE:
-		vDir = XMLoadFloat3(&m_vMoveDir);
+		//vDir = XMLoadFloat3(&m_vMoveDir);
 		if (m_dwAniIdx == PLAYER_sprint)
-		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 1.5f, 0, fTimeDelta, PxControllerFilters());
+		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 1.3f, 0, fTimeDelta, PxControllerFilters());
 		else
-		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
+		{
+			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
+		}
 		break;
 	case SOLDIER_LYING:
-		vDir = XMLoadFloat3(&m_vMoveDir);
+		//vDir = XMLoadFloat3(&m_vMoveDir);
 		if (m_dwAniIdx != PLAYER_Lying && m_dwAniIdx != PLAYER_LyingShoot)
 		{
-			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 0.5f, 0, fTimeDelta, PxControllerFilters());
+			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 0.25f, 0, fTimeDelta, PxControllerFilters());
 		}
 		break;
 	case SOLDIER_JUMP:
-		vDir = XMLoadFloat3(&m_vMoveDir);
+		//vDir = XMLoadFloat3(&m_vMoveDir);
 		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
 		break;
 	case SOLDIER_ROLL:
-		vDir = XMLoadFloat3(&m_fRollDir);
-
-		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fRollSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
+		//vDir = XMLoadFloat3(&m_fRollDir);
+		m_pPxCharacterController->move(PxVec3(m_fRollDir.x, m_fRollDir.y, m_fRollDir.z) * m_fRollSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
 
 		m_fRollSpeed -= 20.f * fTimeDelta;
 		break;
@@ -537,33 +528,31 @@ void CPlayer::Soldier_Move(const FLOAT& fTimeDelta)
 
 void CPlayer::Soldier_Iron_Move(const FLOAT& fTimeDelta)
 {
-	m_fSpeed = 70.f;
-	XMVECTOR vDir;// = XMLoadFloat3(&m_vMoveDir);
-	XMVECTOR vPos = XMLoadFloat3(&m_pTransform->m_vPos);
-
+	//XMVECTOR vDir;// = XMLoadFloat3(&m_vMoveDir);
+	//XMVECTOR vPos = XMLoadFloat3(&m_pTransform->m_vPos);
 	switch (m_dwState)
 	{
 	case SOLDIER_MOVE:
-		vDir = XMLoadFloat3(&m_vMoveDir);
+		//vDir = XMLoadFloat3(&m_vMoveDir);
 		if (m_dwAniIdx == PLAYER_Iron_Sprint)
-			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 1.5f, 0, fTimeDelta, PxControllerFilters());
+			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 1.3f, 0, fTimeDelta, PxControllerFilters());
 		else
 			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
 		break;
 	case SOLDIER_LYING:
-		vDir = XMLoadFloat3(&m_vMoveDir);
+		//vDir = XMLoadFloat3(&m_vMoveDir);
 		if (m_dwAniIdx != PLAYER_Iron_Lying && m_dwAniIdx != PLAYER_Iron_LyingShoot)
 		{
-			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 0.5f, 0, fTimeDelta, PxControllerFilters());
+			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 0.25f, 0, fTimeDelta, PxControllerFilters());
 		}
 		break;
 	case SOLDIER_JUMP:
-		vDir = XMLoadFloat3(&m_vMoveDir);
+		//vDir = XMLoadFloat3(&m_vMoveDir);
 		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
 		break;
 	case SOLDIER_ROLL:
-		vDir = XMLoadFloat3(&m_fRollDir);
-		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fRollSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
+		//vDir = XMLoadFloat3(&m_fRollDir);
+		m_pPxCharacterController->move(PxVec3(m_fRollDir.x, m_fRollDir.y, m_fRollDir.z) * m_fRollSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
 		m_fRollSpeed -= 20.f * fTimeDelta;
 		break;
 	}

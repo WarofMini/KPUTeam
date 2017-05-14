@@ -57,6 +57,7 @@ public:
 	void		Set_Fire(_bool bFire) { m_bFire = bFire; }
 	_bool		IsAbleReload(void) { return m_bAbleReload; }
 	void		Reload(void);
+	FLOAT		Get_Time(void) { return m_fTimeDelta; }
 
 public:
 	void		UpdateDir(void);

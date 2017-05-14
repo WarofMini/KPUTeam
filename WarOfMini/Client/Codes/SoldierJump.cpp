@@ -64,7 +64,7 @@ int CSoldierJump::OnState()
 	else
 	{
 		if (m_pInput->Get_DIKeyState(DIK_SPACE) && !m_pSoldier->IsOnGround())
-			m_pSoldier->Soldier_Iron_AddVelocity(200.f);
+			m_pSoldier->Soldier_Iron_AddVelocity(200.f * m_pSoldier->Get_Time());
 		if (m_bShoot)	m_pSoldier->Set_Fire(true);
 		else			m_pSoldier->Set_Fire(false);
 	}
