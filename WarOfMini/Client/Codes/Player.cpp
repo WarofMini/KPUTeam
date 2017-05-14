@@ -582,95 +582,115 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 		m_fRateOfFire = 0.1f;
 		if (((CGun*)m_pEquipment[0])->Fire())
 		{
+			XMFLOAT3 m_vCameraEye = CCameraMgr::GetInstance()->Get_CurCameraEye();
 
-			XMFLOAT3 vDir = CCameraMgr::GetInstance()->Get_CurCameraLookAt();
-
-			XMFLOAT3 vEye = CCameraMgr::GetInstance()->Get_CurCameraEye(); 
-
-			XMFLOAT3 vGoalPos = XMFLOAT3(vEye.x + vDir.x * 1000.f, vEye.y + vDir.y * 1000.f, vEye.z + vDir.z * 1000.f);
-			
-
-			//XMFLOAT3 vDir = m_pTransform->m_vDir;
-			
-			XMFLOAT4X4 vmatWorld = ((CTransform*)m_pEquipment[0]->Get_Component(L"Com_Transform"))->m_matWorld;
-
-			
-			XMFLOAT3 vLocalPos;
-
-			if (m_bIsSoldier)
-			{
-				//x 가 z축의 역할을하네   z+가 x-
-				 vLocalPos = XMFLOAT3(50.f, -27.f, 40.f);
-			}
-			else
-			{
-				//x+가 z+축 z축 -x
-				vLocalPos = XMFLOAT3(45.f, 5.f, 0.f);
-			}
-			
-
-			XMStoreFloat3(&vLocalPos,   XMVector3TransformCoord(XMLoadFloat3(&vLocalPos),XMLoadFloat4x4(&vmatWorld)));
-
-			//XMFLOAT3 vPos = CCameraMgr::GetInstance()->Get_CurCameraEye();
-
-			XMFLOAT3 vPos = vLocalPos;
-			
-			XMStoreFloat3(&vDir, XMVector3Normalize(XMLoadFloat3(&vGoalPos) - XMLoadFloat3(&vPos)));
+			XMFLOAT3 m_vCameraLookAt = CCameraMgr::GetInstance()->Get_CurCameraLookAt();
 
 
-			PxVec3 OriginPos = PxVec3(vPos.x, vPos.y, vPos.z);
-			PxVec3 Dir		 = PxVec3(vDir.x, vDir.y, vDir.z);
+			PxVec3 OriginPos = PxVec3(m_vCameraEye.x, m_vCameraEye.y, m_vCameraEye.z);
+			PxVec3 Dir = PxVec3(m_vCameraLookAt.x, m_vCameraLookAt.y, m_vCameraLookAt.z);
 
 
 			PxReal maxDistance = 1000.f;
-			PxRaycastBuffer hit;
-			PxQueryFilterData fd;
-			fd.flags |= PxQueryFlag::ePOSTFILTER;
+			PxRaycastBuffer Onehit;
+			PxQueryFilterData Onefd;
+			Onefd.flags |= PxQueryFlag::ePOSTFILTER;
 
-			bool status = false;
+			bool m_bOneCheck = false;
 
-			status = m_pScene->raycast(OriginPos, Dir, maxDistance, hit, PxHitFlags(PxHitFlag::eDEFAULT), fd);
 
-			if (status == true)
+			m_bOneCheck = m_pScene->raycast(OriginPos, Dir, maxDistance, Onehit, PxHitFlags(PxHitFlag::eDEFAULT), Onefd);
+
+			//최종 검사
+			if (m_bOneCheck == true)
 			{
-				CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
+				XMFLOAT3 m_vGoalPos = XMFLOAT3(Onehit.block.position.x, Onehit.block.position.y, Onehit.block.position.z);
 
-				list<CGameObject*>* m_pObject = pLayer->Find_ObjectList(L"TestPos");
+				//Player의 월드 총구 포지션 설정
+				XMFLOAT4X4 vmatWorld = ((CTransform*)m_pEquipment[0]->Get_Component(L"Com_Transform"))->m_matWorld;
 
-				m_vtestpos = XMFLOAT3(hit.block.position.x, hit.block.position.y, hit.block.position.z);
 
-				//m_vtestpos = XMFLOAT3(vLocalPos.x, vLocalPos.y, vLocalPos.z);
-				
-				 const char* pName = hit.block.actor->getName();
-				 string strFullName = pName;
-				int iStartIdx = strFullName.find("OtherPlayer_");
-				
-				if (iStartIdx != -1)
+				XMFLOAT3 m_vWorldGunPos;
+
+				if (m_bIsSoldier)
 				{
-					string strID = strFullName.substr(12, strFullName.length() - 11);
-					int intValue = atoi(strID.c_str());
-
-					Ser_COLLLAY_DATA strColData;
-					strColData.size = sizeof(Ser_COLLLAY_DATA);
-					strColData.type = COLLISION_LAY;
-					strColData.ID = intValue;
-					g_Client->sendPacket(sizeof(Ser_COLLLAY_DATA), COLLISION_LAY, reinterpret_cast<BYTE*>(&strColData));
-				}
-				
-				if (m_pObject == NULL)
-				{
-					
-					CGameObject* pGameObject = CSphereMesh::Create(m_pContext, 2.5f, &m_vtestpos);
-					pLayer->Ready_Object(L"TestPos", pGameObject);
+					//x 가 z축의 역할을하네   z+가 x-
+					m_vWorldGunPos = XMFLOAT3(50.f, -27.f, 40.f);
 				}
 				else
 				{
-
-					list<CGameObject*>::iterator iter = m_pObject->begin();
-
-					((CSphereMesh*)(*iter))->SetPosition(m_vtestpos);
-
+					//x+가 z+축 z축 -x
+					m_vWorldGunPos = XMFLOAT3(45.f, 5.f, 0.f);
 				}
+
+
+				XMStoreFloat3(&m_vWorldGunPos, XMVector3TransformCoord(XMLoadFloat3(&m_vWorldGunPos), XMLoadFloat4x4(&vmatWorld)));
+
+
+				//Bullet의 방향벡터
+				XMFLOAT3 m_vBulletDir;
+
+				XMStoreFloat3(&m_vBulletDir, XMVector3Normalize(XMLoadFloat3(&m_vGoalPos)- XMLoadFloat3(&m_vWorldGunPos)));
+
+
+				PxReal maxGunDistance = 1000.f;
+				PxRaycastBuffer Gunhit;
+				PxQueryFilterData Gunfd;
+				Gunfd.flags |= PxQueryFlag::ePOSTFILTER;
+
+				bool m_bTwoCheck = false;
+
+
+				PxVec3 StartPos = PxVec3(m_vWorldGunPos.x, m_vWorldGunPos.y, m_vWorldGunPos.z);
+
+
+				PxVec3 BulletDir = PxVec3(m_vBulletDir.x, m_vBulletDir.y, m_vBulletDir.z);
+
+				m_bTwoCheck = m_pScene->raycast(StartPos, BulletDir, maxGunDistance, Gunhit, PxHitFlags(PxHitFlag::eDEFAULT), Gunfd);
+
+
+
+				if (m_bTwoCheck == true)
+				{
+					CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
+
+					list<CGameObject*>* m_pObject = pLayer->Find_ObjectList(L"TestPos");
+
+					m_vtestpos = XMFLOAT3(Gunhit.block.position.x, Gunhit.block.position.y, Gunhit.block.position.z);
+
+					//m_vtestpos = XMFLOAT3(vLocalPos.x, vLocalPos.y, vLocalPos.z);
+
+					const char* pName = Gunhit.block.actor->getName();
+					string strFullName = pName;
+					int iStartIdx = strFullName.find("OtherPlayer_");
+
+					if (iStartIdx != -1)
+					{
+						string strID = strFullName.substr(12, strFullName.length() - 11);
+						int intValue = atoi(strID.c_str());
+
+						Ser_COLLLAY_DATA strColData;
+						strColData.size = sizeof(Ser_COLLLAY_DATA);
+						strColData.type = COLLISION_LAY;
+						strColData.ID = intValue;
+						g_Client->sendPacket(sizeof(Ser_COLLLAY_DATA), COLLISION_LAY, reinterpret_cast<BYTE*>(&strColData));
+					}
+
+					if (m_pObject == NULL)
+					{
+
+						CGameObject* pGameObject = CSphereMesh::Create(m_pContext, 2.5f, &m_vtestpos);
+						pLayer->Ready_Object(L"TestPos", pGameObject);
+					}
+					else
+					{
+
+						list<CGameObject*>::iterator iter = m_pObject->begin();
+
+						((CSphereMesh*)(*iter))->SetPosition(m_vtestpos);
+					}
+				}
+
 			}
 		}
 		else

@@ -73,6 +73,11 @@ void CPlayerCamera::PlayerState(void)
 	vUpPos = XMVectorSet(0.0f, m_fEpsilonY, 0.0f, 0.0f);//입실론?
 	vAt = vTargetPos + vUpPos;							//바라볼위치
 
+	//오른쪽으로 카메라 이동
+	XMVECTOR m_vRight = XMVector3Cross(vUp, vTargetDir);
+	m_vRight *= 5.f;
+	vAt += m_vRight;
+
 	XMMATRIX matWorld;
 	matWorld = XMLoadFloat4x4(&m_pTargetTransform->m_matWorld);
 
