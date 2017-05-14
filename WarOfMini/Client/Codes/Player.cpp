@@ -619,6 +619,10 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 
 				//m_vtestpos = XMFLOAT3(vLocalPos.x, vLocalPos.y, vLocalPos.z);
 				
+				if(hit.block.actor->getName() == "OtherPlayer")
+				{
+					int i = 0;
+				}
 
 				if (m_pObject == NULL)
 				{
