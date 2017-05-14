@@ -34,13 +34,14 @@ HRESULT CGraphicDev::Set_SwapChain(DXGI_SWAP_CHAIN_DESC & sd, WINMODE eWinMode, 
 
 	sd.BufferDesc.Width = wSizeX;//원하는 후면 버퍼 너비
 	sd.BufferDesc.Height = wSizeY; //원하는 후면 버퍼 높이
-	sd.BufferDesc.RefreshRate.Numerator = m_usFPS; //디스플레이 모드 갱신율
+	sd.BufferDesc.RefreshRate.Numerator = 0; //디스플레이 모드 갱신율
 	sd.BufferDesc.RefreshRate.Denominator = 1;
 	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; //후면 버퍼 픽셀 형식
 	sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;//디스플레이 스캔라인 모드
 	sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED; //디스클레이 비례모드
 
 	 // 4X MSAA 품질 수준 지원 점검
+
 	if (m_b4xMsaaCheck)
 	{
 		UINT ui4xMsaaQuality;
@@ -60,7 +61,6 @@ HRESULT CGraphicDev::Set_SwapChain(DXGI_SWAP_CHAIN_DESC & sd, WINMODE eWinMode, 
 		sd.SampleDesc.Count = 4; //다중 표본화를 위해 추출할 표본 개수와 품질 수준을 서술하는 구조체
 		sd.SampleDesc.Quality = ui4xMsaaQuality - 1;
 	}
-
 	else
 	{
 		sd.SampleDesc.Count = 1; //스왑 체인에서 사용할 후면 버퍼개수
@@ -120,7 +120,6 @@ void CGraphicDev::Set_DepthStencil(D3D11_TEXTURE2D_DESC & td, const _ushort & wS
 	td.CPUAccessFlags = 0;
 	//CPU가 자원에 접근하는 방식을 결정하는 플래그
 	//GPU만 읽고 쓸뿐 CPU는 전혀 접근하지 않으면 NULL
-
 	td.MiscFlags = 0; //기타 플래그
 }
 
@@ -173,6 +172,7 @@ HRESULT CGraphicDev::Ready_GraphicDev(HWND hWnd, WINMODE eWinMode, const _ushort
 
 	_uint	uDeviceFlag = 0;
 
+
 //디버그 모드 빌드에서 디버그 계층을 활성화 하기 위해서는 반드시 설정 필수!!
 //디버그 플래그를 지정할 시 VC++ 출력 창에 디버그 메시지를 보냄	
 #if defined(DEBUG) || defined(_DEBUG)
@@ -191,7 +191,7 @@ HRESULT CGraphicDev::Ready_GraphicDev(HWND hWnd, WINMODE eWinMode, const _ushort
 	//9. pFeatureLevel: pFeatureLevel 배열에서 처음으로 지원되는 기능을 돌려준다.
 	//10. ppImmediateContext : 생성된 장치 문맥을 돌려준다.
 	hr = D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, uDeviceFlag,
-				0, 0, D3D11_SDK_VERSION, &m_pGraphicDev, NULL, &m_pContext);
+						0, 0, D3D11_SDK_VERSION, &m_pGraphicDev, NULL, &m_pContext);
 
 	if (FAILED(hr) == TRUE)
 	{
@@ -231,10 +231,13 @@ HRESULT CGraphicDev::Ready_GraphicDev(HWND hWnd, WINMODE eWinMode, const _ushort
 		MSG_BOX(L"IDXGIFactory Get Failed");
 		return E_FAIL;
 	}
+
 	//========================================================================================
 
 	// Swap Chain 생성
 	DXGI_SWAP_CHAIN_DESC sd;
+
+	ZeroMemory(&sd, sizeof(DXGI_SWAP_CHAIN_DESC));
 
 	hr = Set_SwapChain(sd, eWinMode, hWnd, wSizeX, wSizeY);
 
@@ -507,7 +510,6 @@ void CGraphicDev::OnResizeBackBuffers(void)
 {
 	if (m_pContext == NULL)
 		return;
-
 
 	m_pContext->OMSetRenderTargets(0, NULL, NULL);
 

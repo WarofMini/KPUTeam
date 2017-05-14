@@ -197,7 +197,7 @@ void COtherPlayer::SoldierChange(void)
 void COtherPlayer::BuildObject(PxPhysics * pPxPhysics, PxScene * pPxScene, PxMaterial * pPxMaterial, PxControllerManager * pPxControllerManager)
 {
 	PxCapsuleControllerDesc	PxCapsuledesc;
-	PxCapsuledesc.position = PxExtendedVec3(0, 0, 0);
+	PxCapsuledesc.position = PxExtendedVec3(50, 0, 20);
 	PxCapsuledesc.radius = 5.0f;
 	PxCapsuledesc.height = 10.0f;
 
@@ -213,10 +213,9 @@ void COtherPlayer::BuildObject(PxPhysics * pPxPhysics, PxScene * pPxScene, PxMat
 	PxCapsuledesc.upDirection = PxVec3(0, 1, 0);
 	PxCapsuledesc.contactOffset = 0.1f; //Á¢ÃË ¿ÀÇÁ¼Â
 	PxCapsuledesc.material = pPxMaterial;
-	PxCapsuledesc.nonWalkableMode = PxControllerNonWalkableMode::eFORCE_SLIDING;
+	//PxCapsuledesc.nonWalkableMode = PxControllerNonWalkableMode::eFORCE_SLIDING;
 	m_pPxCharacterController = pPxControllerManager->createController(PxCapsuledesc);
 
-
+	m_pTransform->m_vPos = XMFLOAT3(20.f, 0.f, 10.f);
 	m_pPxCharacterController->setFootPosition(PxExtendedVec3(m_pTransform->m_vPos.x, m_pTransform->m_vPos.y, m_pTransform->m_vPos.z));
-	//m_pTransform->m_vPos = XMFLOAT3(20.f, 0.f, 10.f);
 }

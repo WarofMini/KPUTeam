@@ -348,10 +348,12 @@ void CMainApp::Debug_KeyCheck(void)
 	}
 
 	//창크기 조절 (전체화면, 창화면)
+	/*
 	if (GetAsyncKeyState(VK_F4) & 1)
 	{
 		CGraphicDev::GetInstance()->ChangeScreenMode();
 	}
+	*/
 }
 
 void CMainApp::InitializePhysxEngine()

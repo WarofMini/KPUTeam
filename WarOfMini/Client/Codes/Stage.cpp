@@ -89,6 +89,21 @@ HRESULT CStage::Ready_GameLogic(void)
 	pLayer->Ready_Object(L"Player", pGameObject);
 
 
+
+
+
+	pGameObject = COtherPlayer::Create(m_pGraphicDev, m_pContext);
+
+	if (NULL == pGameObject)
+		return E_FAIL;
+
+
+	((COtherPlayer*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, m_pPxControllerManager);
+	pLayer->Ready_Object(L"OhterPlayer", pGameObject);
+
+
+
+
 	pGameObject = CPlayer::Create(m_pGraphicDev, m_pContext);
 
 	if (NULL == pGameObject)

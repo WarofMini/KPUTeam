@@ -562,7 +562,39 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 		{
 
 			XMFLOAT3 vDir = CCameraMgr::GetInstance()->Get_CurCameraLookAt();
-			XMFLOAT3 vPos = CCameraMgr::GetInstance()->Get_CurCameraEye();
+
+			XMFLOAT3 vEye = CCameraMgr::GetInstance()->Get_CurCameraEye(); 
+
+			XMFLOAT3 vGoalPos = XMFLOAT3(vEye.x + vDir.x * 1000.f, vEye.y + vDir.y * 1000.f, vEye.z + vDir.z * 1000.f);
+			
+
+			//XMFLOAT3 vDir = m_pTransform->m_vDir;
+			
+			XMFLOAT4X4 vmatWorld = ((CTransform*)m_pEquipment[0]->Get_Component(L"Com_Transform"))->m_matWorld;
+
+			
+			XMFLOAT3 vLocalPos;
+
+			if (m_bIsSoldier)
+			{
+				//x 가 z축의 역할을하네   z+가 x-
+				 vLocalPos = XMFLOAT3(50.f, -27.f, 40.f);
+			}
+			else
+			{
+				//x+가 z+축 z축 -x
+				vLocalPos = XMFLOAT3(45.f, 5.f, 0.f);
+			}
+			
+
+			XMStoreFloat3(&vLocalPos,   XMVector3TransformCoord(XMLoadFloat3(&vLocalPos),XMLoadFloat4x4(&vmatWorld)));
+
+			//XMFLOAT3 vPos = CCameraMgr::GetInstance()->Get_CurCameraEye();
+
+			XMFLOAT3 vPos = vLocalPos;
+			
+			XMStoreFloat3(&vDir, XMVector3Normalize(XMLoadFloat3(&vGoalPos) - XMLoadFloat3(&vPos)));
+
 
 			PxVec3 OriginPos = PxVec3(vPos.x, vPos.y, vPos.z);
 			PxVec3 Dir		 = PxVec3(vDir.x, vDir.y, vDir.z);
@@ -571,7 +603,7 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 			PxReal maxDistance = 1000.f;
 			PxRaycastBuffer hit;
 			PxQueryFilterData fd;
-			fd.flags |= PxQueryFlag::eANY_HIT;
+			fd.flags |= PxQueryFlag::ePOSTFILTER;
 
 			bool status = false;
 
@@ -585,10 +617,13 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 
 				m_vtestpos = XMFLOAT3(hit.block.position.x, hit.block.position.y, hit.block.position.z);
 
+				//m_vtestpos = XMFLOAT3(vLocalPos.x, vLocalPos.y, vLocalPos.z);
+				
+
 				if (m_pObject == NULL)
 				{
 					
-					CGameObject* pGameObject = CSphereMesh::Create(m_pContext, 2.f, &m_vtestpos);
+					CGameObject* pGameObject = CSphereMesh::Create(m_pContext, 2.5f, &m_vtestpos);
 					pLayer->Ready_Object(L"TestPos", pGameObject);
 				}
 				else
@@ -685,7 +720,7 @@ void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *
 	PxCapsuledesc.volumeGrowth = 1.9f;
 	//캐릭터가 걸어 갈 수있는 최대 경사. 
 	PxCapsuledesc.slopeLimit = cosf(XMConvertToRadians(15.f));
-	PxCapsuledesc.nonWalkableMode = PxControllerNonWalkableMode::eFORCE_SLIDING;
+	//PxCapsuledesc.nonWalkableMode = PxControllerNonWalkableMode::eFORCE_SLIDING;
 	PxCapsuledesc.upDirection = PxVec3(0, 1, 0);
 	PxCapsuledesc.contactOffset = 0.1f; //접촉 오프셋
 	PxCapsuledesc.material = pPxMaterial;
