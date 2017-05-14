@@ -368,7 +368,7 @@ void CServer::Timer_Thread()
 				{
 					SendPacket(p, &)
 				}*/
-				cout << "Timer : " << CTimer::SetTime() << endl;
+				//cout << "Timer : " << CTimer::SetTime() << endl;
 			}
 		}
 		else
