@@ -95,7 +95,7 @@ void CServer::MakeWorkerThread_AcceptThread()
 
 	thread acceptThread{ &CServer::Accept_thread, this };
 
-	thread timer_thread{ &CServer::Timer_Thread, this };
+	//thread timer_thread{ &CServer::Timer_Thread, this };
 
 	while (g_bShoutdown)
 	{
@@ -230,9 +230,7 @@ void CServer::Accept_thread()
 				error_display("Accept_WSARecv", err_no);
 			}
 		}
-	
 	}
-
 }
 
 void CServer::Worker_thread()
