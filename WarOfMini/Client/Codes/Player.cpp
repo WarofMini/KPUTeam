@@ -245,7 +245,11 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 		if (m_dwState != SOLDIER_DEAD)
 		{
 			m_dwState = SOLDIER_DEAD;
-			PlayAnimation(PLAYER_Death2);
+
+			if (m_bIsSoldier)
+				PlayAnimation(PLAYER_Death2);
+			else
+				PlayAnimation(PLAYER_Iron_Death2);
 		}
 		else
 		{
@@ -253,7 +257,10 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 			{
 				m_iHP = 5;
 				m_dwState = SOLDIER_IDLE;
-				PlayAnimation(PLAYER_idle);
+				if (m_bIsSoldier)
+					PlayAnimation(PLAYER_idle);
+				else
+					PlayAnimation(PLAYER_Iron_Idle);
 				m_pComStateMachine->Enter_State(SOLDIER_IDLE);
 			}
 		}
@@ -503,7 +510,10 @@ void CPlayer::Soldier_Move(const FLOAT& fTimeDelta)
 		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 1.4f, 0, fTimeDelta, PxControllerFilters());
 		else
 		{
-			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
+			if(m_eMoveDir == DIR_D || m_eMoveDir == DIR_DL || m_eMoveDir == DIR_DR)
+				m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 0.7f, 0, fTimeDelta, PxControllerFilters());
+			else
+				m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
 		}
 		break;
 	case SOLDIER_LYING:
