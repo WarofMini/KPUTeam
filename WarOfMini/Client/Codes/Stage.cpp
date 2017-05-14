@@ -87,6 +87,7 @@ HRESULT CStage::Ready_GameLogic(void)
 
 	pLayer->Ready_Object(L"Player", pGameObject);
 
+	/*
 	pGameObject = CPhysicsObect::Create(m_pContext);
 	((CPhysicsObect*)pGameObject)->SetObjNum(MESHNUM_BOOK1);
 	((CPhysicsObect*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(2.f, 2.f, 2.f), m_pCooking, "Physics");
@@ -95,6 +96,7 @@ HRESULT CStage::Ready_GameLogic(void)
 	//((CPhysicsObect*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f)));
 	((CPhysicsObect*)pGameObject)->SetPosition(XMFLOAT3(30.f, 100.f, 30.f));
 	pLayer->Ready_Object(L"PhysicsObject", pGameObject);
+	*/
 
 	m_mapLayer.insert(MAPLAYER::value_type(L"Layer_GameLogic", pLayer));
 
