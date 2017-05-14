@@ -500,7 +500,7 @@ void CPlayer::Soldier_Move(const FLOAT& fTimeDelta)
 	case SOLDIER_MOVE:
 		//vDir = XMLoadFloat3(&m_vMoveDir);
 		if (m_dwAniIdx == PLAYER_sprint)
-		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 1.3f, 0, fTimeDelta, PxControllerFilters());
+		m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 1.4f, 0, fTimeDelta, PxControllerFilters());
 		else
 		{
 			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
@@ -535,7 +535,7 @@ void CPlayer::Soldier_Iron_Move(const FLOAT& fTimeDelta)
 	case SOLDIER_MOVE:
 		//vDir = XMLoadFloat3(&m_vMoveDir);
 		if (m_dwAniIdx == PLAYER_Iron_Sprint)
-			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 1.3f, 0, fTimeDelta, PxControllerFilters());
+			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 1.4f, 0, fTimeDelta, PxControllerFilters());
 		else
 			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
 		break;

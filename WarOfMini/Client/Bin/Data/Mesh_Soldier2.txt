@@ -1,7 +1,7 @@
 0-29-RunForward-40
-30-59-RunLeft-40
-60-89-RunRight-40
-90-119-RunBack-40
+30-59-RunLeft-43
+60-89-RunRight-43
+90-119-RunBack-43
 120-149-Sprint-40
 150-179-RunForwardShoot-40
 180-209-RunLeftShoot-40
