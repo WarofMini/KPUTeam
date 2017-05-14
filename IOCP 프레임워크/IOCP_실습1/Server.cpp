@@ -187,6 +187,8 @@ void CServer::Accept_thread()
 		PlayerTemp.size = sizeof(Ser_PLAYER_DATA);
 		PlayerTemp.type = INIT_CLIENT;
 		PlayerTemp.vPos = XMFLOAT3(20.f * User->id, 0.f, 0.f);
+		PlayerTemp.vMoveDir = XMFLOAT3(0.f, 0.f, 0.f);
+		PlayerTemp.dwState = SOLDIER_IDLE;
 		
 		m_vecPlayer.push_back(PlayerTemp);
 
@@ -582,8 +584,10 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//±Ùµ¥ ¾ê
 		{
 			if (m_vecPlayer[vecID[i]].ID == strPlayerData.ID)
 			{
-				m_vecPlayer[vecID[i]].vDir = strPlayerData.vDir;
+				m_vecPlayer[vecID[i]].vAngle = strPlayerData.vAngle;
 				m_vecPlayer[vecID[i]].vPos = strPlayerData.vPos;
+				m_vecPlayer[vecID[i]].vMoveDir = strPlayerData.vMoveDir;
+				m_vecPlayer[vecID[i]].dwState = strPlayerData.dwState;
 			}
 			else
 			{

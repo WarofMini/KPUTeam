@@ -66,7 +66,10 @@ struct Ser_PLAYER_DATA
 	BYTE type;	// 너가 말한 서버의 buf[1] 이 요거고 -> 아까 process packet 에서 구분한 이벤트는 요 type 인거야.
 	int ID;	// 이게 클라이언트에게 줄 id 값이야
 	XMFLOAT3 vPos;
-	XMFLOAT3 vDir;
+	XMFLOAT3 vAngle;
+
+	XMFLOAT3 vMoveDir;
+	DWORD dwState;
 };
 
 struct Ser_Vec_PLAYER_DATA
