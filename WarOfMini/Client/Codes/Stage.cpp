@@ -82,52 +82,19 @@ HRESULT CStage::Ready_GameLogic(void)
 	if (NULL == pGameObject)
 		return E_FAIL;
 
-
 	((CPlayer*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, m_pPxControllerManager);
 	((CPlayer*)pGameObject)->SetPosition(g_vPos);
 
 	pLayer->Ready_Object(L"Player", pGameObject);
 
-
-
-
-
-	pGameObject = COtherPlayer::Create(m_pGraphicDev, m_pContext);
-
-	if (NULL == pGameObject)
-		return E_FAIL;
-
-
-	((COtherPlayer*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, m_pPxControllerManager);
-	pLayer->Ready_Object(L"OhterPlayer", pGameObject);
-
-
-
-
-	pGameObject = CPlayer::Create(m_pGraphicDev, m_pContext);
-
-	if (NULL == pGameObject)
-		return E_FAIL;
-
-
 	pGameObject = CPhysicsObect::Create(m_pContext);
 	((CPhysicsObect*)pGameObject)->SetObjNum(MESHNUM_BOOK1);
-
 	((CPhysicsObect*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(2.f, 2.f, 2.f), m_pCooking, "Physics");
-
 
 	//x, y, z, = x,z, y축으로 돌아간다...
 	//((CPhysicsObect*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f)));
 	((CPhysicsObect*)pGameObject)->SetPosition(XMFLOAT3(30.f, 100.f, 30.f));
 	pLayer->Ready_Object(L"PhysicsObject", pGameObject);
-
-
-
-
-
-
-	//g_Client.sendPacket(sizeof(CLayer), INIT_CLIENT, reinterpret_cast<BYTE*>(pGameObject->GetPacketData()->ID));
-
 
 	m_mapLayer.insert(MAPLAYER::value_type(L"Layer_GameLogic", pLayer));
 

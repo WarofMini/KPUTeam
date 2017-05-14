@@ -50,6 +50,8 @@ private:
 	_uint			m_uiObjNum_Normal;
 	_uint			m_uiObjNum_Iron;
 
+	string			m_strName;
+
 //Physx SDK Member Variables =========================
 private:
 	PxRigidDynamic*		m_pPxActor;

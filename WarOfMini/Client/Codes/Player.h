@@ -19,7 +19,7 @@ protected:
 	virtual ~CPlayer(void);
 
 public:
-	enum STATE_SOLDIER { SOLDIER_IDLE, SOLDIER_MOVE, SOLDIER_LYING, SOLDIER_ROLL, SOLDIER_JUMP, SOLDIER_END };
+	enum STATE_SOLDIER { SOLDIER_IDLE, SOLDIER_MOVE, SOLDIER_LYING, SOLDIER_ROLL, SOLDIER_JUMP, SOLDIER_DEAD, SOLDIER_END };
 
 public:
 	static CPlayer* Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);
@@ -102,6 +102,9 @@ private:
 
 	PxScene*		m_pScene;
 
+	//test
+	int				m_iHP;
+
 	//Physx SDK Member Variables =========================
 private:
 	PxRigidDynamic*		m_pPxActor;
@@ -123,6 +126,8 @@ public:
 	void	SetRotate(XMFLOAT3 vRot);
 	void	PhysXUpdate(const FLOAT& fTimeDelta);
 
+	//test
+	void			SetHP(void) { --m_iHP; }
 };
 
 #endif //

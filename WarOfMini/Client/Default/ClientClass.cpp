@@ -4,6 +4,7 @@
 #include "Scene.h"
 #include "OtherPlayer.h"
 #include "GraphicDev.h"
+#include "Player.h"
 
 int		g_myid;
 XMFLOAT3 g_vPos;
@@ -415,6 +416,18 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 			}
 		}
 	}
+		break;
+	case COLLISION_LAY:
+		Ser_COLLLAY_DATA strCollData = *reinterpret_cast<Ser_COLLLAY_DATA*>((Ser_COLLLAY_DATA*)buf);
+
+		if (g_myid == strCollData.ID)
+		{
+			pScene = CManagement::GetInstance()->GetScene();
+			pLayer = pScene->FindLayer(L"Layer_GameLogic");
+			list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"Player");
+			list<CGameObject*>::iterator iter = pObjList->begin();
+			((CPlayer*)*iter)->SetHP();
+		}
 		break;
 	case PLAYER_DISCONNECTED:
 	{

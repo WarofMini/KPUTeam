@@ -218,6 +218,9 @@ void COtherPlayer::BuildObject(PxPhysics * pPxPhysics, PxScene * pPxScene, PxMat
 
 	m_pTransform->m_vPos = XMFLOAT3(20.f, 0.f, 10.f);
 	m_pPxCharacterController->setFootPosition(PxExtendedVec3(m_pTransform->m_vPos.x, m_pTransform->m_vPos.y, m_pTransform->m_vPos.z));
+	
+	m_strName = "OtherPlayer_";
 
-	m_pPxCharacterController->getActor()->setName("OtherPlayer");
+	m_strName += to_string(m_iID);
+	m_pPxCharacterController->getActor()->setName(m_strName.c_str());
 }

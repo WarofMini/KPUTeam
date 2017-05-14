@@ -36,6 +36,7 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 , m_pPxCharacterController(NULL)
 , m_fFallAcceleration(9.8f)
 , m_fFallvelocity(0.f)
+, m_iHP(5)
 {
 	m_pInput = CInput::GetInstance();
 	m_vLook = XMFLOAT3(0.f, 1.f, 0.f);
@@ -249,55 +250,76 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 
 	DWORD dwState = m_pComStateMachine->Get_State();
 
-	switch (dwState)
+	if (m_iHP < 0)
 	{
-	case SOLDIER_IDLE:
- 		if (m_dwState == SOLDIER_MOVE)
- 			m_pComStateMachine->Enter_State(SOLDIER_MOVE);
-		if (m_dwState == SOLDIER_LYING)
-			m_pComStateMachine->Enter_State(SOLDIER_LYING);
-		if (m_dwState == SOLDIER_JUMP)
+		if (m_dwState != SOLDIER_DEAD)
 		{
-			m_pComStateMachine->Enter_State(SOLDIER_JUMP);
-			m_fFallvelocity = 200.f;
+			m_dwState = SOLDIER_DEAD;
+			PlayAnimation(PLAYER_Death);
 		}
-		break;
-	case SOLDIER_MOVE:
-		if (m_dwState == SOLDIER_IDLE)
- 			m_pComStateMachine->Enter_State(SOLDIER_IDLE);
-		if (m_dwState == SOLDIER_ROLL)
+		else
 		{
-			m_pComStateMachine->Enter_State(SOLDIER_ROLL);
-			m_fFallvelocity = 70.f;
-			m_fRollSpeed = m_fSpeed * 2.f;
-			m_fRollDir = m_vMoveDir;
+			if (Check_AnimationFrame())
+			{
+				m_iHP = 5;
+				m_dwState = SOLDIER_IDLE;
+				PlayAnimation(PLAYER_idle);
+			}
 		}
-
-		if (m_dwState == SOLDIER_JUMP)
-		{
-			m_pComStateMachine->Enter_State(SOLDIER_JUMP);
-			m_fFallvelocity = 200.f;
-		}
-
-		break;
-
-	case SOLDIER_LYING:
-		if (m_dwState == SOLDIER_IDLE)
-			m_pComStateMachine->Enter_State(SOLDIER_IDLE);
-		break;
-	case SOLDIER_ROLL:
-		if (m_dwState == SOLDIER_IDLE)
-			m_pComStateMachine->Enter_State(SOLDIER_IDLE);
-		if (m_dwState == SOLDIER_MOVE)
-			m_pComStateMachine->Enter_State(SOLDIER_MOVE);
-		break;
-	case SOLDIER_JUMP:
-		if (m_dwState == SOLDIER_IDLE)
-			m_pComStateMachine->Enter_State(SOLDIER_IDLE);
-		break;
-	default:
-		break;
 	}
+	else
+	{
+		switch (dwState)
+		{
+		case SOLDIER_IDLE:
+			if (m_dwState == SOLDIER_MOVE)
+				m_pComStateMachine->Enter_State(SOLDIER_MOVE);
+			if (m_dwState == SOLDIER_LYING)
+				m_pComStateMachine->Enter_State(SOLDIER_LYING);
+			if (m_dwState == SOLDIER_JUMP)
+			{
+				m_pComStateMachine->Enter_State(SOLDIER_JUMP);
+				m_fFallvelocity = 200.f;
+			}
+			break;
+		case SOLDIER_MOVE:
+			if (m_dwState == SOLDIER_IDLE)
+				m_pComStateMachine->Enter_State(SOLDIER_IDLE);
+			if (m_dwState == SOLDIER_ROLL)
+			{
+				m_pComStateMachine->Enter_State(SOLDIER_ROLL);
+				m_fFallvelocity = 70.f;
+				m_fRollSpeed = m_fSpeed * 2.f;
+				m_fRollDir = m_vMoveDir;
+			}
+
+			if (m_dwState == SOLDIER_JUMP)
+			{
+				m_pComStateMachine->Enter_State(SOLDIER_JUMP);
+				m_fFallvelocity = 200.f;
+			}
+
+			break;
+
+		case SOLDIER_LYING:
+			if (m_dwState == SOLDIER_IDLE)
+				m_pComStateMachine->Enter_State(SOLDIER_IDLE);
+			break;
+		case SOLDIER_ROLL:
+			if (m_dwState == SOLDIER_IDLE)
+				m_pComStateMachine->Enter_State(SOLDIER_IDLE);
+			if (m_dwState == SOLDIER_MOVE)
+				m_pComStateMachine->Enter_State(SOLDIER_MOVE);
+			break;
+		case SOLDIER_JUMP:
+			if (m_dwState == SOLDIER_IDLE)
+				m_pComStateMachine->Enter_State(SOLDIER_IDLE);
+			break;
+		default:
+			break;
+		}
+	}
+
 	m_pComStateMachine->Update_State(dwState);
 }
 
@@ -619,11 +641,22 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 
 				//m_vtestpos = XMFLOAT3(vLocalPos.x, vLocalPos.y, vLocalPos.z);
 				
-				if(hit.block.actor->getName() == "OtherPlayer")
+				 const char* pName = hit.block.actor->getName();
+				 string strFullName = pName;
+				int iStartIdx = strFullName.find("OtherPlayer_");
+				
+				if (iStartIdx != -1)
 				{
-					int i = 0;
-				}
+					string strID = strFullName.substr(12, strFullName.length() - 11);
+					int intValue = atoi(strID.c_str());
 
+					Ser_COLLLAY_DATA strColData;
+					strColData.size = sizeof(Ser_COLLLAY_DATA);
+					strColData.type = COLLISION_LAY;
+					strColData.ID = intValue;
+					g_Client->sendPacket(sizeof(Ser_COLLLAY_DATA), COLLISION_LAY, reinterpret_cast<BYTE*>(&strColData));
+				}
+				
 				if (m_pObject == NULL)
 				{
 					
