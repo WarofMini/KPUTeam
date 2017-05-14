@@ -184,7 +184,7 @@ void CRenderer::Clear_RenderGroup(void)
 
 void CRenderer::SwapChain_Clear_RenderGroup(void)
 {
-	m_pSwapChain->Present(0, 0);
+	m_pSwapChain->Present(1, 0);
 
 	Clear_RenderGroup();
 }
