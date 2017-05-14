@@ -9,6 +9,8 @@
 #include <cstdlib>
 #include <xnamath.h>
 #include <list>
+#include <mutex>
+#include <queue>
 
 
 
@@ -28,6 +30,7 @@ using namespace std;
 
 #define OP_RECV 1
 #define OP_SEND 2
+#define OP_TIME 3
 
 
 //const DWORD KEY_UP		= 0x00000000;
@@ -93,6 +96,23 @@ struct Ser_Packet_Remove_Player
 };
 //클라에서 보내온 정보들을 담아서 프로토콜로 뿌려주기 ?
 
+////////////////////////////////////////////////타이머
+
+struct event_type {
+	int obj_id;
+	int do_event;
+	unsigned int wakeup_time;
+	int event_id;
+};
+
+class mycomp
+{
+public:
+	bool operator() (const event_type lhs, const event_type rhs) const
+	{
+		return (lhs.wakeup_time > rhs.wakeup_time);
+	}
+};
 
 
 

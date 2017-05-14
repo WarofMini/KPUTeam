@@ -62,7 +62,7 @@ void CServer::ServerIpAddress(void)
 
 void CServer::Initialize(void)
 {
-
+	startTime = 0.f;
 	WSADATA wsadata;
 	WSAStartup(MAKEWORD(2, 2), &wsadata);
 
@@ -95,6 +95,8 @@ void CServer::MakeWorkerThread_AcceptThread()
 
 	thread acceptThread{ &CServer::Accept_thread, this };
 
+	thread timer_thread{ &CServer::Timer_Thread, this };
+
 	while (g_bShoutdown)
 	{
 		Sleep(1000);
@@ -105,7 +107,7 @@ void CServer::MakeWorkerThread_AcceptThread()
 		thread->join();
 		delete thread;
 	}
-
+	
 	acceptThread.join();
 }
 
@@ -142,7 +144,6 @@ void CServer::Accept_thread()
 	{
 		int err_no = WSAGetLastError();
 		error_display("listen()", err_no);
-
 	}
 	while ((!g_bShoutdown) == TRUE)
 	{
@@ -166,7 +167,7 @@ void CServer::Accept_thread()
 
 		CreateIoCompletionPort(reinterpret_cast<HANDLE>(client_sock), g_hIocp, playerIndex, 0);
 
-
+		
 		// 여기서 이제 클라이언트 관련 정보를 초기화 해서 받아서 넣었어
 		PLAYER_INFO* User = new PLAYER_INFO;
 
@@ -202,6 +203,17 @@ void CServer::Accept_thread()
 
 		SendPacket(PlayerTemp.ID, reinterpret_cast<Packet*>(&PlayerTemp));
 
+		
+		if (playerIndex >= 1)
+		{
+			m_bReady = true;
+		}
+		else
+		{
+			m_bReady = false;
+		}
+		
+
 		DWORD flags{ 0 };
 
 		// 그리고 이제 이 클라이언트가 만약 어떤 무언가의 패킷이되었든 보내면, 받을 수 있도록 준비자세를 취해 그게 WSARecv 여
@@ -216,6 +228,7 @@ void CServer::Accept_thread()
 				error_display("Accept_WSARecv", err_no);
 			}
 		}
+	
 	}
 
 }
@@ -313,8 +326,16 @@ void CServer::Worker_thread()
 		{
 			delete overlap;
 		}
+		else if (overlap->operation_type == OP_TIME)
+		{
+			//Do_Timer(key);
+			Add_Timer(key, OP_TIME, 1000);
+			delete overlap;
+		}
+	
 		else
 		{
+
 			cout << "No Event !! " << endl;
 			exit(-1);
 
@@ -323,6 +344,73 @@ void CServer::Worker_thread()
 
 
 
+}
+void CServer::Timer_Thread()
+{
+	while (1)
+	{
+		if (m_bReady)
+		{
+			for (int i = 2; i > 0; ++i)
+			{
+				CTimer::TimerCount(1.f);
+				if (i == 1 - 1)
+				{
+					m_bReady = false;
+					startTime = CTimer::SetTime();
+					cout << "Complete Time !! " << endl;
+
+				}
+				//모든 유저들에게 시간값을 알려주자.
+				/*for (int p = 0; p < MAX_USER; ++p)
+				{
+					SendPacket(p, &)
+				}*/
+				cout << "Timer : " << CTimer::SetTime() << endl;
+			}
+		}
+		else
+		{
+			Sleep(1);
+			timer_lock.lock();
+			while (false == timer_queue.empty())
+			{
+				
+				if (timer_queue.top().wakeup_time > GetTickCount())
+					break;
+				event_type ev = timer_queue.top();
+				timer_queue.pop();
+				timer_lock.unlock();
+				Overlap_ex* over = new Overlap_ex;
+				over->operation_type = ev.event_id;
+				PostQueuedCompletionStatus(g_hIocp, 1, ev.obj_id, &(over->Original_Overlap));
+				timer_lock.lock();
+			
+			}
+			timer_lock.unlock();
+
+		}
+
+	}
+	CTimer::TimerCount(0.03f);
+
+
+}
+void CServer::Add_Timer(int id, int do_event, int wakeup)
+{
+	event_type new_event;
+	new_event.do_event = do_event;
+	new_event.obj_id = id;
+	new_event.wakeup_time = wakeup + GetTickCount();
+
+	EnterCriticalSection(&cs);
+	timer_queue.push(new_event);
+	//cout << "Timer : " << new_event.wakeup_time << endl;
+	LeaveCriticalSection(&cs);
+
+	/*timer_lock.lock();
+	timer_queue.push(event_type{ i, GetTickCount() + 1000, OP_TIME });
+	timer_lock.unlock();*/
 }
 void CServer::SendRemovePlayerPacket(DWORD dwKey)
 {
@@ -375,28 +463,6 @@ void CServer::SendPacket(unsigned int id, const Packet* packet)
 
 		}
 	}
-	
-
-	//int packet_size = reinterpret_cast<unsigned char*>(packet)[0];
-
-	////함수가 끝난 다음에 보내는 데이터가 날아가면 안됨.. 비동기 포인터로 처리한다.
-	//Overlap_ex* over = new Overlap_ex;
-	//ZeroMemory(over, sizeof(Overlap_ex));
-	//over->operation_type = OP_SEND;
-
-	//over->wsabuf.buf = reinterpret_cast<CHAR*>(over->IOCPbuf);
-	//over->wsabuf.len = packet_size;
-	//memcpy(over->IOCPbuf, packet, packet_size);
-
-	//int retval = WSASend(m_Client[id].s, &over->wsabuf, 1, 0, NULL, &over->Original_Overlap, NULL);
-
-	//if (retval != 0)
-	//{
-	//	int error_no = WSAGetLastError();
-	//	error_display("SendPacket: WSASend", error_no);
-	//	while (true);
-
-	//}
 }
 
 // 수신한 패킷을 잘 조립해서 끝냈으니, 이제 여기서 클라이언트가 보낸 값을 잘 읽기만 하고
@@ -409,6 +475,8 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 		if (m_Client[i]->connected)
 			vecID.push_back(i);
 	}
+
+	
 
 	//unsigned char m_sendbuf[256]{ 0 };
 
@@ -430,9 +498,11 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 		Ser_PLAYER_DATA strPlayerData;
 		strPlayerData = *reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)&buf[2]);
 		cout << "[NO. " << strPlayerData.ID << "]ID value Recv.. " << endl;
-
 		for (int i = 0; i < vecID.size(); ++i)
 		{
+			//timer_queue.push(event_type{ i, GetTickCount() + 1000, OP_TIME });
+
+			
 			if (m_Client[vecID[i]]->id == strPlayerData.ID)
 			{
 				for (int j = 0; j < vecID.size(); ++j)

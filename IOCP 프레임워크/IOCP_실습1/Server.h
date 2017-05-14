@@ -1,6 +1,6 @@
 #pragma once
 #include "Protocol.h"
-#include "Player.h"
+#include "Timer.h"
 
 class CServer
 {
@@ -14,7 +14,10 @@ private:
 	bool g_bShoutdown = false;
 	int iCpuCore;
 	unsigned int playerIndex{ UINT_MAX };
-	
+
+	bool m_bReady = false;
+	CRITICAL_SECTION cs;
+	float startTime;
 
 	//DWORD KeyValue;
 	//CPlayer*	m_pPlayer;
@@ -28,6 +31,8 @@ public:
 	void MakeWorkerThread_AcceptThread();
 	void Accept_thread();
 	void Worker_thread();
+	void Timer_Thread();
+	void Add_Timer(int id, int do_event, int wakeup);
 	
 	void SendRemovePlayerPacket(DWORD dwKey);
 
@@ -38,6 +43,10 @@ public:
 	
 private:
 	vector<Ser_PLAYER_DATA> m_vecPlayer;
+
+public:
+	priority_queue<event_type, vector<event_type>, mycomp> timer_queue;
+	mutex timer_lock;
 
 public:
 	CServer();
