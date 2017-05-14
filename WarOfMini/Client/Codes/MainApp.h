@@ -23,7 +23,7 @@ private:
 	_ulong							m_dwRenderCnt;
 	_tchar							m_szFPS[128];
 	_float							m_fTime;
-
+	_bool							m_bDebugRender;
 
 	//Physx SDK Member Variables =========================
 	PxPhysics*						m_pPxPhysicsSDK;

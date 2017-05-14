@@ -107,7 +107,7 @@ HRESULT CStage::Ready_Environment(void)
 	CGameObject* pGameObject = NULL;
 
 	//다이나믹 카메라 적용
-	CCameraMgr::GetInstance()->Ready_DynamicCamera(m_pContext, m_pPxScene, CCameraMgr::CAMERA_DYNAMIC, 0.1f, 10000.f, XMFLOAT3(0.f, 5.f, -10.f), XMFLOAT3(0.f, 0.f, 0.f));
+	CCameraMgr::GetInstance()->Ready_DynamicCamera(m_pContext, m_pPxScene, CCameraMgr::CAMERA_DYNAMIC, 0.1f, 10000.f, XMFLOAT3(681.f, 269.f, -45.f), XMFLOAT3(672.f, 251.f, -7.8f));
 
 	//플레이어 카메라 적용
 	CComponent* pTransform = (CComponent*)FindLayer(L"Layer_GameLogic")->Get_Component(L"Player", L"Com_Transform");

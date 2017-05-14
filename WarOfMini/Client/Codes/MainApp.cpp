@@ -21,6 +21,7 @@ CMainApp::CMainApp(void)
 {
 	
 	ZeroMemory(&m_szFPS, sizeof(_tchar) * 128);
+	m_bDebugRender = true;
 	//콘솔창===================================
 	/*AllocConsole();
 	freopen("CONOUT$", "wt", stdout);
@@ -128,9 +129,20 @@ void CMainApp::Render(void)
 
 	CManagement::GetInstance()->Render();
 
-	Render_FPS();
+	//디버그용 폰트 띄우기 선택
+	if (GetAsyncKeyState('L') & 1)
+	{
+		if (m_bDebugRender)
+			m_bDebugRender = false;
+		else
+			m_bDebugRender = true;
+	}
 
-	Render_CurrentScene();
+	if (m_bDebugRender)
+	{
+		Render_FPS();
+		Render_CurrentScene();
+	}
 
 	CManagement::GetInstance()->GetRenderer()->SwapChain_Clear_RenderGroup();
 }
@@ -339,6 +351,7 @@ void CMainApp::Stage_DebugInfo(void)
 //디버그 On/Off 체크
 void CMainApp::Debug_KeyCheck(void)
 {
+	/*
 	if (GetAsyncKeyState('L') & 1)
 	{
 		if (g_bCollisionDraw == TRUE)
@@ -346,7 +359,7 @@ void CMainApp::Debug_KeyCheck(void)
 		else
 			g_bCollisionDraw = TRUE;
 	}
-
+	*/
 	//창크기 조절 (전체화면, 창화면)
 	/*
 	if (GetAsyncKeyState(VK_F4) & 1)
