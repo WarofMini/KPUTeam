@@ -206,14 +206,14 @@ void CServer::Accept_thread()
 		SendPacket(PlayerTemp.ID, reinterpret_cast<Packet*>(&PlayerTemp));
 
 		
-		if (playerIndex >= 1)
+		/*if (playerIndex >= 1)
 		{
 			m_bReady = true;
 		}
 		else
 		{
 			m_bReady = false;
-		}
+		}*/
 		
 
 		DWORD flags{ 0 };
@@ -254,11 +254,11 @@ void CServer::Worker_thread()
 		// 근데 이건 아니지, 왜냐? 서버 자기 자신이 딴 클라한테 보냈기 때문에, return 이 false 일 수가 없어
 		if (FALSE == Result || 0 == iosize)
 		{
-			if (FALSE == Result)
+			/*if (FALSE == Result)
 			{
 				int Error_no = WSAGetLastError();
 				error_display("WorkerThread Start GetQueuedCompletionStatus", Error_no);
-			}
+			}*/
 
 			SendRemovePlayerPacket(key);
 
@@ -309,12 +309,12 @@ void CServer::Worker_thread()
 				int retval = WSARecv(m_Client[key]->sock, &m_Client[key]->my_overapped.wsabuf, 1, NULL, &flags, &m_Client[key]->my_overapped.Original_Overlap, NULL);
 				if (retval == SOCKET_ERROR)
 				{
-					int err_no = WSAGetLastError();
+					/*int err_no = WSAGetLastError();
 					if (ERROR_IO_PENDING != err_no)
 					{
 						error_display("WorkerThreadStart::WSARecv", err_no);
 
-					}
+					}*/
 					continue;
 
 				}			
@@ -326,12 +326,12 @@ void CServer::Worker_thread()
 		{
 			delete overlap;
 		}
-		else if (overlap->operation_type == OP_TIME)
-		{
-			//Do_Timer(key);
-			Add_Timer(key, OP_TIME, 1000);
-			delete overlap;
-		}
+		//else if (overlap->operation_type == OP_TIME)
+		//{
+		//	//Do_Timer(key);
+		//	//Add_Timer(key, OP_TIME, 1000);
+		//	delete overlap;
+		//}
 	
 		else
 		{
@@ -345,73 +345,73 @@ void CServer::Worker_thread()
 
 
 }
-void CServer::Timer_Thread()
-{
-	while (1)
-	{
-		if (m_bReady)
-		{
-			for (int i = 2; i > 0; ++i)
-			{
-				CTimer::TimerCount(1.f);
-				if (i == 1 - 1)
-				{
-					m_bReady = false;
-					startTime = CTimer::SetTime();
-					cout << "Complete Time !! " << endl;
-
-				}
-				//모든 유저들에게 시간값을 알려주자.
-				/*for (int p = 0; p < MAX_USER; ++p)
-				{
-					SendPacket(p, &)
-				}*/
-				//cout << "Timer : " << CTimer::SetTime() << endl;
-			}
-		}
-		else
-		{
-			Sleep(1);
-			timer_lock.lock();
-			while (false == timer_queue.empty())
-			{
-				
-				if (timer_queue.top().wakeup_time > GetTickCount())
-					break;
-				event_type ev = timer_queue.top();
-				timer_queue.pop();
-				timer_lock.unlock();
-				Overlap_ex* over = new Overlap_ex;
-				over->operation_type = ev.event_id;
-				PostQueuedCompletionStatus(g_hIocp, 1, ev.obj_id, &(over->Original_Overlap));
-				timer_lock.lock();
-			
-			}
-			timer_lock.unlock();
-
-		}
-
-	}
-	CTimer::TimerCount(0.03f);
-
-
-}
-void CServer::Add_Timer(int id, int do_event, int wakeup)
-{
-	event_type new_event;
-	new_event.do_event = do_event;
-	new_event.obj_id = id;
-	new_event.wakeup_time = wakeup + GetTickCount();
-
-	EnterCriticalSection(&cs);
-	timer_queue.push(new_event);
-	//cout << "Timer : " << new_event.wakeup_time << endl;
-	LeaveCriticalSection(&cs);
-
-	/*timer_lock.lock();
-	timer_queue.push(event_type{ i, GetTickCount() + 1000, OP_TIME });
-	timer_lock.unlock();*/
-}
+//void CServer::Timer_Thread()
+//{
+//	while (1)
+//	{
+//		if (m_bReady)
+//		{
+//			for (int i = 2; i > 0; ++i)
+//			{
+//				CTimer::TimerCount(1.f);
+//				if (i == 1 - 1)
+//				{
+//					m_bReady = false;
+//					startTime = CTimer::SetTime();
+//					cout << "Complete Time !! " << endl;
+//
+//				}
+//				//모든 유저들에게 시간값을 알려주자.
+//				/*for (int p = 0; p < MAX_USER; ++p)
+//				{
+//					SendPacket(p, &)
+//				}*/
+//				//cout << "Timer : " << CTimer::SetTime() << endl;
+//			}
+//		}
+//		else
+//		{
+//			Sleep(1);
+//			timer_lock.lock();
+//			while (false == timer_queue.empty())
+//			{
+//				
+//				if (timer_queue.top().wakeup_time > GetTickCount())
+//					break;
+//				event_type ev = timer_queue.top();
+//				timer_queue.pop();
+//				timer_lock.unlock();
+//				Overlap_ex* over = new Overlap_ex;
+//				over->operation_type = ev.event_id;
+//				PostQueuedCompletionStatus(g_hIocp, 1, ev.obj_id, &(over->Original_Overlap));
+//				timer_lock.lock();
+//			
+//			}
+//			timer_lock.unlock();
+//
+//		}
+//
+//	}
+//	CTimer::TimerCount(0.03f);
+//
+//
+//}
+//void CServer::Add_Timer(int id, int do_event, int wakeup)
+//{
+//	event_type new_event;
+//	new_event.do_event = do_event;
+//	new_event.obj_id = id;
+//	new_event.wakeup_time = wakeup + GetTickCount();
+//
+//	EnterCriticalSection(&cs);
+//	timer_queue.push(new_event);
+//	//cout << "Timer : " << new_event.wakeup_time << endl;
+//	LeaveCriticalSection(&cs);
+//
+//	/*timer_lock.lock();
+//	timer_queue.push(event_type{ i, GetTickCount() + 1000, OP_TIME });
+//	timer_lock.unlock();*/
+//}
 void CServer::SendRemovePlayerPacket(DWORD dwKey)
 {
 	Ser_Packet_Remove_Player packet;
@@ -454,14 +454,14 @@ void CServer::SendPacket(unsigned int id, const Packet* packet)
 	int retval = WSASend(m_Client[id]->sock, &overlap->wsabuf, 1, NULL, flags, &overlap->Original_Overlap, NULL);
 	if (retval == SOCKET_ERROR)
 	{
-		int err_no = WSAGetLastError();
+		/*int err_no = WSAGetLastError();
 
 		if (err_no != ERROR_IO_PENDING)
 		{
 			error_display("SendPacket_WSASend", err_no);
 			while (true);
 
-		}
+		}*/
 	}
 }
 
@@ -476,22 +476,20 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 			vecID.push_back(i);
 	}
 
-	
-
 	//unsigned char m_sendbuf[256]{ 0 };
 
 	// 여기서 은 무엇이겠어
 	// 한번 말해봥 클라이언트 기준에서 한번 맞춰봥
 	switch (buf[1])
 	{
-	case TEST:
-	{
-		//클라에서 받은 패킷을 그대로 다시 돌려준다.
-		cout << "[NO. " << id << "]TEST Packet Recv.. " << endl;
-		cout << "buf[0] =  " << buf[0] << "buf[1] = " << buf[1] << "buf[2] =  " << buf[2] << endl;
-		SendPacket(id, buf);
-		break;
-	}
+	//case TEST:
+	//{
+	//	//클라에서 받은 패킷을 그대로 다시 돌려준다.
+	//	cout << "[NO. " << id << "]TEST Packet Recv.. " << endl;
+	//	cout << "buf[0] =  " << buf[0] << "buf[1] = " << buf[1] << "buf[2] =  " << buf[2] << endl;
+	//	SendPacket(id, buf);
+	//	break;
+	//}
 
 	case INIT_CLIENT:
 	{

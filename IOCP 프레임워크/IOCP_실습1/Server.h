@@ -34,8 +34,8 @@ public:
 	void MakeWorkerThread_AcceptThread();
 	void Accept_thread();
 	void Worker_thread();
-	void Timer_Thread();
-	void Add_Timer(int id, int do_event, int wakeup);
+	//void Timer_Thread();
+	//void Add_Timer(int id, int do_event, int wakeup);
 	
 	void SendRemovePlayerPacket(DWORD dwKey);
 
