@@ -79,8 +79,8 @@ void CServer::CheckCPUCoreCount()
 	SYSTEM_INFO si;
 	GetSystemInfo(&si);
 	iCpuCore = static_cast<int>(si.dwNumberOfProcessors) * 2;
-	cout << "CPU Core Count : " << iCpuCore / 2 << endl;
-	cout << "Thread : " << iCpuCore << endl;
+	//cout << "CPU Core Count : " << iCpuCore / 2 << endl;
+	//cout << "Thread : " << iCpuCore << endl;
 
 }
 
