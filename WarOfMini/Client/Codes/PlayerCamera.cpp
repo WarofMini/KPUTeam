@@ -168,7 +168,7 @@ void CPlayerCamera::CheckCollision(void)
 		PxReal maxDistance = 9999.f;
 		PxRaycastBuffer hit;
 		PxQueryFilterData fd;
-		fd.flags |= PxQueryFlag::eANY_HIT;
+		fd.flags |= PxQueryFlag::ePOSTFILTER;
 
 
 		_bool m_bstatus = false;
