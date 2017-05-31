@@ -33,6 +33,8 @@ public:
 
 	MESHNUM	 MatchingObject(wstring strMeshName);
 
+	HRESULT	 InitPhysicsObject(void);
+
 private:
 	bool	m_bEnterGame;
 };

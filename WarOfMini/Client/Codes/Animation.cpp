@@ -35,6 +35,7 @@ void CAnimation::UpdateSubresource(CAnimationInfo* pAnimInfo, XMFLOAT4X4* pBoneW
 		const WORD& wNextFrame = pAnimInfo->Get_NextFrame();
 		const FLOAT& fRatio = pAnimInfo->Get_Ratio();
 
+
 		size_t uiClusterSize = m_vecAnimData[wCurKey][wCurFrame].size();
 
 		for (size_t iCluster = 0; iCluster < uiClusterSize; ++iCluster)
@@ -67,11 +68,7 @@ void CAnimation::UpdateSubresource(CAnimationInfo* pAnimInfo, XMFLOAT4X4* pBoneW
 		
 			XMStoreFloat4x4(&matBoneWorld[iCluster], XMMatrixTranspose(matScale * matRot * matTrans));
 		
-			//XMVECTOR dd = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-			//matRot = XMMatrixInverse(&dd, matRot);
-			//matTrans = XMMatrixInverse(&dd, matTrans);
-			//matScale = XMMatrixInverse(&dd, matScale);
-		
+
 			XMStoreFloat4x4(&pBoneWorld[iCluster], matScale * matRot * matTrans );
 		}
 	}

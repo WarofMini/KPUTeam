@@ -60,8 +60,7 @@ HRESULT CDynaicMesh::Create_Buffer(const VTXBONE* pVB, const _uint& uiVtxCnt, co
 		memcpy(m_pIndex, pIB, sizeof(UINT) * m_uiIdxCnt);
 
 		
-		m_vPivotPos = pVB[0].vPos;
-			
+		m_vPivotPos = pVB[0].vPos;	
 
 		D3D11_BUFFER_DESC tBufferDesc;
 
@@ -190,6 +189,7 @@ void CDynaicMesh::RenderAnim(CAnimationInfo* pAnimInfo, MATNODE* pMatNode, _uint
 			// Mesh
 			m_pContext->IASetVertexBuffers(0, 1, &m_pVB, &uiStride, &uiOffset);
 			m_pContext->IASetIndexBuffer(m_pIB, DXGI_FORMAT_R32_UINT, 0);
+
 
 			m_pContext->DrawIndexed(m_uiIdxCnt, 0, 0);
 
@@ -404,16 +404,17 @@ XMFLOAT4X4 CDynaicMesh::Get_TransBoneMatrix(_int iIndex, _int iIndex2, MATNODE* 
 
 
 		XMStoreFloat4x4(&matTrans, XMMatrixIdentity());
-		if(XMMatrixIsIdentity(XMLoadFloat4x4(&pMatNode->matBone[iIndex2])))
+		if (XMMatrixIsIdentity(XMLoadFloat4x4(&pMatNode->matBone[iIndex2])))
 		{
 			return matTrans;
 		}
 
 
 		//XMStoreFloat4x4(&matTransBone, XMMatrixTranslationFromVector(XMLoadFloat3(&m_vPivotPos)) * XMLoadFloat4x4(&pMatNode->matBone[iIndex2]));
-		//XMStoreFloat4x4(&matTransBone, XMLoadFloat4x4(&pMatNode->matBone[iIndex2]));
 
-		XMStoreFloat4x4(&matTrans, XMMatrixTranslationFromVector(XMLoadFloat3(&m_vPivotPos)) * XMLoadFloat4x4(&pMatNode->matBone[iIndex2]));
+		XMStoreFloat4x4(&matTrans, XMMatrixTranslationFromVector(XMLoadFloat3(&m_pVertex[iIndex2].vPos)) * XMLoadFloat4x4(&pMatNode->matBone[iIndex2]));
+
+		//XMStoreFloat4x4(&matTrans,  XMLoadFloat4x4(&pMatNode->matBone[iIndex2]));
 
 
 		return matTrans;

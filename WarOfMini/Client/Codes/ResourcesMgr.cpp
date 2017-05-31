@@ -191,6 +191,9 @@ HRESULT CResourcesMgr::Ready_Mesh(ID3D11Device* pGraphicDev, ID3D11DeviceContext
 		vector<pair<_ushort, _ushort>> vecFrameCnt;
 		Load_FrameData(pResourceKey, vecFrameCnt);
 
+		SetFbxBoneIndex(&mapIndexByName, pFbxRootNode);
+
+
 		// Load Mesh Data
 		Load_DynamicMesh(pGraphicDev, pContext, pFbxRootNode, nullptr, pFbxScene, AnimStackNameArray, vecFrameCnt);
 
@@ -607,18 +610,17 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 		// Get Vertex, UV, Normal, Index, Texture
 
 		//ControlPointsCount() = 물리적인 vertex    (걍 vertex)
-	
+
+		
 		uiVtxCnt = pMesh->GetControlPointsCount();//Vertex의 갯수
 		pVtxBone = new VTXBONE[uiVtxCnt];
 		ZeroMemory(pVtxBone, sizeof(VTXBONE) * uiVtxCnt);
-
-		FbxVector2 vFbxUV(0, 0);
 
 		// Vertex
 		{
 			FbxVector4* pVertices = pMesh->GetControlPoints();//물리적인 Vertex
 
-			for (UINT i = 0; i < uiVtxCnt; ++i)
+			for (_uint i = 0; i < uiVtxCnt; ++i)
 			{
 				//Vertex의 Position을 대입
 				pVtxBone[i].vPos = XMFLOAT3((_float)pVertices[i].mData[0], (_float)pVertices[i].mData[1], (_float)pVertices[i].mData[2]);
@@ -626,13 +628,14 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 				//도대체 이건 왜 필요한것인가
 				XMStoreFloat3(&pVtxBone[i].vPos, XMVector3TransformCoord(XMLoadFloat3(&pVtxBone[i].vPos), XMLoadFloat4x4(&matWorld)));
 
-				for (int boneindex = 0; boneindex < 4; ++boneindex)
+				for (_int boneindex = 0; boneindex < 4; ++boneindex)
 				{
 					pVtxBone[i].uiBones[boneindex] = MAX_BONE_MATRICES - 1;
 					pVtxBone[i].fWeights[boneindex] = 0.f;
 				}
 			}
-		}
+		}		
+		
 
 		// Index, UV
 		{
@@ -646,16 +649,20 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 			FbxStringList UVNames;
 			pMesh->GetUVSetNames(UVNames);
 
-			for (_uint uiPolygonIndex = 0; uiPolygonIndex < uiPolygonCount; ++uiPolygonIndex)
+			for (_uint uiPolygonIndex = 0; uiPolygonIndex < uiPolygonCount; uiPolygonIndex++)
 			{
 				_uint uiVerticeCount = pMesh->GetPolygonSize(uiPolygonIndex);
 
-				for (_uint uiVerticeIndex = 0; uiVerticeIndex < uiVerticeCount; ++uiVerticeIndex)
+				assert(uiVerticeCount == 3);
+
+				for (_uint uiVerticeIndex = 0; uiVerticeIndex < uiVerticeCount; uiVerticeIndex++)
 				{
+		
 					_uint uiIndex = pMesh->GetPolygonVertex(uiPolygonIndex, uiVerticeIndex);
 
+					
 					pIndex[uiIdxArrIndex] = uiIndex;
-					++uiIdxArrIndex;
+					uiIdxArrIndex++;
 
 					FbxVector4 vNormal;
 
@@ -713,6 +720,9 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 			}
 		}
 
+
+
+
 		// Bones & Weights & Animation
 		//Deformer안에 Cluster라는 것들을 갖고있다. (보통 메시 1개당 Deformer 1개이다.)
 		//Cluster안에 Link라는게 있는데 이게 진짜 joint이다.
@@ -732,22 +742,35 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 					for (_uint i = 0; i < uiClusterCount; ++i)
 					{
 						FbxCluster* pCluster = pSkinDeformer->GetCluster(i);
+
+						if (!pCluster->GetLink())
+							continue;
+
+						//본의 이름
+						
+						//string BoneName = pCluster->GetLink()->GetName();
+						//int INDEX = mapIndexByName[BoneName];
+
+
 						_uint uiVertexIndexCount = pCluster->GetControlPointIndicesCount();
 
-						for (_uint j = 0; j < uiVertexIndexCount; ++j)
+						for (_uint j = 0; j < uiVertexIndexCount; j++)
 						{
 							_uint uiVectexIndex = pCluster->GetControlPointIndices()[j];
+						
+							
 
 							if (pVtxBone[uiVectexIndex].fWeights[bonecount[uiVectexIndex]] == 0.f)
 							{
-								pVtxBone[uiVectexIndex].uiBones[bonecount[uiVectexIndex]] = i;
-								pVtxBone[uiVectexIndex].fWeights[bonecount[uiVectexIndex]] = (float)pCluster->GetControlPointWeights()[j];
+									pVtxBone[uiVectexIndex].uiBones[bonecount[uiVectexIndex]] = i;
+									pVtxBone[uiVectexIndex].fWeights[bonecount[uiVectexIndex]] = (_float)pCluster->GetControlPointWeights()[j];
 							}
 
 							bonecount[uiVectexIndex] += 1;
 						}
 					}
 
+					/*
 					for (_uint i = 0; i < uiVtxCnt; ++i)
 					{
 						float fullWeights = pVtxBone[i].fWeights[0] + pVtxBone[i].fWeights[1] + pVtxBone[i].fWeights[2] + pVtxBone[i].fWeights[3];
@@ -755,6 +778,7 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 						if (fullWeights < 1.0f)
 							pVtxBone[i].fWeights[3] = 1.0f - fullWeights;
 					}
+					*/
 
 					Safe_Delete_Array(bonecount);
 				}
@@ -782,7 +806,7 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 
 					FbxLongLong unit = stop / frameCnt;
 
-					for (UINT uiDataIdx = 0; uiDataIdx < vecFrameCnt.size(); ++uiDataIdx)
+					for (_uint uiDataIdx = 0; uiDataIdx < vecFrameCnt.size(); ++uiDataIdx)
 					{
 						CAnimation::ANIMDATA tAnimData;
 
@@ -793,9 +817,9 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 							// Matrix
 							if (pFbxScene->GetPoseCount())
 							{
-								FbxPose* pPose = pFbxScene->GetPose(pFbxScene->GetPoseCount() + 1);
+								//FbxPose* pPose = pFbxScene->GetPose(pFbxScene->GetPoseCount() + 1);
 
-								for (UINT uiClusterIndex = 0; uiClusterIndex < uiClusterCount; ++uiClusterIndex)
+								for (_uint uiClusterIndex = 0; uiClusterIndex < uiClusterCount; ++uiClusterIndex)
 								{
 									FbxAMatrix matVertexTransform;
 
@@ -829,8 +853,9 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 										
 
 										//시간에 따른 EvaluateGlobalTransform
-										lClusterGlobalCurPos = GetGlobalPosition(pCluster->GetLink(), pTime, pPose);
+										//lClusterGlobalCurPos = GetGlobalPosition(pCluster->GetLink(), pTime, pPose);
 
+										lClusterGlobalCurPos = pCluster->GetLink()->EvaluateGlobalTransform(pTime);
 
 										//옛날버전
 										matVertexTransform = TransBoneMtx * lClusterGlobalCurPos * LinkBoneMtx.Inverse();
@@ -839,15 +864,16 @@ void CResourcesMgr::Load_DynamicMesh(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 
 
 									}
+	
 
 									FbxQuaternion vQ = matVertexTransform.GetQ();
 									FbxVector4 vT = matVertexTransform.GetT();
 									FbxVector4 vS = matVertexTransform.GetS();
 
 									CLUSDATA tClusData;
-									tClusData.R = XMFLOAT4((FLOAT)vQ.mData[0], (FLOAT)vQ.mData[1], (FLOAT)vQ.mData[2], (FLOAT)vQ.mData[3]);
-									tClusData.T = XMFLOAT3((FLOAT)vT.mData[0], (FLOAT)vT.mData[1], (FLOAT)vT.mData[2]);
-									tClusData.S = XMFLOAT3((FLOAT)vS.mData[0], (FLOAT)vS.mData[1], (FLOAT)vS.mData[2]);
+									tClusData.R = XMFLOAT4((_float)vQ.mData[0], (_float)vQ.mData[1], (_float)vQ.mData[2], (_float)vQ.mData[3]);
+									tClusData.T = XMFLOAT3((_float)vT.mData[0], (_float)vT.mData[1], (_float)vT.mData[2]);
+									tClusData.S = XMFLOAT3((_float)vS.mData[0], (_float)vS.mData[1], (_float)vS.mData[2]);
 									vecAniMatrix.push_back(tClusData);
 								}
 							}
@@ -925,6 +951,14 @@ void CResourcesMgr::Release(void)
 	m_pFbxSdkMgr->Destroy();
 
 	delete this;
+}
+
+void CResourcesMgr::SetFbxBoneIndex(map<std::string, unsigned int>* _pIndexByName, FbxNode * _pNode)
+{
+	(*_pIndexByName)[_pNode->GetName()] = _pIndexByName->size();
+
+	for (int i = 0; i < _pNode->GetChildCount(); ++i)
+		this->SetFbxBoneIndex(_pIndexByName, _pNode->GetChild(i));
 }
 
 //애니메이션 정보 Load

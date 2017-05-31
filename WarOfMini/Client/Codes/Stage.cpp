@@ -11,6 +11,7 @@
 #include "Tank.h"
 #include "PhysicsObect.h"
 #include "OtherPlayer.h"
+#include "PhysicsDoor.h"
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 : CScene(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking)
@@ -46,6 +47,7 @@ HRESULT CStage::Ready_Scene(void)
 	InitFloor();
 	InitToiletFloor();
 	LoadStageMap();
+	InitPhysicsObject();
 
 	return S_OK;
 }
@@ -86,6 +88,18 @@ HRESULT CStage::Ready_GameLogic(void)
 	((CPlayer*)pGameObject)->SetPosition(g_vPos);
 
 	pLayer->Ready_Object(L"Player", pGameObject);
+
+
+
+
+
+
+	
+
+
+
+
+
 
 	/*
 	pGameObject = CPhysicsObect::Create(m_pContext);
@@ -314,6 +328,8 @@ HRESULT CStage::LoadStageMap(void)
 	_ulong	dwByte = 0;
 	HANDLE hFile = CreateFile(tPath.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
+	_int	m_iWallcount = 0;
+
 	while (true)
 	{
 		OBJ_INFO m_tInfo;
@@ -334,7 +350,6 @@ HRESULT CStage::LoadStageMap(void)
 
 
 		eMeshNum = MatchingObject(strName);
-
 
 		if (eMeshNum != MESHNUM_END)
 		{
@@ -361,12 +376,27 @@ HRESULT CStage::LoadStageMap(void)
 			XMStoreFloat3(&m_vScale, vScale);
 			XMStoreFloat3(&m_vPos, vPos);
 			XMStoreFloat3(&m_vAngle, vAngle);
+
+
 			//
 			((CDefaultObj*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, m_vScale, m_pCooking, "StaticObject");
 			((CDefaultObj*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(m_vAngle.x), (_float)D3DXToRadian(m_vAngle.z), (_float)D3DXToRadian(m_vAngle.y)));
 			((CDefaultObj*)pGameObject)->SetPosition(m_vPos);
 
-			pLayer->Ready_Object(L"StaticObject", pGameObject);
+
+
+			if (eMeshNum == MESHNUM_WALL3)
+			{
+				if (m_iWallcount == 1)
+					pLayer->Ready_Object(L"StaticWall", pGameObject);
+				else
+					pLayer->Ready_Object(L"StaticObject", pGameObject);
+
+
+				++m_iWallcount;
+			}
+			else
+				pLayer->Ready_Object(L"StaticObject", pGameObject);
 		}
 
 	}
@@ -553,4 +583,23 @@ MESHNUM CStage::MatchingObject(wstring strMeshName)
 		return MESHNUM_WATERCOOLER;
 
 	return MESHNUM_END;
+}
+
+HRESULT CStage::InitPhysicsObject(void)
+{
+	CLayer* pLayer = FindLayer(L"Layer_GameLogic");
+
+	CPhysicsDoor* pDoorObject = CPhysicsDoor::Create(m_pContext);
+
+	pDoorObject->SetLayer(pLayer);
+
+	(pDoorObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(1.99f, 2.0f, 2.51f), m_pCooking, "PhysicsDoor");
+
+	//(pDoorObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(90.f), (_float)D3DXToRadian(90.f), (_float)D3DXToRadian(0.f)));
+	//(pDoorObject)->SetPosition(XMFLOAT3(800.0f, 150.0f, 100.0f));
+
+	pLayer->Ready_Object(L"PhysicsDoor", pDoorObject);
+
+
+	return S_OK;
 }

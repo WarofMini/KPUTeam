@@ -235,6 +235,9 @@
     <Filter Include="02.Object\06.PhysicsObject">
       <UniqueIdentifier>{7eb471a7-adf7-4860-a28a-1bc118b5946b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\06.PhysicsObject\00.Door">
+      <UniqueIdentifier>{153d1c8f-6842-4353-a1a2-9e03c368e27b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -474,6 +477,9 @@
     <ClInclude Include="..\Codes\PhysicsObect.h">
       <Filter>02.Object\06.PhysicsObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\PhysicsDoor.h">
+      <Filter>02.Object\06.PhysicsObject\00.Door</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -670,6 +676,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\PhysicsObject.cpp">
       <Filter>02.Object\06.PhysicsObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\PhysicsDoor.cpp">
+      <Filter>02.Object\06.PhysicsObject\00.Door</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

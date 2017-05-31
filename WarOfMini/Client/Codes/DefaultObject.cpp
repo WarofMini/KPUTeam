@@ -177,7 +177,6 @@ void CDefaultObj::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMateri
 
 	m_pPxActor->setName(name);
 
-
 	pPxScene->addActor(*m_pPxActor);
 
 	/*
@@ -232,4 +231,9 @@ void CDefaultObj::SetRotate(XMFLOAT3 vRot)
 
 	m_pPxActor->setGlobalPose(_PxTransform);
 
+}
+
+PxRigidStatic * CDefaultObj::GetPxActor(void)
+{
+	return m_pPxActor;
 }

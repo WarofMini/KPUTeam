@@ -19,16 +19,6 @@ CPhysicsObect::~CPhysicsObect(void)
 {
 }
 
-CPhysicsObect* CPhysicsObect::Create(ID3D11DeviceContext* pContext)
-{
-	CPhysicsObect* pObject = new CPhysicsObect(pContext);
-
-	if (FAILED(pObject->Initialize()))
-		Safe_Release(pObject);
-
-	return pObject;
-}
-
 HRESULT CPhysicsObect::Initialize()
 {
 	if (FAILED(Ready_Component()))

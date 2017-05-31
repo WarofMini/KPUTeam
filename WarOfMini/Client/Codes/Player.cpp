@@ -54,7 +54,7 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 
 	XMStoreFloat4x4(&m_matBone, XMMatrixIdentity());
 	m_iBoneNum = 0;
-	//pSphereMesh = CSphereMesh::Create(m_pContext, 1.f);
+	pSphereMesh = CSphereMesh::Create(m_pContext, 1.f);
 }
 
 CPlayer::~CPlayer(void)
@@ -134,7 +134,7 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 		SendPacketAlways();
 	}	
 
-	/* 본행렬 찾기 위한 디버그
+	// 본행렬 찾기 위한 디버그
 	if (GetAsyncKeyState('G') & 1)
 	{
 		m_iBoneNum += 1;
@@ -145,7 +145,7 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 		m_iBoneNum -= 1;
 		cout << "BoneNum" << m_iBoneNum << endl;
 	}
-	*/
+	
 
 
 	// Update
@@ -157,7 +157,7 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 	Update_Equipment(fTimeDelta);
 
 
-	//pSphereMesh->Update(fTimeDelta);
+	pSphereMesh->Update(fTimeDelta);
 
 	return 0;
 }
@@ -208,8 +208,8 @@ void CPlayer::Update_Equipment(const FLOAT& fTimeDelta)
 	XMMATRIX matWorld = XMLoadFloat4x4(&m_pTransform->m_matWorld);
 	XMStoreFloat4x4(&m_matEquipBone[0], XMLoadFloat4x4(&m_matEquipBone[0]) * matWorld);
 
-	//XMStoreFloat4x4(&m_matBone, XMLoadFloat4x4(&m_matBone) * matWorld);
-	//((CSphereMesh*)pSphereMesh)->SetmatWorld(&m_matBone);
+	XMStoreFloat4x4(&m_matBone, XMLoadFloat4x4(&m_matBone) * matWorld);
+	((CSphereMesh*)pSphereMesh)->SetmatWorld(&m_matBone);
 
 	m_pEquipment[0]->SetParent(m_matEquipBone[0]);
 	m_pEquipment[0]->Update(fTimeDelta);
@@ -737,7 +737,7 @@ void CPlayer::Render(void)
 {
 	CDynamicObject::Render();
 
-	//pSphereMesh->Render();
+	pSphereMesh->Render();
 }
 
 void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, PxControllerManager *pPxControllerManager)

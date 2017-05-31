@@ -65,6 +65,13 @@ private:
 
 private:
 	list<wstring*> m_ResourceNameList;
+
+
+public:
+	map<string, unsigned int>	mapIndexByName;
+
+	void		SetFbxBoneIndex(map<std::string, unsigned int>* _pIndexByName, FbxNode* _pNode);
+
 };
 
 #endif // ResourceMgr_h__
