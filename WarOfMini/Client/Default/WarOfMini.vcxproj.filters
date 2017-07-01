@@ -241,6 +241,9 @@
     <Filter Include="02.Object\07.Effect">
       <UniqueIdentifier>{df9e4131-d0e6-4630-b6b1-8edfc7e02fd8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\08.UI">
+      <UniqueIdentifier>{721468a0-9704-48c0-b03d-c7a460b943e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -486,6 +489,9 @@
     <ClInclude Include="..\Codes\Effect.h">
       <Filter>02.Object\07.Effect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\UI.h">
+      <Filter>02.Object\08.UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -688,6 +694,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Effect.cpp">
       <Filter>02.Object\07.Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\UI.cpp">
+      <Filter>02.Object\08.UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

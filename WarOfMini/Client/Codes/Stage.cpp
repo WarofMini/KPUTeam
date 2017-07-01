@@ -13,6 +13,7 @@
 #include "OtherPlayer.h"
 #include "PhysicsDoor.h"
 #include "Effect.h"
+#include "UI.h"
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 : CScene(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking)
@@ -102,13 +103,22 @@ HRESULT CStage::Ready_GameLogic(void)
 	*/
 
 
-	//Effect
+	//Effect	
 	/*
 	pGameObject = CEffect::Create(m_pContext);
 
 	if (NULL == pGameObject)
 		return E_FAIL;
 	pLayer->Ready_Object(L"Effect", pGameObject);
+	*/
+
+	//UI
+	/*
+	pGameObject = CUI::Create(m_pContext);
+
+	if (NULL == pGameObject)
+		return E_FAIL;
+	pLayer->Ready_Object(L"UI", pGameObject);
 	*/
 
 	/*

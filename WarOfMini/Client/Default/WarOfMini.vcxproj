@@ -226,6 +226,7 @@
     <ClInclude Include="..\Codes\Tire.h" />
     <ClInclude Include="..\Codes\Transform.h" />
     <ClInclude Include="..\Codes\Truck.h" />
+    <ClInclude Include="..\Codes\UI.h" />
     <ClInclude Include="..\Codes\xnacollision.h" />
     <ClInclude Include="..\Headers\Enum.h" />
     <ClInclude Include="..\Headers\Function.h" />
@@ -307,6 +308,7 @@
     <ClCompile Include="..\Codes\Tire.cpp" />
     <ClCompile Include="..\Codes\Transform.cpp" />
     <ClCompile Include="..\Codes\Truck.cpp" />
+    <ClCompile Include="..\Codes\UI.cpp" />
     <ClCompile Include="..\Codes\xnacollision.cpp" />
     <ClCompile Include="ClientClass.cpp" />
     <ClCompile Include="stdafx.cpp">
