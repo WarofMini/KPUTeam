@@ -103,13 +103,13 @@ HRESULT CStage::Ready_GameLogic(void)
 
 
 	//Effect
-	
+	/*
 	pGameObject = CEffect::Create(m_pContext);
 
 	if (NULL == pGameObject)
 		return E_FAIL;
 	pLayer->Ready_Object(L"Effect", pGameObject);
-	
+	*/
 
 	/*
 	pGameObject = CPhysicsObect::Create(m_pContext);

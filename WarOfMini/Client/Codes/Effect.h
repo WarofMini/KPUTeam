@@ -36,6 +36,16 @@ private:
 	_int			m_iLastTextureNumber; //ÃÑ ÅØ½ºÃÄ °¹¼ö
 	_float			m_fFrameSpeed;
 
+
+public:
+	void			SetLastTextureNumber(_int iNumber) { m_iLastTextureNumber = iNumber;}
+	void			SetCurrentTextureNumber(_int iNumber) { m_iCurrentTextureNumber = iNumber; }
+	void			SetFrameSpeed(_float fSpeed) { m_fFrameSpeed = fSpeed; }
+
+	_int			GetCurrentTextureNumber(void) { return m_iCurrentTextureNumber; }
+	_int			GetLastTextureNumber(void) { return m_iLastTextureNumber;  }
+	_float			GetFrameSpeed(void) { return m_fFrameSpeed; }
+
 };
 
 #endif
