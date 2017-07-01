@@ -111,6 +111,7 @@ private:
 	PxRigidDynamic*		m_pPxActor;
 	PxController*		m_pPxCharacterController;
 
+
 	//객체에 충돌박스 입히기===============================
 	CGameObject*		pSphereMesh;
 private:

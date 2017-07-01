@@ -782,7 +782,6 @@ void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *
 	PxCapsuledesc.material = pPxMaterial;
 
 	m_pPxCharacterController = pPxControllerManager->createController(PxCapsuledesc);
-
 }
 
 void CPlayer::SetPosition(XMFLOAT3 vPosition)

@@ -75,13 +75,11 @@ HRESULT CRenderer::Ready_Renderer(void)
 	if (FAILED(CShaderMgr::GetInstance()->Ready_ShaderFromFiles(m_pGraphicDev, m_pContext, L"Shader_Default", L"../Bin/ShaderCode/Shader_Default.fx", 0)))
 		return E_FAIL;
 
+	if (FAILED(CShaderMgr::GetInstance()->Ready_ShaderFromFiles(m_pGraphicDev, m_pContext, L"Shader_Effect", L"../Bin/ShaderCode/Shader_Effect.fx", 0)))
+		return E_FAIL;
+
+
 	if (FAILED(CShaderMgr::GetInstance()->Ready_ShaderFromFiles(m_pGraphicDev, m_pContext, L"Shader_Normal", L"../Bin/ShaderCode/Shader_Normal.fx", 0)))
-		return E_FAIL;
-
-	if (FAILED(CShaderMgr::GetInstance()->Ready_ShaderFromFiles(m_pGraphicDev, m_pContext, L"Shader_Skybox", L"../Bin/ShaderCode/Shader_Skybox.fx", 0)))
-		return E_FAIL;
-
-	if (FAILED(CShaderMgr::GetInstance()->Ready_ShaderFromFiles(m_pGraphicDev, m_pContext, L"Shader_Terrain", L"../Bin/ShaderCode/Shader_Terrain.fx", 0)))
 		return E_FAIL;
 
 	if (FAILED(CShaderMgr::GetInstance()->Ready_ShaderFromFiles(m_pGraphicDev, m_pContext, L"Shader_Instancing", L"../Bin/ShaderCode/Shader_Instancing.fx", 0)))

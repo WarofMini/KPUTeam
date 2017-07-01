@@ -144,22 +144,26 @@ void CPhysicsDoor::CreateChain(PxPhysics* pPxPhysics, PxScene* pPxScene, PxRigid
 
 	list<CGameObject*>* pObjList = m_pLayer->Find_ObjectList(L"StaticWall");
 
+	XMFLOAT3 m_vTargetPos = ((CTransform*)(*pObjList->begin())->Get_Component(L"Com_Transform"))->m_vPos;
+
+	PxD6Joint* m_pJoint = PxD6JointCreate(*pPxPhysics, NULL, PxTransform(PxVec3(m_vTargetPos.x - 2.f, m_vTargetPos.y - 22.f, m_vTargetPos.z - offset.x)), pActor, localTm);
+
+	m_pJoint->setMotion(PxD6Axis::eSWING1, PxD6Motion::eLIMITED);
+
+	m_pJoint->setSwingLimit(PxJointLimitCone(PxPi/4, PxPi/4, 10.05f));
+
+
+
 	//1 배우0 : 관절이 부착된 배우, NULL을 사용하여 조인트를 월드 프레임의 특정 지점에 부착가능
 	//2 localFrame 배우0을 기준으로 한 조인트의 위치와 방향
 	//3 배우 1 : 관절이 부착된 배우, 
 	//4 localFrame 배우1에 대한 조인트와 위치와 방향
 	//PxRevoluteJoint* m_pJoint = PxRevoluteJointCreate(*pPxPhysics, ((CDefaultObj*)(*pObjList->begin()))->GetPxActor(), PxTransform(PxVec3(0.0f, 0.0f, 0.0f)), pActor, PxTransform(-offset));
 
-	XMFLOAT3 m_vTargetPos = ((CTransform*)(*pObjList->begin())->Get_Component(L"Com_Transform"))->m_vPos;
-
-	PxD6Joint* m_pJoint = PxD6JointCreate(*pPxPhysics, NULL, PxTransform(PxVec3(m_vTargetPos.x - 2.f, m_vTargetPos.y - 22.f, m_vTargetPos.z - offset.x)), pActor, localTm);
 
 	//0 : 하한 낮은각도
 	//upperLimit : 한도의 상한
 	//dist 그것이 활동하게되는 한계로부터의 거리 . 기본값은 0.1라디안 중 작은값
-	m_pJoint->setMotion(PxD6Axis::eSWING1, PxD6Motion::eLIMITED);
-	//m_pJoint->setDrive(PxD6Drive::eSLERP, PxD6JointDrive(0, 1000, FLT_MAX, true));
-	m_pJoint->setSwingLimit(PxJointLimitCone(PxPi / 4, PxPi / 4, 10.05f));
 	//m_pJoint->setLimit(PxJointAngularLimitPair(PxPi / 4, PxPi / 4, 0.05f));
 	//m_pJoint->setRevoluteJointFlag(PxRevoluteJointFlag::eDRIVE_FREESPIN, true);
 }
