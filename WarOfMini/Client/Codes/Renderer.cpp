@@ -272,6 +272,9 @@ void CRenderer::Render_Alpha(void)
 
 void CRenderer::Render_UI(void)
 {
+	CRenderTargetMgr::GetInstance()->Set_RenderTarget(L"RT_Blend", 2, TRUE);
+	CGraphicDev::GetInstance()->SetAlphaEnable(TRUE);
+
 	RENDERLIST::iterator iter = m_RenderGroup[RENDER_UI].begin();
 	RENDERLIST::iterator iter_end = m_RenderGroup[RENDER_UI].end();
 
@@ -279,6 +282,8 @@ void CRenderer::Render_UI(void)
 	{
 		(*iter)->Render();
 	}
+
+	CGraphicDev::GetInstance()->SetAlphaEnable(FALSE);
 }
 
 CRenderer* CRenderer::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)

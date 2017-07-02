@@ -54,7 +54,7 @@ INT CEffect::Update(const FLOAT & fTimeDelta)
 {
 	m_fRealTime += fTimeDelta;
 
-	m_iFrame = int((m_fRealTime / m_fLifeTime) *(m_iSizeX * m_iSizeY));
+	m_iFrame = int((m_fRealTime / m_fLifeTime) * (m_iSizeX * m_iSizeY));
 
 	CGameObject::Update(fTimeDelta);
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ALPHA, this);
@@ -65,6 +65,7 @@ INT CEffect::Update(const FLOAT & fTimeDelta)
 
 void CEffect::Render(void)
 {
+	
 	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Effect"));
 
 	ID3D11Buffer* pBaseShaderCB = CGraphicDev::GetInstance()->GetBaseShaderCB();
@@ -94,7 +95,7 @@ void CEffect::Render(void)
 
 	m_pTexture->Render(0, 0);
 	m_pBuffer->Render();
-
+	
 }
 
 void CEffect::Release(void)

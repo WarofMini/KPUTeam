@@ -611,11 +611,13 @@ void CGraphicDev::Release(void)
 	if (Safe_Com_Release(m_pInstShaderCB))
 		MSG_BOX(L"m_pInstShaderCB Release Failed");
 
-	if (Safe_Com_Release(m_pBaseShaderCB))
-		MSG_BOX(L"m_pBaseShaderCB Release Failed");
-
+	
 	if (Safe_Com_Release(m_pSpriteShaderCB))
 		MSG_BOX(L"m_pSpriteShaderCB Release Failed");
+
+
+	if (Safe_Com_Release(m_pBaseShaderCB))
+		MSG_BOX(L"m_pBaseShaderCB Release Failed");
 
 	if (Safe_Com_Release(m_pRenderTargetView))
 		MSG_BOX(L"m_pRenderTargetView Release Failed");

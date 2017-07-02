@@ -244,6 +244,9 @@
     <Filter Include="02.Object\08.UI">
       <UniqueIdentifier>{721468a0-9704-48c0-b03d-c7a460b943e2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\08.UI\00.Aim">
+      <UniqueIdentifier>{5824a860-1eb7-471e-933d-3d8641451909}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -492,6 +495,9 @@
     <ClInclude Include="..\Codes\UI.h">
       <Filter>02.Object\08.UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Aim.h">
+      <Filter>02.Object\08.UI\00.Aim</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -697,6 +703,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\UI.cpp">
       <Filter>02.Object\08.UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Aim.cpp">
+      <Filter>02.Object\08.UI\00.Aim</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -161,6 +161,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Codes\Aim.h" />
     <ClInclude Include="..\Codes\Animation.h" />
     <ClInclude Include="..\Codes\AnimationInfo.h" />
     <ClInclude Include="..\Codes\Camera.h" />
@@ -245,6 +246,7 @@
     <ClInclude Include="WarOfMini.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Codes\Aim.cpp" />
     <ClCompile Include="..\Codes\Animation.cpp" />
     <ClCompile Include="..\Codes\AnimationInfo.cpp" />
     <ClCompile Include="..\Codes\Camera.cpp" />

@@ -7,3 +7,4 @@ GabisconSov-tga-0
 T_tires_C-tga-0
 T_truck_C-tga-0
 Bomb-dds-0
+Aim-png-0

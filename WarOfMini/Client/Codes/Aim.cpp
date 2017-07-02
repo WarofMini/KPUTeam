@@ -1,51 +1,66 @@
 #include "stdafx.h"
-#include "UI.h"
+#include "Aim.h"
 #include "Management.h"
 #include "ResourcesMgr.h"
 #include "ShaderMgr.h"
 #include "GraphicDev.h"
-#include "RcTex.h"
 #include "CameraMgr.h"
 #include "Transform.h"
 
-CUI::CUI(ID3D11DeviceContext * pContext)
-: CGameObject(pContext)
-, m_pBuffer(NULL)
-, m_pTexture(NULL)
-, m_pTransform(NULL)
-, m_fX(0)
-, m_fY(0)
-, m_fSizeX(0)
-, m_fSizeY(0)
-{
-	XMStoreFloat4x4(&m_pProj, XMMatrixIdentity());
-	XMStoreFloat4x4(&m_pView, XMMatrixIdentity());
-}
-
-CUI::~CUI(void)
+CAim::CAim(ID3D11DeviceContext * pContext)
+: CUI(pContext)
 {
 }
 
-HRESULT CUI::Initialize(void)
+CAim::~CAim(void)
+{
+}
+
+CAim * CAim::Create(ID3D11DeviceContext * pContext)
+{
+	CAim* pAim = new CAim(pContext);
+
+	if (FAILED(pAim->Initialize()))
+		Safe_Release(pAim);
+
+	return pAim;
+}
+
+HRESULT CAim::Initialize(void)
 {
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
 
+	m_fX = (WINCX >> 1);
+	m_fY = (WINCY >> 1);
+
+	m_fSizeX = 150;
+	m_fSizeY = 150;
+
+
 	return S_OK;
 }
 
-INT CUI::Update(const FLOAT & fTimeDelta)
+_int CAim::Update(const _float & fTimeDelta)
 {
+	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
+		return 0;
+
 	CGameObject::Update(fTimeDelta);
+
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
-	XMStoreFloat4x4(&m_pProj,   XMMatrixOrthographicLH(_float(WINCX), _float(WINCY), 0.0f, 1.0f));
+	XMStoreFloat4x4(&m_pProj, XMMatrixOrthographicLH(_float(WINCX), _float(WINCY), 0.0f, 1.0f));
+
 
 	return 0;
 }
 
-void CUI::Render(void)
+void CAim::Render(void)
 {
+	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
+		return;
+
 	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Default"));
 
 	ID3D11Buffer* pBaseShaderCB = CGraphicDev::GetInstance()->GetBaseShaderCB();
@@ -80,13 +95,12 @@ void CUI::Render(void)
 	m_pBuffer->Render();
 }
 
-void CUI::Release(void)
+void CAim::Release(void)
 {
-	CGameObject::Release();
-	delete this;
+	CUI::Release();
 }
 
-HRESULT CUI::Ready_Component(void)
+HRESULT CAim::Ready_Component(void)
 {
 	CComponent* pComponent = NULL;
 

@@ -56,7 +56,6 @@ public:
 	_float			GetRealTime(void) { return m_fRealTime; }
 	_float			GetDelayTime(void) { return m_fDelayTime; }
 
-
 };
 
 #endif

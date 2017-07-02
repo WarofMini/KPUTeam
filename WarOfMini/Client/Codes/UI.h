@@ -7,16 +7,13 @@ class CTransform;
 class CTextures;
 class CRcTex;
 
-class CUI
+class CUI abstract
 	: public CGameObject
 {
 
-private:
+protected:
 	explicit CUI(ID3D11DeviceContext* pContext);
 	virtual ~CUI(void);
-
-public:
-	static CUI* Create(ID3D11DeviceContext* pContext);
 
 public:
 	virtual HRESULT	Initialize(void);
@@ -24,18 +21,17 @@ public:
 	virtual void	Render(void);
 	virtual void	Release(void);
 
-private:
+protected:
 	virtual HRESULT Ready_Component(void);
 
-private:
-	CTransform*		m_pTransform;
-	CTextures*		m_pTexture;
-	CRcTex*			m_pBuffer;
+protected:
+	CTransform*				m_pTransform;
+	CTextures*				m_pTexture;
+	CRcTex*					m_pBuffer;
 
-private:
+protected:
 	_float					m_fX, m_fY;
 	_float					m_fSizeX, m_fSizeY;
-
 	XMFLOAT4X4				m_pProj;
 	XMFLOAT4X4				m_pView;
 };
