@@ -56,10 +56,15 @@ typedef struct tagDynamicShader_CB
 
 typedef struct tagTerEffect_CB
 {
-	FLOAT		fRange1;
+	/*FLOAT		fRange1;
 	FLOAT		fRange2;
 	XMVECTOR	vEffectPos1;
-	XMVECTOR	vEffectPos2;
+	XMVECTOR	vEffectPos2;*/
+
+	UINT		iSizeX;
+	UINT		iSizeY;
+	UINT		iFrame;
+	XMVECTOR	vEffectPos;
 
 }TEREFFSHADER_CB;
 

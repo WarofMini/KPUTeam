@@ -44,7 +44,6 @@ public:
 
 private:
 	void Ready_TextureFromFile(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);
-	void Ready_SpriteTextureFromFile(_tchar* strFilePath, ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);
 
 public:
 	void Render_FPS(void);

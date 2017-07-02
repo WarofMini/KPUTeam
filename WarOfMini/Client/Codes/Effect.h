@@ -32,19 +32,30 @@ private:
 	CRcTex*			m_pBuffer;
 
 private:
-	_int			m_iCurrentTextureNumber; //현재 텍스쳐 번호
-	_int			m_iLastTextureNumber; //총 텍스쳐 갯수
-	_float			m_fFrameSpeed;
-
+	_int			m_iFrame; //현재 텍스쳐 번호
+	_int			m_iSizeX; //텍스쳐 가로 길이
+	_int			m_iSizeY; //텍스쳐 세로 길이
+	
+	_float			m_fLifeTime;
+	_float			m_fRealTime;
+	_float			m_fDelayTime;
 
 public:
-	void			SetLastTextureNumber(_int iNumber) { m_iLastTextureNumber = iNumber;}
-	void			SetCurrentTextureNumber(_int iNumber) { m_iCurrentTextureNumber = iNumber; }
-	void			SetFrameSpeed(_float fSpeed) { m_fFrameSpeed = fSpeed; }
+	void			SetFrame(_int iNumber) { m_iFrame = iNumber; }
+	void			SetSizeX(_int iSizeX) { m_iSizeX = iSizeX; }
+	void			SetSizeY(_int iSizeY) { m_iSizeY = iSizeY; }
+	void			SetLifeTime(_float Time) { m_fLifeTime = Time; }
+	void			SetRealTime(_float Time) { m_fRealTime = Time; }
+	void			SetDelayTime(_float Time) { m_fDelayTime = Time; }
 
-	_int			GetCurrentTextureNumber(void) { return m_iCurrentTextureNumber; }
-	_int			GetLastTextureNumber(void) { return m_iLastTextureNumber;  }
-	_float			GetFrameSpeed(void) { return m_fFrameSpeed; }
+
+	_int			GetFrame(void) { return m_iFrame; }
+	_int			GetSizeX(void) { return m_iSizeX; }
+	_int			GetSizeY(void) { return m_iSizeY; }
+	_float			GetLifeTime(void) { return m_fLifeTime; }
+	_float			GetRealTime(void) { return m_fRealTime; }
+	_float			GetDelayTime(void) { return m_fDelayTime; }
+
 
 };
 

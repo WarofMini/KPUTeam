@@ -60,9 +60,6 @@ HRESULT CMainApp::Initialize(void)
 	//텍스쳐 준비, tga, dds 모두 사용가능
 	Ready_TextureFromFile(pGraphicDev, pContext);
 
-	//Sprite를 위한 텍스쳐
-	Ready_SpriteTextureFromFile(L"Explosion/", pGraphicDev, pContext);
-
 	// Buffer
 	CResourcesMgr::GetInstance()->Ready_Buffer(pGraphicDev, pContext, RESOURCE_STAGE, CResourcesMgr::BUFFER_RCTEX, L"Buffer_RcTex");
 	CResourcesMgr::GetInstance()->Ready_Buffer(pGraphicDev, pContext, RESOURCE_STAGE, CResourcesMgr::BUFFER_CUBE, L"Buffer_CubeTex");
@@ -245,59 +242,6 @@ void CMainApp::Ready_TextureFromFile(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 
 	inFile.close();
 }
-
-void CMainApp::Ready_SpriteTextureFromFile(_tchar* strFilePath, ID3D11Device * pGraphicDev, ID3D11DeviceContext * pContext)
-{
-	//텍스쳐이름-확장자-개수(0 단독 텍스쳐, n 여러장 텍스쳐 한번에 로드 시)
-	wstring wstrPath = L"../Bin/Data/SpriteTextureInformation.txt";
-
-	wifstream inFile;
-	inFile.open(wstrPath.c_str(), ios::in);
-
-	_tchar pFileName[MAX_NAME];
-	_tchar pFileType[4];
-	_tchar pFileNum[4];
-
-	while (!inFile.eof())
-	{
-		inFile.getline(pFileName, MAX_NAME, '-');
-		inFile.getline(pFileType, 4, '-');
-		inFile.getline(pFileNum, 4);
-
-		_ushort wTextureCnt = _wtoi(pFileNum);
-
-		wstring wstrTextureKey = L"Texture_";
-		wstrTextureKey += pFileName;
-
-		wstring wstrTexturePath = L"../Bin/Resources/Sprite/";
-
-		wstrTexturePath += strFilePath;
-
-		wstrTexturePath += pFileName;
-		if (wTextureCnt) wstrTexturePath += L"%d.";
-		else wstrTexturePath += L".";
-		wstrTexturePath += pFileType;
-
-		CTextures::TEXTURETYPE eTextureType = CTextures::TYPE_NORMAL;
-
-		if (!lstrcmp(pFileType, L"tga"))
-			eTextureType = CTextures::TYPE_TGA;
-
-		else if (!lstrcmp(pFileType, L"dds"))
-			eTextureType = CTextures::TYPE_DDSCUBE;
-
-		CResourcesMgr::GetInstance()->Ready_Texture(pGraphicDev, pContext, RESOURCE_STAGE, wstrTextureKey.c_str(), eTextureType, wstrTexturePath.c_str(), wTextureCnt);
-	}
-
-	inFile.close();
-
-
-
-
-
-
-}
-
 
 void CMainApp::Render_FPS(void)
 {

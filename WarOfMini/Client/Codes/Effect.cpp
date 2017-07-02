@@ -15,9 +15,13 @@ CEffect::CEffect(ID3D11DeviceContext * pContext)
 , m_pTexture(NULL)
 , m_pTransform(NULL)
 {
-	m_iCurrentTextureNumber = 0;
-	m_iLastTextureNumber = 89;
-	m_fFrameSpeed = 100.f;
+	m_iFrame = 0;
+	m_iSizeX = 4;
+	m_iSizeY = 4;
+
+	m_fLifeTime = 1.f;
+	m_fRealTime = 0.0f;
+	m_fDelayTime = 0.0f;
 }
 
 CEffect::~CEffect(void)
@@ -48,9 +52,9 @@ HRESULT CEffect::Initialize(void)
 
 INT CEffect::Update(const FLOAT & fTimeDelta)
 {
-	m_iCurrentTextureNumber += (fTimeDelta * m_fFrameSpeed);
-	m_iCurrentTextureNumber %= m_iLastTextureNumber;
+	m_fRealTime += fTimeDelta;
 
+	m_iFrame = int((m_fRealTime / m_fLifeTime) *(m_iSizeX * m_iSizeY));
 
 	CGameObject::Update(fTimeDelta);
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ALPHA, this);
@@ -64,6 +68,7 @@ void CEffect::Render(void)
 	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Effect"));
 
 	ID3D11Buffer* pBaseShaderCB = CGraphicDev::GetInstance()->GetBaseShaderCB();
+	ID3D11Buffer* pSpriteShaderCB = CGraphicDev::GetInstance()->GetSpriteShaderCB();
 	ID3D11SamplerState* pBaseSampler = CGraphicDev::GetInstance()->GetBaseSampler();
 
 	BASESHADER_CB tBaseShaderCB;
@@ -73,12 +78,21 @@ void CEffect::Render(void)
 	tBaseShaderCB.matProj = XMMatrixTranspose(XMLoadFloat4x4(CCameraMgr::GetInstance()->Get_CurCameraProj()));
 	m_pContext->UpdateSubresource(pBaseShaderCB, 0, NULL, &tBaseShaderCB, 0, 0);
 
+
+	TEREFFSHADER_CB tSpriteShaderCB;
+
+	tSpriteShaderCB.iSizeX = m_iSizeX;
+	tSpriteShaderCB.iSizeY = m_iSizeY;
+	tSpriteShaderCB.iFrame = m_iFrame;
+	m_pContext->UpdateSubresource(pSpriteShaderCB, 0, NULL, &tSpriteShaderCB, 0, 0);
+
 	m_pContext->VSSetShader(CShaderMgr::GetInstance()->Get_VertexShader(L"Shader_Effect"), NULL, 0);
 	m_pContext->VSSetConstantBuffers(0, 1, &pBaseShaderCB);
+	m_pContext->VSSetConstantBuffers(1, 1, &pSpriteShaderCB);
 	m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_Effect"), NULL, 0);
 	m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
 
-	m_pTexture->Render(0, m_iCurrentTextureNumber);
+	m_pTexture->Render(0, 0);
 	m_pBuffer->Render();
 
 }
@@ -101,7 +115,7 @@ HRESULT CEffect::Ready_Component(void)
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Buffer", pComponent));
 
 	//Texture
-	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, L"Texture_Explosion");
+	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, L"Texture_Bomb");
 	m_pTexture = dynamic_cast<CTextures*>(pComponent);
 	if (pComponent == NULL) return E_FAIL;
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Texture", pComponent));

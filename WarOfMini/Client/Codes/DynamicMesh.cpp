@@ -259,7 +259,7 @@ void CDynaicMesh::RenderInst(const vector<XMFLOAT4X4*>& vecObjWorld)
 	// Instancing
 	for (UINT uiDrawCnt = 0; uiDrawCnt < UINT(vecObjWorld.size() / INSTCNT) + 1; ++uiDrawCnt)
 	{
-	INSTSHADER_CB tInstShaderCB;
+	INSTSHADER_CB	;
 	UINT uiInstSize = vecObjWorld.size() - (uiDrawCnt * INSTCNT);
 
 	if (uiInstSize > INSTCNT)

@@ -8,6 +8,14 @@ cbuffer ConstantBuffer : register(b0)
 	matrix matProj;
 }
 
+
+cbuffer ConstantBuffer : register(b1)
+{
+	int iSizeX;
+	int iSizeY;
+	int iFrame;
+}
+
 struct VS_OUTPUT
 {
 	float4 vPos		: SV_POSITION;
@@ -28,7 +36,14 @@ VS_OUTPUT VS(float4 vPos : POSITION, float2 vTexUV : TEXCOORD0, float3 vNormal :
 
 	output.vProjPos = output.vPos;
 
-	output.vTexUV = vTexUV;
+	int iX = iFrame % iSizeX;
+	int iY = iFrame / iSizeX;
+
+	float fX = vTexUV.x / (float)iSizeX;
+	float fY = vTexUV.y / (float)iSizeY;
+
+	output.vTexUV.x = fX + (1.f / (float)iSizeX * iX);
+	output.vTexUV.y = fY + (1.f / (float)iSizeY * iY);
 
 	return output;
 }

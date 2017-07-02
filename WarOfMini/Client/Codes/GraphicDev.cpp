@@ -18,6 +18,7 @@ CGraphicDev::CGraphicDev(void)
 , m_pBaseShaderCB(NULL)
 , m_pInstShaderCB(NULL)
 , m_pDynamicShaderCB(NULL)
+, m_pSpriteShaderCB(NULL)
 , m_b4xMsaaCheck(true)
 , m_usFPS(0)
 , m_bWireEnable(false)
@@ -342,6 +343,15 @@ HRESULT CGraphicDev::Ready_GraphicDev(HWND hWnd, WINMODE eWinMode, const _ushort
 		return E_FAIL;
 	}
 
+	//스프라이트를 위한 정점버퍼
+	tBufferDesc.ByteWidth = sizeof(TEREFFSHADER_CB);
+
+	if (FAILED(m_pGraphicDev->CreateBuffer(&tBufferDesc, NULL, &m_pSpriteShaderCB)))
+	{
+		MSG_BOX(L"Sprite ConstantBuffer Created Failed");
+		return E_FAIL;
+	}
+
 	// 다이나믹 메시 정점버퍼
 	tBufferDesc.ByteWidth = sizeof(DYNAMICSHADER_CB);
 
@@ -350,7 +360,6 @@ HRESULT CGraphicDev::Ready_GraphicDev(HWND hWnd, WINMODE eWinMode, const _ushort
 		MSG_BOX(L"DynamicMesh ConstantBuffer Created Failed");
 		return E_FAIL;
 	}
-
 
 	//텍스처 렌더링
 	//샘플러 스테이트 오브젝트 설정
@@ -463,6 +472,11 @@ ID3D11Buffer * CGraphicDev::GetInstShaderCB()
 ID3D11Buffer * CGraphicDev::GetDynamicShaderCB()
 {
 	return m_pDynamicShaderCB;
+}
+
+ID3D11Buffer * CGraphicDev::GetSpriteShaderCB()
+{
+	return m_pSpriteShaderCB;
 }
 
 ID3D11SamplerState * CGraphicDev::GetBaseSampler()
@@ -599,6 +613,9 @@ void CGraphicDev::Release(void)
 
 	if (Safe_Com_Release(m_pBaseShaderCB))
 		MSG_BOX(L"m_pBaseShaderCB Release Failed");
+
+	if (Safe_Com_Release(m_pSpriteShaderCB))
+		MSG_BOX(L"m_pSpriteShaderCB Release Failed");
 
 	if (Safe_Com_Release(m_pRenderTargetView))
 		MSG_BOX(L"m_pRenderTargetView Release Failed");
