@@ -247,6 +247,18 @@
     <Filter Include="02.Object\08.UI\00.Aim">
       <UniqueIdentifier>{5824a860-1eb7-471e-933d-3d8641451909}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\07.Effect\00.Bomb">
+      <UniqueIdentifier>{d580296d-bea1-4959-9dad-9517d2276c8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\01.Numbering">
+      <UniqueIdentifier>{7497b92b-50d8-4dae-bb81-eaa97d26c74d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\02.BulletNumbering">
+      <UniqueIdentifier>{c1913e1c-0010-4b7f-987b-4e83a4667df3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\03.DefaultUI">
+      <UniqueIdentifier>{d4ce6522-fb5c-4a9c-9403-ccc74d86978e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -498,6 +510,18 @@
     <ClInclude Include="..\Codes\Aim.h">
       <Filter>02.Object\08.UI\00.Aim</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Bomb.h">
+      <Filter>02.Object\07.Effect\00.Bomb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Numbering.h">
+      <Filter>02.Object\08.UI\01.Numbering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\BulletNumbering.h">
+      <Filter>02.Object\08.UI\02.BulletNumbering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\DefaultUI.h">
+      <Filter>02.Object\08.UI\03.DefaultUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -706,6 +730,18 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Aim.cpp">
       <Filter>02.Object\08.UI\00.Aim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Bomb.cpp">
+      <Filter>02.Object\07.Effect\00.Bomb</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Numbering.cpp">
+      <Filter>02.Object\08.UI\01.Numbering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\BulletNumbering.cpp">
+      <Filter>02.Object\08.UI\02.BulletNumbering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\DefaultUI.cpp">
+      <Filter>02.Object\08.UI\03.DefaultUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

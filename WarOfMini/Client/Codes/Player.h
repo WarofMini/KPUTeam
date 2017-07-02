@@ -127,9 +127,13 @@ public:
 	void	SetPosition(XMFLOAT3 vPosition);
 	void	SetRotate(XMFLOAT3 vRot);
 	void	PhysXUpdate(const FLOAT& fTimeDelta);
+	
+	CGun*	GetEquipment(void) { return m_pEquipment[0]; }
 
 	//test
 	void			SetHP(void) { --m_iHP; }
+
+
 };
 
 #endif //

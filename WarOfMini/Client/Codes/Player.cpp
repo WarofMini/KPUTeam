@@ -151,7 +151,6 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 	// Update
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
 
-
 	UpdateDir();
 
 	Update_Equipment(fTimeDelta);

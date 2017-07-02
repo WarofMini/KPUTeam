@@ -35,6 +35,11 @@ private:
 	ID3D11Device*	m_pGraphicDev;
 	float			m_fScale;
 	_uint			m_iAmmo;
+	_uint			m_iOriginAmmo;
+
+public:
+	_uint*			GetAmmo(void) { return &m_iAmmo; }
+	_uint*			GetOriginAmmo(void) { return &m_iOriginAmmo; }
 
 
 };

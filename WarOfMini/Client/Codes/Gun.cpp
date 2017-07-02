@@ -9,6 +9,7 @@ CGun::CGun(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
 , m_pGraphicDev(pGraphicDev)
 , m_fScale(0.4f)
 , m_iAmmo(60)
+, m_iOriginAmmo(m_iAmmo)
 {
 }
 

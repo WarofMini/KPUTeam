@@ -35,6 +35,8 @@ public:
 
 	HRESULT	 InitPhysicsObject(void);
 
+	HRESULT  InitUIObject(void);
+
 private:
 	bool	m_bEnterGame;
 };

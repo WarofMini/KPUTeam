@@ -164,11 +164,14 @@
     <ClInclude Include="..\Codes\Aim.h" />
     <ClInclude Include="..\Codes\Animation.h" />
     <ClInclude Include="..\Codes\AnimationInfo.h" />
+    <ClInclude Include="..\Codes\Bomb.h" />
+    <ClInclude Include="..\Codes\BulletNumbering.h" />
     <ClInclude Include="..\Codes\Camera.h" />
     <ClInclude Include="..\Codes\CameraMgr.h" />
     <ClInclude Include="..\Codes\Component.h" />
     <ClInclude Include="..\Codes\CubeTex.h" />
     <ClInclude Include="..\Codes\DefaultObject.h" />
+    <ClInclude Include="..\Codes\DefaultUI.h" />
     <ClInclude Include="..\Codes\DynamicCamera.h" />
     <ClInclude Include="..\Codes\DynamicMesh.h" />
     <ClInclude Include="..\Codes\DynamicObject.h" />
@@ -192,6 +195,7 @@
     <ClInclude Include="..\Codes\Management.h" />
     <ClInclude Include="..\Codes\Mesh.h" />
     <ClInclude Include="..\Codes\MeshMgr.h" />
+    <ClInclude Include="..\Codes\Numbering.h" />
     <ClInclude Include="..\Codes\OtherPlayer.h" />
     <ClInclude Include="..\Codes\PhysicsDoor.h" />
     <ClInclude Include="..\Codes\PhysicsObect.h" />
@@ -249,11 +253,14 @@
     <ClCompile Include="..\Codes\Aim.cpp" />
     <ClCompile Include="..\Codes\Animation.cpp" />
     <ClCompile Include="..\Codes\AnimationInfo.cpp" />
+    <ClCompile Include="..\Codes\Bomb.cpp" />
+    <ClCompile Include="..\Codes\BulletNumbering.cpp" />
     <ClCompile Include="..\Codes\Camera.cpp" />
     <ClCompile Include="..\Codes\CameraMgr.cpp" />
     <ClCompile Include="..\Codes\Component.cpp" />
     <ClCompile Include="..\Codes\CubeTex.cpp" />
     <ClCompile Include="..\Codes\DefaultObject.cpp" />
+    <ClCompile Include="..\Codes\DefaultUI.cpp" />
     <ClCompile Include="..\Codes\DynamicCamera.cpp" />
     <ClCompile Include="..\Codes\DynamicMesh.cpp" />
     <ClCompile Include="..\Codes\DynamicObject.cpp" />
@@ -277,6 +284,7 @@
     <ClCompile Include="..\Codes\Management.cpp" />
     <ClCompile Include="..\Codes\Mesh.cpp" />
     <ClCompile Include="..\Codes\MeshMgr.cpp" />
+    <ClCompile Include="..\Codes\Numbering.cpp" />
     <ClCompile Include="..\Codes\OtherPlayer.cpp" />
     <ClCompile Include="..\Codes\PhysicsDoor.cpp" />
     <ClCompile Include="..\Codes\PhysicsObject.cpp" />

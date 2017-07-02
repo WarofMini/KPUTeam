@@ -7,15 +7,12 @@ class CTextures;
 class CTransform;
 class CRcTex;
 
-class CEffect
+class CEffect abstract
 	: public CGameObject
 {
-private:
+protected:
 	explicit CEffect(ID3D11DeviceContext* pContext);
 	virtual ~CEffect(void);
-
-public:
-	static CEffect* Create(ID3D11DeviceContext* pContext);
 
 public:
 	virtual HRESULT	Initialize(void);
@@ -23,15 +20,15 @@ public:
 	virtual void	Render(void);
 	virtual void	Release(void);
 
-private:
+protected:
 	virtual HRESULT Ready_Component(void);
 
-private:
+protected:
 	CTransform*		m_pTransform;
 	CTextures*		m_pTexture;
 	CRcTex*			m_pBuffer;
 
-private:
+protected:
 	_int			m_iFrame; //현재 텍스쳐 번호
 	_int			m_iSizeX; //텍스쳐 가로 길이
 	_int			m_iSizeY; //텍스쳐 세로 길이

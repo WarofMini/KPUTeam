@@ -14,6 +14,9 @@
 #include "PhysicsDoor.h"
 #include "Effect.h"
 #include "Aim.h"
+#include "Bomb.h"
+#include "BulletNumbering.h"
+#include "DefaultUI.h"
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 : CScene(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking)
@@ -43,6 +46,7 @@ HRESULT CStage::Ready_Scene(void)
 {
 	m_pPxMaterial = m_pPxPhysicsSDK->createMaterial(0.9f, 0.9f, 0.001f);
 
+
 	if (FAILED(Ready_GameLogic()))		return E_FAIL;
 	if (FAILED(Ready_Environment()))	return E_FAIL;
 
@@ -50,6 +54,7 @@ HRESULT CStage::Ready_Scene(void)
 	InitToiletFloor();
 	LoadStageMap();
 	InitPhysicsObject();
+	InitUIObject();
 
 	return S_OK;
 }
@@ -104,19 +109,11 @@ HRESULT CStage::Ready_GameLogic(void)
 
 
 	//Effect	
-	
-	pGameObject = CEffect::Create(m_pContext);
-
+	pGameObject = CBomb::Create(m_pContext);
 	if (NULL == pGameObject)
 		return E_FAIL;
 	pLayer->Ready_Object(L"Effect", pGameObject);
 	
-
-	//UI
-	pGameObject = CAim::Create(m_pContext);
-	if (NULL == pGameObject)
-		return E_FAIL;
-	pLayer->Ready_Object(L"Aim", pGameObject);
 	
 
 	/*
@@ -618,6 +615,77 @@ HRESULT CStage::InitPhysicsObject(void)
 
 	pLayer->Ready_Object(L"PhysicsDoor", pDoorObject);
 
+
+	return S_OK;
+}
+
+HRESULT CStage::InitUIObject(void)
+{
+	CLayer* pLayer = FindLayer(L"Layer_GameLogic");
+
+	CGameObject* pGameObject = NULL;
+
+	//UI
+	pGameObject = CAim::Create(m_pContext);
+	if (NULL == pGameObject)
+		return E_FAIL;
+	pLayer->Ready_Object(L"UI", pGameObject);
+
+
+	//BulletNumber
+	pGameObject = CBulletNumbering::Create(m_pContext);
+	if (NULL == pGameObject)
+		return E_FAIL;
+
+	((CBulletNumbering*)pGameObject)->SetNumberSize(80.f, 80.f);
+	((CBulletNumbering*)pGameObject)->SetNumberPosition(400.f, 400.f);
+	((CBulletNumbering*)pGameObject)->ComputeFXFY();
+	((CBulletNumbering*)pGameObject)->SetState(CBulletNumbering::CHANGE_BULLETNUMBER);
+
+	list<CGameObject*>* pObjList =  pLayer->Find_ObjectList(L"Player");
+
+	CGun* m_pGun = ((CPlayer*)(*pObjList->begin()))->GetEquipment();
+
+	if (m_pGun != NULL)
+	{
+		((CBulletNumbering*)pGameObject)->SetGun(m_pGun);
+	}
+
+	pLayer->Ready_Object(L"UI", pGameObject);
+
+
+	
+	//BulletNumber
+	pGameObject = CBulletNumbering::Create(m_pContext);
+	if (NULL == pGameObject)
+		return E_FAIL;
+
+	((CBulletNumbering*)pGameObject)->SetNumberSize(80.f, 80.f);
+	((CBulletNumbering*)pGameObject)->SetNumberPosition(655.f, 400.f);
+	((CBulletNumbering*)pGameObject)->ComputeFXFY();
+	((CBulletNumbering*)pGameObject)->SetState(CBulletNumbering::ORIGIN_BULLETNUMBER);
+
+	if (m_pGun != NULL)
+	{
+		((CBulletNumbering*)pGameObject)->SetGun(m_pGun);
+	}
+
+	pLayer->Ready_Object(L"UI", pGameObject);
+
+
+	//Slash
+	pGameObject = CDefaultUI::Create(m_pContext, L"Texture_Slash");
+	if (NULL == pGameObject)
+		return E_FAIL;
+
+	((CUI*)pGameObject)->SetSizeX(100);
+	((CUI*)pGameObject)->SetSizeY(80);
+	((CUI*)pGameObject)->SetMoveX(567.f);
+	((CUI*)pGameObject)->SetMoveY(400.f);
+	((CUI*)pGameObject)->ComputeFXFY();
+
+	pLayer->Ready_Object(L"UI", pGameObject);
+	
 
 	return S_OK;
 }

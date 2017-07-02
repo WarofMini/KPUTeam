@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Aim.h"
+#include "DefaultUI.h"
 #include "Management.h"
 #include "ResourcesMgr.h"
 #include "ShaderMgr.h"
@@ -7,43 +7,40 @@
 #include "CameraMgr.h"
 #include "Transform.h"
 
-CAim::CAim(ID3D11DeviceContext * pContext)
+
+CDefaultUI::CDefaultUI(ID3D11DeviceContext * pContext)
 : CUI(pContext)
 {
 }
 
-CAim::~CAim(void)
+CDefaultUI::~CDefaultUI(void)
 {
 }
 
-CAim * CAim::Create(ID3D11DeviceContext * pContext)
+CDefaultUI* CDefaultUI::Create(ID3D11DeviceContext * pContext, wstring strName)
 {
-	CAim* pAim = new CAim(pContext);
+	CDefaultUI* pUI = new CDefaultUI(pContext);
 
-	if (FAILED(pAim->Initialize()))
-		Safe_Release(pAim);
+	pUI->SetName(strName);
 
-	return pAim;
+	if (FAILED(pUI->Initialize()))
+		Safe_Release(pUI);
+
+	return pUI;
 }
 
-HRESULT CAim::Initialize(void)
+HRESULT CDefaultUI::Initialize(void)
 {
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
 
-	m_fX = (WINCX >> 1);
-	m_fY = (WINCY >> 1);
-
-	m_fSizeX = 150;
-	m_fSizeY = 150;
-
-	m_fOriginSizeX = 150;
-	m_fOriginSizeY = 150;
+	m_fX = (WINCX >> 1) + m_fMoveX;
+	m_fY = (WINCY >> 1) + m_fMoveY;
 
 	return S_OK;
 }
 
-_int CAim::Update(const _float & fTimeDelta)
+_int CDefaultUI::Update(const _float & fTimeDelta)
 {
 	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
 		return 0;
@@ -54,11 +51,10 @@ _int CAim::Update(const _float & fTimeDelta)
 
 	XMStoreFloat4x4(&m_pProj, XMMatrixOrthographicLH(_float(WINCX), _float(WINCY), 0.0f, 1.0f));
 
-
 	return 0;
 }
 
-void CAim::Render(void)
+void CDefaultUI::Render(void)
 {
 	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
 		return;
@@ -75,8 +71,8 @@ void CAim::Render(void)
 
 	ComputeChangeWindowSize();
 
-	m_fX = (WINCX >> 1);
-	m_fY = (WINCY >> 1);
+	m_fX = (WINCX >> 1) + m_fMoveX;
+	m_fY = (WINCY >> 1) + m_fMoveY;
 
 	m_matWorld._11 = m_fSizeX;
 	m_matWorld._22 = m_fSizeY;
@@ -95,16 +91,16 @@ void CAim::Render(void)
 	m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_Default"), NULL, 0);
 	m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
 
-	m_pTexture->Render(0, 0);
+	m_pTexture->Render(0, m_iTextureNumber);
 	m_pBuffer->Render();
 }
 
-void CAim::Release(void)
+void CDefaultUI::Release(void)
 {
 	CUI::Release();
 }
 
-HRESULT CAim::Ready_Component(void)
+HRESULT CDefaultUI::Ready_Component(void)
 {
 	CComponent* pComponent = NULL;
 
@@ -115,7 +111,7 @@ HRESULT CAim::Ready_Component(void)
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Buffer", pComponent));
 
 	//Texture
-	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, L"Texture_Aim");
+	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, m_strName.c_str());
 	m_pTexture = dynamic_cast<CTextures*>(pComponent);
 	if (pComponent == NULL) return E_FAIL;
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Texture", pComponent));

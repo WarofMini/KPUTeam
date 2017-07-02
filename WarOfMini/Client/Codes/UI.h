@@ -34,6 +34,33 @@ protected:
 	_float					m_fSizeX, m_fSizeY;
 	XMFLOAT4X4				m_pProj;
 	XMFLOAT4X4				m_pView;
+
+	_float					m_fMoveX;
+	_float					m_fMoveY;
+
+
+	_float					m_fOriginMoveX, m_fOriginMoveY;
+	_float					m_fOriginSizeX, m_fOriginSizeY;
+
+public:
+	void					SetfX(_float fX) { m_fX = fX; }
+	void					SetfY(_float fY) { m_fY = fY; }
+	void					SetSizeX(_float fSizeX) { m_fOriginSizeX = fSizeX;   m_fSizeX = fSizeX; }
+	void					SetSizeY(_float fSizeY) { m_fOriginSizeY = fSizeY;	 m_fSizeY = fSizeY; }
+	void					SetMoveX(_float fMoveX) { m_fOriginMoveX = fMoveX;   m_fMoveX = fMoveX; }
+	void					SetMoveY(_float fMoveY) { m_fOriginMoveY = fMoveY;   m_fMoveY = fMoveY; }
+
+
+	_float					GetfX(void) { return m_fX; }
+	_float					GetfY(void) { return m_fY; }
+	_float					GetSizeX(void) { return m_fSizeX; }
+	_float					GetSizeY(void) { return m_fSizeY; }
+	_float					GetMoveX(void) { return m_fMoveX; }
+	_float					GetMoveY(void) { return m_fMoveY; }
+
+	void					ComputeFXFY(void);
+
+	void					ComputeChangeWindowSize(void);
 };
 
 #endif
