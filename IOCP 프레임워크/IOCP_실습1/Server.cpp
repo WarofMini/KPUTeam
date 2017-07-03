@@ -2,6 +2,8 @@
 
 
 CServer::CServer()
+	:starttime(0.f)
+	, m_bReady(false)
 {
 	ServerIpAddress();
 	CheckCPUCoreCount();
@@ -60,6 +62,24 @@ void CServer::ServerIpAddress(void)
 
 }
 
+void CServer::Process_Event(event_type ev_Now)
+{
+	switch (ev_Now.do_event)
+	{
+	case EV_GAMECOUNT:
+	{
+		Overlap_ex* over = new Overlap_ex;
+		over->operation_type = OP_TIME;
+		PostQueuedCompletionStatus(g_hIocp, 1, ev_Now.obj_id, &(over->Original_Overlap));
+		break;
+	}
+	default:
+		break;
+	}
+	
+
+}
+
 void CServer::Initialize(void)
 {
 	startTime = 0.f;
@@ -95,7 +115,7 @@ void CServer::MakeWorkerThread_AcceptThread()
 
 	thread acceptThread{ &CServer::Accept_thread, this };
 
-	//thread timer_thread{ &CServer::Timer_Thread, this };
+	thread timer_thread{ &CServer::Timer_Thread, this };
 
 	while (g_bShoutdown)
 	{
@@ -187,33 +207,29 @@ void CServer::Accept_thread()
 		PlayerTemp.size = sizeof(Ser_PLAYER_DATA);
 		PlayerTemp.type = INIT_CLIENT;
 		PlayerTemp.vPos = XMFLOAT3(20.f * User->id, 0.f, 0.f);
-		PlayerTemp.vMoveDir = XMFLOAT3(0.f, 0.f, 0.f);
-		PlayerTemp.dwState = SOLDIER_IDLE;
+		PlayerTemp.vDir = XMFLOAT3(0.f, 0.f, 0.f);
+		//PlayerTemp.dwState = SOLDIER_IDLE;
 		
 		m_vecPlayer.push_back(PlayerTemp);
 
 		// 그리고 여기서 이제 전체 클라이언트 관리하는 녀석으로 값을 넣어주잖아.ㅇㅇ
 		m_Client.push_back(move(User));
 
-		// 바로 여기지아니면 여기나 여기도 괜찮고 여기다 해도 상관없지
-		// 왜냐하면? 어차피 데이터를 보내는데는 단 2가지만 필요하거든, 클라이언트의 소켓 주소랑
-		// 패킷을 보낼 데이터
-		// 하지만 요 쯤이 적절해 보이는군
-		// 그냥 안정적으로 클라이언트까지 넣어주고
-		// 바로 패킷보내주는 작업을 하는게 그냥 내 기분에 좋으니까
-		// 나도 여기라 생각했는데 밑에 Recv는 하고 받야아할것같아서 그밑에다 할려그랬는데...ㅅㅂ
 
 		SendPacket(PlayerTemp.ID, reinterpret_cast<Packet*>(&PlayerTemp));
 
-		
-		/*if (playerIndex >= 1)
+		if (playerIndex <= 1)
 		{
 			m_bReady = true;
+			m_state.gamestate = START;
 		}
-		else
-		{
-			m_bReady = false;
-		}*/
+		
+		//플레이어가 2명이상 입장 하게되면 시간이 가게 하자.
+		//int TimeInteeger = GetTickCount() + 1000;
+		//if (playerIndex >= 1)
+		//{
+		//	//timer_queue.push(event_type{ User->id, m_state
+		//}
 		
 
 		DWORD flags{ 0 };
@@ -329,7 +345,7 @@ void CServer::Worker_thread()
 		//else if (overlap->operation_type == OP_TIME)
 		//{
 		//	//Do_Timer(key);
-		//	//Add_Timer(key, OP_TIME, 1000);
+		//	Add_Timer(key, OP_TIME, 1000);
 		//	delete overlap;
 		//}
 	
@@ -345,73 +361,77 @@ void CServer::Worker_thread()
 
 
 }
-//void CServer::Timer_Thread()
-//{
-//	while (1)
-//	{
-//		if (m_bReady)
-//		{
-//			for (int i = 2; i > 0; ++i)
-//			{
-//				CTimer::TimerCount(1.f);
-//				if (i == 1 - 1)
-//				{
-//					m_bReady = false;
-//					startTime = CTimer::SetTime();
-//					cout << "Complete Time !! " << endl;
-//
-//				}
-//				//모든 유저들에게 시간값을 알려주자.
-//				/*for (int p = 0; p < MAX_USER; ++p)
-//				{
-//					SendPacket(p, &)
-//				}*/
-//				//cout << "Timer : " << CTimer::SetTime() << endl;
-//			}
-//		}
-//		else
-//		{
-//			Sleep(1);
-//			timer_lock.lock();
-//			while (false == timer_queue.empty())
-//			{
-//				
-//				if (timer_queue.top().wakeup_time > GetTickCount())
-//					break;
-//				event_type ev = timer_queue.top();
-//				timer_queue.pop();
-//				timer_lock.unlock();
-//				Overlap_ex* over = new Overlap_ex;
-//				over->operation_type = ev.event_id;
-//				PostQueuedCompletionStatus(g_hIocp, 1, ev.obj_id, &(over->Original_Overlap));
-//				timer_lock.lock();
-//			
-//			}
-//			timer_lock.unlock();
-//
-//		}
-//
-//	}
-//	CTimer::TimerCount(0.03f);
-//
-//
-//}
-//void CServer::Add_Timer(int id, int do_event, int wakeup)
-//{
-//	event_type new_event;
-//	new_event.do_event = do_event;
-//	new_event.obj_id = id;
-//	new_event.wakeup_time = wakeup + GetTickCount();
-//
-//	EnterCriticalSection(&cs);
-//	timer_queue.push(new_event);
-//	//cout << "Timer : " << new_event.wakeup_time << endl;
-//	LeaveCriticalSection(&cs);
-//
-//	/*timer_lock.lock();
-//	timer_queue.push(event_type{ i, GetTickCount() + 1000, OP_TIME });
-//	timer_lock.unlock();*/
-//}
+void CServer::Timer_Thread()
+{
+	while (1)
+	{
+		if (m_bReady)
+		{
+			for (int i = 2; i > 0; --i)
+			{
+				CTimer::TimerCount(1.f);
+				if (i == 1)
+				{
+					m_state.gamestate = START;
+					m_bReady = false;
+					startTime = CTimer::SetTime();
+					cout << "Timer Start !! " << endl;
+
+				}
+				//모든 유저들에게 시간값을 알려주자.
+				for (int p = 0; p < MAX_USER; ++p)
+				{
+					SendPacket(p, reinterpret_cast<Packet*>(&m_state));
+				}
+				cout << "Timer : " << CTimer::SetTime() << endl;
+			}
+		}
+		else
+		{
+			Sleep(1);
+			timer_lock.lock();
+			while (topEv.wakeup_time <= GetTickCount())
+			{
+				timer_lock.unlock();
+				timer_queue.pop();
+				timer_lock.lock();
+				Process_Event(topEv);
+				if (timer_queue.size() == 0)
+					break;
+				else
+				{
+					timer_lock.unlock();
+					topEv = timer_queue.top();
+					timer_lock.lock();
+				}
+			}
+			//timer_lock.unlock();
+
+		}
+
+	}
+	CTimer::TimerCount(0.03f);
+	
+
+
+
+}
+void CServer::Add_Timer(int id, int do_event, int wakeup)
+{
+	event_type new_event;
+	new_event.do_event = do_event;
+	new_event.obj_id = id;
+	new_event.wakeup_time = wakeup + GetTickCount();
+
+	EnterCriticalSection(&cs);
+	timer_queue.push(new_event);
+	//cout << "Timer : " << new_event.wakeup_time << endl;
+	LeaveCriticalSection(&cs);
+
+	//timer_lock.lock();
+	//timer_queue.push(event_type{ id, GetTickCount() + 1000, OP_TIME });
+	//timer_lock.unlock();
+}
 void CServer::SendRemovePlayerPacket(DWORD dwKey)
 {
 	Ser_Packet_Remove_Player packet;
@@ -431,6 +451,16 @@ void CServer::SendRemovePlayerPacket(DWORD dwKey)
 		}
 		SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&packet));
 	}
+}
+void CServer::SCSendCount()
+{
+	Ser_Time_DATA Time;
+	Time.size = sizeof(Ser_Time_DATA);
+	Time.time = CTimer::GetTime(starttime);
+
+	for (int i = 0; i < playerIndex; ++i)
+		SendPacket(i, reinterpret_cast<Packet*>(&Time));
+
 }
 void CServer::SendPacket(unsigned int id, const Packet* packet)
 {	
@@ -509,6 +539,9 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 						continue;
 					m_vecPlayer[vecID[j]].type = INIT_CLIENT;
 					SendPacket(strPlayerData.ID, reinterpret_cast<Packet*>(&m_vecPlayer[vecID[j]]));
+
+					if (START == m_state.gamestate)
+						SCSendCount();
 				}
 			}
 			else
@@ -580,10 +613,10 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 		{
 			if (m_vecPlayer[vecID[i]].ID == strPlayerData.ID)
 			{
-				m_vecPlayer[vecID[i]].vAngle = strPlayerData.vAngle;
+				//m_vecPlayer[vecID[i]].vAngle = strPlayerData.vAngle;
 				m_vecPlayer[vecID[i]].vPos = strPlayerData.vPos;
-				m_vecPlayer[vecID[i]].vMoveDir = strPlayerData.vMoveDir;
-				m_vecPlayer[vecID[i]].dwState = strPlayerData.dwState;
+				m_vecPlayer[vecID[i]].vDir = strPlayerData.vDir;
+				//m_vecPlayer[vecID[i]].dwState = strPlayerData.dwState;
 			}
 			else
 			{
