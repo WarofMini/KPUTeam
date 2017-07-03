@@ -1,36 +1,63 @@
 #pragma once
+#pragma comment(lib, "ws2_32")
+#include <Winsock2.h>
+#include <Windows.h>
+#include <iostream>
+#include <thread>
+#include <vector>
+#include <D3DX10math.h>
+#include <cstdlib>
+#include <xnamath.h>
+#include <list>
+#include <mutex>
+#include <queue>
 
 
-#define SERVERPORT 9000
 
+
+using namespace std;
 
 // packet[1] operation
 #define DISCONNECTED 0
 
-using namespace std;
-
 #define SERVER_PORT	9000
 #define SERVER_IP "127,0,0,1"
-#define MAX_BUF_SIZE 256
+
+#define MAX_BUFFER_SIZE	4000
 #define MAX_PACKET_SIZE 255
 
 #define MAX_USER 10
 
 #define OP_RECV 1
 #define OP_SEND 2
+#define OP_TIME 3;
 
 
-//const DWORD KEY_UP = 0x00000000;
-//const DWORD KEY_DOWN = 0x00000001;
-//const DWORD KEY_LEFT = 0x00000002;
-//const DWORD KEY_RIGHT = 0x00000004;
+
+// Timer Event Define !
+
+#define EV_GAMECOUNT 0
+#define EV_SUDDENDETH 1
+#define EV_GAMEEXITCOUNT 2
+//#define EV_GAMECOUNT 3
+//#define EV_GAMECOUNT 4
+//#define EV_GAMECOUNT 5
+
+
+// Game State !
+
+#define LOGO					0
+#define READY					1
+#define START					2
+#define END						3
+
 
 struct Overlap_ex
 {
 	WSAOVERLAPPED Original_Overlap;
 	int operation_type;
 	WSABUF wsabuf;
-	unsigned char IOCPbuf[MAX_BUF_SIZE]; // 바로 요 버퍼를 잡아준거야. -> 이 버퍼로 모든 클라이언트 패킷이 담기도록 공간을 잡기위해 패킷이 여러개 있는고야
+	unsigned char IOCPbuf[MAX_BUFFER_SIZE]; // 바로 요 버퍼를 잡아준거야. -> 이 버퍼로 모든 클라이언트 패킷이 담기도록 공간을 잡기위해 패킷이 여러개 있는고야
 };
 
 struct PLAYER_INFO
@@ -72,7 +99,7 @@ struct Ser_ANIMATION_DATA
 	int ID;	// 이게 클라이언트에게 줄 id 값이야
 	bool bImmediate;
 	DWORD dwAniIdx;
-	bool bIsSoldier;//군바리변신
+	bool bIsSoldier;
 };
 
 struct Ser_COLLLAY_DATA
@@ -80,6 +107,11 @@ struct Ser_COLLLAY_DATA
 	BYTE size;	// 이게 전체 size 이고
 	BYTE type;	// 너가 말한 서버의 buf[1] 이 요거고 -> 아까 process packet 에서 구분한 이벤트는 요 type 인거야.
 	int ID;	// 이게 클라이언트에게 줄 id 값이야
+};
+struct Ser_Time_DATA {
+	BYTE size;
+	BYTE type;
+	float time;						//시간 float값
 };
 
 struct Ser_Packet_Remove_Player
@@ -89,8 +121,30 @@ struct Ser_Packet_Remove_Player
 	WORD id;
 	Ser_PLAYER_DATA vecPlayerData[10];
 };
-//클라에서 보내온 정보들을 담아서 프로토콜로 뿌려주기 ?
 
+struct Ser_STATE_DATA {				// 게임 전체 상태
+	BYTE size;
+	BYTE type;						// 1
+	BYTE gamestate;					// 0, 1, 2, 3
+	BYTE timecount;					// 4, 3, 2, 1, 
+};
+////////////////////////////////////////////////타이머
+
+struct event_type {
+	int obj_id;
+	int do_event;
+	unsigned int wakeup_time;
+	int event_id;
+};
+
+class mycomp
+{
+public:
+	bool operator() (const event_type lhs, const event_type rhs) const
+	{
+		return (lhs.wakeup_time > rhs.wakeup_time);
+	}
+};
 
 
 
@@ -112,13 +166,6 @@ enum ProcessPacket
 	COLLISION_LAY,
 	PLAYER_DISCONNECTED, // 연결이 끊기면 삭제시켜주자.
 	SEND_POSITION,
-};
-
-struct Packet_remove_Player
-{
-	BYTE size;
-	BYTE type;
-	WORD id;
 };
 
 
