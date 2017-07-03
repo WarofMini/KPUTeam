@@ -30,27 +30,13 @@ using namespace std;
 
 #define OP_RECV 1
 #define OP_SEND 2
-#define OP_TIME 3;
+#define OP_TIME 3
 
 
-
-// Timer Event Define !
-
-#define EV_GAMECOUNT 0
-#define EV_SUDDENDETH 1
-#define EV_GAMEEXITCOUNT 2
-//#define EV_GAMECOUNT 3
-//#define EV_GAMECOUNT 4
-//#define EV_GAMECOUNT 5
-
-
-// Game State !
-
-#define LOGO					0
-#define READY					1
-#define START					2
-#define END						3
-
+//const DWORD KEY_UP		= 0x00000000;
+//const DWORD KEY_DOWN	= 0x00000001;
+//const DWORD KEY_LEFT	= 0x00000002;
+//const DWORD KEY_RIGHT	= 0x00000004;
 
 struct Overlap_ex
 {
@@ -80,7 +66,10 @@ struct Ser_PLAYER_DATA
 	BYTE type;	// 너가 말한 서버의 buf[1] 이 요거고 -> 아까 process packet 에서 구분한 이벤트는 요 type 인거야.
 	int ID;	// 이게 클라이언트에게 줄 id 값이야
 	XMFLOAT3 vPos;
-	XMFLOAT3 vDir;
+	XMFLOAT3 vAngle;
+
+	XMFLOAT3 vMoveDir;
+	DWORD dwState;
 };
 
 struct Ser_Vec_PLAYER_DATA
@@ -108,26 +97,15 @@ struct Ser_COLLLAY_DATA
 	BYTE type;	// 너가 말한 서버의 buf[1] 이 요거고 -> 아까 process packet 에서 구분한 이벤트는 요 type 인거야.
 	int ID;	// 이게 클라이언트에게 줄 id 값이야
 };
-struct Ser_Time_DATA {
-	BYTE size;
-	BYTE type;
-	float time;						//시간 float값
-};
 
 struct Ser_Packet_Remove_Player
 {
 	BYTE size;
 	BYTE type;
 	WORD id;
-	Ser_PLAYER_DATA vecPlayerData[10];
 };
+//클라에서 보내온 정보들을 담아서 프로토콜로 뿌려주기 ?
 
-struct Ser_STATE_DATA {				// 게임 전체 상태
-	BYTE size;
-	BYTE type;						// 1
-	BYTE gamestate;					// 0, 1, 2, 3
-	BYTE timecount;					// 4, 3, 2, 1, 
-};
 ////////////////////////////////////////////////타이머
 
 struct event_type {
@@ -168,5 +146,11 @@ enum ProcessPacket
 	SEND_POSITION,
 };
 
+struct Packet_remove_Player
+{
+	BYTE size;
+	BYTE type;
+	WORD id;
+};
 
 using Packet = unsigned char;

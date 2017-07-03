@@ -18,14 +18,10 @@ private:
 	int iCpuCore;
 	unsigned int playerIndex{ UINT_MAX };
 
-	bool m_bReady;
+	bool m_bReady = false;
 	CRITICAL_SECTION cs;
 	float startTime;
 
-	event_type topEv;
-	Ser_STATE_DATA		m_state;	//게임 전체 상태 데이터.
-	float starttime;
-	
 	//DWORD KeyValue;
 	//CPlayer*	m_pPlayer;
 
@@ -38,16 +34,16 @@ public:
 	void MakeWorkerThread_AcceptThread();
 	void Accept_thread();
 	void Worker_thread();
-	void Timer_Thread();
-	void Add_Timer(int id, int do_event, int wakeup);
-	
+	//void Timer_Thread();
+	//void Add_Timer(int id, int do_event, int wakeup);
+
 	void SendRemovePlayerPacket(DWORD dwKey);
-	void SCSendCount();	//클라에게서 시간을 계속 보내주자.
-	void Process_Event(event_type ev_Now);
+
+
 	void Initialize(void);
 	void SendPacket(unsigned int id, const Packet* packet);
 	void ProcessPacket(const Packet* buf, const unsigned int& id);
-	
+
 private:
 	vector<Ser_PLAYER_DATA> m_vecPlayer;
 
