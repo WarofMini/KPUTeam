@@ -13,15 +13,18 @@ cbuffer ConstantBuffer : register(b1)
 {
 	int   iSizeX;
 	int   iSizeY;
-	int	  iFrame;
+	int   iFrame;
 	float fAlpha;
 }
+
+
 
 struct VS_OUTPUT
 {
 	float4 vPos		: SV_POSITION;
 	float2 vTexUV	: TEXCOORD0;
 	float4 vProjPos : TEXCOORD1;
+	float fShade : COLOR0;
 };
 
 //--------------------------------------------------------------------------------------
@@ -37,14 +40,9 @@ VS_OUTPUT VS(float4 vPos : POSITION, float2 vTexUV : TEXCOORD0, float3 vNormal :
 
 	output.vProjPos = output.vPos;
 
-	int iX = iFrame % iSizeX;
-	int iY = iFrame / iSizeX;
+	output.vTexUV = vTexUV;
 
-	float fX = vTexUV.x / (float)iSizeX;
-	float fY = vTexUV.y / (float)iSizeY;
-
-	output.vTexUV.x = fX + (1.f / (float)iSizeX * iX);
-	output.vTexUV.y = fY + (1.f / (float)iSizeY * iY);
+	output.fShade = fAlpha;
 
 	return output;
 }
@@ -64,12 +62,9 @@ PS_OUTPUT PS(VS_OUTPUT input)
 
 	output.vColor = txDiffuse.Sample(BaseSampler, input.vTexUV);
 
-	//if (0.3f < input.vProjPos.z * 0.005f)
-	//	output.vColor.a = 0.f;
-
-	output.vDepth = input.vProjPos.z * 0.005f;
-	output.vDepth.a = output.vColor.a;
-
+	
+	output.vColor.a = input.fShade;
+		
 
 	return output;
 }

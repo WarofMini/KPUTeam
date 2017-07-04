@@ -230,6 +230,8 @@
     <ClInclude Include="..\Codes\Timer_Manager.h" />
     <ClInclude Include="..\Codes\Timer.h" />
     <ClInclude Include="..\Codes\Tire.h" />
+    <ClInclude Include="..\Codes\Title.h" />
+    <ClInclude Include="..\Codes\TitleBack.h" />
     <ClInclude Include="..\Codes\Transform.h" />
     <ClInclude Include="..\Codes\Truck.h" />
     <ClInclude Include="..\Codes\UI.h" />
@@ -318,6 +320,8 @@
     <ClCompile Include="..\Codes\Timer_Manager.cpp" />
     <ClCompile Include="..\Codes\Timer.cpp" />
     <ClCompile Include="..\Codes\Tire.cpp" />
+    <ClCompile Include="..\Codes\Title.cpp" />
+    <ClCompile Include="..\Codes\TitleBack.cpp" />
     <ClCompile Include="..\Codes\Transform.cpp" />
     <ClCompile Include="..\Codes\Truck.cpp" />
     <ClCompile Include="..\Codes\UI.cpp" />
@@ -375,6 +379,10 @@
     <FxCompile Include="..\Bin\ShaderCode\Shader_Terrain.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderCode\Shader_TitleBack.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

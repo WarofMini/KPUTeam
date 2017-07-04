@@ -65,7 +65,7 @@ HRESULT CLogo::Ready_GameLogic(void)
 	CGameObject* pGameObject = NULL;
 	
 	//LogoBack
-	pGameObject = CLogoBack::Create(m_pContext);
+	pGameObject = CLogoBack::Create(m_pContext, L"Texture_LogoBack");
 
 	if (NULL == pGameObject) 
 		return E_FAIL;
@@ -81,9 +81,6 @@ HRESULT CLogo::Ready_Environment(void)
 {
 	CLayer* pLayer = CLayer::Create();
 	CGameObject* pGameObject = NULL;
-
-	// RenderTarget
-	CRenderTargetMgr::GetInstance()->Ready_RenderTarget(m_pGraphicDev, m_pContext, L"RT_Blend", DXGI_FORMAT_R8G8B8A8_UNORM, WINCX, WINCY, -0.8f, 0.8f);
 
 	m_mapLayer.insert(MAPLAYER::value_type(L"Layer_Environment", pLayer));
 	

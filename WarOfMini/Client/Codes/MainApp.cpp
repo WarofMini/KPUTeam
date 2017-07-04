@@ -72,9 +72,9 @@ HRESULT CMainApp::Initialize(void)
 	}
 
 	// Scene
-	if (FAILED(CManagement::GetInstance()->Change_Scene(CSceneSelector(SCENE_LOGO))))
+	if (FAILED(CManagement::GetInstance()->Change_Scene(CSceneSelector(SCENE_TITLE))))
 	{
-		MSG_BOX(L"Change_Scene(SCENE_STAGE) Failed");
+		MSG_BOX(L"Change_Scene(SCENE_TITLE) Failed");
 		return E_FAIL;
 	}
 

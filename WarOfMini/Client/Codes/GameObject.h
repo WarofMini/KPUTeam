@@ -18,7 +18,7 @@ protected:
 	Ser_PLAYER_DATA*							m_pServer_PlayerData;
 	//텍스쳐 번호
 	_int										m_iTextureNumber;
-
+	wstring										m_strTextureName;
 
 protected:
 	ID3D11DeviceContext* m_pContext;
@@ -49,6 +49,9 @@ public:
 	//객체의 텍스쳐를 바꿔주는 함수(요걸로 각각의 객체의 텍스쳐를 바꿔줄수 있다.)
 	void	Set_TextureNumber(_uint uiTextureNum);
 	_uint	Get_TextureNumber(void);
+
+public:
+	void		SetName(wstring strName) { m_strTextureName = strName; }
 };
 
 #endif

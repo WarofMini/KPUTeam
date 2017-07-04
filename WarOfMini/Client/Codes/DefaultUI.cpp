@@ -111,7 +111,7 @@ HRESULT CDefaultUI::Ready_Component(void)
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Buffer", pComponent));
 
 	//Texture
-	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, m_strName.c_str());
+	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, m_strTextureName.c_str());
 	m_pTexture = dynamic_cast<CTextures*>(pComponent);
 	if (pComponent == NULL) return E_FAIL;
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Texture", pComponent));

@@ -3,6 +3,7 @@
 
 #include "Include.h"
 #include "Logo.h"
+#include "Title.h"
 #include "Stage.h"
 
 class CSceneSelector
@@ -18,8 +19,8 @@ public:
 	{
 		switch (m_eSceneID)
 		{
-		case SCENE_LOGIN:
-			//*ppScene = CLoginScene::Create(pGraphicDev, pContext);
+		case SCENE_TITLE:
+			*ppScene = CTitle::Create(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking);
 			break;
 
 		case SCENE_LOGO:

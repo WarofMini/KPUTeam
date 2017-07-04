@@ -23,12 +23,6 @@ public:
 protected:
 	virtual HRESULT Ready_Component(void);
 
-private:
-	wstring		m_strName;
-
-public:
-	void		SetName(wstring strName) { m_strName = strName; }
-
 };
 
 

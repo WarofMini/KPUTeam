@@ -102,3 +102,18 @@ void CEffect::ComputeBillboard(void)
 		memcpy(&m_pTransform->m_matWorld.m[3][0], &m_pTransform->m_vPos, sizeof(XMFLOAT3));
 	}
 }
+
+void CEffect::SetPosition(XMFLOAT3 vPos)
+{
+	m_pTransform->m_vPos = vPos;
+}
+
+void CEffect::SetScale(XMFLOAT3 vScale)
+{
+	m_pTransform->m_vScale = vScale;
+}
+
+void CEffect::SetRotate(XMFLOAT3 vRotate)
+{
+	m_pTransform->m_vAngle = vRotate;
+}

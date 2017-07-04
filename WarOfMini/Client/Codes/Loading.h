@@ -4,7 +4,7 @@
 class CLoading
 {
 public:
-	enum LOADINGID { LOADING_LOGO, LOADING_STAGE, LOADING_END };
+	enum LOADINGID { LOADING_TITLE, LOADING_LOGO, LOADING_STAGE, LOADING_END };
 
 public:
 	explicit CLoading(LOADINGID eLoadID);

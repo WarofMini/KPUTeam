@@ -62,6 +62,9 @@ public:
 
 public:
 	void			ComputeBillboard(void);
+	void			SetPosition(XMFLOAT3 vPos);
+	void			SetScale(XMFLOAT3 vScale);
+	void			SetRotate(XMFLOAT3 vRotate);
 };
 
 #endif

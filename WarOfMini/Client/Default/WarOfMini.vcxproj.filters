@@ -25,9 +25,6 @@
     <Filter Include="02.Object">
       <UniqueIdentifier>{d4218a93-01fe-4db7-a452-55d2a0639655}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\99.LogoBack">
-      <UniqueIdentifier>{253bb7a9-a45f-438f-9d30-30f71f9a96ab}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Object\01.Soldier">
       <UniqueIdentifier>{652a4702-4b30-4df9-b540-5bdf8201398c}</UniqueIdentifier>
     </Filter>
@@ -244,11 +241,23 @@
     <Filter Include="02.Object\08.UI">
       <UniqueIdentifier>{721468a0-9704-48c0-b03d-c7a460b943e2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\08.UI\00.Aim">
-      <UniqueIdentifier>{5824a860-1eb7-471e-933d-3d8641451909}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Object\07.Effect\00.Bomb">
       <UniqueIdentifier>{d580296d-bea1-4959-9dad-9517d2276c8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\06.PhysicsObject\01.DefaultPhysicsObject">
+      <UniqueIdentifier>{25515352-ce47-40ee-a315-81af0d29dfdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\02.Title">
+      <UniqueIdentifier>{e4f973a3-1721-436e-a38c-ac9df8dfb3aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\10.LogoBack">
+      <UniqueIdentifier>{253bb7a9-a45f-438f-9d30-30f71f9a96ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\09.TitleBack">
+      <UniqueIdentifier>{9ce6982e-689c-40f2-b0cd-b337e2376405}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\00.Aim">
+      <UniqueIdentifier>{5824a860-1eb7-471e-933d-3d8641451909}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.Object\08.UI\01.Numbering">
       <UniqueIdentifier>{7497b92b-50d8-4dae-bb81-eaa97d26c74d}</UniqueIdentifier>
@@ -258,9 +267,6 @@
     </Filter>
     <Filter Include="02.Object\08.UI\03.DefaultUI">
       <UniqueIdentifier>{d4ce6522-fb5c-4a9c-9403-ccc74d86978e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Object\06.PhysicsObject\01.DefaultPhysicsObject">
-      <UniqueIdentifier>{25515352-ce47-40ee-a315-81af0d29dfdd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -439,7 +445,7 @@
       <Filter>02.Object\02.DefaultObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\LogoBack.h">
-      <Filter>02.Object\99.LogoBack</Filter>
+      <Filter>02.Object\10.LogoBack</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Player.h">
       <Filter>02.Object\01.Soldier\00.SoldierMain</Filter>
@@ -527,6 +533,12 @@
     </ClInclude>
     <ClInclude Include="..\Codes\DefaultPhysicsObject.h">
       <Filter>02.Object\06.PhysicsObject\01.DefaultPhysicsObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Title.h">
+      <Filter>01.Scene\02.Title</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\TitleBack.h">
+      <Filter>02.Object\09.TitleBack</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -666,7 +678,7 @@
       <Filter>02.Object\02.DefaultObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\LogoBack.cpp">
-      <Filter>02.Object\99.LogoBack</Filter>
+      <Filter>02.Object\10.LogoBack</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Player.cpp">
       <Filter>02.Object\01.Soldier\00.SoldierMain</Filter>
@@ -752,6 +764,12 @@
     <ClCompile Include="..\Codes\DefaultPhysicsObject.cpp">
       <Filter>02.Object\06.PhysicsObject\01.DefaultPhysicsObject</Filter>
     </ClCompile>
+    <ClCompile Include="..\Codes\Title.cpp">
+      <Filter>01.Scene\02.Title</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\TitleBack.cpp">
+      <Filter>02.Object\09.TitleBack</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -794,6 +812,9 @@
       <Filter>95.Engine\00.Utility\05.Shader\01.ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderCode\Shader_Effect.fx">
+      <Filter>95.Engine\00.Utility\05.Shader\01.ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderCode\Shader_TitleBack.fx">
       <Filter>95.Engine\00.Utility\05.Shader\01.ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>

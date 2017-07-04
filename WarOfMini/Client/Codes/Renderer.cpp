@@ -78,6 +78,9 @@ HRESULT CRenderer::Ready_Renderer(void)
 	if (FAILED(CShaderMgr::GetInstance()->Ready_ShaderFromFiles(m_pGraphicDev, m_pContext, L"Shader_Effect", L"../Bin/ShaderCode/Shader_Effect.fx", 0)))
 		return E_FAIL;
 
+	if (FAILED(CShaderMgr::GetInstance()->Ready_ShaderFromFiles(m_pGraphicDev, m_pContext, L"Shader_TitleBack", L"../Bin/ShaderCode/Shader_TitleBack.fx", 0)))
+		return E_FAIL;
+
 
 	if (FAILED(CShaderMgr::GetInstance()->Ready_ShaderFromFiles(m_pGraphicDev, m_pContext, L"Shader_Normal", L"../Bin/ShaderCode/Shader_Normal.fx", 0)))
 		return E_FAIL;

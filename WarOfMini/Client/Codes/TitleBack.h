@@ -1,5 +1,5 @@
-#ifndef LogoBack_h__
-#define LogoBack_h__
+#ifndef TitleBack_h__
+#define TitleBack_h__
 
 #include "GameObject.h"
 
@@ -7,17 +7,16 @@ class CTransform;
 class CTextures;
 class CRcTex;
 
-class CLogoBack 
+class CTitleBack
 	: public CGameObject
 {
 
 private:
-	explicit CLogoBack(ID3D11DeviceContext* pContext);
-	virtual ~CLogoBack(void);
+	explicit CTitleBack(ID3D11DeviceContext* pContext);
+	virtual ~CTitleBack(void);
 
 public:
-	static CLogoBack* Create(ID3D11DeviceContext* pContext);
-	static CLogoBack* Create(ID3D11DeviceContext* pContext, wstring strName);
+	static CTitleBack* Create(ID3D11DeviceContext* pContext);
 
 public:
 	virtual HRESULT	Initialize(void);
@@ -32,7 +31,12 @@ private:
 	CTransform*		m_pTransform;
 	CTextures*		m_pTexture;
 	CRcTex*			m_pBuffer;
+	float			m_fAlpha;
+	float			m_fAlphaSpeed;
+	_bool			m_bAlphaCheck;
 
+public:
+	_bool*			GetAlphaCheck(void) { return &m_bAlphaCheck; }
 };
 
 #endif
