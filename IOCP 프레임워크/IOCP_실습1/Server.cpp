@@ -2,8 +2,6 @@
 
 
 CServer::CServer()
-	:starttime(0.f)
-	, m_bReady(false)
 {
 	ServerIpAddress();
 	CheckCPUCoreCount();
@@ -220,8 +218,9 @@ void CServer::Accept_thread()
 
 		if (playerIndex >= 1)
 		{
+			BYTE Time = GetTickCount();
 
-			//timer_queue.push(event_type{ reinterpret_cast<int>(&playerIndex), GetTickCount() + 1000, OP_TIME });
+			timer_queue.push(event_type{ reinterpret_cast<BYTE>(&playerIndex), Time + 1000, OP_TIME });
 		}
 		
 		//플레이어가 2명이상 입장 하게되면 시간이 가게 하자.
@@ -342,12 +341,12 @@ void CServer::Worker_thread()
 		{
 			delete overlap;
 		}
-		//else if (overlap->operation_type == OP_TIME)
-		//{
-		//	//Do_Timer(key);
-		//	Add_Timer(key, OP_TIME, 1000);
-		//	delete overlap;
-		//}
+		else if (overlap->operation_type == OP_TIME)
+		{
+			//Do_Timer(key);
+			Add_Timer(key, OP_TIME, 1000);
+			delete overlap;
+		}
 	
 		else
 		{
@@ -363,56 +362,6 @@ void CServer::Worker_thread()
 }
 void CServer::Timer_Thread()
 {
-	//while (1)
-	//{
-	//	if (m_bReady)
-	//	{
-	//		for (int i = 2; i > 0; --i)
-	//		{
-	//			CTimer::TimerCount(1.f);
-	//			if (i == 1)
-	//			{
-	//				m_state.gamestate = START;
-	//				m_bReady = false;
-	//				startTime = CTimer::SetTime();
-	//				cout << "Timer Start !! " << endl;
-
-	//			}
-	//			//모든 유저들에게 시간값을 알려주자.
-	//			for (int p = 0; p < MAX_USER; ++p)
-	//			{
-	//				SendPacket(p, reinterpret_cast<Packet*>(&m_state));
-	//			}
-	//			cout << "Timer : " << CTimer::SetTime() << endl;
-	//		}
-	//	}
-	//	else
-	//	{
-	//		Sleep(1);
-	//		timer_lock.lock();
-	//		while (topEv.wakeup_time <= GetTickCount())
-	//		{
-	//			timer_lock.unlock();
-	//			timer_queue.pop();
-	//			timer_lock.lock();
-	//			Process_Event(topEv);
-	//			if (timer_queue.size() == 0)
-	//				break;
-	//			else
-	//			{
-	//				timer_lock.unlock();
-	//				topEv = timer_queue.top();
-	//				timer_lock.lock();
-	//			}
-	//		}
-	//		//timer_lock.unlock();
-
-	//	}
-
-	//}
-	//CTimer::TimerCount(0.03f);
-
-
 	while (true) {
 		Sleep(1);
 		timer_lock.lock();
@@ -432,8 +381,6 @@ void CServer::Timer_Thread()
 		timer_lock.unlock();
 	}
 
-
-
 }
 void CServer::Add_Timer(int id, int do_event, int wakeup)
 {
@@ -443,7 +390,7 @@ void CServer::Add_Timer(int id, int do_event, int wakeup)
 	new_event.wakeup_time = wakeup + GetTickCount();
 
 	timer_lock.lock();
-	//timer_queue.push(event_type{ id, GetTickCount() + 1000, OP_TIME });
+	timer_queue.push(event_type{ id, reinterpret_cast<BYTE>(&new_event.wakeup_time) + 1000, OP_TIME });
 	timer_lock.unlock();
 }
 void CServer::SendRemovePlayerPacket(DWORD dwKey)
@@ -468,12 +415,12 @@ void CServer::SendRemovePlayerPacket(DWORD dwKey)
 }
 void CServer::SCSendCount()
 {
-	Ser_Time_DATA Time;
+	/*Ser_Time_DATA Time;
 	Time.size = sizeof(Ser_Time_DATA);
 	Time.time = CTimer::GetTime(starttime);
 
 	for (int i = 0; i < playerIndex; ++i)
-		SendPacket(i, reinterpret_cast<Packet*>(&Time));
+		SendPacket(i, reinterpret_cast<Packet*>(&Time));*/
 
 }
 void CServer::SendPacket(unsigned int id, const Packet* packet)
@@ -542,8 +489,6 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 		cout << "[NO. " << strPlayerData.ID << "]ID value Recv.. " << endl;
 		for (int i = 0; i < vecID.size(); ++i)
 		{
-			//timer_queue.push(event_type{ i, GetTickCount() + 1000, OP_TIME });
-
 			
 			if (m_Client[vecID[i]]->id == strPlayerData.ID)
 			{
@@ -554,8 +499,10 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 					m_vecPlayer[vecID[j]].type = INIT_CLIENT;
 					SendPacket(strPlayerData.ID, reinterpret_cast<Packet*>(&m_vecPlayer[vecID[j]]));
 
-					if (START == m_state.gamestate)
-						SCSendCount();
+
+					
+					/*if (START == m_state.gamestate)
+						SCSendCount();*/
 				}
 			}
 			else
@@ -563,7 +510,7 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 				SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strPlayerData));
 			}
 		}
-
+		//timer_queue.push(event_type{ strPlayerData.ID, GetTickCount() + 1000, OP_TIME });
 		//전에꺼 코드
 //  		for (int i = 0; i <= playerIndex; ++i)
 //  		{
