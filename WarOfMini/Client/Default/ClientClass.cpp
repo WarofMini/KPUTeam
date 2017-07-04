@@ -40,7 +40,7 @@ void AsynchronousClientClass::InitSock(const HWND& hwnd)
 	ZeroMemory(&serveraddr, sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
 	serveraddr.sin_addr.s_addr = inet_addr(m_serverIP);
-	serveraddr.sin_port = htons(SERVERPORT);
+	serveraddr.sin_port = htons(SERVER_PORT);
 
 	m_retval = WSAConnect(m_sock, (SOCKADDR *)&serveraddr, sizeof(serveraddr), NULL, NULL, NULL, NULL);
 	if (SOCKET_ERROR == m_retval) {
@@ -67,9 +67,9 @@ void AsynchronousClientClass::InitSock(const HWND& hwnd)
 	}
 
 	m_wsa_recvbuf.buf = reinterpret_cast<CHAR*>(m_recvbuf);
-	m_wsa_recvbuf.len = MAX_BUF_SIZE;
+	m_wsa_recvbuf.len = MAX_BUFFER_SIZE;
 	m_wsa_sendbuf.buf = reinterpret_cast<CHAR*>(m_sendbuf);
-	m_wsa_sendbuf.len = MAX_BUF_SIZE;
+	m_wsa_sendbuf.len = MAX_BUFFER_SIZE;
 }
 
 void AsynchronousClientClass::ProcessWinMessage(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -101,7 +101,7 @@ void AsynchronousClientClass::ProcessWinMessage(HWND hwnd, UINT uMsg, WPARAM wPa
 		while (0 < current_data_processing) {
 			if (0 == m_packet_size_current) {
 				m_packet_size_current = buf[0];
-				if (buf[0] > MAX_BUF_SIZE) {
+				if (buf[0] > MAX_BUFFER_SIZE) {
 					cout << "AsynchronousClientClass::ProcessWinMessage() Error, recvbuf[0] is out of MAX_BUF_SIZE\n";
 					exit(-1);
 				}
@@ -161,7 +161,7 @@ void AsynchronousClientClass::sendPacket_TEST()
 void AsynchronousClientClass::sendPacket(const BYTE data_size, const BYTE type, BYTE * data_start_pointer)
 {
 	// 실제 최대 버퍼 사이즈 보다 데이터 길이가 커지면 안된다.
-	if (MAX_BUF_SIZE < (data_size + 2)) {
+	if (MAX_BUFFER_SIZE < (data_size + 2)) {
 #ifdef _DEBUG
 		// 아래와 같은 에러가 발생하게 된다면, 버퍼 사이즈를 건드리기 보다 실제 데이터 크기를 압축해 줄여 보낼 수 있도록 하자
 		printf("[ code LINE %d ] [ code FUNCTION %s ] SendPacket class ERROR :: data size overed MAX_BUF_SIZE\n", __LINE__, __FUNCTION__);
@@ -221,7 +221,7 @@ int AsynchronousClientClass::recvn()
 {
 	int received;
 	Packet *ptr = m_recvbuf;
-	int left = MAX_BUF_SIZE;
+	int left = MAX_BUFFER_SIZE;
 
 	while (left > 0) {
 		received = recv(m_sock, reinterpret_cast<char*>(&ptr), left, 0);
@@ -233,7 +233,7 @@ int AsynchronousClientClass::recvn()
 		ptr += received;
 	}
 
-	return (MAX_BUF_SIZE - left);
+	return (MAX_BUFFER_SIZE - left);
 }
 
 void AsynchronousClientClass::error_display(char * msg, int err_no, int line)

@@ -10,12 +10,15 @@
 #include <xnamath.h>
 #include <list>
 #include <mutex>
+#include <chrono>
 #include <queue>
 
 
 
 
 using namespace std;
+using namespace chrono;
+
 
 // packet[1] operation
 #define DISCONNECTED 0
@@ -30,11 +33,12 @@ using namespace std;
 
 #define OP_RECV 1
 #define OP_SEND 2
-#define OP_TIME 3;
+#define OP_TIME 3
 
 
 
 // Timer Event Define !
+
 
 #define EV_GAMECOUNT 0
 #define EV_SUDDENDETH 1
@@ -140,6 +144,7 @@ struct event_type {
 class mycomp
 {
 public:
+	mycomp() {}
 	bool operator() (const event_type lhs, const event_type rhs) const
 	{
 		return (lhs.wakeup_time > rhs.wakeup_time);

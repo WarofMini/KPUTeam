@@ -47,9 +47,9 @@ private:
 	WSABUF m_wsa_recvbuf;
 	WSABUF m_wsa_sendbuf;
 
-	Packet m_recvbuf[MAX_BUF_SIZE]{ 0 };
-	Packet m_sendbuf[MAX_BUF_SIZE]{ 0 };
-	Packet m_data_buf[MAX_BUF_SIZE]{ 0 };
+	Packet m_recvbuf[MAX_BUFFER_SIZE]{ 0 };
+	Packet m_sendbuf[MAX_BUFFER_SIZE]{ 0 };
+	Packet m_data_buf[MAX_BUFFER_SIZE]{ 0 };
 	unsigned int m_recvbytes{ 0 };
 	unsigned int m_packet_size_current{ 0 };
 	unsigned int m_packet_size_previous{ 0 };
