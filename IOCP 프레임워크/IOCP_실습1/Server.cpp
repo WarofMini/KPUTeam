@@ -2,6 +2,8 @@
 
 
 CServer::CServer()
+	:starttime(0.f)
+	, m_bReady(false)
 {
 	ServerIpAddress();
 	CheckCPUCoreCount();
@@ -60,6 +62,24 @@ void CServer::ServerIpAddress(void)
 
 }
 
+void CServer::Process_Event(event_type ev_Now)
+{
+	switch (ev_Now.do_event)
+	{
+	case EV_GAMECOUNT:
+	{
+		Overlap_ex* over = new Overlap_ex;
+		over->operation_type = EV_GAMECOUNT;
+		PostQueuedCompletionStatus(g_hIocp, 1, ev_Now.obj_id, &(over->Original_Overlap));
+		break;
+	}
+	default:
+		break;
+	}
+	
+
+}
+
 void CServer::Initialize(void)
 {
 	startTime = 0.f;
@@ -107,7 +127,7 @@ void CServer::MakeWorkerThread_AcceptThread()
 		thread->join();
 		delete thread;
 	}
-
+	
 	acceptThread.join();
 }
 
@@ -167,7 +187,7 @@ void CServer::Accept_thread()
 
 		CreateIoCompletionPort(reinterpret_cast<HANDLE>(client_sock), g_hIocp, playerIndex, 0);
 
-
+		
 		// 여기서 이제 클라이언트 관련 정보를 초기화 해서 받아서 넣었어
 		PLAYER_INFO* User = new PLAYER_INFO;
 
@@ -180,41 +200,37 @@ void CServer::Accept_thread()
 		User->my_overapped.operation_type = OP_RECV; // 그걸 접속하자 마자 여기서 초기화 해준거야.
 		User->my_overapped.wsabuf.buf = reinterpret_cast<char*>(&User->my_overapped.IOCPbuf);
 		User->my_overapped.wsabuf.len = sizeof(User->my_overapped.IOCPbuf);
-
+		
 		//m_listPlayer
 		Ser_PLAYER_DATA PlayerTemp;
 		PlayerTemp.ID = User->id;
 		PlayerTemp.size = sizeof(Ser_PLAYER_DATA);
 		PlayerTemp.type = INIT_CLIENT;
 		PlayerTemp.vPos = XMFLOAT3(20.f * User->id, 0.f, 0.f);
-		PlayerTemp.vMoveDir = XMFLOAT3(0.f, 0.f, 0.f);
-		PlayerTemp.dwState = SOLDIER_IDLE;
-
+		PlayerTemp.vDir = XMFLOAT3(0.f, 0.f, 0.f);
+		//PlayerTemp.dwState = SOLDIER_IDLE;
+		
 		m_vecPlayer.push_back(PlayerTemp);
 
 		// 그리고 여기서 이제 전체 클라이언트 관리하는 녀석으로 값을 넣어주잖아.ㅇㅇ
 		m_Client.push_back(move(User));
 
-		// 바로 여기지아니면 여기나 여기도 괜찮고 여기다 해도 상관없지
-		// 왜냐하면? 어차피 데이터를 보내는데는 단 2가지만 필요하거든, 클라이언트의 소켓 주소랑
-		// 패킷을 보낼 데이터
-		// 하지만 요 쯤이 적절해 보이는군
-		// 그냥 안정적으로 클라이언트까지 넣어주고
-		// 바로 패킷보내주는 작업을 하는게 그냥 내 기분에 좋으니까
-		// 나도 여기라 생각했는데 밑에 Recv는 하고 받야아할것같아서 그밑에다 할려그랬는데...ㅅㅂ
 
 		SendPacket(PlayerTemp.ID, reinterpret_cast<Packet*>(&PlayerTemp));
 
-
-		/*if (playerIndex >= 1)
+		if (playerIndex >= 1)
 		{
-		m_bReady = true;
+
+			//timer_queue.push(event_type{ reinterpret_cast<int>(&playerIndex), GetTickCount() + 1000, OP_TIME });
 		}
-		else
-		{
-		m_bReady = false;
-		}*/
-
+		
+		//플레이어가 2명이상 입장 하게되면 시간이 가게 하자.
+		//int TimeInteeger = GetTickCount() + 1000;
+		//if (playerIndex >= 1)
+		//{
+		//	//timer_queue.push(event_type{ User->id, m_state
+		//}
+		
 
 		DWORD flags{ 0 };
 
@@ -243,12 +259,12 @@ void CServer::Worker_thread()
 		DWORD iosize;
 		Overlap_ex* overlap; // 그래서 이 overlap 포인터 변수가 존재하는 이유야
 
-							 // GetQueuedCompletionStatus 이 함수는, 뭐가 되었든 간에 그냥 무슨 이벤트가 발생하면 리턴하는 함수야
-							 // 클라에서 메세지 패킷을 보내도 이 함수가 갑자기 깨어나서 return 을 하게 되고
-							 // 서버에서 메세지 패킷을 send 하여 보내도, 이 함수가 갑자기 깨어나서 return 을해
-							 // 물론 클라가 접속을 일방적으로 끊었을때도 깨어나서 return 을 한단말이지
-							 // 여기 이 함수에서, 야 시발 형배야 나 다 보냈어 하고 알려준다고
-							 // 여기서 리턴을 하면 overlap 포인터에다가, WSARecv 든 WSASend 든, 거기다 사용했었던 주소를 리턴해서 요 변수에 담아주는거야
+		// GetQueuedCompletionStatus 이 함수는, 뭐가 되었든 간에 그냥 무슨 이벤트가 발생하면 리턴하는 함수야
+		// 클라에서 메세지 패킷을 보내도 이 함수가 갑자기 깨어나서 return 을 하게 되고
+		// 서버에서 메세지 패킷을 send 하여 보내도, 이 함수가 갑자기 깨어나서 return 을해
+		// 물론 클라가 접속을 일방적으로 끊었을때도 깨어나서 return 을 한단말이지
+		// 여기 이 함수에서, 야 시발 형배야 나 다 보냈어 하고 알려준다고
+		// 여기서 리턴을 하면 overlap 포인터에다가, WSARecv 든 WSASend 든, 거기다 사용했었던 주소를 리턴해서 요 변수에 담아주는거야
 		BOOL Result = GetQueuedCompletionStatus(g_hIocp, &iosize, &key, reinterpret_cast<LPOVERLAPPED *>(&overlap), INFINITE);
 
 		// 근데 이건 아니지, 왜냐? 서버 자기 자신이 딴 클라한테 보냈기 때문에, return 이 false 일 수가 없어
@@ -256,13 +272,13 @@ void CServer::Worker_thread()
 		{
 			/*if (FALSE == Result)
 			{
-			int Error_no = WSAGetLastError();
-			error_display("WorkerThread Start GetQueuedCompletionStatus", Error_no);
+				int Error_no = WSAGetLastError();
+				error_display("WorkerThread Start GetQueuedCompletionStatus", Error_no);
 			}*/
 
 			SendRemovePlayerPacket(key);
 
-			cout << "[No. " << key << "] Disconnected " << endl;
+			cout << "[No. " << key << "] Disconnected "<< endl;
 
 			continue;
 
@@ -289,9 +305,9 @@ void CServer::Worker_thread()
 					ProcessPacket(m_Client[key]->Packetbuf, key);
 
 
-					buf_ptr += required;
+					buf_ptr  += required;
 					remained -= required;
-
+				
 					m_Client[key]->curr_paket_size = 0;
 					m_Client[key]->prev_received = 0;
 
@@ -312,12 +328,12 @@ void CServer::Worker_thread()
 					/*int err_no = WSAGetLastError();
 					if (ERROR_IO_PENDING != err_no)
 					{
-					error_display("WorkerThreadStart::WSARecv", err_no);
+						error_display("WorkerThreadStart::WSARecv", err_no);
 
 					}*/
 					continue;
 
-				}
+				}			
 			}
 
 
@@ -329,10 +345,10 @@ void CServer::Worker_thread()
 		//else if (overlap->operation_type == OP_TIME)
 		//{
 		//	//Do_Timer(key);
-		//	//Add_Timer(key, OP_TIME, 1000);
+		//	Add_Timer(key, OP_TIME, 1000);
 		//	delete overlap;
 		//}
-
+	
 		else
 		{
 
@@ -345,73 +361,91 @@ void CServer::Worker_thread()
 
 
 }
-//void CServer::Timer_Thread()
-//{
-//	while (1)
-//	{
-//		if (m_bReady)
-//		{
-//			for (int i = 2; i > 0; ++i)
-//			{
-//				CTimer::TimerCount(1.f);
-//				if (i == 1 - 1)
-//				{
-//					m_bReady = false;
-//					startTime = CTimer::SetTime();
-//					cout << "Complete Time !! " << endl;
-//
-//				}
-//				//모든 유저들에게 시간값을 알려주자.
-//				/*for (int p = 0; p < MAX_USER; ++p)
-//				{
-//					SendPacket(p, &)
-//				}*/
-//				//cout << "Timer : " << CTimer::SetTime() << endl;
-//			}
-//		}
-//		else
-//		{
-//			Sleep(1);
-//			timer_lock.lock();
-//			while (false == timer_queue.empty())
-//			{
-//				
-//				if (timer_queue.top().wakeup_time > GetTickCount())
-//					break;
-//				event_type ev = timer_queue.top();
-//				timer_queue.pop();
-//				timer_lock.unlock();
-//				Overlap_ex* over = new Overlap_ex;
-//				over->operation_type = ev.event_id;
-//				PostQueuedCompletionStatus(g_hIocp, 1, ev.obj_id, &(over->Original_Overlap));
-//				timer_lock.lock();
-//			
-//			}
-//			timer_lock.unlock();
-//
-//		}
-//
-//	}
-//	CTimer::TimerCount(0.03f);
-//
-//
-//}
-//void CServer::Add_Timer(int id, int do_event, int wakeup)
-//{
-//	event_type new_event;
-//	new_event.do_event = do_event;
-//	new_event.obj_id = id;
-//	new_event.wakeup_time = wakeup + GetTickCount();
-//
-//	EnterCriticalSection(&cs);
-//	timer_queue.push(new_event);
-//	//cout << "Timer : " << new_event.wakeup_time << endl;
-//	LeaveCriticalSection(&cs);
-//
-//	/*timer_lock.lock();
-//	timer_queue.push(event_type{ i, GetTickCount() + 1000, OP_TIME });
-//	timer_lock.unlock();*/
-//}
+void CServer::Timer_Thread()
+{
+	//while (1)
+	//{
+	//	if (m_bReady)
+	//	{
+	//		for (int i = 2; i > 0; --i)
+	//		{
+	//			CTimer::TimerCount(1.f);
+	//			if (i == 1)
+	//			{
+	//				m_state.gamestate = START;
+	//				m_bReady = false;
+	//				startTime = CTimer::SetTime();
+	//				cout << "Timer Start !! " << endl;
+
+	//			}
+	//			//모든 유저들에게 시간값을 알려주자.
+	//			for (int p = 0; p < MAX_USER; ++p)
+	//			{
+	//				SendPacket(p, reinterpret_cast<Packet*>(&m_state));
+	//			}
+	//			cout << "Timer : " << CTimer::SetTime() << endl;
+	//		}
+	//	}
+	//	else
+	//	{
+	//		Sleep(1);
+	//		timer_lock.lock();
+	//		while (topEv.wakeup_time <= GetTickCount())
+	//		{
+	//			timer_lock.unlock();
+	//			timer_queue.pop();
+	//			timer_lock.lock();
+	//			Process_Event(topEv);
+	//			if (timer_queue.size() == 0)
+	//				break;
+	//			else
+	//			{
+	//				timer_lock.unlock();
+	//				topEv = timer_queue.top();
+	//				timer_lock.lock();
+	//			}
+	//		}
+	//		//timer_lock.unlock();
+
+	//	}
+
+	//}
+	//CTimer::TimerCount(0.03f);
+
+
+	while (true) {
+		Sleep(1);
+		timer_lock.lock();
+		while (false == timer_queue.empty()) {
+			if (timer_queue.top().wakeup_time > GetTickCount()) break;
+			event_type ev = timer_queue.top();
+			timer_queue.pop();
+			timer_lock.unlock();
+			Overlap_ex *over = new Overlap_ex;
+			over->operation_type = ev.event_id;
+			//Process_Event(over->operation_type);
+			PostQueuedCompletionStatus(g_hIocp, 1,
+				ev.obj_id,
+				&(over->Original_Overlap));
+			timer_lock.lock();
+		}
+		timer_lock.unlock();
+	}
+
+
+
+}
+void CServer::Add_Timer(int id, int do_event, int wakeup)
+{
+	event_type new_event;
+	new_event.do_event = do_event;
+	new_event.obj_id = id;
+	new_event.wakeup_time = wakeup + GetTickCount();
+
+	timer_lock.lock();
+	//timer_queue.push(event_type{ id, GetTickCount() + 1000, OP_TIME });
+	timer_lock.unlock();
+}
 void CServer::SendRemovePlayerPacket(DWORD dwKey)
 {
 	Ser_Packet_Remove_Player packet;
@@ -432,8 +466,18 @@ void CServer::SendRemovePlayerPacket(DWORD dwKey)
 		SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&packet));
 	}
 }
-void CServer::SendPacket(unsigned int id, const Packet* packet)
+void CServer::SCSendCount()
 {
+	Ser_Time_DATA Time;
+	Time.size = sizeof(Ser_Time_DATA);
+	Time.time = CTimer::GetTime(starttime);
+
+	for (int i = 0; i < playerIndex; ++i)
+		SendPacket(i, reinterpret_cast<Packet*>(&Time));
+
+}
+void CServer::SendPacket(unsigned int id, const Packet* packet)
+{	
 	Overlap_ex* overlap = new Overlap_ex;
 	//unsigned char* packetTemp = packet;
 	memset(overlap, 0, sizeof(Overlap_ex));
@@ -458,8 +502,8 @@ void CServer::SendPacket(unsigned int id, const Packet* packet)
 
 		if (err_no != ERROR_IO_PENDING)
 		{
-		error_display("SendPacket_WSASend", err_no);
-		while (true);
+			error_display("SendPacket_WSASend", err_no);
+			while (true);
 
 		}*/
 	}
@@ -482,14 +526,14 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 	// 한번 말해봥 클라이언트 기준에서 한번 맞춰봥
 	switch (buf[1])
 	{
-		//case TEST:
-		//{
-		//	//클라에서 받은 패킷을 그대로 다시 돌려준다.
-		//	cout << "[NO. " << id << "]TEST Packet Recv.. " << endl;
-		//	cout << "buf[0] =  " << buf[0] << "buf[1] = " << buf[1] << "buf[2] =  " << buf[2] << endl;
-		//	SendPacket(id, buf);
-		//	break;
-		//}
+	//case TEST:
+	//{
+	//	//클라에서 받은 패킷을 그대로 다시 돌려준다.
+	//	cout << "[NO. " << id << "]TEST Packet Recv.. " << endl;
+	//	cout << "buf[0] =  " << buf[0] << "buf[1] = " << buf[1] << "buf[2] =  " << buf[2] << endl;
+	//	SendPacket(id, buf);
+	//	break;
+	//}
 
 	case INIT_CLIENT:
 	{
@@ -500,7 +544,7 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 		{
 			//timer_queue.push(event_type{ i, GetTickCount() + 1000, OP_TIME });
 
-
+			
 			if (m_Client[vecID[i]]->id == strPlayerData.ID)
 			{
 				for (int j = 0; j < vecID.size(); ++j)
@@ -509,6 +553,9 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 						continue;
 					m_vecPlayer[vecID[j]].type = INIT_CLIENT;
 					SendPacket(strPlayerData.ID, reinterpret_cast<Packet*>(&m_vecPlayer[vecID[j]]));
+
+					if (START == m_state.gamestate)
+						SCSendCount();
 				}
 			}
 			else
@@ -518,58 +565,58 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 		}
 
 		//전에꺼 코드
-		//  		for (int i = 0; i <= playerIndex; ++i)
-		//  		{
-		//  			if (m_Client[i]->connected == false)
-		//  				continue;
-		//  			if (m_vecPlayer[i].ID == strPlayerData.ID)
-		//  			{//내가 접속하는거면 다른 플레이어들 생성
-		//  				Ser_Vec_PLAYER_DATA vecPlayerData;
-		//  				vecPlayerData.ID = m_vecPlayer[i].ID;
-		//  				vecPlayerData.size = sizeof(Ser_Vec_PLAYER_DATA);
-		//  				vecPlayerData.type = INIT_OTHER_PLAYER;
-		//  				vecPlayerData.PlayerSize = vecID.size();
-		// 
-		// 				for (int j = 0; j < vecPlayerData.PlayerSize; ++j)
-		// 				{
-		// 					vecPlayerData.vecPlayerData[j].ID = m_vecPlayer[vecID[j]].ID;
-		// 					vecPlayerData.vecPlayerData[j].size = m_vecPlayer[vecID[j]].size;
-		// 					vecPlayerData.vecPlayerData[j].type = m_vecPlayer[vecID[j]].type;
-		// 					vecPlayerData.vecPlayerData[j].vPos = m_vecPlayer[vecID[j]].vPos;
-		// 				}
-		// 				SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&vecPlayerData));
-		//  			}
-		//  			else
-		//  			{//다른놈이 들어오면 그놈 생성
-		//  				SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&strPlayerData));
-		//  			}
-		//  		}
+//  		for (int i = 0; i <= playerIndex; ++i)
+//  		{
+//  			if (m_Client[i]->connected == false)
+//  				continue;
+//  			if (m_vecPlayer[i].ID == strPlayerData.ID)
+//  			{//내가 접속하는거면 다른 플레이어들 생성
+//  				Ser_Vec_PLAYER_DATA vecPlayerData;
+//  				vecPlayerData.ID = m_vecPlayer[i].ID;
+//  				vecPlayerData.size = sizeof(Ser_Vec_PLAYER_DATA);
+//  				vecPlayerData.type = INIT_OTHER_PLAYER;
+//  				vecPlayerData.PlayerSize = vecID.size();
+// 
+// 				for (int j = 0; j < vecPlayerData.PlayerSize; ++j)
+// 				{
+// 					vecPlayerData.vecPlayerData[j].ID = m_vecPlayer[vecID[j]].ID;
+// 					vecPlayerData.vecPlayerData[j].size = m_vecPlayer[vecID[j]].size;
+// 					vecPlayerData.vecPlayerData[j].type = m_vecPlayer[vecID[j]].type;
+// 					vecPlayerData.vecPlayerData[j].vPos = m_vecPlayer[vecID[j]].vPos;
+// 				}
+// 				SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&vecPlayerData));
+//  			}
+//  			else
+//  			{//다른놈이 들어오면 그놈 생성
+//  				SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&strPlayerData));
+//  			}
+//  		}
 
 		//그 전에꺼
-		// 		for (int i = 0; i < m_vecPlayer.size(); ++i)
-		// 		{
-		// 			if (m_vecPlayer[i].ID == strPlayerData.ID)
-		// 			{
-		// 				Ser_Vec_PLAYER_DATA vecPlayerData;
-		// 				vecPlayerData.ID = m_vecPlayer[i].ID;
-		// 				vecPlayerData.size = sizeof(Ser_Vec_PLAYER_DATA);
-		// 				vecPlayerData.type = INIT_OTHER_PLAYER;
-		// 				vecPlayerData.PlayerSize = m_vecPlayer.size();
-		// 
-		// 				for (int i = 0; i < vecPlayerData.PlayerSize; ++i)
-		// 				{
-		// 					vecPlayerData.vecPlayerData[i].ID = m_vecPlayer[i].ID;
-		// 					vecPlayerData.vecPlayerData[i].size = m_vecPlayer[i].size;
-		// 					vecPlayerData.vecPlayerData[i].type = m_vecPlayer[i].type;
-		// 					vecPlayerData.vecPlayerData[i].vPos = m_vecPlayer[i].vPos;
-		// 				}
-		// 				SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&vecPlayerData));
-		// 			}
-		// 			else
-		// 			{
-		// 				SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&strPlayerData));
-		// 			}
-		// 		}		
+// 		for (int i = 0; i < m_vecPlayer.size(); ++i)
+// 		{
+// 			if (m_vecPlayer[i].ID == strPlayerData.ID)
+// 			{
+// 				Ser_Vec_PLAYER_DATA vecPlayerData;
+// 				vecPlayerData.ID = m_vecPlayer[i].ID;
+// 				vecPlayerData.size = sizeof(Ser_Vec_PLAYER_DATA);
+// 				vecPlayerData.type = INIT_OTHER_PLAYER;
+// 				vecPlayerData.PlayerSize = m_vecPlayer.size();
+// 
+// 				for (int i = 0; i < vecPlayerData.PlayerSize; ++i)
+// 				{
+// 					vecPlayerData.vecPlayerData[i].ID = m_vecPlayer[i].ID;
+// 					vecPlayerData.vecPlayerData[i].size = m_vecPlayer[i].size;
+// 					vecPlayerData.vecPlayerData[i].type = m_vecPlayer[i].type;
+// 					vecPlayerData.vecPlayerData[i].vPos = m_vecPlayer[i].vPos;
+// 				}
+// 				SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&vecPlayerData));
+// 			}
+// 			else
+// 			{
+// 				SendPacket(m_vecPlayer[i].ID, reinterpret_cast<Packet*>(&strPlayerData));
+// 			}
+// 		}		
 	}
 	break;
 	case CLIENT_POSITION:
@@ -580,10 +627,10 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 		{
 			if (m_vecPlayer[vecID[i]].ID == strPlayerData.ID)
 			{
-				m_vecPlayer[vecID[i]].vAngle = strPlayerData.vAngle;
+				//m_vecPlayer[vecID[i]].vAngle = strPlayerData.vAngle;
 				m_vecPlayer[vecID[i]].vPos = strPlayerData.vPos;
-				m_vecPlayer[vecID[i]].vMoveDir = strPlayerData.vMoveDir;
-				m_vecPlayer[vecID[i]].dwState = strPlayerData.dwState;
+				m_vecPlayer[vecID[i]].vDir = strPlayerData.vDir;
+				//m_vecPlayer[vecID[i]].dwState = strPlayerData.dwState;
 			}
 			else
 			{
@@ -621,21 +668,21 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 		break;
 	case PLAYER_DISCONNECTED:
 	{
-		/*	Ser_Packet_Remove_Player RemovePlayer;
+	/*	Ser_Packet_Remove_Player RemovePlayer;
 		RemovePlayer = *reinterpret_cast<Ser_Packet_Remove_Player*>((Ser_Packet_Remove_Player*)&buf[2]);
 
 		for (int i = 0; i < m_vecPlayer.size(); ++i)
 		{
-		if (m_vecPlayer[i].ID == RemovePlayer.id)
-		continue;
-		m_vecPlayer[i].type = PLAYER_DISCONNECTED;
-		SendRemovePlayerPacket(i, i);
+			if (m_vecPlayer[i].ID == RemovePlayer.id)
+				continue;
+			m_vecPlayer[i].type = PLAYER_DISCONNECTED;
+			SendRemovePlayerPacket(i, i);
 		}
-		*/
+*/
 	}
 	break;
 	}
-
+	
 }
 
 
