@@ -72,7 +72,6 @@ _int CStage::Update(const _float& fTimeDelta)
 		m_bEnterGame = true;
 	}
 
-
 	CScene::Update(fTimeDelta);
 	CCameraMgr::GetInstance()->Update_CurCamera(fTimeDelta);
 
@@ -108,12 +107,11 @@ HRESULT CStage::Ready_GameLogic(void)
 	*/
 
 
-	//Effect	
+	//Effect
 	pGameObject = CBomb::Create(m_pContext);
 	if (NULL == pGameObject)
 		return E_FAIL;
-	pLayer->Ready_Object(L"Effect", pGameObject);
-	
+	pLayer->Ready_Object(L"Effect", pGameObject);	
 	
 
 	/*
@@ -606,12 +604,12 @@ HRESULT CStage::InitPhysicsObject(void)
 
 	CPhysicsDoor* pDoorObject = CPhysicsDoor::Create(m_pContext);
 
-	pDoorObject->SetLayer(pLayer);
+	(pDoorObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(1.99f, 2.0f, 2.5f), m_pCooking, "PhysicsDoor");
 
-	(pDoorObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(1.99f, 2.0f, 2.51f), m_pCooking, "PhysicsDoor");
-
-	//(pDoorObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(90.f), (_float)D3DXToRadian(90.f), (_float)D3DXToRadian(0.f)));
-	//(pDoorObject)->SetPosition(XMFLOAT3(800.0f, 150.0f, 100.0f));
+	(pDoorObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(270.f), (_float)D3DXToRadian(0.f), (_float)D3DXToRadian(180.f)));
+	(pDoorObject)->SetPosition(XMFLOAT3(1168.0f, 161.0f, 310.0f));
+	(pDoorObject)->SetSeparation(XMFLOAT3(80.f, 0.0f, 0.0f));
+	(pDoorObject)->CreateChain(m_pPxPhysicsSDK, m_pPxScene);
 
 	pLayer->Ready_Object(L"PhysicsDoor", pDoorObject);
 

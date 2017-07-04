@@ -33,6 +33,7 @@ HRESULT CTruck::Initialize(ID3D11Device* pGraphicDev)
 		return E_FAIL;
 
 	m_pTransform->m_vScale = XMFLOAT3(1.f, 1.f, 1.f);
+	m_pTransform->m_vPos = XMFLOAT3(100.f, 0.0f, 200.f);
 
 	return S_OK;
 }

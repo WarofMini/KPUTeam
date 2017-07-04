@@ -1,18 +1,19 @@
-#ifndef PhysicsDoor_h__
-#define PhysicsDoor_h__
+#ifndef DefaultPhysicsObject_h__
+#define DefaultPhysicsObject_h__
 
 #include "PhysicsObect.h"
 
 
-class CPhysicsDoor
+class CDefaultPhysicsObect 
 	: public CPhysicsObect
 {
 protected:
-	explicit CPhysicsDoor(ID3D11DeviceContext* pContext);
-	virtual ~CPhysicsDoor(void);
+	explicit CDefaultPhysicsObect(ID3D11DeviceContext* pContext);
+	virtual ~CDefaultPhysicsObect(void);
 
 public:
-	static CPhysicsDoor* Create(ID3D11DeviceContext* pContext);
+	static CDefaultPhysicsObect* Create(ID3D11DeviceContext* pContext);
+
 
 public:
 	virtual HRESULT	Initialize(void);
@@ -26,13 +27,8 @@ protected:
 public:
 	virtual void	BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, XMFLOAT3 vScale, PxCooking* pCooking, const char* name);
 
-	void	CreateChain(PxPhysics * pPxPhysics, PxScene * pPxScene);
-
-private:
-	XMFLOAT3	m_vSeparation;
-
-public:
-	void		SetSeparation(XMFLOAT3 vSeparation) { m_vSeparation = vSeparation;}
 };
 
-#endif //PhysicsDoor
+
+#endif // PhysicsObject
+

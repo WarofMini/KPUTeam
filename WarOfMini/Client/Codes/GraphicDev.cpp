@@ -136,7 +136,7 @@ void CGraphicDev::Set_Viewport(D3D11_VIEWPORT & vp, const _ushort & wSizeX, cons
 
 void CGraphicDev::SetAlphaEnable(_bool bAlphaEnable)
 {
-	if(bAlphaEnable)
+	if (bAlphaEnable)
 		m_pContext->OMSetBlendState(m_pAlphaBlendState, NULL, 0xFFFFFF);
 	else
 		m_pContext->OMSetBlendState(NULL, NULL, 0xFFFFFF);

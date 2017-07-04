@@ -264,6 +264,7 @@ void CRenderer::Render_Alpha(void)
 
 	for (; iter != iter_end; ++iter)
 	{
+
 		iter->second->Render();
 	}
 

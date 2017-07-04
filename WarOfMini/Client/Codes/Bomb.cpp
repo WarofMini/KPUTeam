@@ -48,6 +48,7 @@ HRESULT CBomb::Initialize(void)
 
 INT CBomb::Update(const FLOAT & fTimeDelta)
 {
+
 	m_fRealTime += fTimeDelta;
 
 	m_iFrame = int((m_fRealTime / m_fLifeTime) * (m_iSizeX * m_iSizeY));
@@ -55,6 +56,7 @@ INT CBomb::Update(const FLOAT & fTimeDelta)
 	CGameObject::Update(fTimeDelta);
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ALPHA, this);
 
+	ComputeBillboard();
 
 	return 0;
 }

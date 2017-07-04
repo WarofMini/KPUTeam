@@ -141,7 +141,6 @@ void CPhysicsObect::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMate
 
 void CPhysicsObect::SetPosition(XMFLOAT3 vPosition)
 {
-
 	PxTransform _PxTransform = m_pPxActor->getGlobalPose();
 
 	_PxTransform.p = PxVec3(vPosition.x, vPosition.y, vPosition.z);

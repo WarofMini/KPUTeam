@@ -37,6 +37,10 @@ protected:
 	_float			m_fRealTime;
 	_float			m_fDelayTime;
 
+	_bool			m_bAllBillboardCheck;
+	_bool			m_bYBillboardCheck;
+
+
 public:
 	void			SetFrame(_int iNumber) { m_iFrame = iNumber; }
 	void			SetSizeX(_int iSizeX) { m_iSizeX = iSizeX; }
@@ -44,7 +48,8 @@ public:
 	void			SetLifeTime(_float Time) { m_fLifeTime = Time; }
 	void			SetRealTime(_float Time) { m_fRealTime = Time; }
 	void			SetDelayTime(_float Time) { m_fDelayTime = Time; }
-
+	void			SetAllBillboard(_bool bCheck) { m_bAllBillboardCheck = bCheck; }
+	void			SetYBillboard(_bool bCheck) { m_bYBillboardCheck = bCheck; }
 
 	_int			GetFrame(void) { return m_iFrame; }
 	_int			GetSizeX(void) { return m_iSizeX; }
@@ -52,7 +57,11 @@ public:
 	_float			GetLifeTime(void) { return m_fLifeTime; }
 	_float			GetRealTime(void) { return m_fRealTime; }
 	_float			GetDelayTime(void) { return m_fDelayTime; }
+	_bool			GetAllBillboard(void) { return m_bAllBillboardCheck; }
+	_bool			GetYBillboard(void) { return m_bYBillboardCheck; }
 
+public:
+	void			ComputeBillboard(void);
 };
 
 #endif

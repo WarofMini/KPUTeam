@@ -259,6 +259,9 @@
     <Filter Include="02.Object\08.UI\03.DefaultUI">
       <UniqueIdentifier>{d4ce6522-fb5c-4a9c-9403-ccc74d86978e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\06.PhysicsObject\01.DefaultPhysicsObject">
+      <UniqueIdentifier>{25515352-ce47-40ee-a315-81af0d29dfdd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -522,6 +525,9 @@
     <ClInclude Include="..\Codes\DefaultUI.h">
       <Filter>02.Object\08.UI\03.DefaultUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\DefaultPhysicsObject.h">
+      <Filter>02.Object\06.PhysicsObject\01.DefaultPhysicsObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -742,6 +748,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\DefaultUI.cpp">
       <Filter>02.Object\08.UI\03.DefaultUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\DefaultPhysicsObject.cpp">
+      <Filter>02.Object\06.PhysicsObject\01.DefaultPhysicsObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

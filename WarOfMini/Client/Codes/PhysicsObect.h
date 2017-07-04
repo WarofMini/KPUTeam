@@ -40,8 +40,6 @@ public:
 public:
 	void			SetPosition(XMFLOAT3 vPosition);
 	void			SetRotate(XMFLOAT3 vRot);
-
-
 };
 
 
