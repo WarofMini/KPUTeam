@@ -47,7 +47,7 @@ _int CTitle::Update(const _float & fTimeDelta)
 {
 	CScene::Update(fTimeDelta);
 
-	if ((*m_bSceneCheck) == true && ((GetAsyncKeyState(VK_RETURN))))
+	if ((*m_bSceneCheck) == true && ((GetAsyncKeyState(VK_RETURN) & 0x8000)))
 	{
 		CManagement::GetInstance()->Change_Scene(CSceneSelector(SCENE_LOGO));
 	}

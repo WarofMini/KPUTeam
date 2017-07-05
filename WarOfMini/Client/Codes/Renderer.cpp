@@ -99,7 +99,7 @@ HRESULT CRenderer::Ready_Renderer(void)
 
 void CRenderer::Render(void)
 {
-	m_pContext->ClearRenderTargetView((CRenderTargetMgr::GetInstance()->Get_RanderTargetView(L"RT_Blend"))[0], D3DXCOLOR(0.f, 0.f, 1.f, 0.f));
+	m_pContext->ClearRenderTargetView((CRenderTargetMgr::GetInstance()->Get_RanderTargetView(L"RT_Blend"))[0], D3DXCOLOR(0.f, 0.f, 0.f, 0.f));
 	m_pContext->ClearRenderTargetView((CRenderTargetMgr::GetInstance()->Get_RanderTargetView(L"RT_Blend"))[1], D3DXCOLOR(1.f, 1.f, 1.f, 0.f));
 	m_pContext->ClearDepthStencilView((CRenderTargetMgr::GetInstance()->Get_DepthStencilView(L"RT_Blend")), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 

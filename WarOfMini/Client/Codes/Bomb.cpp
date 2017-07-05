@@ -18,6 +18,7 @@ CBomb::CBomb(ID3D11DeviceContext * pContext)
 	m_fLifeTime = 1.f;
 	m_fRealTime = 0.0f;
 	m_fDelayTime = 0.0f;
+	m_bAllBillboardCheck = true;
 }
 
 CBomb::~CBomb(void)
