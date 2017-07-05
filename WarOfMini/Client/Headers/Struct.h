@@ -86,7 +86,8 @@ typedef struct tagObjectInfo
 
 }OBJ_INFO;
 
-typedef struct tagClusData {
+typedef struct tagClusData 
+{
 	XMFLOAT4 R;
 	XMFLOAT3 T;
 	XMFLOAT3 S;

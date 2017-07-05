@@ -89,7 +89,6 @@ HRESULT CMainApp::Initialize(void)
 	//Ready Font
 	CFontMgr::GetInstance()->Ready_Font(pGraphicDev, pContext, L"∞ÌµÒ");
 
-
 	return S_OK;
 }
 
@@ -245,7 +244,7 @@ void CMainApp::Ready_TextureFromFile(ID3D11Device* pGraphicDev, ID3D11DeviceCont
 
 void CMainApp::Render_FPS(void)
 {
-	////Render Font
+	//Render Font
 	CFontMgr::GetInstance()->Render_Font(L"∞ÌµÒ", L"<Debug Information>", 15.f, 10.f, 0.f, D3DXCOLOR(0.0f, 0.f, 1.f, 1.f));
 	CFontMgr::GetInstance()->Render_Font(L"∞ÌµÒ", m_szFPS, 15.f, 10.f, 30.f, D3DXCOLOR(0.0f, 1.f, 0.f, 1.f));
 }
@@ -341,9 +340,9 @@ void CMainApp::Stage_DebugInfo(void)
 
 	CFontMgr::GetInstance()->Render_Font(L"∞ÌµÒ", strOnOff.c_str(), 15.f, 130.f, 252.f, OnOffColor);
 
+	CFontMgr::GetInstance()->Render_Font(L"∞ÌµÒ", L"F4 : »≠∏È≈©±‚ ¡∂¿˝", 15.f, 10.f, 275.f, D3DXCOLOR(0.0f, 1.0f, 0.f, 1.f));
 
-	CFontMgr::GetInstance()->Render_Font(L"∞ÌµÒ", L"F4 : »≠∏È≈©±‚ ¡∂¿˝", 15.f, 10.f, 275.f, D3DXCOLOR(0.0f, 0.0f, 1.f, 1.f));
-
+	CFontMgr::GetInstance()->Render_Font(L"∞ÌµÒ", L"K : ∑ª¥ı≈∏∞Ÿ On/Off", 15.f, 10.f, 295.f, D3DXCOLOR(0.0f, 1.0f, 0.f, 1.f));
 
 }
 

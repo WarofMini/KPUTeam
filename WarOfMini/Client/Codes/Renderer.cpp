@@ -129,11 +129,14 @@ void CRenderer::Render(void)
 	// Render Window
 	m_pContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
 
-	//if (Get_InputKeyDown(DIK_8)) 
-	//	m_bDrawRenderTarget = !m_bDrawRenderTarget;
-	//if (m_bDrawRenderTarget) 
-	//	Render_RenderTarget(L"RT_Blend");
 
+	//·»´õÅ¸°Ù On/ Off
+	if((GetAsyncKeyState('K')) & 1) 
+		m_bDrawRenderTarget = !m_bDrawRenderTarget;
+	if (m_bDrawRenderTarget) 
+		CRenderTargetMgr::GetInstance()->Render(L"RT_Blend");
+
+	
 	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_FogResult"));
 
 	ID3D11Buffer* pBaseShaderCB = CGraphicDev::GetInstance()->GetBaseShaderCB();
