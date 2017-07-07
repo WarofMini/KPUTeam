@@ -9,7 +9,7 @@ class CGun;
 class CBulletNumbering
 	: public CUI
 {
-protected:
+private:
 	explicit CBulletNumbering(ID3D11DeviceContext* pContext);
 	virtual ~CBulletNumbering(void);
 

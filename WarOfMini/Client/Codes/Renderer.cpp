@@ -106,7 +106,7 @@ void CRenderer::Render(void)
 	m_pRenderTargetView = CGraphicDev::GetInstance()->GetRenderTargetView();
 	m_pDepthStencilView = CGraphicDev::GetInstance()->GetDepthStencilView();
 
-	m_pContext->ClearRenderTargetView(m_pRenderTargetView, D3DXCOLOR(0.f, 0.f, 1.0f, 0.f));
+	m_pContext->ClearRenderTargetView(m_pRenderTargetView, D3DXCOLOR(0.f, 0.f, 0.0f, 0.f));
 	m_pContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 
 	Render_Priority();
@@ -154,10 +154,10 @@ void CRenderer::Render(void)
 	m_pContext->VSSetConstantBuffers(0, 1, &pBaseShaderCB);
 	m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_FogResult"), NULL, 0);
 	m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
-
+	
 	for (_uint uiSlot = 0; uiSlot < 2; ++uiSlot)
 		CRenderTargetMgr::GetInstance()->Set_Texture(L"RT_Blend", uiSlot, uiSlot);
-
+		
 	m_pRcTex->Render();
 
 }

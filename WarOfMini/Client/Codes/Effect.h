@@ -7,11 +7,12 @@ class CTextures;
 class CTransform;
 class CRcTex;
 
-class CEffect abstract
+class CEffect 
 	: public CGameObject
 {
 protected:
 	explicit CEffect(ID3D11DeviceContext* pContext);
+	explicit CEffect(const CEffect& rhs);
 	virtual ~CEffect(void);
 
 public:
@@ -19,6 +20,7 @@ public:
 	virtual INT		Update(const FLOAT& fTimeDelta);
 	virtual void	Render(void);
 	virtual void	Release(void);
+
 
 protected:
 	virtual HRESULT Ready_Component(void);
@@ -65,6 +67,9 @@ public:
 	void			SetPosition(XMFLOAT3 vPos);
 	void			SetScale(XMFLOAT3 vScale);
 	void			SetRotate(XMFLOAT3 vRotate);
+
+public:
+	static	CEffect*	Clone_Effect(const CEffect& rhs);
 };
 
 #endif

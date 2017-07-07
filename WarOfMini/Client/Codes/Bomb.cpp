@@ -40,7 +40,7 @@ HRESULT CBomb::Initialize(void)
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
 
-	m_pTransform->m_vScale = XMFLOAT3(100.f, 100.f, 0.f);
+	m_pTransform->m_vScale = XMFLOAT3(10.f, 10.f, 0.f);
 
 	m_pTransform->m_vPos = XMFLOAT3(50.f, 80.f, 0.f);
 

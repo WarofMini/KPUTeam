@@ -10,7 +10,7 @@ class CRcTex;
 class CBomb
 	: public CEffect
 {
-protected:
+private:
 	explicit CBomb(ID3D11DeviceContext* pContext);
 	virtual ~CBomb(void);
 

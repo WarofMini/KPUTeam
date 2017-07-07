@@ -6,7 +6,7 @@
 class CAim
 	: public CUI
 {
-protected:
+private:
 	explicit CAim(ID3D11DeviceContext* pContext);
 	virtual ~CAim(void);
 

@@ -107,11 +107,12 @@ HRESULT CStage::Ready_GameLogic(void)
 	*/
 
 
-	//Effect
+	//Effect 40000 : fps 11
+
 	pGameObject = CBomb::Create(m_pContext);
 	if (NULL == pGameObject)
 		return E_FAIL;
-	pLayer->Ready_Object(L"Effect", pGameObject);	
+	pLayer->Ready_Object(L"Effect", pGameObject);
 	
 
 	/*

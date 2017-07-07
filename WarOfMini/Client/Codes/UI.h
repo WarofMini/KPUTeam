@@ -7,7 +7,7 @@ class CTransform;
 class CTextures;
 class CRcTex;
 
-class CUI abstract
+class CUI 
 	: public CGameObject
 {
 

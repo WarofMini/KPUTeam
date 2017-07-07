@@ -6,7 +6,7 @@
 class CDefaultUI
 	: public CUI
 {
-protected:
+private:
 	explicit CDefaultUI(ID3D11DeviceContext* pContext);
 	virtual ~CDefaultUI(void);
 

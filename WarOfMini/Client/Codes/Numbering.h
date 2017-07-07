@@ -6,7 +6,7 @@
 class CNumbering
 	: public CUI
 {
-protected:
+private:
 	explicit CNumbering(ID3D11DeviceContext* pContext);
 	virtual ~CNumbering(void);
 
