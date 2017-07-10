@@ -17,6 +17,7 @@
 #include "Bomb.h"
 #include "BulletNumbering.h"
 #include "DefaultUI.h"
+#include "Cloth.h"
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 : CScene(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking)
@@ -614,6 +615,10 @@ HRESULT CStage::InitPhysicsObject(void)
 
 	pLayer->Ready_Object(L"PhysicsDoor", pDoorObject);
 
+
+	CCloth* pClothObject = CCloth::Create(m_pContext);
+	(pClothObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(1.99f, 2.0f, 2.5f), m_pCooking, "PhysicsCloth");
+	pLayer->Ready_Object(L"PhysicsCloth", pClothObject);
 
 	return S_OK;
 }

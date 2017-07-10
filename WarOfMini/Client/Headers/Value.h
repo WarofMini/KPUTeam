@@ -29,6 +29,4 @@ const _ubyte INSTCNT = 32;
 #define PS_SLOT_SAMPLER_STATE		0x00
 
 
-
-
 #endif

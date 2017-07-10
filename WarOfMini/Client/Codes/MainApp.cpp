@@ -19,7 +19,7 @@ CMainApp::CMainApp(void)
 , m_fTime(0.0f)
 , m_pPVDConnection(NULL)
 {
-	
+	srand(GetTickCount());
 	ZeroMemory(&m_szFPS, sizeof(_tchar) * 128);
 	m_bDebugRender = true;
 	//ÄÜ¼ÖÃ¢===================================
