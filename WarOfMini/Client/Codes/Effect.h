@@ -12,7 +12,6 @@ class CEffect
 {
 protected:
 	explicit CEffect(ID3D11DeviceContext* pContext);
-	explicit CEffect(const CEffect& rhs);
 	virtual ~CEffect(void);
 
 public:
@@ -67,9 +66,6 @@ public:
 	void			SetPosition(XMFLOAT3 vPos);
 	void			SetScale(XMFLOAT3 vScale);
 	void			SetRotate(XMFLOAT3 vRotate);
-
-public:
-	static	CEffect*	Clone_Effect(const CEffect& rhs);
 };
 
 #endif

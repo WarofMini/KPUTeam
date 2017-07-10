@@ -268,8 +268,8 @@
     <Filter Include="02.Object\08.UI\03.DefaultUI">
       <UniqueIdentifier>{d4ce6522-fb5c-4a9c-9403-ccc74d86978e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\07.Effect\01.EffectMgr">
-      <UniqueIdentifier>{dcd34fbf-d45a-4ec4-93d7-a063f23d477a}</UniqueIdentifier>
+    <Filter Include="02.Object\06.PhysicsObject\02.Cloth">
+      <UniqueIdentifier>{1c3bb01a-74f7-4126-823a-e1f68d7c10d9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -543,8 +543,8 @@
     <ClInclude Include="..\Codes\TitleBack.h">
       <Filter>02.Object\09.TitleBack</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\EffectMgr.h">
-      <Filter>02.Object\07.Effect\01.EffectMgr</Filter>
+    <ClInclude Include="..\Codes\Cloth.h">
+      <Filter>02.Object\06.PhysicsObject\02.Cloth</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -776,8 +776,8 @@
     <ClCompile Include="..\Codes\TitleBack.cpp">
       <Filter>02.Object\09.TitleBack</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\EffectMgr.cpp">
-      <Filter>02.Object\07.Effect\01.EffectMgr</Filter>
+    <ClCompile Include="..\Codes\Cloth.cpp">
+      <Filter>02.Object\06.PhysicsObject\02.Cloth</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

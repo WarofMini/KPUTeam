@@ -26,23 +26,6 @@ CEffect::CEffect(ID3D11DeviceContext * pContext)
 
 }
 
-CEffect::CEffect(const CEffect & rhs)
-:CGameObject(rhs.m_pContext)
-, m_pBuffer(rhs.m_pBuffer)
-, m_pTexture(rhs.m_pTexture)
-, m_pTransform(rhs.m_pTransform)
-, m_iFrame(rhs.m_iFrame)
-, m_iSizeX(rhs.m_iSizeX)
-, m_iSizeY(rhs.m_iSizeY)
-, m_fLifeTime(rhs.m_fLifeTime)
-, m_fRealTime(rhs.m_fRealTime)
-, m_fDelayTime(rhs.m_fDelayTime)
-, m_bAllBillboardCheck(rhs.m_bAllBillboardCheck)
-, m_bYBillboardCheck(rhs.m_bYBillboardCheck)
-{
-
-}
-
 CEffect::~CEffect(void)
 {
 }
@@ -133,9 +116,4 @@ void CEffect::SetScale(XMFLOAT3 vScale)
 void CEffect::SetRotate(XMFLOAT3 vRotate)
 {
 	m_pTransform->m_vAngle = vRotate;
-}
-
-CEffect * CEffect::Clone_Effect(const CEffect & rhs)
-{
-	return new CEffect(rhs);
 }

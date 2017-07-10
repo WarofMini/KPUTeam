@@ -7,7 +7,7 @@
 class CDefaultPhysicsObect 
 	: public CPhysicsObect
 {
-protected:
+private:
 	explicit CDefaultPhysicsObect(ID3D11DeviceContext* pContext);
 	virtual ~CDefaultPhysicsObect(void);
 

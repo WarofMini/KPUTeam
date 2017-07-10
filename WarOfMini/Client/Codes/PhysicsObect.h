@@ -6,7 +6,7 @@
 class CTransform;
 
 
-class CPhysicsObect abstract
+class CPhysicsObect
 	: public CGameObject
 {
 protected:

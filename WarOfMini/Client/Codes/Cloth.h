@@ -1,18 +1,21 @@
-#ifndef PhysicsDoor_h__
-#define PhysicsDoor_h__
+#ifndef Cloth_h__
+#define Cloth_h__
 
 #include "PhysicsObect.h"
 
 
-class CPhysicsDoor
+class CCloth
 	: public CPhysicsObect
 {
 private:
-	explicit CPhysicsDoor(ID3D11DeviceContext* pContext);
-	virtual ~CPhysicsDoor(void);
+	explicit CCloth(ID3D11DeviceContext* pContext);
+	virtual ~CCloth(void);
+
+private:
+	PxCloth*				 m_pCloth;
 
 public:
-	static CPhysicsDoor* Create(ID3D11DeviceContext* pContext);
+	static CCloth* Create(ID3D11DeviceContext* pContext);
 
 public:
 	virtual HRESULT	Initialize(void);
@@ -26,13 +29,8 @@ protected:
 public:
 	virtual void	BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, XMFLOAT3 vScale, PxCooking* pCooking, const char* name);
 
-	void	CreateChain(PxPhysics * pPxPhysics, PxScene * pPxScene);
-
-private:
-	XMFLOAT3	m_vSeparation;
-
-public:
-	void		SetSeparation(XMFLOAT3 vSeparation) { m_vSeparation = vSeparation;}
 };
 
-#endif //PhysicsDoor
+
+#endif // Cloth
+

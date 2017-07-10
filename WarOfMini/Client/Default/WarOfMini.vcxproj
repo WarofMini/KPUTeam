@@ -168,6 +168,7 @@
     <ClInclude Include="..\Codes\BulletNumbering.h" />
     <ClInclude Include="..\Codes\Camera.h" />
     <ClInclude Include="..\Codes\CameraMgr.h" />
+    <ClInclude Include="..\Codes\Cloth.h" />
     <ClInclude Include="..\Codes\Component.h" />
     <ClInclude Include="..\Codes\CubeTex.h" />
     <ClInclude Include="..\Codes\DefaultObject.h" />
@@ -177,7 +178,6 @@
     <ClInclude Include="..\Codes\DynamicMesh.h" />
     <ClInclude Include="..\Codes\DynamicObject.h" />
     <ClInclude Include="..\Codes\Effect.h" />
-    <ClInclude Include="..\Codes\EffectMgr.h" />
     <ClInclude Include="..\Codes\Equipment.h" />
     <ClInclude Include="..\Codes\Font.h" />
     <ClInclude Include="..\Codes\FontMgr.h" />
@@ -261,6 +261,7 @@
     <ClCompile Include="..\Codes\BulletNumbering.cpp" />
     <ClCompile Include="..\Codes\Camera.cpp" />
     <ClCompile Include="..\Codes\CameraMgr.cpp" />
+    <ClCompile Include="..\Codes\Cloth.cpp" />
     <ClCompile Include="..\Codes\Component.cpp" />
     <ClCompile Include="..\Codes\CubeTex.cpp" />
     <ClCompile Include="..\Codes\DefaultObject.cpp" />
@@ -270,7 +271,6 @@
     <ClCompile Include="..\Codes\DynamicMesh.cpp" />
     <ClCompile Include="..\Codes\DynamicObject.cpp" />
     <ClCompile Include="..\Codes\Effect.cpp" />
-    <ClCompile Include="..\Codes\EffectMgr.cpp" />
     <ClCompile Include="..\Codes\Equipment.cpp" />
     <ClCompile Include="..\Codes\Font.cpp" />
     <ClCompile Include="..\Codes\FontMgr.cpp" />
