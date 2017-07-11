@@ -120,8 +120,8 @@ void CCloth::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *p
 	PxTransform pos = PxTransform(PxVec3(20.f, 20.f, 20.f), q);
 
 	PxU32 numFlagRow = 2;
-	PxU32 resX = 6, resY = 6;
-	PxReal sizeX = 5.f, sizeY = 2.f, height = 5.f;
+	PxU32 resX = 10, resY = 10;
+	PxReal sizeX = 5.f, sizeY = 5.f, height = 5.f;
 
 	vector<PxVec4> vertices;
 	vector<PxU32> primitives;
@@ -152,7 +152,7 @@ void CCloth::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *p
 
 
 	// set solver settings
-	m_pCloth->setSolverFrequency(120);
+	m_pCloth->setSolverFrequency(240);
 	m_pCloth->setDampingCoefficient(PxVec3(0.0f));
 
 	m_pCloth->setStretchConfig(PxClothFabricPhaseType::eBENDING, PxClothStretchConfig(0.1f));
@@ -162,6 +162,11 @@ void CCloth::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *p
 
 PxClothMeshDesc CCloth::CreateMeshGrid(PxVec3 dirU, PxVec3 dirV, PxU32 numU, PxU32 numV, vector<PxVec4>& vertices, vector<PxU32>& indices, vector<PxVec2>& texcoords)
 {
+	//dirU = PxVec3(5.0f, 0.f, 0.f)
+	//dir V =PxVec3(0.0f, -5.0f, 0.0f), 
+	//numU = 10
+	//numV = 10
+
 	int numVertices = numU * numV; //Vertex의 개수
 	int numQuads = (numU - 1) * (numV - 1); //4각형의 개수
 
@@ -170,8 +175,8 @@ PxClothMeshDesc CCloth::CreateMeshGrid(PxVec3 dirU, PxVec3 dirV, PxU32 numU, PxU
 	texcoords.resize(numVertices);
 
 	// fill in point data
-	PxReal scaleU = 1 / PxReal(numU - 1);
-	PxReal scaleV = 1 / PxReal(numV - 1);
+	PxReal scaleU = 1 / PxReal(numU - 1);   //1/5
+	PxReal scaleV = 1 / PxReal(numV - 1);  // 1/5
 
 
 	PxVec4* posIt = &(*vertices.begin());
@@ -185,8 +190,12 @@ PxClothMeshDesc CCloth::CreateMeshGrid(PxVec3 dirU, PxVec3 dirV, PxU32 numU, PxU
 		{
 			PxReal texU = j * scaleU;
 			PxVec3 posU = (texU - 0.5f) * dirU;
-			*posIt++ = PxVec4(posU + posV, 1.0f);
-			*texIt++ = PxVec2(texU, 1.0f - texV);
+
+			PxVec4 pos = PxVec4(posU + posV, 1.0f);
+			PxVec2 tex = PxVec2(texU, 1.0f - texV);
+
+			*posIt++ = pos;
+			*texIt++ = tex;
 		}
 	}
 

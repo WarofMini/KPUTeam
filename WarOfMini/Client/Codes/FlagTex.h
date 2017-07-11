@@ -30,6 +30,9 @@ private:
 
 private:
 	VTXTEX*					m_pVertex;
+
+public:
+	VTXTEX*					GetVertex(void) { return m_pVertex; }
 };
 
 

@@ -7,10 +7,10 @@
 IMPLEMENT_SINGLETON(CResourcesMgr)
 
 CResourcesMgr::CResourcesMgr(void)
-	: m_pmapResource(NULL)
-	, m_wReservedSize(0)
-	, m_pFbxSdkMgr(NULL)
-	, m_pRootMeshStore(NULL)
+: m_pmapResource(NULL)
+, m_wReservedSize(0)
+, m_pFbxSdkMgr(NULL)
+, m_pRootMeshStore(NULL)
 {
 	Ready_FbxSdkMgr();
 }
@@ -76,7 +76,8 @@ HRESULT CResourcesMgr::Ready_Buffer(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 		pResource = CCubeTex::Create(pGraphicDev, pContext);
 		break;
 
-	case BUFFER_TERRAIN:
+	case BUFFER_FLAGTEX:
+		pResource = CFlagTex::Create(pGraphicDev, pContext, wCntX, wCntZ, wItv);
 		break;
 	}
 

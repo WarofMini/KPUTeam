@@ -42,12 +42,7 @@ CFlagTex* CFlagTex::Clone_Resource(void)
 HRESULT CFlagTex::Create_Buffer(const WORD& wCntX, const WORD& wCntZ, const WORD& wItv)
 {
 	HRESULT hr = E_FAIL;
-	//HANDLE hFile = nullptr;
 
-	//DWORD dwByte;
-	XMFLOAT3 vVtxPos;
-
-	//hFile = CreateFile(L"../bin/Data/Data_Ter.dat", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	// Vertex
 	m_uiVtxCnt = wCntX * wCntZ;
@@ -61,21 +56,11 @@ HRESULT CFlagTex::Create_Buffer(const WORD& wCntX, const WORD& wCntZ, const WORD
 		{
 			iIndex = z * wCntX + x;
 
-			/*ReadFile(hFile, &vVtxPos, sizeof(XMFLOAT3), &dwByte, NULL);
-
-			if (dwByte == 0)
-				break;*/
-
-			m_pVertex[iIndex].vPos = XMFLOAT3(
-				float(x) * wItv,
-				0.0f,
-				float(z) * wItv);;
+			m_pVertex[iIndex].vPos = XMFLOAT3(float(x) * wItv, 0.0f, float(z) * wItv);
 			m_pVertex[iIndex].vTexUV = XMFLOAT2(x / (wCntX - 1.f), z / (wCntZ - 1.f));
 			m_pVertex[iIndex].vNormal = XMFLOAT3(0.f, 0.f, 0.f);
 		}
 	}
-
-//	CloseHandle(hFile);
 
 	// Index
 	m_uiIdxCnt = (wCntX - 1) * (wCntZ - 1) * 2 * 3;
@@ -153,7 +138,6 @@ HRESULT CFlagTex::Create_Buffer(const WORD& wCntX, const WORD& wCntZ, const WORD
 
 	// Create Index Buffer
 	ZeroMemory(&tBufferDesc, sizeof(D3D11_BUFFER_DESC));
-
 	tBufferDesc.ByteWidth = sizeof(UINT) * m_uiIdxCnt;
 	tBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
