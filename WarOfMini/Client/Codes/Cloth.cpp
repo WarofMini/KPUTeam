@@ -120,7 +120,7 @@ void CCloth::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *p
 	PxTransform pos = PxTransform(PxVec3(20.f, 20.f, 20.f), q);
 
 	PxU32 numFlagRow = 2;
-	PxU32 resX = 10, resY = 10;
+	PxU32 resX = 6, resY = 6;
 	PxReal sizeX = 5.f, sizeY = 2.f, height = 5.f;
 
 	vector<PxVec4> vertices;
@@ -162,8 +162,8 @@ void CCloth::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *p
 
 PxClothMeshDesc CCloth::CreateMeshGrid(PxVec3 dirU, PxVec3 dirV, PxU32 numU, PxU32 numV, vector<PxVec4>& vertices, vector<PxU32>& indices, vector<PxVec2>& texcoords)
 {
-	int numVertices = numU * numV;
-	int numQuads = (numU - 1) * (numV - 1);
+	int numVertices = numU * numV; //Vertex의 개수
+	int numQuads = (numU - 1) * (numV - 1); //4각형의 개수
 
 	vertices.resize(numVertices);
 	indices.resize(numQuads * 4);

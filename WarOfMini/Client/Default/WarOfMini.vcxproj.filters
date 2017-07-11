@@ -271,6 +271,9 @@
     <Filter Include="02.Object\06.PhysicsObject\02.Cloth">
       <UniqueIdentifier>{1c3bb01a-74f7-4126-823a-e1f68d7c10d9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="95.Engine\01.Resources\03.Buffer\03.FlagTex">
+      <UniqueIdentifier>{2816a038-24b0-4ff6-a104-8e6a6118518d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -546,6 +549,9 @@
     <ClInclude Include="..\Codes\Cloth.h">
       <Filter>02.Object\06.PhysicsObject\02.Cloth</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\FlagTex.h">
+      <Filter>95.Engine\01.Resources\03.Buffer\03.FlagTex</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -778,6 +784,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Cloth.cpp">
       <Filter>02.Object\06.PhysicsObject\02.Cloth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\FlagTex.cpp">
+      <Filter>95.Engine\01.Resources\03.Buffer\03.FlagTex</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
