@@ -3,6 +3,10 @@
 
 #include "PhysicsObect.h"
 
+
+class CFlagTex;
+class CTextures;
+
 class CCloth
 	: public CPhysicsObect
 {
@@ -16,6 +20,10 @@ private:
 	PxVec3                   mWindRange;
 	PxReal                   mWindStrength;
 	PxReal                   mTime;
+	CFlagTex*				 m_pBuffer;
+	CTextures*				 m_pTexture;
+	VTXTEX*					 m_pClothVtx;
+	int						 m_iVtxCount;
 public:
 	static CCloth* Create(ID3D11DeviceContext* pContext);
 
@@ -34,9 +42,17 @@ public:
 	PxClothMeshDesc	CreateMeshGrid(PxVec3 dirU, PxVec3 dirV, PxU32 numU, PxU32 numV,
 		vector<PxVec4>& vertices, vector<PxU32>& indices, vector<PxVec2>& texcoords);
 
-	void setWind(const PxVec3 &dir, PxReal strength, const PxVec3& range);
+	void SetWind(const PxVec3 &dir, PxReal strength, const PxVec3& range);
 
 	PxF32 WindRand(PxF32 a, PxF32 b);
+
+	void UpdateWind(const _float& fTimeDelta);
+
+	void ClothPhysXUpdate(const _float & fTimeDelta);
+
+	void ClothSetPosition(XMFLOAT3 vPosition);
+	void ClothSetRotate(XMFLOAT3 vRot);
+
 };
 
 

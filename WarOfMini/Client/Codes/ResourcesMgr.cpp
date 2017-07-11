@@ -56,7 +56,7 @@ void CResourcesMgr::Ready_FbxSdkMgr(void)
 
 HRESULT CResourcesMgr::Ready_Buffer(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext
 	, const _ushort& wContainerIdx, BUFFERTYPE eBufferType, const _tchar* pResourceKey
-	, const _ushort& wCntX, const _ushort& wCntZ, const _ushort& wItv)
+	, const _ushort& wCntX, const _ushort& wCntZ, const _ushort& wItvX, const _ushort& wItvZ)
 {
 	NULL_CHECK_RETURN_MSG(m_wReservedSize, E_FAIL, L"ReservedSize Not Failed");
 	NULL_CHECK_RETURN_MSG(m_pmapResource, E_FAIL, L"pmapResource Not Failed");
@@ -77,7 +77,7 @@ HRESULT CResourcesMgr::Ready_Buffer(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 		break;
 
 	case BUFFER_FLAGTEX:
-		pResource = CFlagTex::Create(pGraphicDev, pContext, wCntX, wCntZ, wItv);
+		pResource = CFlagTex::Create(pGraphicDev, pContext, wCntX, wCntZ, wItvX, wItvZ);
 		break;
 	}
 

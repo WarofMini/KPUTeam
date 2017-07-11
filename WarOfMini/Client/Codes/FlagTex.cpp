@@ -9,6 +9,10 @@ CFlagTex::CFlagTex(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
 , m_uiVtxCnt(0)
 , m_uiIdxCnt(0)
 , m_pVertex(nullptr)
+, m_fResX(NULL)
+, m_fResZ(NULL)
+, m_fSizeX(NULL)
+, m_fSizeZ(NULL)
 {
 }
 
@@ -17,11 +21,11 @@ CFlagTex::~CFlagTex(void)
 }
 
 CFlagTex* CFlagTex::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext
-	, const WORD& wCntX, const WORD& wCntZ, const WORD& wItv)
+	, const WORD& wCntX, const WORD& wCntZ, const WORD& wItvX, const WORD& wItvZ)
 {
 	CFlagTex* pFlagTex = new CFlagTex(pGraphicDev, pContext);
 
-	if (FAILED(pFlagTex->Create_Buffer(wCntX, wCntZ, wItv)))
+	if (FAILED(pFlagTex->Create_Buffer(wCntX, wCntZ, wItvX, wItvZ)))
 	{
 		MSG_BOX(L"FlagTex Create_Buffer Failed");
 		Safe_Release(pFlagTex);
@@ -39,17 +43,53 @@ CFlagTex* CFlagTex::Clone_Resource(void)
 	return pFlagTex;
 }
 
-HRESULT CFlagTex::Create_Buffer(const WORD& wCntX, const WORD& wCntZ, const WORD& wItv)
+HRESULT CFlagTex::Create_Buffer(const WORD& wCntX, const WORD& wCntZ, const WORD& wItvX, const WORD& wItvZ)
 {
 	HRESULT hr = E_FAIL;
 
+	m_fResX = wCntX;
+	m_fResZ = wCntZ;
+	m_fSizeX = wItvX;
+	m_fSizeZ = wItvZ;
 
+	PxVec3 dirU = PxVec3((_float)wItvX, 0.0f, 0.0f);
+	PxVec3 dirV = PxVec3(0.0f, -(_float)wItvZ, 0.0f);
 	// Vertex
-	m_uiVtxCnt = wCntX * wCntZ;
+	m_uiVtxCnt = wCntX * wCntZ; //VertexÀÇ °³¼ö
+
 	m_pVertex = new VTXTEX[m_uiVtxCnt];
 
-	int	iIndex = 0;
+	_int	iIndex = 0;
 
+	PxReal scaleU = 1 / PxReal(wCntX - 1);
+	PxReal scaleV = 1 / PxReal(wCntZ - 1);
+
+	for (_uint i = 0; i < wCntZ; i++)
+	{
+		PxReal texV = i * scaleV;
+
+		PxVec3 posV = (texV - 0.5f) * dirV;
+
+		for (PxU32 j = 0; j < wCntX; j++)
+		{
+			iIndex = i * wCntX + j;
+
+			PxReal texU = j * scaleU;
+			PxVec3 posU = (texU - 0.5f) * dirU;
+		
+			PxVec4 pos = PxVec4(posU + posV, 1.0f);
+			PxVec2 tex = PxVec2(texU,  texV - 1.f);
+
+			m_pVertex[iIndex].vPos = XMFLOAT3((_float)pos.x, (_float)pos.y, (_float)pos.z);
+			m_pVertex[iIndex].vTexUV = XMFLOAT2((_float)tex.x, (_float)tex.y);
+			m_pVertex[iIndex].vNormal = XMFLOAT3(0.f, 0.f, 0.f);
+
+		}
+
+	}
+
+
+	/*
 	for (int z = 0; z < wCntZ; ++z)
 	{
 		for (int x = 0; x < wCntX; ++x)
@@ -61,6 +101,8 @@ HRESULT CFlagTex::Create_Buffer(const WORD& wCntX, const WORD& wCntZ, const WORD
 			m_pVertex[iIndex].vNormal = XMFLOAT3(0.f, 0.f, 0.f);
 		}
 	}
+	*/
+
 
 	// Index
 	m_uiIdxCnt = (wCntX - 1) * (wCntZ - 1) * 2 * 3;
@@ -118,9 +160,9 @@ HRESULT CFlagTex::Create_Buffer(const WORD& wCntX, const WORD& wCntZ, const WORD
 	ZeroMemory(&tBufferDesc, sizeof(D3D11_BUFFER_DESC));
 
 	tBufferDesc.ByteWidth = sizeof(VTXTEX) * m_uiVtxCnt;
-	tBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+	tBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	tBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	tBufferDesc.CPUAccessFlags = 0;
+	tBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
 	D3D11_SUBRESOURCE_DATA tSubData;
 
@@ -138,8 +180,10 @@ HRESULT CFlagTex::Create_Buffer(const WORD& wCntX, const WORD& wCntZ, const WORD
 
 	// Create Index Buffer
 	ZeroMemory(&tBufferDesc, sizeof(D3D11_BUFFER_DESC));
+	tBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 	tBufferDesc.ByteWidth = sizeof(UINT) * m_uiIdxCnt;
 	tBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	tBufferDesc.CPUAccessFlags = 0;
 
 	tSubData.pSysMem = pIndex;
 
@@ -160,7 +204,7 @@ void CFlagTex::Render(void)
 {
 	UINT uiStride = sizeof(VTXTEX);
 	UINT uiOffset = 0;
-
+	
 	m_pContext->IASetVertexBuffers(0, 1, &m_pVB, &uiStride, &uiOffset);
 	m_pContext->IASetIndexBuffer(m_pIB, DXGI_FORMAT_R32_UINT, 0);
 
@@ -179,4 +223,33 @@ void CFlagTex::Release(void)
 	}
 
 	delete this;
+}
+
+void CFlagTex::GetVtxInfo(void * pVtxInfo)
+{
+	void* pOriVtx = NULL;
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+
+	m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+
+	pOriVtx = (VTXTEX*)mappedResource.pData;
+
+	memcpy(pVtxInfo, (void*)pOriVtx, sizeof(VTXTEX) * m_uiVtxCnt);
+
+	m_pContext->Unmap(m_pVB, 0);
+
+}
+
+void CFlagTex::SetVtxInfo(void * pVtxInfo)
+{
+	void* pOriVtx = NULL;
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+
+	m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+
+	pOriVtx = (VTXTEX*)mappedResource.pData;
+
+	memcpy(pOriVtx, (void*)pVtxInfo, sizeof(VTXTEX) * m_uiVtxCnt);
+
+	m_pContext->Unmap(m_pVB, 0);
 }

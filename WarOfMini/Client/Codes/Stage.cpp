@@ -617,7 +617,11 @@ HRESULT CStage::InitPhysicsObject(void)
 
 
 	CCloth* pClothObject = CCloth::Create(m_pContext);
-	(pClothObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(1.99f, 2.0f, 2.5f), m_pCooking, "PhysicsCloth");
+	(pClothObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(1.0f, 1.0f, 1.0f), m_pCooking, "PhysicsCloth");
+	(pClothObject)->ClothSetPosition(XMFLOAT3(50.0f, 50.0f, 0.0f));
+	(pClothObject)->ClothSetRotate(XMFLOAT3((_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f)));
+	(pClothObject)->SetWind(PxVec3(1.f, 0.1f, 0.f), 40.0f, PxVec3(0.0f, 10.0f, 10.0f));
+
 	pLayer->Ready_Object(L"PhysicsCloth", pClothObject);
 
 	return S_OK;

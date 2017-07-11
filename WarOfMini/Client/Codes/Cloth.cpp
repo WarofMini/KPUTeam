@@ -6,13 +6,17 @@
 #include "Management.h"
 #include "GraphicDev.h"
 #include "CameraMgr.h"
+#include "ResourcesMgr.h"
 
-PxTransform gPose = PxTransform(PxVec3(20, 20, 20), PxQuat(0, PxVec3(0, 0, 0)));
 
 CCloth::CCloth(ID3D11DeviceContext* pContext)
 : CPhysicsObect(pContext)
 , m_pCloth(NULL)
 , mTime(0.0f)
+, m_pBuffer(NULL)
+, m_pTexture(NULL)
+, m_pClothVtx(NULL)
+, m_iVtxCount(0)
 {
 	
 }
@@ -39,6 +43,11 @@ HRESULT CCloth::Initialize()
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
 
+	m_iVtxCount = m_pBuffer->GetResX() * m_pBuffer->GetResZ();
+
+	m_pClothVtx = new VTXTEX[m_iVtxCount];
+
+	m_pBuffer->GetVtxInfo(m_pClothVtx);
 
 	return S_OK;
 }
@@ -46,47 +55,30 @@ HRESULT CCloth::Initialize()
 _int CCloth::Update(const _float& fTimeDelta)
 {
 
-
 	CGameObject::Update(fTimeDelta);
 
-	setWind(PxVec3(1.f, 0.1f, 0.f), 40.0f, PxVec3(0.0f, 10.0f, 10.0f));
+	UpdateWind(fTimeDelta);
 
-	mTime += fTimeDelta * WindRand(0.0f, 1.0f);
-
-	float st = 1.0f + (float)sin(mTime);
-
-	float windStrength = WindRand(1.0f, st) * mWindStrength;
-	float windRangeStrength = WindRand(0.0f, 2.0f);
-
-	PxVec3 offset(PxReal(WindRand(-1, 1)), PxReal(WindRand(-1, 1)), PxReal(WindRand(-1, 1)));
-	float ct = 1.0f + (float)cos(mTime + 0.1);
-	offset *= ct;
-	PxVec3 windAcceleration = windStrength * mWindDir + windRangeStrength * mWindRange.multiply(offset);
-	m_pCloth->setExternalAcceleration(windAcceleration);
+	ClothPhysXUpdate(fTimeDelta);
 
 
 	PxClothParticleData* data = m_pCloth->lockParticleData();
 
 	PxClothParticle* pa = data->particles;
 
-	PxVec3 pos1 = pa[0].pos;
-	PxVec3 pos2 = pa[1].pos;
-	PxVec3 pos3 = pa[2].pos;
-	PxVec3 pos4 = pa[3].pos;
-	PxVec3 pos5 = pa[4].pos;
-	PxVec3 pos6 = pa[5].pos;
-	PxVec3 pos7 = pa[6].pos;
-	PxVec3 pos8 = pa[7].pos;
-	PxVec3 pos9 = pa[8].pos;
+	for (int i = 0; i < m_iVtxCount; ++i)
+	{
+		m_pClothVtx[i].vPos = XMFLOAT3(pa[i].pos.x, pa[i].pos.y, pa[i].pos.z);
+	}
+	
+	m_pBuffer->SetVtxInfo(m_pClothVtx);
 
 	 //update the cloth local frame
 	//gPose = PxTransform(PxVec3(0), PxQuat(PxPi / 240, PxVec3(0, 1, 0))) * gPose;
 	//m_pCloth->setTargetPose(gPose);
 
-	//PhysXUpdate(fTimeDelta);
 
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
-
 
 	return 0;
 }
@@ -94,20 +86,64 @@ _int CCloth::Update(const _float& fTimeDelta)
 
 void CCloth::Render(void)
 {
-	CPhysicsObect::Render();
+	CGraphicDev::GetInstance()->SetCullEnable(FALSE);
+
+	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Default"));
+
+	ID3D11Buffer* pBaseShaderCB = CGraphicDev::GetInstance()->GetBaseShaderCB();
+	ID3D11SamplerState* pBaseSampler = CGraphicDev::GetInstance()->GetBaseSampler();
+
+	BASESHADER_CB tBaseShaderCB;
+
+	tBaseShaderCB.matWorld = XMMatrixTranspose(XMLoadFloat4x4(&m_pTransform->m_matWorld));
+	tBaseShaderCB.matView = XMMatrixTranspose(XMLoadFloat4x4(CCameraMgr::GetInstance()->Get_CurCameraView()));
+	tBaseShaderCB.matProj = XMMatrixTranspose(XMLoadFloat4x4(CCameraMgr::GetInstance()->Get_CurCameraProj()));
+	
+	m_pContext->UpdateSubresource(pBaseShaderCB, 0, NULL, &tBaseShaderCB, 0, 0);
+
+
+	m_pContext->VSSetShader(CShaderMgr::GetInstance()->Get_VertexShader(L"Shader_Default"), NULL, 0);
+	m_pContext->VSSetConstantBuffers(0, 1, &pBaseShaderCB);
+	m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_Default"), NULL, 0);
+	m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
+
+	m_pTexture->Render(0, 0);
+	m_pBuffer->Render();
+
+	CGraphicDev::GetInstance()->SetCullEnable(TRUE);
+
 }
 
 
 void CCloth::Release(void)
 {
+	Safe_Delete_Array(m_pClothVtx);
 	CPhysicsObect::Release();
 }
 
 
 HRESULT CCloth::Ready_Component()
 {
-	if (FAILED(CPhysicsObect::Ready_Component()))
-		return E_FAIL;
+	CComponent* pComponent = NULL;
+
+	//Buffer
+	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, L"Buffer_FlagTex");
+	m_pBuffer = dynamic_cast<CFlagTex*>(pComponent);
+	if (pComponent == NULL) return E_FAIL;
+	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Buffer", pComponent));
+
+	//Texture
+	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, L"Texture_LogoBack");
+	m_pTexture = dynamic_cast<CTextures*>(pComponent);
+	if (pComponent == NULL) return E_FAIL;
+	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Texture", pComponent));
+
+
+	// Transform
+	pComponent = CTransform::Create();
+	m_pTransform = dynamic_cast<CTransform*>(pComponent);
+	if (pComponent == NULL) return E_FAIL;
+	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Transform", pComponent));
 
 	return S_OK;
 }
@@ -117,11 +153,10 @@ void CCloth::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *p
 {
 	PxQuat q = PxQuat(PxIdentity);
 
-	PxTransform pos = PxTransform(PxVec3(20.f, 20.f, 20.f), q);
+	PxTransform m_tPxPos = PxTransform(PxVec3(0.f, 0.f, 0.f), q);
 
-	PxU32 numFlagRow = 2;
-	PxU32 resX = 10, resY = 10;
-	PxReal sizeX = 5.f, sizeY = 5.f, height = 5.f;
+	PxU32 resX = m_pBuffer->GetResX(), resY = m_pBuffer->GetResZ();
+	PxReal sizeX = m_pBuffer->GetSizeX(), sizeY = m_pBuffer->GetSizeZ(), height = 5.f;
 
 	vector<PxVec4> vertices;
 	vector<PxU32> primitives;
@@ -144,7 +179,7 @@ void CCloth::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *p
 
 	// create the cloth actor
 	const PxClothParticle* particles = (const PxClothParticle*)meshDesc.points.data;
-	m_pCloth = pPxPhysics->createCloth(pos, *clothFabric, particles, PxClothFlags());
+	m_pCloth = pPxPhysics->createCloth(m_tPxPos, *clothFabric, particles, PxClothFlags());
 	PX_ASSERT(m_pCloth);
 
 	// add this cloth into the scene
@@ -158,15 +193,11 @@ void CCloth::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *p
 	m_pCloth->setStretchConfig(PxClothFabricPhaseType::eBENDING, PxClothStretchConfig(0.1f));
 	m_pCloth->setTetherConfig(PxClothTetherConfig(1.0f, 1.0f));
 
+	m_pTransform->m_vScale = XMFLOAT3(vScale.x, vScale.y, vScale.z);
 }
 
 PxClothMeshDesc CCloth::CreateMeshGrid(PxVec3 dirU, PxVec3 dirV, PxU32 numU, PxU32 numV, vector<PxVec4>& vertices, vector<PxU32>& indices, vector<PxVec2>& texcoords)
 {
-	//dirU = PxVec3(5.0f, 0.f, 0.f)
-	//dir V =PxVec3(0.0f, -5.0f, 0.0f), 
-	//numU = 10
-	//numV = 10
-
 	int numVertices = numU * numV; //Vertex의 개수
 	int numQuads = (numU - 1) * (numV - 1); //4각형의 개수
 
@@ -234,7 +265,7 @@ PxClothMeshDesc CCloth::CreateMeshGrid(PxVec3 dirU, PxVec3 dirV, PxU32 numU, PxU
 
 }
 
-void CCloth::setWind(const PxVec3 & dir, PxReal strength, const PxVec3 & range)
+void CCloth::SetWind(const PxVec3 & dir, PxReal strength, const PxVec3 & range)
 {
 	mWindStrength = strength;
 	mWindDir = dir;
@@ -244,4 +275,52 @@ void CCloth::setWind(const PxVec3 & dir, PxReal strength, const PxVec3 & range)
 PxF32 CCloth::WindRand(PxF32 a, PxF32 b)
 {
 	return ((b - a)*((float)rand() / RAND_MAX)) + a;
+}
+
+void CCloth::UpdateWind(const _float& fTimeDelta)
+{
+	mTime += fTimeDelta * WindRand(0.0f, 1.0f);
+
+	float st = 1.0f + (float)sin(mTime);
+
+	float windStrength = WindRand(1.0f, st) * mWindStrength;
+	float windRangeStrength = WindRand(0.0f, 2.0f);
+
+	PxVec3 offset(PxReal(WindRand(-1, 1)), PxReal(WindRand(-1, 1)), PxReal(WindRand(-1, 1)));
+	float ct = 1.0f + (float)cos(mTime + 0.1);
+	offset *= ct;
+	PxVec3 windAcceleration = windStrength * mWindDir + windRangeStrength * mWindRange.multiply(offset);
+	m_pCloth->setExternalAcceleration(windAcceleration);
+}
+
+void CCloth::ClothPhysXUpdate(const _float & fTimeDelta)
+{
+	XMMATRIX matScale = XMMatrixScaling((float)(m_pTransform->m_vScale.x), (float)(m_pTransform->m_vScale.y), (float)(m_pTransform->m_vScale.z));
+
+	PxTransform pT = m_pCloth->getGlobalPose();
+	PxMat44 m = PxMat44(pT);
+	PxVec3 RotatedOffset = m.rotate(PxVec3(0.0f, 0.0f, 0.0f));
+	m.setPosition(PxVec3(m.getPosition() + RotatedOffset));
+
+	XMStoreFloat4x4(&m_pTransform->m_matWorld, matScale * (XMMATRIX)m.front());
+}
+
+void CCloth::ClothSetPosition(XMFLOAT3 vPosition)
+{
+	PxTransform _PxTransform = m_pCloth->getGlobalPose();
+
+	_PxTransform.p = PxVec3(vPosition.x, vPosition.y, vPosition.z);
+
+	m_pCloth->setGlobalPose(_PxTransform);
+}
+
+void CCloth::ClothSetRotate(XMFLOAT3 vRot)
+{
+	PxTransform _PxTransform = m_pCloth->getGlobalPose();
+
+	_PxTransform.q *= PxQuat(vRot.x, PxVec3(1, 0, 0));
+	_PxTransform.q *= PxQuat(vRot.y, PxVec3(0, 1, 0));
+	_PxTransform.q *= PxQuat(vRot.z, PxVec3(0, 0, 1));
+
+	m_pCloth->setGlobalPose(_PxTransform);
 }

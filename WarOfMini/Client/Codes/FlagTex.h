@@ -12,11 +12,11 @@ private:
 
 public:
 	static CFlagTex* Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext
-		, const WORD& wCntX, const WORD& wCntZ, const WORD& wItv);
+		, const WORD& wCntX, const WORD& wCntZ, const WORD& wItvX, const WORD& wItvZ);
 
 private:
 	CFlagTex* Clone_Resource(void);
-	HRESULT Create_Buffer(const WORD& wCntX, const WORD& wCntZ, const WORD& wItv);
+	HRESULT Create_Buffer(const WORD& wCntX, const WORD& wCntZ, const WORD& wItvX, const WORD& wItvZ);
 
 public:
 	void Render(void);
@@ -25,14 +25,24 @@ public:
 private:
 	ID3D11Buffer*			m_pVB;
 	ID3D11Buffer*			m_pIB;
-	UINT					m_uiVtxCnt;
-	UINT					m_uiIdxCnt;
-
+	_uint					m_uiVtxCnt;
+	_uint					m_uiIdxCnt;
+	_float					m_fResX;
+	_float					m_fResZ;
+	_float					m_fSizeX;
+	_float					m_fSizeZ;
+	
 private:
 	VTXTEX*					m_pVertex;
 
 public:
 	VTXTEX*					GetVertex(void) { return m_pVertex; }
+	void					GetVtxInfo(void* pVtxInfo);
+	void					SetVtxInfo(void* pVtxInfo);
+	_float					GetResX(void) { return m_fResX; }
+	_float					GetResZ(void) { return m_fResZ; }
+	_float					GetSizeX(void) { return m_fSizeX; }
+	_float					GetSizeZ(void) { return m_fSizeZ; }
 };
 
 

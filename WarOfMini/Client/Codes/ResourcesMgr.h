@@ -28,7 +28,7 @@ public:
 public:
 	HRESULT Ready_Buffer(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext
 		, const _ushort& wContainerIdx, BUFFERTYPE eBufferType, const _tchar* pResourceKey
-		, const _ushort& wCntX = 0, const _ushort& wCntZ = 0, const _ushort& wItv = 0);
+		, const _ushort& wCntX = 0, const _ushort& wCntZ = 0, const _ushort& wItvX = 0, const _ushort& wItvZ = 0);
 
 	HRESULT Ready_Texture(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext
 		, const _ushort& wContainerIdx, const _tchar* pResourceKey, CTextures::TEXTURETYPE eTextureType

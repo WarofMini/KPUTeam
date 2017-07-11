@@ -63,7 +63,7 @@ HRESULT CMainApp::Initialize(void)
 	// Buffer
 	CResourcesMgr::GetInstance()->Ready_Buffer(pGraphicDev, pContext, RESOURCE_STAGE, CResourcesMgr::BUFFER_RCTEX, L"Buffer_RcTex");
 	CResourcesMgr::GetInstance()->Ready_Buffer(pGraphicDev, pContext, RESOURCE_STAGE, CResourcesMgr::BUFFER_CUBE, L"Buffer_CubeTex");
-
+	CResourcesMgr::GetInstance()->Ready_Buffer(pGraphicDev, pContext, RESOURCE_STAGE, CResourcesMgr::BUFFER_FLAGTEX, L"Buffer_FlagTex", 10, 10, 40, 20);
 	// Management
 	if (FAILED(CManagement::GetInstance()->Ready_Management(pGraphicDev, pContext, m_pPxPhysicsSDK, m_pPxScene, m_pPxControllerManager, m_pCooking)))
 	{
