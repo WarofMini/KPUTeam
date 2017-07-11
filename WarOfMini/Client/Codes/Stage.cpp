@@ -18,6 +18,7 @@
 #include "BulletNumbering.h"
 #include "DefaultUI.h"
 #include "Cloth.h"
+#include "Station.h"
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 : CScene(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking)
@@ -96,6 +97,15 @@ HRESULT CStage::Ready_GameLogic(void)
 
 	pLayer->Ready_Object(L"Player", pGameObject);
 
+
+
+	pGameObject = CBomb::Create(m_pContext);
+	if (NULL == pGameObject)
+		return E_FAIL;
+	pLayer->Ready_Object(L"Effect", pGameObject);
+
+
+
 	/*
 	pGameObject = COtherPlayer::Create(m_pGraphicDev, m_pContext);
 
@@ -106,14 +116,6 @@ HRESULT CStage::Ready_GameLogic(void)
 
 	pLayer->Ready_Object(L"OtherPlayer", pGameObject);
 	*/
-
-
-	//Effect 40000 : fps 11
-
-	pGameObject = CBomb::Create(m_pContext);
-	if (NULL == pGameObject)
-		return E_FAIL;
-	pLayer->Ready_Object(L"Effect", pGameObject);
 	
 
 	/*
@@ -615,14 +617,62 @@ HRESULT CStage::InitPhysicsObject(void)
 
 	pLayer->Ready_Object(L"PhysicsDoor", pDoorObject);
 
-
-	CCloth* pClothObject = CCloth::Create(m_pContext);
+	//점령전을 위한 첫번째 기지================================================================================
+	CCloth* pClothObject = CCloth::Create(m_pContext, L"Buffer_FlagTexOne");
 	(pClothObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(1.0f, 1.0f, 1.0f), m_pCooking, "PhysicsCloth");
-	(pClothObject)->ClothSetPosition(XMFLOAT3(50.0f, 50.0f, 0.0f));
+	(pClothObject)->ClothSetPosition(XMFLOAT3(300.0f, 50.0f, 100.0f));
 	(pClothObject)->ClothSetRotate(XMFLOAT3((_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f)));
-	(pClothObject)->SetWind(PxVec3(1.f, 0.1f, 0.f), 40.0f, PxVec3(0.0f, 10.0f, 10.0f));
+	(pClothObject)->SetWind(PxVec3(1.0f, 0.1f, 0.0f), 40.0f, PxVec3(0.0f, 10.0f, 10.0f));
 
 	pLayer->Ready_Object(L"PhysicsCloth", pClothObject);
+
+	//Station One
+	CStation* pStation = CStation::Create(m_pContext);
+
+	if (NULL == pStation)
+		return E_FAIL;
+	pStation->SetPosition(XMFLOAT3(300.f, 20.f, 100.f));
+	pStation->SetRotate(XMFLOAT3(-90.f, 0.f, 0.f));
+	pStation->SetFlag(pClothObject);
+	pLayer->Ready_Object(L"StationOne", pStation);
+	//============================================================================================================
+
+	//점령전을 위한 두번째 기지==================================================================================
+	CCloth* pClothObjectTwo = CCloth::Create(m_pContext, L"Buffer_FlagTexTwo");
+	(pClothObjectTwo)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(1.0f, 1.0f, 1.0f), m_pCooking, "PhysicsCloth");
+	(pClothObjectTwo)->ClothSetPosition(XMFLOAT3(400.0f, 50.0f, 100.0f));
+	(pClothObjectTwo)->ClothSetRotate(XMFLOAT3((_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f)));
+	(pClothObjectTwo)->SetWind(PxVec3(1.0f, 0.1f, 0.0f), 40.0f, PxVec3(0.0f, 10.0f, 10.0f));
+	pLayer->Ready_Object(L"PhysicsCloth", pClothObjectTwo);
+
+	//Station Two
+	CStation* pStationTwo = CStation::Create(m_pContext);
+	if (NULL == pStationTwo)
+		return E_FAIL;
+	pStationTwo->SetPosition(XMFLOAT3(400.f, 20.f, 100.f));
+	pStationTwo->SetRotate(XMFLOAT3(-90.f, 0.f, 0.f));
+	pStationTwo->SetFlag(pClothObjectTwo);
+	pLayer->Ready_Object(L"StationTwo", pStationTwo);
+	//============================================================================================================
+
+	//점령전을 위한 세번째 기지==================================================================================
+	CCloth* pClothObjectThree = CCloth::Create(m_pContext, L"Buffer_FlagTexThree");
+	(pClothObjectThree)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(1.0f, 1.0f, 1.0f), m_pCooking, "PhysicsCloth");
+	(pClothObjectThree)->ClothSetPosition(XMFLOAT3(500.0f, 50.0f, 100.0f));
+	(pClothObjectThree)->ClothSetRotate(XMFLOAT3((_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f)));
+	(pClothObjectThree)->SetWind(PxVec3(1.0f, 0.1f, 0.0f), 40.0f, PxVec3(0.0f, 10.0f, 10.0f));
+	pLayer->Ready_Object(L"PhysicsCloth", pClothObjectThree);
+
+	//Station Three
+	CStation* pStationThree = CStation::Create(m_pContext);
+	if (NULL == pStationTwo)
+		return E_FAIL;
+	pStationThree->SetPosition(XMFLOAT3(500.f, 20.f, 100.f));
+	pStationThree->SetRotate(XMFLOAT3(-90.f, 0.f, 0.f));
+	pStationThree->SetFlag(pClothObjectTwo);
+	pLayer->Ready_Object(L"StationThree", pStationThree);
+	//============================================================================================================
+
 
 	return S_OK;
 }

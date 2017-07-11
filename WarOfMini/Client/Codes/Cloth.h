@@ -24,8 +24,10 @@ private:
 	CTextures*				 m_pTexture;
 	VTXTEX*					 m_pClothVtx;
 	int						 m_iVtxCount;
+	wstring					 m_strBufferName;
+
 public:
-	static CCloth* Create(ID3D11DeviceContext* pContext);
+	static CCloth* Create(ID3D11DeviceContext* pContext, wstring strName);
 
 public:
 	virtual HRESULT	Initialize(void);
@@ -52,6 +54,8 @@ public:
 
 	void ClothSetPosition(XMFLOAT3 vPosition);
 	void ClothSetRotate(XMFLOAT3 vRot);
+
+	void SetBufferName(wstring strName) { m_strBufferName = strName; }
 
 };
 

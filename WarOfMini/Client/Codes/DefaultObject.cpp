@@ -6,14 +6,12 @@
 #include "Management.h"
 #include "GraphicDev.h"
 #include "CameraMgr.h"
-#include "SphereMesh.h"
 
 CDefaultObj::CDefaultObj(ID3D11DeviceContext* pContext)
 : CGameObject(pContext)
 , m_uiObjNum(0)
 , m_fRadius(0.f)
 , m_pTransform(NULL)
-, m_pSphereMesh(NULL)
 , m_pPxActor(NULL)
 {
 }
@@ -81,8 +79,6 @@ void CDefaultObj::Render(void)
 
 void CDefaultObj::Release(void)
 {
-	Safe_Release(m_pSphereMesh);
-
 	CGameObject::Release();
 	delete this;
 }
@@ -123,7 +119,6 @@ void CDefaultObj::ComputeCollider(void)
 	m_fRadius = (vMax.z > m_fRadius) ? vMax.z : m_fRadius;
 
 
-	m_pSphereMesh = CSphereMesh::Create(m_pContext, m_fRadius , &m_pTransform->m_vPos);
 }
 
 void CDefaultObj::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, XMFLOAT3 vScale, PxCooking* pCooking, const char* name)

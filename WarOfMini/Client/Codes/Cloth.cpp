@@ -25,9 +25,11 @@ CCloth::~CCloth(void)
 {
 }
 
-CCloth * CCloth::Create(ID3D11DeviceContext * pContext)
+CCloth * CCloth::Create(ID3D11DeviceContext * pContext, wstring strName)
 {
 	CCloth* pObject = new CCloth(pContext);
+
+	pObject->SetBufferName(strName);
 
 	if (FAILED(pObject->Initialize()))
 		Safe_Release(pObject);
@@ -54,7 +56,6 @@ HRESULT CCloth::Initialize()
 
 _int CCloth::Update(const _float& fTimeDelta)
 {
-
 	CGameObject::Update(fTimeDelta);
 
 	UpdateWind(fTimeDelta);
@@ -127,7 +128,7 @@ HRESULT CCloth::Ready_Component()
 	CComponent* pComponent = NULL;
 
 	//Buffer
-	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, L"Buffer_FlagTex");
+	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, m_strBufferName.c_str());
 	m_pBuffer = dynamic_cast<CFlagTex*>(pComponent);
 	if (pComponent == NULL) return E_FAIL;
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Buffer", pComponent));
@@ -185,7 +186,6 @@ void CCloth::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *p
 	// add this cloth into the scene
 	pPxScene->addActor(*m_pCloth);
 
-
 	// set solver settings
 	m_pCloth->setSolverFrequency(240);
 	m_pCloth->setDampingCoefficient(PxVec3(0.0f));
@@ -194,6 +194,8 @@ void CCloth::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *p
 	m_pCloth->setTetherConfig(PxClothTetherConfig(1.0f, 1.0f));
 
 	m_pTransform->m_vScale = XMFLOAT3(vScale.x, vScale.y, vScale.z);
+
+
 }
 
 PxClothMeshDesc CCloth::CreateMeshGrid(PxVec3 dirU, PxVec3 dirV, PxU32 numU, PxU32 numV, vector<PxVec4>& vertices, vector<PxU32>& indices, vector<PxVec2>& texcoords)
