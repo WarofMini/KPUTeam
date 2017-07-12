@@ -10,10 +10,9 @@
 
 CStation::CStation(ID3D11DeviceContext* pContext)
 : CGameObject(pContext)
-, m_uiObjNum(MESHNUM_BOOKBOX1)
-, m_pTransform(NULL)
 , m_pFlag(NULL)
 {
+	m_uiObjNum = MESHNUM_BOOKBOX1;
 }
 
 CStation::~CStation(void)
@@ -89,14 +88,4 @@ HRESULT CStation::Ready_Component()
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Transform", pComponent));
 
 	return S_OK;
-}
-
-void CStation::SetObjNum(_uint uNum)
-{
-	m_uiObjNum = uNum;
-}
-
-_uint CStation::GetObjNum(void)
-{
-	return m_uiObjNum;
 }

@@ -9,8 +9,6 @@
 
 CPhysicsObect::CPhysicsObect(ID3D11DeviceContext* pContext)
 : CGameObject(pContext)
-, m_uiObjNum(0)
-, m_pTransform(NULL)
 , m_pPxActor(NULL)
 {
 }
@@ -70,6 +68,9 @@ void CPhysicsObect::Render(void)
 
 void CPhysicsObect::Release(void)
 {
+	if (m_pPxActor)
+		m_pPxActor->release();
+
 	CGameObject::Release();
 	delete this;
 }
@@ -86,16 +87,6 @@ HRESULT CPhysicsObect::Ready_Component()
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Transform", pComponent));
 
 	return S_OK;
-}
-
-void CPhysicsObect::SetObjNum(_uint uNum)
-{
-	m_uiObjNum = uNum;
-}
-
-_uint CPhysicsObect::GetObjNum(void)
-{
-	return m_uiObjNum;
 }
 
 void CPhysicsObect::PhysXUpdate(const _float & fTimeDelta)

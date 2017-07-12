@@ -4,7 +4,7 @@
 #include "GameObject.h"
 
 class CAnimationInfo;
-class CTransform;
+
 
 class CDynamicObject abstract
 	: public CGameObject
@@ -24,10 +24,7 @@ protected:
 
 protected:
 	CAnimationInfo* m_pAnimInfo;
-	CTransform*		m_pTransform;
 	MATNODE*		m_pMatBoneNode;
-
-	_uint			m_uiObjNum;
 	_float			m_fSpeed;
 	_float			m_fHeight;
 	_ubyte			m_byColor;

@@ -4,8 +4,6 @@
 #include "GameObject.h"
 
 
-class CTransform;
-class CSphereMesh;
 
 class CDefaultObj
 	: public CGameObject
@@ -25,16 +23,6 @@ public:
 
 private:
 	virtual HRESULT Ready_Component(void);
-
-private:
-	_uint			m_uiObjNum;
-	_float			m_fRadius;
-	CTransform*		m_pTransform;
-
-public:
-	void			SetObjNum(_uint uNum);
-	_uint			GetObjNum(void);
-	void			ComputeCollider(void);
 
 	//Physx SDK Member Variables =========================
 private:

@@ -8,8 +8,6 @@
 
 CStaticObject::CStaticObject(ID3D11DeviceContext* pContext)
 : CGameObject(pContext)
-, m_pTransform(nullptr)
-, m_uiObjNum(0)
 {
 }
 

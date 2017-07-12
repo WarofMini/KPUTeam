@@ -23,16 +23,13 @@ public:
 protected:
 	virtual HRESULT Ready_Component(void);
 
-public:
-	virtual void	BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, XMFLOAT3 vScale, PxCooking* pCooking, const char* name);
-
-	void	CreateChain(PxPhysics * pPxPhysics, PxScene * pPxScene);
-
 private:
 	XMFLOAT3	m_vSeparation;
 
 public:
-	void		SetSeparation(XMFLOAT3 vSeparation) { m_vSeparation = vSeparation;}
+	virtual void	BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, XMFLOAT3 vScale, PxCooking* pCooking, const char* name);
+	void			CreateChain(PxPhysics * pPxPhysics, PxScene * pPxScene);
+	void			SetSeparation(XMFLOAT3 vSeparation) { m_vSeparation = vSeparation;}
 };
 
 #endif //PhysicsDoor

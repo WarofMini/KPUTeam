@@ -32,7 +32,6 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 , m_fRateOfFire(0.f)
 , m_bFire(false)
 , m_bAbleReload(false)
-, m_pPxActor(NULL)
 , m_pPxCharacterController(NULL)
 , m_fFallAcceleration(9.8f)
 , m_fFallvelocity(0.f)
@@ -163,6 +162,11 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 
 void CPlayer::Release(void)
 {
+
+	if (m_pPxCharacterController)
+		m_pPxCharacterController->release();
+
+
 	CDynamicObject::Release();
 	Safe_Release(m_pEquipment[0]);
 }

@@ -4,7 +4,6 @@
 #include "GameObject.h"
 
 class CTextures;
-class CTransform;
 class CRcTex;
 
 class CEffect 
@@ -25,7 +24,6 @@ protected:
 	virtual HRESULT Ready_Component(void);
 
 protected:
-	CTransform*		m_pTransform;
 	CTextures*		m_pTexture;
 	CRcTex*			m_pBuffer;
 
@@ -33,11 +31,9 @@ protected:
 	_int			m_iFrame; //현재 텍스쳐 번호
 	_int			m_iSizeX; //텍스쳐 가로 길이
 	_int			m_iSizeY; //텍스쳐 세로 길이
-	
 	_float			m_fLifeTime;
 	_float			m_fRealTime;
 	_float			m_fDelayTime;
-
 	_bool			m_bAllBillboardCheck;
 	_bool			m_bYBillboardCheck;
 

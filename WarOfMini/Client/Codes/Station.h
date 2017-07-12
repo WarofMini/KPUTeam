@@ -26,13 +26,9 @@ private:
 	virtual HRESULT Ready_Component(void);
 
 private:
-	_uint			m_uiObjNum;
-	CTransform*		m_pTransform;
 	CCloth*			m_pFlag;
 
 public:
-	void			SetObjNum(_uint uNum);
-	_uint			GetObjNum(void);
 	void			SetPosition(XMFLOAT3 vPos) { m_pTransform->m_vPos = vPos; }
 	void			SetRotate(XMFLOAT3 vRotate) { m_pTransform->m_vAngle = vRotate; }
 	void			SetScale(XMFLOAT3 vScale) { m_pTransform->m_vScale = vScale; }

@@ -6,6 +6,8 @@ CGameObject::CGameObject(ID3D11DeviceContext * pContext)
 : m_pContext(pContext)
 , m_pServer_PlayerData(NULL)
 , m_iTextureNumber(0)
+, m_pTransform(NULL)
+, m_uiObjNum(0)
 {
 }
 

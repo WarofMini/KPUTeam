@@ -3,7 +3,7 @@
 
 #include "GameObject.h"
 
-class CTransform;
+
 class CTextures;
 class CRcTex;
 
@@ -25,7 +25,6 @@ protected:
 	virtual HRESULT Ready_Component(void);
 
 protected:
-	CTransform*				m_pTransform;
 	CTextures*				m_pTexture;
 	CRcTex*					m_pBuffer;
 
@@ -34,11 +33,8 @@ protected:
 	_float					m_fSizeX, m_fSizeY;
 	XMFLOAT4X4				m_pProj;
 	XMFLOAT4X4				m_pView;
-
 	_float					m_fMoveX;
 	_float					m_fMoveY;
-
-
 	_float					m_fOriginMoveX, m_fOriginMoveY;
 	_float					m_fOriginSizeX, m_fOriginSizeY;
 

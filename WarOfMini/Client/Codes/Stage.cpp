@@ -192,7 +192,7 @@ HRESULT CStage::InitFloor(void)
 				return E_FAIL;
 
 
-			((CDefaultObj*)pGameObject)->SetObjNum(MESHNUM_FLOOR1);
+			(pGameObject)->SetObjNum(MESHNUM_FLOOR1);
 
 
 			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle = XMFLOAT3(270.f, 0.f, 0.f);
@@ -230,7 +230,7 @@ HRESULT CStage::InitFloor(void)
 			if (NULL == pGameObject)
 				return E_FAIL;
 
-			((CDefaultObj*)pGameObject)->SetObjNum(MESHNUM_CEILING);
+			(pGameObject)->SetObjNum(MESHNUM_CEILING);
 
 			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle = XMFLOAT3(270.f, 0.f, 0.f);
 			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale = XMFLOAT3(m_fSize, m_fSize, m_fSize);
@@ -275,12 +275,11 @@ HRESULT CStage::InitToiletFloor(void)
 			if (NULL == pGameObject)
 				return E_FAIL;
 
-			((CDefaultObj*)pGameObject)->SetObjNum(MESHNUM_FLOOR2);
+			(pGameObject)->SetObjNum(MESHNUM_FLOOR2);
 
 			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle = XMFLOAT3(270.f, 0.f, 0.f);
 			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale = XMFLOAT3(m_fSize, m_fSize, m_fSize);
 			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos = XMFLOAT3((j % 4) * m_iSize + 1282.f, 0.1f, i * m_iSize + 300.f);
-
 
 
 			((CDefaultObj*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(m_fSize, m_fSize, m_fSize), m_pCooking, "Floor2");
@@ -310,7 +309,7 @@ HRESULT CStage::InitToiletFloor(void)
 			if (NULL == pGameObject)
 				return E_FAIL;
 
-			((CDefaultObj*)pGameObject)->SetObjNum(MESHNUM_CEILING);
+			(pGameObject)->SetObjNum(MESHNUM_CEILING);
 
 			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle = XMFLOAT3(270.f, 0.f, 0.f);
 			((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale = XMFLOAT3(m_fSize, m_fSize, m_fSize);
@@ -345,7 +344,6 @@ HRESULT CStage::LoadStageMap(void)
 	_ulong	dwByte = 0;
 	HANDLE hFile = CreateFile(tPath.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
-	_int	m_iWallcount = 0;
 
 	while (true)
 	{
@@ -395,25 +393,10 @@ HRESULT CStage::LoadStageMap(void)
 			XMStoreFloat3(&m_vAngle, vAngle);
 
 
-			//
 			((CDefaultObj*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, m_vScale, m_pCooking, "StaticObject");
 			((CDefaultObj*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(m_vAngle.x), (_float)D3DXToRadian(m_vAngle.z), (_float)D3DXToRadian(m_vAngle.y)));
 			((CDefaultObj*)pGameObject)->SetPosition(m_vPos);
-
-
-
-			if (eMeshNum == MESHNUM_WALL3)
-			{
-				if (m_iWallcount == 1)
-					pLayer->Ready_Object(L"StaticWall", pGameObject);
-				else
-					pLayer->Ready_Object(L"StaticObject", pGameObject);
-
-
-				++m_iWallcount;
-			}
-			else
-				pLayer->Ready_Object(L"StaticObject", pGameObject);
+			pLayer->Ready_Object(L"StaticObject", pGameObject);
 		}
 
 	}
@@ -669,7 +652,7 @@ HRESULT CStage::InitPhysicsObject(void)
 		return E_FAIL;
 	pStationThree->SetPosition(XMFLOAT3(500.f, 20.f, 100.f));
 	pStationThree->SetRotate(XMFLOAT3(-90.f, 0.f, 0.f));
-	pStationThree->SetFlag(pClothObjectTwo);
+	pStationThree->SetFlag(pClothObjectThree);
 	pLayer->Ready_Object(L"StationThree", pStationThree);
 	//============================================================================================================
 

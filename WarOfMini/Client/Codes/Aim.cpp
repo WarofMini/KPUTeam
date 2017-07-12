@@ -31,8 +31,8 @@ HRESULT CAim::Initialize(void)
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
 
-	m_fX = (WINCX >> 1);
-	m_fY = (WINCY >> 1);
+	m_fX = (_float)(WINCX >> 1);
+	m_fY = (_float)(WINCY >> 1);
 
 	m_fSizeX = 150;
 	m_fSizeY = 150;
@@ -75,8 +75,9 @@ void CAim::Render(void)
 
 	ComputeChangeWindowSize();
 
-	m_fX = (WINCX >> 1);
-	m_fY = (WINCY >> 1);
+	m_fX = (_float)(WINCX >> 1);
+	m_fY = (_float)(WINCY >> 1);
+
 
 	m_matWorld._11 = m_fSizeX;
 	m_matWorld._22 = m_fSizeY;

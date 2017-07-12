@@ -12,7 +12,7 @@
 CCloth::CCloth(ID3D11DeviceContext* pContext)
 : CPhysicsObect(pContext)
 , m_pCloth(NULL)
-, mTime(0.0f)
+, m_Time(0.0f)
 , m_pBuffer(NULL)
 , m_pTexture(NULL)
 , m_pClothVtx(NULL)
@@ -45,7 +45,7 @@ HRESULT CCloth::Initialize()
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
 
-	m_iVtxCount = m_pBuffer->GetResX() * m_pBuffer->GetResZ();
+	m_iVtxCount = (_int)(m_pBuffer->GetResX() * m_pBuffer->GetResZ());
 
 	m_pClothVtx = new VTXTEX[m_iVtxCount];
 
@@ -118,6 +118,9 @@ void CCloth::Render(void)
 
 void CCloth::Release(void)
 {
+	if (m_pCloth)
+		m_pCloth->release();
+
 	Safe_Delete_Array(m_pClothVtx);
 	CPhysicsObect::Release();
 }
@@ -156,8 +159,12 @@ void CCloth::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *p
 
 	PxTransform m_tPxPos = PxTransform(PxVec3(0.f, 0.f, 0.f), q);
 
-	PxU32 resX = m_pBuffer->GetResX(), resY = m_pBuffer->GetResZ();
-	PxReal sizeX = m_pBuffer->GetSizeX(), sizeY = m_pBuffer->GetSizeZ(), height = 5.f;
+	PxU32 resX = (PxU32)m_pBuffer->GetResX();
+	PxU32 resY = (PxU32)m_pBuffer->GetResZ();
+
+	PxReal sizeX = (PxReal)m_pBuffer->GetSizeX();
+	PxReal sizeY = (PxReal)m_pBuffer->GetSizeZ();
+	PxReal height = 5.f;
 
 	vector<PxVec4> vertices;
 	vector<PxU32> primitives;
@@ -269,9 +276,9 @@ PxClothMeshDesc CCloth::CreateMeshGrid(PxVec3 dirU, PxVec3 dirV, PxU32 numU, PxU
 
 void CCloth::SetWind(const PxVec3 & dir, PxReal strength, const PxVec3 & range)
 {
-	mWindStrength = strength;
-	mWindDir = dir;
-	mWindRange = range;
+	m_WindStrength = strength;
+	m_WindDir = dir;
+	m_WindRange = range;
 }
 
 PxF32 CCloth::WindRand(PxF32 a, PxF32 b)
@@ -281,17 +288,17 @@ PxF32 CCloth::WindRand(PxF32 a, PxF32 b)
 
 void CCloth::UpdateWind(const _float& fTimeDelta)
 {
-	mTime += fTimeDelta * WindRand(0.0f, 1.0f);
+	m_Time += fTimeDelta * WindRand(0.0f, 1.0f);
 
-	float st = 1.0f + (float)sin(mTime);
+	float st = 1.0f + (float)sin(m_Time);
 
-	float windStrength = WindRand(1.0f, st) * mWindStrength;
+	float windStrength = WindRand(1.0f, st) * m_WindStrength;
 	float windRangeStrength = WindRand(0.0f, 2.0f);
 
 	PxVec3 offset(PxReal(WindRand(-1, 1)), PxReal(WindRand(-1, 1)), PxReal(WindRand(-1, 1)));
-	float ct = 1.0f + (float)cos(mTime + 0.1);
+	float ct = 1.0f + (float)cos(m_Time + 0.1);
 	offset *= ct;
-	PxVec3 windAcceleration = windStrength * mWindDir + windRangeStrength * mWindRange.multiply(offset);
+	PxVec3 windAcceleration = windStrength * m_WindDir + windRangeStrength * m_WindRange.multiply(offset);
 	m_pCloth->setExternalAcceleration(windAcceleration);
 }
 

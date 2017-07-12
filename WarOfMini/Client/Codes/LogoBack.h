@@ -3,7 +3,7 @@
 
 #include "GameObject.h"
 
-class CTransform;
+
 class CTextures;
 class CRcTex;
 
@@ -29,7 +29,6 @@ private:
 	virtual HRESULT Ready_Component(void);
 
 private:
-	CTransform*		m_pTransform;
 	CTextures*		m_pTexture;
 	CRcTex*			m_pBuffer;
 

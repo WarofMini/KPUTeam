@@ -13,6 +13,7 @@ CPhysicsDoor::CPhysicsDoor(ID3D11DeviceContext * pContext)
 :CPhysicsObect(pContext)
 {
 	m_vSeparation = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	m_uiObjNum = MESHNUM_DOOR2;
 }
 
 CPhysicsDoor::~CPhysicsDoor(void)
@@ -33,7 +34,6 @@ CPhysicsDoor * CPhysicsDoor::Create(ID3D11DeviceContext * pContext)
 
 HRESULT CPhysicsDoor::Initialize(void)
 {
-	m_uiObjNum = MESHNUM_DOOR2;
 
 	if (FAILED(Ready_Component()))
 		return E_FAIL;

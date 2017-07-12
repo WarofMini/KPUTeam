@@ -205,9 +205,6 @@
     <Filter Include="95.Engine\00.Utility\13.Collision">
       <UniqueIdentifier>{a1d5920d-efe1-4d83-b776-c7fa2ee8c31d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="95.Engine\00.Utility\13.Collision\00.CollisionSphere">
-      <UniqueIdentifier>{2de7f605-75c7-453d-90e5-f7fcc0ac14c2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="95.Engine\00.Utility\13.Collision\01.XNACollision">
       <UniqueIdentifier>{aeeb79a8-5700-4378-a64e-b185ba0e0a36}</UniqueIdentifier>
     </Filter>
@@ -216,9 +213,6 @@
     </Filter>
     <Filter Include="02.Object\04.Gabiscon">
       <UniqueIdentifier>{76082c1c-f9ac-4efe-b7a9-4d020897f181}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="95.Engine\00.Utility\16.Gravity">
-      <UniqueIdentifier>{7bb064b7-5a28-45a2-bcc0-5134297a7b3b}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.Object\05.Tank">
       <UniqueIdentifier>{012b215f-2d8a-4355-bf2b-6aecb507cd0c}</UniqueIdentifier>
@@ -276,6 +270,9 @@
     </Filter>
     <Filter Include="02.Object\06.PhysicsObject\03.Station">
       <UniqueIdentifier>{abf63ea3-6f55-4924-be59-93f247a82057}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.Engine\00.Utility\13.Collision\02.CollisionSphere">
+      <UniqueIdentifier>{9a237203-b01d-4b22-9cbe-87d0f594970b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -489,9 +486,6 @@
     <ClInclude Include="..\Codes\PlayerCamera.h">
       <Filter>95.Engine\00.Utility\11.Camera\01.PlayerCamera</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\SphereMesh.h">
-      <Filter>95.Engine\00.Utility\13.Collision\00.CollisionSphere</Filter>
-    </ClInclude>
     <ClInclude Include="..\Codes\xnacollision.h">
       <Filter>95.Engine\00.Utility\13.Collision\01.XNACollision</Filter>
     </ClInclude>
@@ -500,9 +494,6 @@
     </ClInclude>
     <ClInclude Include="..\Codes\Gabiscon.h">
       <Filter>02.Object\04.Gabiscon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Codes\Gravity.h">
-      <Filter>95.Engine\00.Utility\16.Gravity</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Tank.h">
       <Filter>02.Object\05.Tank</Filter>
@@ -557,6 +548,9 @@
     </ClInclude>
     <ClInclude Include="..\Codes\Station.h">
       <Filter>02.Object\06.PhysicsObject\03.Station</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\SphereMesh.h">
+      <Filter>95.Engine\00.Utility\13.Collision\02.CollisionSphere</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -728,9 +722,6 @@
     <ClCompile Include="..\Codes\PlayerCamera.cpp">
       <Filter>95.Engine\00.Utility\11.Camera\01.PlayerCamera</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\SphereMesh.cpp">
-      <Filter>95.Engine\00.Utility\13.Collision\00.CollisionSphere</Filter>
-    </ClCompile>
     <ClCompile Include="..\Codes\xnacollision.cpp">
       <Filter>95.Engine\00.Utility\13.Collision\01.XNACollision</Filter>
     </ClCompile>
@@ -739,9 +730,6 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Gabiscon.cpp">
       <Filter>02.Object\04.Gabiscon</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\Gravity.cpp">
-      <Filter>95.Engine\00.Utility\16.Gravity</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Tank.cpp">
       <Filter>02.Object\05.Tank</Filter>
@@ -796,6 +784,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Station.cpp">
       <Filter>02.Object\06.PhysicsObject\03.Station</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\SphereMesh.cpp">
+      <Filter>95.Engine\00.Utility\13.Collision\02.CollisionSphere</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

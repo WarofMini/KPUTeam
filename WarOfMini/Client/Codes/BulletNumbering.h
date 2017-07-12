@@ -32,15 +32,14 @@ protected:
 
 private:
 	CNumbering*				m_pNumbering[2];
-	CGun*					m_pGun;
 	BULLETNUMBERING_STATE   m_eState;
+	CGun*					m_pGun;
+
 public:
 	void		SetNumberSize(_float fSizeX, _float fSizeY);
 	void		SetNumberPosition(_float fMoveX, _float fMoveY);
 	void		SetGun(CGun* pGun) { m_pGun = pGun; }
 	void		SetState(BULLETNUMBERING_STATE eState) { m_eState = eState; }
-
-public:
 	void		ChangingNumbering(void);
 };
 

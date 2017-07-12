@@ -4,7 +4,6 @@
 #include "Effect.h"
 
 class CTextures;
-class CTransform;
 class CRcTex;
 
 class CBomb

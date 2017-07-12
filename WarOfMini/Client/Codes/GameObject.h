@@ -2,9 +2,10 @@
 #define GameObject_h__
 
 #include "Include.h"
-
+#include "Transform.h"
 
 class CComponent;
+
 
 class CGameObject
 {
@@ -16,9 +17,11 @@ protected:
 	typedef map<const _tchar*, CComponent*>		MAPCOMPONENT;
 	MAPCOMPONENT								m_mapComponent;
 	Ser_PLAYER_DATA*							m_pServer_PlayerData;
-	//텍스쳐 번호
-	_int										m_iTextureNumber;
+	
+	_int										m_iTextureNumber;//텍스쳐 번호
 	wstring										m_strTextureName;
+	CTransform*									m_pTransform;
+	_uint										m_uiObjNum; //메시 번호
 
 protected:
 	ID3D11DeviceContext* m_pContext;
@@ -52,6 +55,13 @@ public:
 
 public:
 	void		SetName(wstring strName) { m_strTextureName = strName; }
+
+	void		SetTransformPosition(XMFLOAT3 vPos) {m_pTransform->m_vPos = vPos;}
+	void		SetTransformScale(XMFLOAT3 vScale) { m_pTransform->m_vScale = vScale; }
+	void		SetTransformRotate(XMFLOAT3 vAngle) { m_pTransform->m_vAngle = vAngle; }
+
+	void			SetObjNum(_uint uNum) { m_uiObjNum = uNum; }
+	_uint			GetObjNum(void) { return m_uiObjNum; }
 };
 
 #endif

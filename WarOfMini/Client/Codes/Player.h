@@ -6,8 +6,6 @@
 class CEquipment;
 class CStateMachine;
 class CInput;
-class CCalculator;
-class CRigidBody;
 
 class CGun;
 
@@ -108,7 +106,6 @@ private:
 
 	//Physx SDK Member Variables =========================
 private:
-	PxRigidDynamic*		m_pPxActor;
 	PxController*		m_pPxCharacterController;
 
 

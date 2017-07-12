@@ -16,15 +16,15 @@ private:
 
 private:
 	PxCloth*				 m_pCloth;
-	PxVec3                   mWindDir;
-	PxVec3                   mWindRange;
-	PxReal                   mWindStrength;
-	PxReal                   mTime;
+	PxVec3                   m_WindDir;
+	PxVec3                   m_WindRange;
+	PxReal                   m_WindStrength;
+	PxReal                   m_Time;
 	CFlagTex*				 m_pBuffer;
 	CTextures*				 m_pTexture;
 	VTXTEX*					 m_pClothVtx;
-	int						 m_iVtxCount;
 	wstring					 m_strBufferName;
+	_int						 m_iVtxCount;
 
 public:
 	static CCloth* Create(ID3D11DeviceContext* pContext, wstring strName);

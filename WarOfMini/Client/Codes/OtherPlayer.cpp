@@ -8,12 +8,11 @@
 #include "Management.h"
 
 COtherPlayer::COtherPlayer(ID3D11DeviceContext* pContext)
-	: CDynamicObject(pContext)
-	, m_iEquipBone(0)
-	, m_dwAniIdx(PLAYER_idle)
-	, m_bIsSoldier(true)
-	, m_pPxActor(NULL)
-	, m_pPxCharacterController(NULL)
+: CDynamicObject(pContext)
+, m_iEquipBone(0)
+, m_dwAniIdx(PLAYER_idle)
+, m_bIsSoldier(true)
+, m_pPxCharacterController(NULL)
 {
 	m_vLook = XMFLOAT3(0.f, 0.f, -1.f);
 
@@ -61,7 +60,7 @@ HRESULT COtherPlayer::Initialize(ID3D11Device* pGraphicDev)
 
 	m_pTransform->m_vScale = XMFLOAT3(1.f, 1.f, 1.f);
 	m_pTransform->m_vAngle.x = 90.f;
-	m_pAnimInfo->Set_Key(m_dwAniIdx);
+	m_pAnimInfo->Set_Key((_ushort)m_dwAniIdx);
 
 	// Equipment
 	m_pEquipment[0] = CGun::Create(pGraphicDev, m_pContext);
@@ -93,6 +92,9 @@ INT COtherPlayer::Update(const FLOAT& fTimeDelta)
 }
 void COtherPlayer::Release(void)
 {
+	if (m_pPxCharacterController)
+		m_pPxCharacterController->release();
+
 	CDynamicObject::Release();
 	Safe_Release(m_pEquipment[0]);
 }
@@ -158,7 +160,10 @@ void COtherPlayer::SetPlayerData(XMFLOAT3 vPos, XMFLOAT3 vDir)
 	if (!m_bIsSoldier)
 		m_fRevice = 0.0f;
 
-	m_pTransform->m_vPos = XMFLOAT3(m_pPxCharacterController->getFootPosition().x, m_pPxCharacterController->getFootPosition().y + m_fRevice, m_pPxCharacterController->getFootPosition().z);
+	m_pTransform->m_vPos = XMFLOAT3((_float)m_pPxCharacterController->getFootPosition().x, 
+									(_float)m_pPxCharacterController->getFootPosition().y + m_fRevice, 
+									(_float)m_pPxCharacterController->getFootPosition().z);
+
 	m_pTransform->m_vPos.y += m_fRevice;
 	m_pTransform->m_vAngle = vDir;
 

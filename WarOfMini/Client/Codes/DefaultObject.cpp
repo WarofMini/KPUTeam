@@ -9,11 +9,9 @@
 
 CDefaultObj::CDefaultObj(ID3D11DeviceContext* pContext)
 : CGameObject(pContext)
-, m_uiObjNum(0)
-, m_fRadius(0.f)
-, m_pTransform(NULL)
 , m_pPxActor(NULL)
 {
+	m_uiObjNum = 0;
 }
 
 CDefaultObj::~CDefaultObj(void)
@@ -41,7 +39,6 @@ HRESULT CDefaultObj::Initialize()
 
 _int CDefaultObj::Update(const _float& fTimeDelta)
 {
-	//m_pTransform->m_vAngle.y += 1.f;
 
 	CGameObject::Update(fTimeDelta);
 
@@ -79,6 +76,9 @@ void CDefaultObj::Render(void)
 
 void CDefaultObj::Release(void)
 {
+	if(m_pPxActor)
+		m_pPxActor->release();
+	
 	CGameObject::Release();
 	delete this;
 }
@@ -96,30 +96,6 @@ HRESULT CDefaultObj::Ready_Component()
 	return S_OK;
 }
 
-void CDefaultObj::SetObjNum(_uint uNum)
-{
-	m_uiObjNum = uNum;
-}
-
-_uint CDefaultObj::GetObjNum(void)
-{
-	return m_uiObjNum;
-}
-
-void CDefaultObj::ComputeCollider(void)
-{
-	XMFLOAT3 vMax = *CMeshMgr::GetInstance()->Get_MeshMax(m_uiObjNum);
-
-	vMax = XMFLOAT3(vMax.x * m_pTransform->m_vScale.x,
-	vMax.y * m_pTransform->m_vScale.y,
-	vMax.z * m_pTransform->m_vScale.z);
-
-
-	m_fRadius = (vMax.x > vMax.y) ? vMax.x : vMax.y;
-	m_fRadius = (vMax.z > m_fRadius) ? vMax.z : m_fRadius;
-
-
-}
 
 void CDefaultObj::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, XMFLOAT3 vScale, PxCooking* pCooking, const char* name)
 {

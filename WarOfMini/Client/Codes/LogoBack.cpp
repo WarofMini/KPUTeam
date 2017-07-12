@@ -12,7 +12,6 @@ CLogoBack::CLogoBack(ID3D11DeviceContext * pContext)
 : CGameObject(pContext)
 , m_pBuffer(NULL)
 , m_pTexture(NULL)
-, m_pTransform(NULL)
 {
 }
 

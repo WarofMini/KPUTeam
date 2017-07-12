@@ -187,7 +187,6 @@
     <ClInclude Include="..\Codes\Gabiscon.h" />
     <ClInclude Include="..\Codes\GameObject.h" />
     <ClInclude Include="..\Codes\GraphicDev.h" />
-    <ClInclude Include="..\Codes\Gravity.h" />
     <ClInclude Include="..\Codes\Gun.h" />
     <ClInclude Include="..\Codes\Input.h" />
     <ClInclude Include="..\Codes\Layer.h" />
@@ -282,7 +281,6 @@
     <ClCompile Include="..\Codes\Gabiscon.cpp" />
     <ClCompile Include="..\Codes\GameObject.cpp" />
     <ClCompile Include="..\Codes\GraphicDev.cpp" />
-    <ClCompile Include="..\Codes\Gravity.cpp" />
     <ClCompile Include="..\Codes\Gun.cpp" />
     <ClCompile Include="..\Codes\Input.cpp" />
     <ClCompile Include="..\Codes\Layer.cpp" />

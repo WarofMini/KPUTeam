@@ -4,7 +4,6 @@
 #include "GameObject.h"
 
 
-class CTransform;
 
 class CStaticObject abstract
 	: public CGameObject
@@ -21,10 +20,6 @@ public:
 
 protected:
 	virtual HRESULT Ready_Component(void);
-
-protected:
-	CTransform*		m_pTransform;
-	_uint			m_uiObjNum;
 
 };
 
