@@ -10,3 +10,4 @@ Bomb-dds-0
 Aim-png-0
 Number-png-10
 Slash-png-0
+Tower-tga-0

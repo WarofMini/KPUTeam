@@ -11,8 +11,9 @@
 CStation::CStation(ID3D11DeviceContext* pContext)
 : CGameObject(pContext)
 , m_pFlag(NULL)
+, m_pPxActor(NULL)
 {
-	m_uiObjNum = MESHNUM_BOOKBOX1;
+	m_uiObjNum = MESHNUM_TOWER;
 }
 
 CStation::~CStation(void)
@@ -73,6 +74,9 @@ void CStation::Render(void)
 
 void CStation::Release(void)
 {
+	if (m_pPxActor)
+		m_pPxActor->release();
+
 	CGameObject::Release();
 	delete this;
 }
@@ -88,4 +92,90 @@ HRESULT CStation::Ready_Component()
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Transform", pComponent));
 
 	return S_OK;
+}
+
+void CStation::BuildObject(PxPhysics * pPxPhysics, PxScene * pPxScene, PxMaterial * pPxMaterial, XMFLOAT3 vScale, PxCooking * pCooking, const char * name)
+{
+	PxTriangleMeshDesc meshDesc;
+
+
+	PxVec3*			m_pVtxTex;
+	PxU32*			m_pIndex;
+
+	_uint			m_iCount;
+
+
+	//Mesh vertex Count
+	m_iCount = CMeshMgr::GetInstance()->Get_MeshVtxCnt(m_uiObjNum);
+
+	m_pVtxTex = CMeshMgr::GetInstance()->Get_MeshPxVtx(m_uiObjNum);
+	m_pIndex = CMeshMgr::GetInstance()->Get_MeshPxIndex(m_uiObjNum);
+
+
+	meshDesc.points.count = m_iCount;
+	meshDesc.triangles.count = m_iCount / 3;
+	meshDesc.points.stride = sizeof(PxVec3);
+	meshDesc.triangles.stride = sizeof(PxU32) * 3;
+	meshDesc.points.data = &(*m_pVtxTex);
+	meshDesc.triangles.data = &(*m_pIndex);
+	meshDesc.flags = PxMeshFlags(0);
+
+	PxDefaultMemoryOutputStream stream;
+	bool ok = pCooking->cookTriangleMesh(meshDesc, stream);
+
+	if (!ok)
+		return;
+
+	PxDefaultMemoryInputData rb(stream.getData(), stream.getSize());
+
+	PxTriangleMesh* triangleMesh = pPxPhysics->createTriangleMesh(rb);
+
+
+	PxVec3 ScaleTemp = PxVec3(vScale.x, vScale.y, vScale.z);
+
+	//Scale
+	PxMeshScale PxScale;
+	PxScale.scale = ScaleTemp;
+
+	PxTriangleMeshGeometry meshGeom(triangleMesh, PxScale);
+
+
+	PxQuat q = PxQuat(PxIdentity);
+
+	PxTransform _PxTransform = PxTransform(PxVec3(0.f, 0.f, 0.f), q);
+
+	m_pPxActor = PxCreateStatic(*pPxPhysics, _PxTransform, meshGeom, *pPxMaterial);
+
+	m_pPxActor->setName(name);
+
+	pPxScene->addActor(*m_pPxActor);
+}
+
+void CStation::SetPosition(XMFLOAT3 vPosition)
+{
+	m_pTransform->m_vPos = vPosition;
+
+	PxTransform _PxTransform = m_pPxActor->getGlobalPose();
+
+	_PxTransform.p = PxVec3(vPosition.x, vPosition.y, vPosition.z);
+	m_pPxActor->setGlobalPose(_PxTransform);
+}
+
+void CStation::SetRotate(XMFLOAT3 vRot)
+{
+	m_pTransform->m_vAngle = XMFLOAT3(vRot.x, vRot.z, vRot.y);
+
+	PxTransform _PxTransform = m_pPxActor->getGlobalPose();
+
+
+	_PxTransform.q *= PxQuat((_float)D3DXToRadian(vRot.x), PxVec3(1, 0, 0));
+	_PxTransform.q *= PxQuat((_float)D3DXToRadian(vRot.y), PxVec3(0, 1, 0));
+	_PxTransform.q *= PxQuat((_float)D3DXToRadian(vRot.z), PxVec3(0, 0, 1));
+
+	m_pPxActor->setGlobalPose(_PxTransform);
+}
+
+PxRigidStatic * CStation::GetPxActor(void)
+{
+	return m_pPxActor;
 }

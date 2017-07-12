@@ -2,7 +2,6 @@
 #define Station_h__
 
 #include "GameObject.h"
-#include "Transform.h"
 
 class CCloth;
 
@@ -27,12 +26,14 @@ private:
 
 private:
 	CCloth*			m_pFlag;
+	PxRigidStatic*	m_pPxActor;
 
 public:
-	void			SetPosition(XMFLOAT3 vPos) { m_pTransform->m_vPos = vPos; }
-	void			SetRotate(XMFLOAT3 vRotate) { m_pTransform->m_vAngle = vRotate; }
-	void			SetScale(XMFLOAT3 vScale) { m_pTransform->m_vScale = vScale; }
-	void			SetFlag(CCloth* pFlag) { m_pFlag = pFlag; }
+	void			BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, XMFLOAT3 vScale, PxCooking* pCooking, const char* name);
+	void			SetPosition(XMFLOAT3 vPosition);
+	void			SetRotate(XMFLOAT3 vRot);
+	PxRigidStatic*  GetPxActor(void);
+	void			SetFlag(CCloth* pFlag) { m_pFlag = pFlag; };
 };
 
 #endif // Station_h__

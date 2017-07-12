@@ -71,3 +71,4 @@ Urinal-0-0
 WaterCooler-0-0
 Ceiling-0-0
 Sphere-0-0
+Tower-0-0
