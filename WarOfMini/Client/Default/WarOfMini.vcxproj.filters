@@ -274,6 +274,9 @@
     <Filter Include="02.Object\05.PhysicsObject\04.Station">
       <UniqueIdentifier>{abf63ea3-6f55-4924-be59-93f247a82057}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\08.UI\04.Gage">
+      <UniqueIdentifier>{7f08e589-9042-444f-a00b-726d6186c72f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -552,6 +555,9 @@
     <ClInclude Include="..\Codes\SphereMesh.h">
       <Filter>95.Engine\00.Utility\13.Collision\02.CollisionSphere</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\GageUI.h">
+      <Filter>02.Object\08.UI\04.Gage</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -788,6 +794,9 @@
     <ClCompile Include="..\Codes\SphereMesh.cpp">
       <Filter>95.Engine\00.Utility\13.Collision\02.CollisionSphere</Filter>
     </ClCompile>
+    <ClCompile Include="..\Codes\GageUI.cpp">
+      <Filter>02.Object\08.UI\04.Gage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -833,6 +842,9 @@
       <Filter>95.Engine\00.Utility\05.Shader\01.ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderCode\Shader_TitleBack.fx">
+      <Filter>95.Engine\00.Utility\05.Shader\01.ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderCode\Shader_Gage.fx">
       <Filter>95.Engine\00.Utility\05.Shader\01.ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>

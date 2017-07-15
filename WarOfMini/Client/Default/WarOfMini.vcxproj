@@ -185,6 +185,7 @@
     <ClInclude Include="..\Codes\Frame.h" />
     <ClInclude Include="..\Codes\FrameMgr.h" />
     <ClInclude Include="..\Codes\Gabiscon.h" />
+    <ClInclude Include="..\Codes\GageUI.h" />
     <ClInclude Include="..\Codes\GameObject.h" />
     <ClInclude Include="..\Codes\GraphicDev.h" />
     <ClInclude Include="..\Codes\Gun.h" />
@@ -279,6 +280,7 @@
     <ClCompile Include="..\Codes\Frame.cpp" />
     <ClCompile Include="..\Codes\FrameMgr.cpp" />
     <ClCompile Include="..\Codes\Gabiscon.cpp" />
+    <ClCompile Include="..\Codes\GageUI.cpp" />
     <ClCompile Include="..\Codes\GameObject.cpp" />
     <ClCompile Include="..\Codes\GraphicDev.cpp" />
     <ClCompile Include="..\Codes\Gun.cpp" />
@@ -365,6 +367,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderCode\Shader_FogResult.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderCode\Shader_Gage.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </FxCompile>

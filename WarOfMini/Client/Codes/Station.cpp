@@ -7,11 +7,16 @@
 #include "GraphicDev.h"
 #include "CameraMgr.h"
 #include "Cloth.h"
+#include "Layer.h"
+#include "Scene.h"
 
 CStation::CStation(ID3D11DeviceContext* pContext)
 : CGameObject(pContext)
 , m_pFlag(NULL)
 , m_pPxActor(NULL)
+, m_pPlayer(NULL)
+, m_fFlagDist(100.f)
+, m_eFlagState(FLAG_EMPTY)
 {
 	m_uiObjNum = MESHNUM_TOWER;
 }
@@ -41,6 +46,9 @@ HRESULT CStation::Initialize()
 
 _int CStation::Update(const _float& fTimeDelta)
 {
+	//거점에서 일정거리 이하로 객체가 있는지 확인
+	CollisionObject();
+
 	CGameObject::Update(fTimeDelta);
 
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
@@ -178,4 +186,41 @@ void CStation::SetRotate(XMFLOAT3 vRot)
 PxRigidStatic * CStation::GetPxActor(void)
 {
 	return m_pPxActor;
+}
+
+void CStation::CollisionObject(void)
+{
+	if (m_pPlayer == NULL)
+	{
+		CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
+
+		list<CGameObject*>* m_pObject = pLayer->Find_ObjectList(L"Player");
+
+		m_pPlayer = ((CPlayer*)(*m_pObject->begin()));
+	}
+	else
+	{
+		_float m_fDist = 0.0f;
+
+		m_fDist = Length(m_pPlayer->GetTransformPosition(), m_pTransform->m_vPos);
+
+		if (m_fDist <= m_fFlagDist)
+			m_pFlag->Set_TextureNumber(1);
+		else
+			m_pFlag->Set_TextureNumber(0);
+	}
+
+
+
+}
+
+_float CStation::Length(XMFLOAT3& xmf3Vector1, XMFLOAT3& xmf3Vector2)
+{
+	XMFLOAT3 xmf3Result;
+
+	XMStoreFloat3(&xmf3Result, XMLoadFloat3(&xmf3Vector1) - XMLoadFloat3(&xmf3Vector2));
+
+	XMStoreFloat3(&xmf3Result, XMVector3Length(XMLoadFloat3(&xmf3Result)));
+
+	return (xmf3Result.x);
 }

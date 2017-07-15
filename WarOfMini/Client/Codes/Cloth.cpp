@@ -108,7 +108,7 @@ void CCloth::Render(void)
 	m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_Default"), NULL, 0);
 	m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
 
-	m_pTexture->Render(0, 0);
+	m_pTexture->Render(0, m_iTextureNumber);
 	m_pBuffer->Render();
 
 	CGraphicDev::GetInstance()->SetCullEnable(TRUE);
@@ -137,7 +137,7 @@ HRESULT CCloth::Ready_Component()
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Buffer", pComponent));
 
 	//Texture
-	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, L"Texture_LogoBack");
+	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, L"Texture_Flag");
 	m_pTexture = dynamic_cast<CTextures*>(pComponent);
 	if (pComponent == NULL) return E_FAIL;
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Texture", pComponent));

@@ -60,6 +60,11 @@ public:
 	void		SetTransformScale(XMFLOAT3 vScale) { m_pTransform->m_vScale = vScale; }
 	void		SetTransformRotate(XMFLOAT3 vAngle) { m_pTransform->m_vAngle = vAngle; }
 
+
+	XMFLOAT3	GetTransformPosition(void) { return m_pTransform->m_vPos; }
+	XMFLOAT3	GetTransformScale(void) { return m_pTransform->m_vScale; }
+	XMFLOAT3	GetTransformRotate(void) { return m_pTransform->m_vAngle; }
+
 	void			SetObjNum(_uint uNum) { m_uiObjNum = uNum; }
 	_uint			GetObjNum(void) { return m_uiObjNum; }
 };

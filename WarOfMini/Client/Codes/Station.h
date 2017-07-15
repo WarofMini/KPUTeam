@@ -4,6 +4,7 @@
 #include "GameObject.h"
 
 class CCloth;
+class CPlayer;
 
 class CStation
 	: public CGameObject
@@ -14,6 +15,9 @@ private:
 
 public:
 	static CStation* Create(ID3D11DeviceContext* pContext);
+
+public:
+	enum eFlagState { FLAG_EMPTY, FLAG_TEAM1, FLAG_TEAM2, FLAG_END };
 
 public:
 	virtual HRESULT	Initialize(void);
@@ -27,13 +31,20 @@ private:
 private:
 	CCloth*			m_pFlag;
 	PxRigidStatic*	m_pPxActor;
-
+	CPlayer*		m_pPlayer;
+	_float			m_fFlagDist;
+	eFlagState		m_eFlagState;
 public:
 	void			BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, XMFLOAT3 vScale, PxCooking* pCooking, const char* name);
 	void			SetPosition(XMFLOAT3 vPosition);
 	void			SetRotate(XMFLOAT3 vRot);
 	PxRigidStatic*  GetPxActor(void);
 	void			SetFlag(CCloth* pFlag) { m_pFlag = pFlag; };
+
+	void			CollisionObject(void);
+	_float			Length(XMFLOAT3& xmf3Vector1, XMFLOAT3& xmf3Vector2);
+	void			SetFlagState(eFlagState eState) { m_eFlagState = eState; }
+	eFlagState		GetFlagState(void) { return m_eFlagState; }
 };
 
 #endif // Station_h__

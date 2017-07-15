@@ -81,7 +81,6 @@ HRESULT CRenderer::Ready_Renderer(void)
 	if (FAILED(CShaderMgr::GetInstance()->Ready_ShaderFromFiles(m_pGraphicDev, m_pContext, L"Shader_TitleBack", L"../Bin/ShaderCode/Shader_TitleBack.fx", 0)))
 		return E_FAIL;
 
-
 	if (FAILED(CShaderMgr::GetInstance()->Ready_ShaderFromFiles(m_pGraphicDev, m_pContext, L"Shader_Normal", L"../Bin/ShaderCode/Shader_Normal.fx", 0)))
 		return E_FAIL;
 
@@ -92,6 +91,9 @@ HRESULT CRenderer::Ready_Renderer(void)
 		return E_FAIL;
 
 	if (FAILED(CShaderMgr::GetInstance()->Ready_ShaderFromFiles(m_pGraphicDev, m_pContext, L"Shader_FogResult", L"../Bin/ShaderCode/Shader_FogResult.fx", 0)))
+		return E_FAIL;
+
+	if (FAILED(CShaderMgr::GetInstance()->Ready_ShaderFromFiles(m_pGraphicDev, m_pContext, L"Shader_Gage", L"../Bin/ShaderCode/Shader_Gage.fx", 0)))
 		return E_FAIL;
 
 	return S_OK;

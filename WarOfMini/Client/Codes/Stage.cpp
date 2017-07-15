@@ -19,6 +19,7 @@
 #include "DefaultUI.h"
 #include "Cloth.h"
 #include "Station.h"
+#include "GageUI.h"
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 : CScene(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking)
@@ -744,6 +745,16 @@ HRESULT CStage::InitUIObject(void)
 	((CUI*)pGameObject)->ComputeFXFY();
 
 	pLayer->Ready_Object(L"UI", pGameObject);
+
+
+	//Gage
+	/*
+	pGameObject = CGageUI::Create(m_pContext);
+	if (NULL == pGameObject)
+		return E_FAIL;
+
+	pLayer->Ready_Object(L"GageUI", pGameObject);
+	*/
 	
 
 	return S_OK;

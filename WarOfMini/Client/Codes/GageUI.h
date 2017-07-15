@@ -1,17 +1,17 @@
-#ifndef Aim_h__
-#define Aim_h__
+#ifndef GageUI_h__
+#define GageUI_h__
 
 #include "UI.h"
 
-class CAim
+class CGageUI
 	: public CUI
 {
 private:
-	explicit CAim(ID3D11DeviceContext* pContext);
-	virtual ~CAim(void);
+	explicit CGageUI(ID3D11DeviceContext* pContext);
+	virtual ~CGageUI(void);
 
 public:
-	static CAim* Create(ID3D11DeviceContext* pContext);
+	static CGageUI* Create(ID3D11DeviceContext* pContext);
 
 
 public:
