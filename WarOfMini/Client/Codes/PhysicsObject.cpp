@@ -145,8 +145,8 @@ void CPhysicsObect::SetRotate(XMFLOAT3 vRot)
 	PxTransform _PxTransform = m_pPxActor->getGlobalPose();
 
 	_PxTransform.q *= PxQuat(vRot.x, PxVec3(1, 0, 0));
-	_PxTransform.q *= PxQuat(vRot.y, PxVec3(0, 1, 0));
-	_PxTransform.q *= PxQuat(vRot.z, PxVec3(0, 0, 1));
+	_PxTransform.q *= PxQuat(vRot.z, PxVec3(0, 1, 0));
+	_PxTransform.q *= PxQuat(vRot.y, PxVec3(0, 0, 1));
 
 	m_pPxActor->setGlobalPose(_PxTransform);
 

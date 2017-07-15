@@ -172,15 +172,6 @@
     <Filter Include="02.Object\01.Soldier\01.OtherPlayer">
       <UniqueIdentifier>{fad12007-0f63-4ee3-8179-ca0887e6da13}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\02.DefaultObject">
-      <UniqueIdentifier>{dd822835-712c-4a67-8648-e119dfaf53d2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Object\03.Equipment">
-      <UniqueIdentifier>{8c439ebf-5628-4572-abc6-2e00978b34a5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Object\03.Equipment\00.Gun">
-      <UniqueIdentifier>{018484a4-70a3-43f0-9577-f6ff8cd80dd0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="95.Engine\00.Utility\12.StateMachine">
       <UniqueIdentifier>{aa4460f0-8115-46b9-8129-265d52162974}</UniqueIdentifier>
     </Filter>
@@ -211,24 +202,6 @@
     <Filter Include="02.Object\01.Soldier\00.SoldierMain\State\Jump">
       <UniqueIdentifier>{ce4a959d-2a2d-42f4-b6d6-daba1af031ee}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\04.Gabiscon">
-      <UniqueIdentifier>{76082c1c-f9ac-4efe-b7a9-4d020897f181}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Object\05.Tank">
-      <UniqueIdentifier>{012b215f-2d8a-4355-bf2b-6aecb507cd0c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Object\05.Tank\Truck">
-      <UniqueIdentifier>{a7d1d4d5-c8af-4f81-a700-e8b92948c1b2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Object\05.Tank\Tire">
-      <UniqueIdentifier>{02cbc07f-7aa5-44f1-96c1-58b1e5bf773b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Object\06.PhysicsObject">
-      <UniqueIdentifier>{7eb471a7-adf7-4860-a28a-1bc118b5946b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Object\06.PhysicsObject\00.Door">
-      <UniqueIdentifier>{153d1c8f-6842-4353-a1a2-9e03c368e27b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Object\07.Effect">
       <UniqueIdentifier>{df9e4131-d0e6-4630-b6b1-8edfc7e02fd8}</UniqueIdentifier>
     </Filter>
@@ -237,9 +210,6 @@
     </Filter>
     <Filter Include="02.Object\07.Effect\00.Bomb">
       <UniqueIdentifier>{d580296d-bea1-4959-9dad-9517d2276c8b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Object\06.PhysicsObject\01.DefaultPhysicsObject">
-      <UniqueIdentifier>{25515352-ce47-40ee-a315-81af0d29dfdd}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Scene\02.Title">
       <UniqueIdentifier>{e4f973a3-1721-436e-a38c-ac9df8dfb3aa}</UniqueIdentifier>
@@ -262,17 +232,47 @@
     <Filter Include="02.Object\08.UI\03.DefaultUI">
       <UniqueIdentifier>{d4ce6522-fb5c-4a9c-9403-ccc74d86978e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\06.PhysicsObject\02.Cloth">
-      <UniqueIdentifier>{1c3bb01a-74f7-4126-823a-e1f68d7c10d9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="95.Engine\01.Resources\03.Buffer\03.FlagTex">
       <UniqueIdentifier>{2816a038-24b0-4ff6-a104-8e6a6118518d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\06.PhysicsObject\03.Station">
-      <UniqueIdentifier>{abf63ea3-6f55-4924-be59-93f247a82057}</UniqueIdentifier>
-    </Filter>
     <Filter Include="95.Engine\00.Utility\13.Collision\02.CollisionSphere">
       <UniqueIdentifier>{9a237203-b01d-4b22-9cbe-87d0f594970b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\02.Equipment">
+      <UniqueIdentifier>{8c439ebf-5628-4572-abc6-2e00978b34a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\02.Equipment\00.Gun">
+      <UniqueIdentifier>{018484a4-70a3-43f0-9577-f6ff8cd80dd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\03.Gabiscon">
+      <UniqueIdentifier>{76082c1c-f9ac-4efe-b7a9-4d020897f181}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\04.Tank">
+      <UniqueIdentifier>{012b215f-2d8a-4355-bf2b-6aecb507cd0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\04.Tank\Truck">
+      <UniqueIdentifier>{a7d1d4d5-c8af-4f81-a700-e8b92948c1b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\04.Tank\Tire">
+      <UniqueIdentifier>{02cbc07f-7aa5-44f1-96c1-58b1e5bf773b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\05.PhysicsObject">
+      <UniqueIdentifier>{7eb471a7-adf7-4860-a28a-1bc118b5946b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\05.PhysicsObject\00.Door">
+      <UniqueIdentifier>{153d1c8f-6842-4353-a1a2-9e03c368e27b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\05.PhysicsObject\01.DefaultPhysicsObject">
+      <UniqueIdentifier>{25515352-ce47-40ee-a315-81af0d29dfdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\05.PhysicsObject\02.Cloth">
+      <UniqueIdentifier>{1c3bb01a-74f7-4126-823a-e1f68d7c10d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\05.PhysicsObject\03.DefaultObject">
+      <UniqueIdentifier>{dd822835-712c-4a67-8648-e119dfaf53d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\05.PhysicsObject\04.Station">
+      <UniqueIdentifier>{abf63ea3-6f55-4924-be59-93f247a82057}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -442,13 +442,13 @@
       <Filter>95.Engine\00.Utility\06.GameObject\01.StaticObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Equipment.h">
-      <Filter>02.Object\03.Equipment</Filter>
+      <Filter>02.Object\02.Equipment</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Gun.h">
-      <Filter>02.Object\03.Equipment\00.Gun</Filter>
+      <Filter>02.Object\02.Equipment\00.Gun</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\DefaultObject.h">
-      <Filter>02.Object\02.DefaultObject</Filter>
+      <Filter>02.Object\05.PhysicsObject\03.DefaultObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\LogoBack.h">
       <Filter>02.Object\10.LogoBack</Filter>
@@ -493,22 +493,22 @@
       <Filter>02.Object\01.Soldier\00.SoldierMain\State\Jump</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Gabiscon.h">
-      <Filter>02.Object\04.Gabiscon</Filter>
+      <Filter>02.Object\03.Gabiscon</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Tank.h">
-      <Filter>02.Object\05.Tank</Filter>
+      <Filter>02.Object\04.Tank</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Truck.h">
-      <Filter>02.Object\05.Tank\Truck</Filter>
+      <Filter>02.Object\04.Tank\Truck</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Tire.h">
-      <Filter>02.Object\05.Tank\Tire</Filter>
+      <Filter>02.Object\04.Tank\Tire</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\PhysicsObect.h">
-      <Filter>02.Object\06.PhysicsObject</Filter>
+      <Filter>02.Object\05.PhysicsObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\PhysicsDoor.h">
-      <Filter>02.Object\06.PhysicsObject\00.Door</Filter>
+      <Filter>02.Object\05.PhysicsObject\00.Door</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Effect.h">
       <Filter>02.Object\07.Effect</Filter>
@@ -532,7 +532,7 @@
       <Filter>02.Object\08.UI\03.DefaultUI</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\DefaultPhysicsObject.h">
-      <Filter>02.Object\06.PhysicsObject\01.DefaultPhysicsObject</Filter>
+      <Filter>02.Object\05.PhysicsObject\01.DefaultPhysicsObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Title.h">
       <Filter>01.Scene\02.Title</Filter>
@@ -541,13 +541,13 @@
       <Filter>02.Object\09.TitleBack</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Cloth.h">
-      <Filter>02.Object\06.PhysicsObject\02.Cloth</Filter>
+      <Filter>02.Object\05.PhysicsObject\02.Cloth</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\FlagTex.h">
       <Filter>95.Engine\01.Resources\03.Buffer\03.FlagTex</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Station.h">
-      <Filter>02.Object\06.PhysicsObject\03.Station</Filter>
+      <Filter>02.Object\05.PhysicsObject\04.Station</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\SphereMesh.h">
       <Filter>95.Engine\00.Utility\13.Collision\02.CollisionSphere</Filter>
@@ -681,13 +681,13 @@
       <Filter>95.Engine\00.Utility\06.GameObject\00.DynamicObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Equipment.cpp">
-      <Filter>02.Object\03.Equipment</Filter>
+      <Filter>02.Object\02.Equipment</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Gun.cpp">
-      <Filter>02.Object\03.Equipment\00.Gun</Filter>
+      <Filter>02.Object\02.Equipment\00.Gun</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\DefaultObject.cpp">
-      <Filter>02.Object\02.DefaultObject</Filter>
+      <Filter>02.Object\05.PhysicsObject\03.DefaultObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\LogoBack.cpp">
       <Filter>02.Object\10.LogoBack</Filter>
@@ -729,22 +729,22 @@
       <Filter>02.Object\01.Soldier\00.SoldierMain\State\Jump</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Gabiscon.cpp">
-      <Filter>02.Object\04.Gabiscon</Filter>
+      <Filter>02.Object\03.Gabiscon</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Tank.cpp">
-      <Filter>02.Object\05.Tank</Filter>
+      <Filter>02.Object\04.Tank</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Truck.cpp">
-      <Filter>02.Object\05.Tank\Truck</Filter>
+      <Filter>02.Object\04.Tank\Truck</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Tire.cpp">
-      <Filter>02.Object\05.Tank\Tire</Filter>
+      <Filter>02.Object\04.Tank\Tire</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\PhysicsObject.cpp">
-      <Filter>02.Object\06.PhysicsObject</Filter>
+      <Filter>02.Object\05.PhysicsObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\PhysicsDoor.cpp">
-      <Filter>02.Object\06.PhysicsObject\00.Door</Filter>
+      <Filter>02.Object\05.PhysicsObject\00.Door</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Effect.cpp">
       <Filter>02.Object\07.Effect</Filter>
@@ -768,7 +768,7 @@
       <Filter>02.Object\08.UI\03.DefaultUI</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\DefaultPhysicsObject.cpp">
-      <Filter>02.Object\06.PhysicsObject\01.DefaultPhysicsObject</Filter>
+      <Filter>02.Object\05.PhysicsObject\01.DefaultPhysicsObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Title.cpp">
       <Filter>01.Scene\02.Title</Filter>
@@ -777,13 +777,13 @@
       <Filter>02.Object\09.TitleBack</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Cloth.cpp">
-      <Filter>02.Object\06.PhysicsObject\02.Cloth</Filter>
+      <Filter>02.Object\05.PhysicsObject\02.Cloth</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\FlagTex.cpp">
       <Filter>95.Engine\01.Resources\03.Buffer\03.FlagTex</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Station.cpp">
-      <Filter>02.Object\06.PhysicsObject\03.Station</Filter>
+      <Filter>02.Object\05.PhysicsObject\04.Station</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\SphereMesh.cpp">
       <Filter>95.Engine\00.Utility\13.Collision\02.CollisionSphere</Filter>

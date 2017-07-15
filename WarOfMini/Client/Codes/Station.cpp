@@ -163,14 +163,14 @@ void CStation::SetPosition(XMFLOAT3 vPosition)
 
 void CStation::SetRotate(XMFLOAT3 vRot)
 {
-	m_pTransform->m_vAngle = XMFLOAT3(vRot.x, vRot.z, vRot.y);
+	m_pTransform->m_vAngle = XMFLOAT3(vRot.x, vRot.y, vRot.z);
 
 	PxTransform _PxTransform = m_pPxActor->getGlobalPose();
 
 
 	_PxTransform.q *= PxQuat((_float)D3DXToRadian(vRot.x), PxVec3(1, 0, 0));
-	_PxTransform.q *= PxQuat((_float)D3DXToRadian(vRot.y), PxVec3(0, 1, 0));
-	_PxTransform.q *= PxQuat((_float)D3DXToRadian(vRot.z), PxVec3(0, 0, 1));
+	_PxTransform.q *= PxQuat((_float)D3DXToRadian(vRot.z), PxVec3(0, 1, 0));
+	_PxTransform.q *= PxQuat((_float)D3DXToRadian(vRot.y), PxVec3(0, 0, 1));
 
 	m_pPxActor->setGlobalPose(_PxTransform);
 }

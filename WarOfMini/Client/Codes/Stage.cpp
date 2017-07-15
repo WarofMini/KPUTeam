@@ -394,7 +394,7 @@ HRESULT CStage::LoadStageMap(void)
 
 
 			((CDefaultObj*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, m_vScale, m_pCooking, "StaticObject");
-			((CDefaultObj*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(m_vAngle.x), (_float)D3DXToRadian(m_vAngle.z), (_float)D3DXToRadian(m_vAngle.y)));
+			((CDefaultObj*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(m_vAngle.x), (_float)D3DXToRadian(m_vAngle.y), (_float)D3DXToRadian(m_vAngle.z)));
 			((CDefaultObj*)pGameObject)->SetPosition(m_vPos);
 			pLayer->Ready_Object(L"StaticObject", pGameObject);
 		}
@@ -591,7 +591,7 @@ HRESULT CStage::InitPhysicsObject(void)
 
 	CPhysicsDoor* pDoorObject = CPhysicsDoor::Create(m_pContext);
 	(pDoorObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(1.99f, 2.0f, 2.5f), m_pCooking, "PhysicsDoor");
-	(pDoorObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(270.f), (_float)D3DXToRadian(0.f), (_float)D3DXToRadian(180.f)));
+	(pDoorObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(270.f), (_float)D3DXToRadian(180.f), (_float)D3DXToRadian(0.f)));
 	(pDoorObject)->SetPosition(XMFLOAT3(1168.0f, 161.0f, 310.0f));
 	(pDoorObject)->SetSeparation(XMFLOAT3(80.f, 0.0f, 0.0f));
 	(pDoorObject)->CreateChain(m_pPxPhysicsSDK, m_pPxScene);
@@ -619,7 +619,7 @@ HRESULT CStage::InitPhysicsObject(void)
 
 	pStation->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, vScale, m_pCooking, "StationOne");
 	pStation->SetPosition(vStationOnePos);
-	pStation->SetRotate(XMFLOAT3(-90.f, 0.f, 0.f)); //x, z, y 넣는 순서
+	pStation->SetRotate(XMFLOAT3(-90.f, 0.f, 0.f));
 	pStation->SetTransformScale(vScale);
 	pStation->SetFlag(pClothObject);
 	pLayer->Ready_Object(L"StationOne", pStation);
