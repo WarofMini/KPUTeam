@@ -32,6 +32,7 @@ private:
 	ID3D11Buffer*					m_pInstShaderCB;
 	ID3D11Buffer*					m_pDynamicShaderCB;
 	ID3D11Buffer*					m_pSpriteShaderCB;
+	ID3D11Buffer*					m_pUIShaderCB;
 	ID3D11SamplerState*				m_pBaseSampler;
 
 
@@ -73,8 +74,10 @@ public:
 	ID3D11Buffer*					GetDynamicShaderCB();
 	ID3D11Buffer*					GetSpriteShaderCB();
 	ID3D11SamplerState*				GetBaseSampler();
+	ID3D11Buffer*					GetUIShaderCB();
 	ID3D11Device*					GetGraphicDevice();
 	ID3D11DeviceContext*			GetContext();
+
 
 public:
 	void							ChangeScreenMode(void);

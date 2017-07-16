@@ -8,11 +8,18 @@ cbuffer ConstantBuffer : register(b0)
 	matrix matProj;
 }
 
+cbuffer ConstantBuffer : register(b1)
+{
+	float   fXGage;
+	float   fYGage;
+}
+
 struct VS_OUTPUT
 {
 	float4 vPos		: SV_POSITION;
 	float2 vTexUV	: TEXCOORD0;
 	float4 vProjPos : TEXCOORD1;
+	float fXShade    : COLOR0;
 };
 
 //--------------------------------------------------------------------------------------
@@ -29,6 +36,8 @@ VS_OUTPUT VS(float4 vPos : POSITION, float2 vTexUV : TEXCOORD0, float3 vNormal :
 	output.vProjPos = output.vPos;
 
 	output.vTexUV = vTexUV;
+
+	output.fXShade = fXGage;
 
 	return output;
 }
@@ -48,9 +57,7 @@ PS_OUTPUT PS(VS_OUTPUT input)
 
 	output.vColor = txDiffuse.Sample(BaseSampler, input.vTexUV);
 
-	//if (0.3f < input.vProjPos.z * 0.005f)
-	//	output.vColor.a = 0.f;
-	if (input.vTexUV.x <= 0.5f)
+	if (input.vTexUV.x >= input.fXShade)
 		output.vColor.a = 0.f;
 
 	output.vDepth = input.vProjPos.z * 0.005f;

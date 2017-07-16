@@ -19,6 +19,7 @@ CGraphicDev::CGraphicDev(void)
 , m_pInstShaderCB(NULL)
 , m_pDynamicShaderCB(NULL)
 , m_pSpriteShaderCB(NULL)
+, m_pUIShaderCB(NULL)
 , m_b4xMsaaCheck(true)
 , m_usFPS(0)
 , m_bWireEnable(false)
@@ -361,6 +362,15 @@ HRESULT CGraphicDev::Ready_GraphicDev(HWND hWnd, WINMODE eWinMode, const _ushort
 		return E_FAIL;
 	}
 
+	//UI를 위한 버퍼
+	tBufferDesc.ByteWidth = sizeof(UI_CB);
+
+	if (FAILED(m_pGraphicDev->CreateBuffer(&tBufferDesc, NULL, &m_pUIShaderCB)))
+	{
+		MSG_BOX(L"UI ConstantBuffer Created Failed");
+		return E_FAIL;
+	}
+
 	//텍스처 렌더링
 	//샘플러 스테이트 오브젝트 설정
 	D3D11_SAMPLER_DESC sampDesc;
@@ -482,6 +492,11 @@ ID3D11Buffer * CGraphicDev::GetSpriteShaderCB()
 ID3D11SamplerState * CGraphicDev::GetBaseSampler()
 {
 	return m_pBaseSampler;
+}
+
+ID3D11Buffer * CGraphicDev::GetUIShaderCB()
+{
+	return m_pUIShaderCB;
 }
 
 ID3D11Device * CGraphicDev::GetGraphicDevice()
@@ -611,13 +626,15 @@ void CGraphicDev::Release(void)
 	if (Safe_Com_Release(m_pInstShaderCB))
 		MSG_BOX(L"m_pInstShaderCB Release Failed");
 
-	
 	if (Safe_Com_Release(m_pSpriteShaderCB))
 		MSG_BOX(L"m_pSpriteShaderCB Release Failed");
 
+	if (Safe_Com_Release(m_pUIShaderCB))
+		MSG_BOX(L"m_pUICB Release Failed");
 
 	if (Safe_Com_Release(m_pBaseShaderCB))
 		MSG_BOX(L"m_pBaseShaderCB Release Failed");
+
 
 	if (Safe_Com_Release(m_pRenderTargetView))
 		MSG_BOX(L"m_pRenderTargetView Release Failed");

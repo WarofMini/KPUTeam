@@ -9,6 +9,9 @@
 
 CGageUI::CGageUI(ID3D11DeviceContext * pContext)
 : CUI(pContext)
+, m_fXGage(0.0f)
+, m_bGageStart(false)
+, m_bGoalCheck(false)
 {
 }
 
@@ -47,8 +50,14 @@ HRESULT CGageUI::Initialize(void)
 
 _int CGageUI::Update(const _float & fTimeDelta)
 {
-	//if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
-	//	return 0;
+	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
+		return 0;
+
+	if (!m_bGageStart)
+		return 0;
+
+	UpdateGage();
+
 
 	CGameObject::Update(fTimeDelta);
 
@@ -62,13 +71,18 @@ _int CGageUI::Update(const _float & fTimeDelta)
 
 void CGageUI::Render(void)
 {
-	//if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
-	//	return;
+	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
+		return;
+
+	if (!m_bGageStart)
+		return ;
 
 	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Gage"));
 
 	ID3D11Buffer* pBaseShaderCB = CGraphicDev::GetInstance()->GetBaseShaderCB();
+	ID3D11Buffer* pUIShaderCB = CGraphicDev::GetInstance()->GetUIShaderCB();
 	ID3D11SamplerState* pBaseSampler = CGraphicDev::GetInstance()->GetBaseSampler();
+
 
 	BASESHADER_CB tBaseShaderCB;
 
@@ -93,8 +107,15 @@ void CGageUI::Render(void)
 
 	m_pContext->UpdateSubresource(pBaseShaderCB, 0, NULL, &tBaseShaderCB, 0, 0);
 
+	UI_CB tUIShaderCB;
+
+	tUIShaderCB.fXGage = m_fXGage;
+
+	m_pContext->UpdateSubresource(pUIShaderCB, 0, NULL, &tUIShaderCB, 0, 0);
+
 	m_pContext->VSSetShader(CShaderMgr::GetInstance()->Get_VertexShader(L"Shader_Gage"), NULL, 0);
 	m_pContext->VSSetConstantBuffers(0, 1, &pBaseShaderCB);
+	m_pContext->VSSetConstantBuffers(1, 1, &pUIShaderCB);
 	m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_Gage"), NULL, 0);
 	m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
 
@@ -131,4 +152,27 @@ HRESULT CGageUI::Ready_Component(void)
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Transform", pComponent));
 
 	return S_OK;
+}
+
+void CGageUI::UpdateGage(void)
+{
+	if (m_bGageStart)
+	{
+		if (m_fXGage >= 1.f) //게이지 풀 완성 (점령 완료)
+		{
+			m_bGoalCheck = true;
+			m_fXGage = 0.0f;
+			m_bGageStart = false;
+		}
+		else
+		{
+			m_fXGage += 0.01f;
+		}
+	}
+	else
+	{
+		m_fXGage = 0.0f;
+		m_bGoalCheck = false;
+	}
+
 }

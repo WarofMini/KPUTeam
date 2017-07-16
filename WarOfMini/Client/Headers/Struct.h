@@ -59,10 +59,17 @@ typedef struct tagTerEffect_CB
 	UINT		iSizeX;
 	UINT		iSizeY;
 	UINT		iFrame;
-	float		fAlpha;
+	_float		fAlpha;
 	XMVECTOR	vPadding;
 
 }TEREFFSHADER_CB;
+
+typedef struct tagUI_CB
+{
+	_float	 fXGage;
+	_float	 fYGage;
+	XMVECTOR vPadding;
+}UI_CB;
 
 
 

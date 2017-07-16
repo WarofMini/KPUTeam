@@ -9,6 +9,7 @@
 #include "Cloth.h"
 #include "Layer.h"
 #include "Scene.h"
+#include "GageUI.h"
 
 CStation::CStation(ID3D11DeviceContext* pContext)
 : CGameObject(pContext)
@@ -17,6 +18,7 @@ CStation::CStation(ID3D11DeviceContext* pContext)
 , m_pPlayer(NULL)
 , m_fFlagDist(100.f)
 , m_eFlagState(FLAG_EMPTY)
+, m_pGage(NULL)
 {
 	m_uiObjNum = MESHNUM_TOWER;
 }
@@ -197,6 +199,7 @@ void CStation::CollisionObject(void)
 		list<CGameObject*>* m_pObject = pLayer->Find_ObjectList(L"Player");
 
 		m_pPlayer = ((CPlayer*)(*m_pObject->begin()));
+
 	}
 	else
 	{
@@ -204,10 +207,30 @@ void CStation::CollisionObject(void)
 
 		m_fDist = Length(m_pPlayer->GetTransformPosition(), m_pTransform->m_vPos);
 
-		if (m_fDist <= m_fFlagDist)
-			m_pFlag->Set_TextureNumber(1);
+		if (m_fDist <= m_fFlagDist) //타워 범위안에 있는경우
+		{
+			if (m_eFlagState == FLAG_TEAM1/*객체가 어느쪽 팀인지*/) //이미 점령한 곳인 경우
+			{
+				
+			}
+			else
+			{
+				m_pGage->SetGageStart(true);
+
+				if (m_pGage->GetGoalCheck() == true)
+				{
+					m_eFlagState = FLAG_TEAM1;
+					m_pFlag->Set_TextureNumber(m_eFlagState);
+					m_pGage->SetGageStart(false);
+					m_pGage->SetXGage(0.0f);
+				}
+			}
+		}
 		else
-			m_pFlag->Set_TextureNumber(0);
+		{
+			m_pGage->SetGageStart(false);
+			m_pGage->SetXGage(0.0f);
+		}
 	}
 
 

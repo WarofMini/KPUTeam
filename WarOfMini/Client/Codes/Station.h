@@ -5,6 +5,7 @@
 
 class CCloth;
 class CPlayer;
+class CGageUI;
 
 class CStation
 	: public CGameObject
@@ -34,6 +35,8 @@ private:
 	CPlayer*		m_pPlayer;
 	_float			m_fFlagDist;
 	eFlagState		m_eFlagState;
+	CGageUI*		m_pGage;
+
 public:
 	void			BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, XMFLOAT3 vScale, PxCooking* pCooking, const char* name);
 	void			SetPosition(XMFLOAT3 vPosition);
@@ -45,6 +48,8 @@ public:
 	_float			Length(XMFLOAT3& xmf3Vector1, XMFLOAT3& xmf3Vector2);
 	void			SetFlagState(eFlagState eState) { m_eFlagState = eState; }
 	eFlagState		GetFlagState(void) { return m_eFlagState; }
+
+	void			SetGageUI(CGageUI* pGage) { m_pGage = pGage; }
 };
 
 #endif // Station_h__
