@@ -63,6 +63,7 @@ _int CCloth::Update(const _float& fTimeDelta)
 	ClothPhysXUpdate(fTimeDelta);
 
 
+	
 	PxClothParticleData* data = m_pCloth->lockParticleData();
 
 	PxClothParticle* pa = data->particles;
@@ -73,6 +74,7 @@ _int CCloth::Update(const _float& fTimeDelta)
 	}
 	
 	m_pBuffer->SetVtxInfo(m_pClothVtx);
+	
 
 	 //update the cloth local frame
 	//gPose = PxTransform(PxVec3(0), PxQuat(PxPi / 240, PxVec3(0, 1, 0))) * gPose;

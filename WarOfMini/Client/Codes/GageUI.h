@@ -36,6 +36,7 @@ public:
 	void	SetGoalCheck(_bool bCheck) { m_bGoalCheck = bCheck; }
 	_bool	GetGoalCheck(void) { return m_bGoalCheck; }
 	void	SetXGage(_float fGage) { m_fXGage = fGage; }
+	void	ResetValue(void);
 };
 
 

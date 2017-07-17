@@ -50,10 +50,8 @@ HRESULT CGageUI::Initialize(void)
 
 _int CGageUI::Update(const _float & fTimeDelta)
 {
-	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
-		return 0;
-
-	if (!m_bGageStart)
+	if ((CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC) ||
+		(!m_bGageStart))
 		return 0;
 
 	UpdateGage();
@@ -71,11 +69,10 @@ _int CGageUI::Update(const _float & fTimeDelta)
 
 void CGageUI::Render(void)
 {
-	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
+	if ((CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC) ||
+		(!m_bGageStart))
 		return;
 
-	if (!m_bGageStart)
-		return ;
 
 	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Gage"));
 
@@ -175,4 +172,11 @@ void CGageUI::UpdateGage(void)
 		m_bGoalCheck = false;
 	}
 
+}
+
+void CGageUI::ResetValue(void)
+{
+	m_fXGage = 0.0f;
+	m_bGageStart = false;
+	m_bGoalCheck = false;
 }

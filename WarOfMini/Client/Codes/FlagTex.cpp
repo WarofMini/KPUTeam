@@ -230,7 +230,7 @@ void CFlagTex::GetVtxInfo(void * pVtxInfo)
 	void* pOriVtx = NULL;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 
-	m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &mappedResource);
 
 	pOriVtx = (VTXTEX*)mappedResource.pData;
 
@@ -245,7 +245,7 @@ void CFlagTex::SetVtxInfo(void * pVtxInfo)
 	void* pOriVtx = NULL;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 
-	m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &mappedResource);
 
 	pOriVtx = (VTXTEX*)mappedResource.pData;
 

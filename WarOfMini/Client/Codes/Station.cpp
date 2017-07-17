@@ -190,7 +190,7 @@ PxRigidStatic * CStation::GetPxActor(void)
 	return m_pPxActor;
 }
 
-void CStation::CollisionObject(void)
+void CStation::CollisionObject(void) //객체 충돌
 {
 	if (m_pPlayer == NULL)
 	{
@@ -207,33 +207,29 @@ void CStation::CollisionObject(void)
 
 		m_fDist = Length(m_pPlayer->GetTransformPosition(), m_pTransform->m_vPos);
 
-		if (m_fDist <= m_fFlagDist) //타워 범위안에 있는경우
+		if (m_fDist <= m_fFlagDist) //거점 범위안에 있는경우
 		{
 			if (m_eFlagState == FLAG_TEAM1/*객체가 어느쪽 팀인지*/) //이미 점령한 곳인 경우
 			{
 				
 			}
-			else
+			else //점령 못한 거점일 경우
 			{
 				m_pGage->SetGageStart(true);
 
 				if (m_pGage->GetGoalCheck() == true)
 				{
 					m_eFlagState = FLAG_TEAM1;
-					m_pFlag->Set_TextureNumber(m_eFlagState);
-					m_pGage->SetGageStart(false);
-					m_pGage->SetXGage(0.0f);
+					m_pFlag->Set_TextureNumber(m_eFlagState); //깃발의 텍스쳐 팀껄로 변환
+					m_pGage->ResetValue();
 				}
 			}
 		}
 		else
 		{
-			m_pGage->SetGageStart(false);
-			m_pGage->SetXGage(0.0f);
+			m_pGage->ResetValue();
 		}
 	}
-
-
 
 }
 
