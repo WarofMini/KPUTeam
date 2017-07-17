@@ -98,6 +98,9 @@ HRESULT CStage::Ready_GameLogic(void)
 
 	pLayer->Ready_Object(L"Player", pGameObject);
 
+	/*pGameObject = CTank::Create(m_pGraphicDev, m_pContext);
+	((CTank*)pGameObject)->SetPos(XMFLOAT3(150.f, 0, 50.f));
+	pLayer->Ready_Object(L"NPC", pGameObject);*/
 
 	pGameObject = CBomb::Create(m_pContext);
 	if (NULL == pGameObject)

@@ -103,6 +103,7 @@ private:
 
 	//test
 	int				m_iHP;
+	CGameObject*	m_pTank;
 
 	//Physx SDK Member Variables =========================
 private:
@@ -129,8 +130,7 @@ public:
 
 	//test
 	void			SetHP(void) { --m_iHP; }
-
-
+	bool			UseTank(void);
 };
 
 #endif //

@@ -28,6 +28,7 @@ private:
 	_float				m_fGap;
 	_float				m_fAngleY;
 
+	CGameObject*		m_pPlayer;
 
 public:
 	void				PlayerState(void);

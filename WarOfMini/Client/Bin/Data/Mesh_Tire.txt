@@ -1,1 +1,6 @@
-0-125-Idle-30
+0-24-Tire_aimspace-30
+25-85-Tire_engine_idle-30
+86-146-Tire_engine_idle2-30
+147-207-Tire_Moving_fast-30
+208-268-Tire_Moving_moderate-30
+269-327-Tire_Moving_slow-30

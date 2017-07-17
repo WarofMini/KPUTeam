@@ -18,8 +18,19 @@ public:
 	virtual INT Update(const FLOAT& fTimeDelta);
 	virtual void Release(void);
 
+public:
+	void SetPos(XMFLOAT3 vPos);
+	XMFLOAT3 GetPos(void);
+	void	SetUse(bool bUse, int iID);
+
 protected:
 	virtual HRESULT Ready_Component(ID3D11Device* pGraphicDev);
+
+private:
+	DWORD			m_dwAniIdx;
+
+	bool				m_bUseable;
+	int					m_iUseID;
 };
 
 #endif // Truck_h__

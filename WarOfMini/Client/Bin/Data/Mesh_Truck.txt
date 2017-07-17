@@ -1,1 +1,11 @@
-0-125-Idle-30
+0-24-Truck_aimspace-30
+25-84-Truck_door_close-30
+85-120-Truck_door_open-30
+121-181-Truck_engine_idle-30
+182-242-Truck_engine_idle2-30
+243-244-Truck_engine_off-30
+245-305-Truck_Moving_fast-30
+306-366-Truck_Moving_moderate-30
+367-427-Truck_Moving_slow-30
+428-448-Truck_shoot2-30
+449-544-Truck_turret_aimspace-30

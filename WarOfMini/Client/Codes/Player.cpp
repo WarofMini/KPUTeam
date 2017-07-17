@@ -15,6 +15,7 @@
 #include "Management.h"
 #include "Scene.h"
 #include "SphereMesh.h"
+#include "Tank.h"
 
 XMFLOAT3		g_vPlayerPos;
 
@@ -36,6 +37,7 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 , m_fFallAcceleration(9.8f)
 , m_fFallvelocity(0.f)
 , m_iHP(5)
+, m_pTank(NULL)
 {
 	m_pInput = CInput::GetInstance();
 	m_vLook = XMFLOAT3(0.f, 1.f, 0.f);
@@ -499,6 +501,34 @@ void CPlayer::KeyState(const FLOAT& fTimeDelta)
 		Soldier_Iron_Move(fTimeDelta);
 
 	Soldier_Fire(fTimeDelta);
+
+	/*if (m_pInput->GetDIKeyStateOnce(DIK_RETURN))
+	{
+		if (m_pTank)
+		{ 
+			((CTank*)m_pTank)->SetUse(false, g_myid);
+			m_pTank = NULL;
+
+		}
+		else
+		{
+			CScene* pScene = NULL;
+			CLayer* pLayer = NULL;
+
+			pScene = CManagement::GetInstance()->GetScene();
+
+			pLayer = pScene->FindLayer(L"Layer_GameLogic");
+			list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"NPC");
+			m_pTank = *pObjList->begin();
+			if (m_pTank != NULL)
+			{
+				((CTank*)m_pTank)->SetUse(true, g_myid);
+			}
+		}
+	}
+
+	if (m_pTank)
+		SetPosition(((CTank*)m_pTank)->GetPos());*/
 }
 
 void CPlayer::Soldier_Move(const FLOAT& fTimeDelta)
@@ -837,6 +867,13 @@ void CPlayer::PhysXUpdate(const FLOAT& fTimeDelta)
 
 	XMStoreFloat4x4(&m_pTransform->m_matWorld, matScale * matRotX * matRotY * matRotZ * matTrans);
 
+}
+
+bool CPlayer::UseTank(void)
+{
+	if (m_pTank)
+		return true;
+	else return false;	
 }
 
 void CPlayer::SendPacketAlways(void)

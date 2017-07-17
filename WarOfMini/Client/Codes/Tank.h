@@ -19,9 +19,18 @@ public:
 	virtual void Render(void);
 	virtual void Release(void);
 
+public:
+	void SetPos(XMFLOAT3 vPos);
+	XMFLOAT3 GetPos(void);
+	void	SetUse(bool bUse, int iID);
+
 private:
 	CDynamicObject*		m_pTruck;
 	CDynamicObject*		m_pTire;
+
+public:
+	bool				m_bUseable;
+	int					m_iUseID;
 
 };
 

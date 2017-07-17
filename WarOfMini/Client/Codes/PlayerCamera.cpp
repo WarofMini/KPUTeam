@@ -5,6 +5,7 @@
 #include "Management.h"
 #include "Scene.h"
 #include "Layer.h"
+#include "Player.h"
 
 CPlayerCamera::CPlayerCamera(ID3D11DeviceContext* pContext, PxScene* pPxScene, const CTransform* pTargetTransform, _float fGap)
 	: CCamera(pContext)
@@ -39,6 +40,7 @@ _int CPlayerCamera::Update(const _float& fTimeDelta)
 		CScene* pScene = CManagement::GetInstance()->GetScene();//->(CComponent*)
 		CLayer* pLayer = pScene->FindLayer(L"Layer_GameLogic");
 		CComponent* pTransform = (CComponent*)pLayer->Get_Component(L"Player", L"Com_Transform");
+		m_pPlayer = *pLayer->Find_ObjectList(L"Player")->begin();
 		m_pTargetTransform = (CTransform*)pTransform;
 	}
 
@@ -70,7 +72,15 @@ void CPlayerCamera::PlayerState(void)
 	XMVECTOR vEye, vAt, vUpPos, vLook, vUp;
 
 	vUp = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	vUpPos = XMVectorSet(0.0f, m_fEpsilonY, 0.0f, 0.0f);//입실론?
+	if (((CPlayer*)m_pPlayer)->UseTank())
+	{
+		vUpPos = XMVectorSet(0.0f, m_fEpsilonY * 3.f, 0.0f, 0.0f);
+		m_fGap = 150.f;
+	}
+	else
+	{
+		vUpPos = XMVectorSet(0.0f, m_fEpsilonY, 0.0f, 0.0f);
+	}
 	vAt = vTargetPos + vUpPos;							//바라볼위치
 
 	//오른쪽으로 카메라 이동

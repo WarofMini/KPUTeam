@@ -27,6 +27,10 @@ public:
 	const _float& Get_Ratio(void);
 	_bool Get_Playing(void);
 
+	void  Set_PlayAni(bool bPlay) { m_bPlay = bPlay; }
+	bool  Get_PlayAni(void) { return m_bPlay; }
+	void  Set_PlayReverse(bool bReverse) { m_bIsReverse = bReverse; }
+
 public:
 	void Set_Key(_ushort wKey);
 	void Set_KeyImm(_ushort wKey);
@@ -47,6 +51,9 @@ private:
 	_ushort				m_wCurFrame;
 	_ushort				m_wNextFrame;
 	_float				m_fRatio;
+
+	bool				m_bPlay;
+	bool				m_bIsReverse;
 };
 
 

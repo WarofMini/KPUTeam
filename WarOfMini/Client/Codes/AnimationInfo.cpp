@@ -13,6 +13,8 @@ CAnimationInfo::CAnimationInfo(MESHNUM eMeshNum)
 , m_wCurFrame(0)
 , m_wNextFrame(0)
 , m_fRatio(0.f)
+, m_bPlay(true)
+, m_bIsReverse(false)
 {
 }
 
@@ -29,31 +31,65 @@ CAnimationInfo* CAnimationInfo::Create(MESHNUM eMeshNum)
 
 _int CAnimationInfo::Update(const _float& fTime)
 {
+	if (!m_bPlay)
+		return 0;
+
 	m_fRatio += fTime * m_vecMeshFrameInfo[m_eMeshNum][m_wCurKey].wFrameSpeed;
 
-	if (m_fRatio > 1.f)
+	if (!m_bIsReverse)
 	{
-		m_fRatio -= 1.f;
-
 		if (m_fRatio > 1.f)
-			m_fRatio = 0.f;
-
-		m_wCurKey = m_wNextKey;
-		m_wCurFrame = m_wNextFrame;
-
-		if (m_wStoreNextKey != m_wNextKey
-			&& (m_wCurKey < NODELAYANICNT || m_wCurFrame == m_vecMeshFrameInfo[m_eMeshNum][m_wCurKey].wFrameCnt - 1))
 		{
-			m_wNextKey = m_wStoreNextKey;
-			//m_wNextFrame = 0;
+			m_fRatio -= 1.f;
+
+			if (m_fRatio > 1.f)
+				m_fRatio = 0.f;
+
+			m_wCurKey = m_wNextKey;
+			m_wCurFrame = m_wNextFrame;
+
+			if (m_wStoreNextKey != m_wNextKey
+				&& (m_wCurKey < NODELAYANICNT || m_wCurFrame == m_vecMeshFrameInfo[m_eMeshNum][m_wCurKey].wFrameCnt - 1))
+			{
+				m_wNextKey = m_wStoreNextKey;
+				//m_wNextFrame = 0;
+			}
+
+			else
+			{
+				++m_wNextFrame;
+
+				if (m_wNextFrame > m_vecMeshFrameInfo[m_eMeshNum][m_wCurKey].wFrameCnt - 1)
+					m_wNextFrame = 0;
+			}
 		}
-
-		else
+	}
+	else
+	{
+		if (m_fRatio > 1.f)
 		{
-			++m_wNextFrame;
+			m_fRatio -= 1.f;
 
-			if (m_wNextFrame > m_vecMeshFrameInfo[m_eMeshNum][m_wCurKey].wFrameCnt - 1)
-				m_wNextFrame = 0;
+			if (m_fRatio > 1.f)
+				m_fRatio = 0.f;
+
+			m_wCurKey = m_wNextKey;
+			m_wCurFrame = m_wNextFrame;
+
+			if (m_wStoreNextKey != m_wNextKey
+				&& (m_wCurKey < NODELAYANICNT || m_wCurFrame == 0))
+			{
+				m_wNextKey = m_wStoreNextKey;
+				//m_wNextFrame = 0;
+			}
+
+			else
+			{
+				if (m_wNextFrame == 0)
+					m_wNextFrame = m_vecMeshFrameInfo[m_eMeshNum][m_wCurKey].wFrameCnt - 1;
+				else
+					--m_wNextFrame;
+			}
 		}
 	}
 
