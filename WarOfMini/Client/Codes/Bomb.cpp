@@ -15,7 +15,7 @@ CBomb::CBomb(ID3D11DeviceContext * pContext)
 	m_iSizeX = 4;
 	m_iSizeY = 4;
 
-	m_fLifeTime = 1.f;
+	m_fLifeTime = 0.5f;
 	m_fRealTime = 0.0f;
 	m_fDelayTime = 0.0f;
 	m_bAllBillboardCheck = true;
@@ -40,9 +40,7 @@ HRESULT CBomb::Initialize(void)
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
 
-	m_pTransform->m_vScale = XMFLOAT3(10.f, 10.f, 0.f);
-
-	m_pTransform->m_vPos = XMFLOAT3(50.f, 80.f, 0.f);
+	m_pTransform->m_vScale = XMFLOAT3(40.f, 40.f, 0.f);
 
 	return S_OK;
 }
@@ -54,12 +52,22 @@ INT CBomb::Update(const FLOAT & fTimeDelta)
 
 	m_iFrame = int((m_fRealTime / m_fLifeTime) * (m_iSizeX * m_iSizeY));
 
-	CGameObject::Update(fTimeDelta);
+	CEffect::Update(fTimeDelta);
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ALPHA, this);
 
 	ComputeBillboard();
 
-	return 0;
+	if (m_fRealTime >= m_fLifeTime)
+		m_bDead = true;
+
+	if (m_bDead && m_bLoop)
+	{
+		m_fRealTime -= m_fLifeTime;
+		m_bDead = false;
+	}
+
+
+	return m_bDead;
 }
 
 void CBomb::Render(void)

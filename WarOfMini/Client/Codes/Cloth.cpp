@@ -17,6 +17,7 @@ CCloth::CCloth(ID3D11DeviceContext* pContext)
 , m_pTexture(NULL)
 , m_pClothVtx(NULL)
 , m_iVtxCount(0)
+, m_fWindCount(0.0f)
 {
 	
 }
@@ -56,12 +57,20 @@ HRESULT CCloth::Initialize()
 
 _int CCloth::Update(const _float& fTimeDelta)
 {
+	m_fWindCount += fTimeDelta;
+
+	if (m_fWindCount >= 30.f)
+	{
+		m_WindDir.x *= -1.f;
+
+		m_fWindCount = 0.0f;
+	}
+
 	CGameObject::Update(fTimeDelta);
 
 	UpdateWind(fTimeDelta);
 
 	ClothPhysXUpdate(fTimeDelta);
-
 
 	
 	PxClothParticleData* data = m_pCloth->lockParticleData();
@@ -74,11 +83,7 @@ _int CCloth::Update(const _float& fTimeDelta)
 	}
 	
 	m_pBuffer->SetVtxInfo(m_pClothVtx);
-	
 
-	 //update the cloth local frame
-	//gPose = PxTransform(PxVec3(0), PxQuat(PxPi / 240, PxVec3(0, 1, 0))) * gPose;
-	//m_pCloth->setTargetPose(gPose);
 
 
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);

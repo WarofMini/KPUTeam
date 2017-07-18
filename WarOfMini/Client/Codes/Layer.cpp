@@ -62,6 +62,30 @@ _int CLayer::Update(const _float & fTimeDelta)
 		OBJECTLIST::iterator iterList = iter->second.begin();
 		OBJECTLIST::iterator iterList_end = iter->second.end();
 
+		for (; iterList != iterList_end;)
+		{
+			iResult = (*iterList)->Update(fTimeDelta);
+
+			if (iResult == 1)
+			{
+				Safe_Release(*iterList);
+				iterList = iter->second.erase(iterList);
+			}
+			else
+			{
+				++iterList;
+			}
+		}
+	}
+
+
+	/*
+	원래코드
+	for (iter; iter != iter_end; ++iter)
+	{
+		OBJECTLIST::iterator iterList = iter->second.begin();
+		OBJECTLIST::iterator iterList_end = iter->second.end();
+
 		for (; iterList != iterList_end; ++iterList)
 		{
 			iResult = (*iterList)->Update(fTimeDelta);
@@ -70,6 +94,7 @@ _int CLayer::Update(const _float & fTimeDelta)
 				return iResult;
 		}
 	}
+	*/
 
 	return iResult;
 }

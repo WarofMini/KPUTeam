@@ -21,6 +21,8 @@ CEffect::CEffect(ID3D11DeviceContext * pContext)
 , m_fDelayTime(0.0f)
 , m_bAllBillboardCheck(false)
 , m_bYBillboardCheck(false)
+, m_bLoop(false)
+, m_bDead(false)
 {
 
 }
@@ -39,6 +41,7 @@ HRESULT CEffect::Initialize(void)
 
 INT CEffect::Update(const FLOAT & fTimeDelta)
 {
+	CGameObject::Update(fTimeDelta);
 	return 0;
 }
 

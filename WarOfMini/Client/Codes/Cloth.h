@@ -24,7 +24,9 @@ private:
 	CTextures*				 m_pTexture;
 	VTXTEX*					 m_pClothVtx;
 	wstring					 m_strBufferName;
-	_int						 m_iVtxCount;
+	_int					 m_iVtxCount;
+	_float					 m_fWindCount;
+	
 
 public:
 	static CCloth* Create(ID3D11DeviceContext* pContext, wstring strName);

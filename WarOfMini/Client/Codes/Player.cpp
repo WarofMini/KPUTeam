@@ -16,6 +16,7 @@
 #include "Scene.h"
 #include "SphereMesh.h"
 #include "Tank.h"
+#include "Bomb.h"
 
 XMFLOAT3		g_vPlayerPos;
 
@@ -686,11 +687,9 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 				{
 					CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
 
-					list<CGameObject*>* m_pObject = pLayer->Find_ObjectList(L"TestPos");
 
 					m_vtestpos = XMFLOAT3(Gunhit.block.position.x, Gunhit.block.position.y, Gunhit.block.position.z);
 
-					//m_vtestpos = XMFLOAT3(vLocalPos.x, vLocalPos.y, vLocalPos.z);
 
 					const char* pName = Gunhit.block.actor->getName();
 					string strFullName = pName;
@@ -708,19 +707,14 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 						g_Client->sendPacket(sizeof(Ser_COLLLAY_DATA), COLLISION_LAY, reinterpret_cast<BYTE*>(&strColData));
 					}
 
-					if (m_pObject == NULL)
-					{
 
-						CGameObject* pGameObject = CSphereMesh::Create(m_pContext, 2.5f, &m_vtestpos);
-						pLayer->Ready_Object(L"TestPos", pGameObject);
-					}
-					else
-					{
+					//Effect
+					CGameObject* pGameObject = CBomb::Create(m_pContext);
 
-						list<CGameObject*>::iterator iter = m_pObject->begin();
-
-						((CSphereMesh*)(*iter))->SetPosition(m_vtestpos);
-					}
+					pGameObject->SetTransformPosition(m_vtestpos);
+				
+					pLayer->Ready_Object(L"Effect", pGameObject);
+					
 				}
 
 			}
@@ -850,7 +844,7 @@ void CPlayer::PhysXUpdate(const FLOAT& fTimeDelta)
 
 
 	//현재 PhysX의 값으로 객체의 월드행렬을 만들어준다.
-	m_pTransform->m_vPos = XMFLOAT3(m_pPxCharacterController->getFootPosition().x, m_pPxCharacterController->getFootPosition().y, m_pPxCharacterController->getFootPosition().z);
+	m_pTransform->m_vPos = XMFLOAT3((_float)m_pPxCharacterController->getFootPosition().x, (_float)m_pPxCharacterController->getFootPosition().y, (_float)m_pPxCharacterController->getFootPosition().z);
 
 
 	_float m_fRevice = 0.5f; //Player의 Y보정값(발이 지면에 안박히게 보정)

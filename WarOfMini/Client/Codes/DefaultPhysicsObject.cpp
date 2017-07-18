@@ -93,10 +93,12 @@ void CDefaultPhysicsObect::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene,
 	PxTransform _PxTransform(0, 0, 0);
 
 	PxBoxGeometry _PxBoxGeometry(_d3dxvExtents.x, _d3dxvExtents.y, _d3dxvExtents.z);
-	m_pPxActor = PxCreateDynamic(*pPxPhysics, _PxTransform, _PxBoxGeometry, *pPxMaterial, 4000.0f);
+
+	m_pPxActor = PxCreateDynamic(*pPxPhysics, _PxTransform, _PxBoxGeometry, *pPxMaterial, 1.0f); //¹Ðµµ
 	m_pPxActor->setName(name);
 
 	pPxScene->addActor(*m_pPxActor);
+
 
 	m_pTransform->m_vScale = XMFLOAT3(vScale.x, vScale.y, vScale.z);
 }
