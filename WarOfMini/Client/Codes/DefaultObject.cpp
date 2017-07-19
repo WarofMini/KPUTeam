@@ -51,6 +51,7 @@ _int CDefaultObj::Update(const _float& fTimeDelta)
 
 void CDefaultObj::Render(void)
 {
+	//IASetInputLayout : 입력 배치 설정을 사용하고자 하는 장치에 묶는 것
 	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Default"));
 
 	ID3D11Buffer* pBaseShaderCB = CGraphicDev::GetInstance()->GetBaseShaderCB();

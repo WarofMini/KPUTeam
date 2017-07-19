@@ -64,7 +64,7 @@ HRESULT CCubeTex::Create_Buffer(void)
 
 	ZeroMemory(&tBufferDesc, sizeof(D3D11_BUFFER_DESC));
 
-	tBufferDesc.ByteWidth = sizeof(VTXTEX) * uiVtxCnt;
+	tBufferDesc.ByteWidth = sizeof(VTXTEX) * uiVtxCnt; //생성할 정점 버퍼의 크기
 	tBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 	tBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	tBufferDesc.CPUAccessFlags = 0;

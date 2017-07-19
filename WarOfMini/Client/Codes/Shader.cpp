@@ -49,7 +49,14 @@ HRESULT CShader::Ready_Shader(_tchar* szFileName, _ubyte byLayoutFlag)
 	// Create InputLayout
 	_uint uiIndex = 2;
 	_uint uiOffset = 32;
-	D3D11_INPUT_ELEMENT_DESC tLayout[5];
+	D3D11_INPUT_ELEMENT_DESC tLayout[5]; //입력배치 객체는 이 구조체들로 이루어진 배열을 통해서 구축한다.
+	//각 원소는 정점 구조체의 각 성분을 서술하는 역할을 한다.(입력배치 서술)이라고 한다.
+	//정점 구조체 성분과 같아야한다.
+	//1. 매개변수 LPCSTR SemanticName : 성분에 부여된 문자열 이름
+	//2. 매개변수 SemanticIndex : 의미소에 부여된 색인
+	//3. 매개변수 InputSlot : 공급될 정점 버퍼 슬롯의 색인(0 ~ 15)
+	//4. 매개변수 AlignedByteOffset : 입력슬롯을 1개만 사용하는 경우 이필드는 C++정점 구조체 오프셋(바이트 단위)
+
 
 	tLayout[0] = { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 };
 	tLayout[1] = { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 };
@@ -66,6 +73,7 @@ HRESULT CShader::Ready_Shader(_tchar* szFileName, _ubyte byLayoutFlag)
 		uiOffset += 16;
 	}
 
+	//입력배치 생성
 	if (FAILED(m_pGraphicDev->CreateInputLayout(tLayout, uiIndex + 1
 		, pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &m_pVertexLayout)))
 	{

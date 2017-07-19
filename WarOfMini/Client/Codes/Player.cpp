@@ -796,9 +796,8 @@ void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *
 	PxCapsuledesc.height = 10.0f;
 	//캐릭터가 올라갈 수있는 장애물의 최대 높이를 정의합니다. 
 	PxCapsuledesc.stepOffset = 2.f;
-
-
-	//캐시 된 볼륨 증가. 
+	
+	//캐시 된 볼륨 증가.
 	//성능을 향상시키기 위해 캐싱하는 컨트롤러 주변의 공간입니다.  이것은 1.0f보다 커야하지만 너무 크지 않아야하며, 2.0f보다 낮아야합니다.
 	PxCapsuledesc.volumeGrowth = 1.9f;
 	//캐릭터가 걸어 갈 수있는 최대 경사. 
@@ -809,6 +808,8 @@ void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *
 	PxCapsuledesc.material = pPxMaterial;
 
 	m_pPxCharacterController = pPxControllerManager->createController(PxCapsuledesc);
+
+
 }
 
 void CPlayer::SetPosition(XMFLOAT3 vPosition)
@@ -844,7 +845,7 @@ void CPlayer::PhysXUpdate(const FLOAT& fTimeDelta)
 
 
 	//현재 PhysX의 값으로 객체의 월드행렬을 만들어준다.
-	m_pTransform->m_vPos = XMFLOAT3((_float)m_pPxCharacterController->getFootPosition().x, (_float)m_pPxCharacterController->getFootPosition().y, (_float)m_pPxCharacterController->getFootPosition().z);
+	m_pTransform->m_vPos = XMFLOAT3((_float)m_pPxCharacterController->getFootPosition().x, (_float)m_pPxCharacterController->getFootPosition().y,(_float) m_pPxCharacterController->getFootPosition().z);
 
 
 	_float m_fRevice = 0.5f; //Player의 Y보정값(발이 지면에 안박히게 보정)

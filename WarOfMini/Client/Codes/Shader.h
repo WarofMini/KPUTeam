@@ -28,7 +28,7 @@ private:
 	ID3D11Device*			m_pGraphicDev;
 	ID3D11DeviceContext*	m_pContext;
 	ID3D11VertexShader*		m_pVertexShader;
-	ID3D11InputLayout*		m_pVertexLayout;
+	ID3D11InputLayout*		m_pVertexLayout; //정점 구조체의 각 성분이 어떤 용도인지를 Direct3D에게 알려주는 수단.
 	ID3D11PixelShader*		m_pPixelShader;
 };
 
