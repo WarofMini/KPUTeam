@@ -65,9 +65,13 @@ HRESULT CCubeTex::Create_Buffer(void)
 	ZeroMemory(&tBufferDesc, sizeof(D3D11_BUFFER_DESC));
 
 	tBufferDesc.ByteWidth = sizeof(VTXTEX) * uiVtxCnt; //생성할 정점 버퍼의 크기
-	tBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-	tBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	tBufferDesc.CPUAccessFlags = 0;
+	tBufferDesc.Usage = D3D11_USAGE_IMMUTABLE; //버퍼가 쓰이는 방식
+	//1. DEFAULT : GPU가 버퍼의 자원을 읽고 써야 한다면 이 용도를 지정
+	//2. IMMUTABLE : 버퍼를 생성한 후에는 전혀 변경하지 않을 것
+	//3. DYNAMIC : 응용프로그램(CPU)이 자원의 자료내용을 자주 갱신해야 한다면 이 용도를 지정
+	//4. STAGING : 응용프로그램(CPU)이 자원의 복사본을 읽어야한다면 이용도를 지정
+	tBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;//정점버퍼일 경우 사용
+	tBufferDesc.CPUAccessFlags = 0;//CPU가 버퍼에 접근하는 방식을 결정하는 플래그
 
 	D3D11_SUBRESOURCE_DATA tSubData;
 

@@ -300,7 +300,7 @@ void CCloth::UpdateWind(const _float& fTimeDelta)
 	float st = 1.0f + (float)sin(m_Time);
 
 	float windStrength = WindRand(1.0f, st) * m_WindStrength;
-	float windRangeStrength = WindRand(0.0f, 2.0f);
+	float windRangeStrength = WindRand(0.0f, 0.5f);
 
 	PxVec3 offset(PxReal(WindRand(-1, 1)), PxReal(WindRand(-1, 1)), PxReal(WindRand(-1, 1)));
 	float ct = 1.0f + (float)cos(m_Time + 0.1);

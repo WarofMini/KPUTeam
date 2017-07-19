@@ -48,7 +48,6 @@ _int CDefaultPhysicsObect::Update(const _float& fTimeDelta)
 
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
 
-
 	return 0;
 }
 
@@ -96,9 +95,7 @@ void CDefaultPhysicsObect::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene,
 
 	m_pPxActor = PxCreateDynamic(*pPxPhysics, _PxTransform, _PxBoxGeometry, *pPxMaterial, 1.0f); //¹Ðµµ
 	m_pPxActor->setName(name);
-
 	pPxScene->addActor(*m_pPxActor);
-
 
 	m_pTransform->m_vScale = XMFLOAT3(vScale.x, vScale.y, vScale.z);
 }

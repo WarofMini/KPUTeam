@@ -100,7 +100,7 @@ INT CMainApp::Update(const _float& fTimeDelta)
 
 	if (m_pPxScene)
 	{
-		m_pPxScene->simulate(fTimeDelta);
+		m_pPxScene->simulate(1/10.f);
 		m_pPxScene->fetchResults(true);
 	}
 
@@ -374,9 +374,7 @@ void CMainApp::InitializePhysxEngine()
 
 	m_pPxFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_PxDefaultAllocatorCallback, m_PxDefaultErrorCallback);
 	PxTolerancesScale PxScale = PxTolerancesScale();
-	PxScale.length /= 100;
-	PxScale.mass /= 100;
-	PxScale.speed /= 100;
+
 	m_pPxPhysicsSDK = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pPxFoundation, PxScale, false);
 	
 
