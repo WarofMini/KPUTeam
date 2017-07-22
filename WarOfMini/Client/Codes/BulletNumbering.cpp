@@ -96,7 +96,6 @@ void CBulletNumbering::SetNumberPosition(_float fMoveX, _float fMoveY)
 {
 	m_pNumbering[0]->SetMoveX(fMoveX);
 	m_pNumbering[0]->SetMoveY(fMoveY);
-
 	m_pNumbering[1]->SetMoveX(fMoveX + (m_pNumbering[0]->GetSizeX()));
 	m_pNumbering[1]->SetMoveY(fMoveY);
 	

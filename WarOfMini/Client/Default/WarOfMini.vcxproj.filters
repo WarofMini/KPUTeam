@@ -847,5 +847,8 @@
     <FxCompile Include="..\Bin\ShaderCode\Shader_Gage.fx">
       <Filter>95.Engine\00.Utility\05.Shader\01.ShaderCode</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderCode\Shader_Object.fx">
+      <Filter>95.Engine\00.Utility\05.Shader\01.ShaderCode</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

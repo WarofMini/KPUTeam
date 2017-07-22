@@ -47,7 +47,7 @@ private:
 	ID3D11RasterizerState*			m_pSolidRS;
 	ID3D11RasterizerState*			m_pNoneCullRS;
 	ID3D11BlendState*				m_pAlphaBlendState;
-
+	ID3D11BlendState*				m_pAlphaToCoverageBlendState;
 
 	_bool							m_b4xMsaaCheck;//품질검사
 	_ushort							m_usFPS; //디스플레이 모드 갱신율

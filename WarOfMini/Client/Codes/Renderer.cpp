@@ -96,6 +96,9 @@ HRESULT CRenderer::Ready_Renderer(void)
 	if (FAILED(CShaderMgr::GetInstance()->Ready_ShaderFromFiles(m_pGraphicDev, m_pContext, L"Shader_Gage", L"../Bin/ShaderCode/Shader_Gage.fx", 0)))
 		return E_FAIL;
 
+	if (FAILED(CShaderMgr::GetInstance()->Ready_ShaderFromFiles(m_pGraphicDev, m_pContext, L"Shader_Object", L"../Bin/ShaderCode/Shader_Object.fx", 0)))
+		return E_FAIL;
+
 	return S_OK;
 }
 

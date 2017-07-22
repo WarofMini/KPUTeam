@@ -8,6 +8,7 @@ CGraphicDev::CGraphicDev(void)
 , m_pContext(NULL)
 , m_pSwapChain(NULL)
 , m_pAlphaBlendState(NULL)
+, m_pAlphaToCoverageBlendState(NULL)
 , m_pWireFrameRS(NULL)
 , m_pSolidRS(NULL)
 , m_pNoneCullRS(NULL)
@@ -467,9 +468,25 @@ HRESULT CGraphicDev::Ready_GraphicDev(HWND hWnd, WINMODE eWinMode, const _ushort
 	m_pContext->RSSetState(m_pSolidRS);
 
 
+	//Blend
+	D3D11_BLEND_DESC tAlphaToCoverageDesc;
+	ZeroMemory(&tAlphaToCoverageDesc, sizeof(D3D11_BLEND_DESC));
+	tAlphaToCoverageDesc.AlphaToCoverageEnable = true;
+	tAlphaToCoverageDesc.IndependentBlendEnable = false;
+	tAlphaToCoverageDesc.RenderTarget[0].BlendEnable = false;
+	tAlphaToCoverageDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	if (FAILED(m_pGraphicDev->CreateBlendState(&tAlphaToCoverageDesc, &m_pAlphaToCoverageBlendState)))
+	{
+		MSG_BOX(L"BlendState Created Failed");
+		return E_FAIL;
+	}
+
 	// Create BlendState
 	D3D11_BLEND_DESC tBSDesc;
 	ZeroMemory(&tBSDesc, sizeof(D3D11_BLEND_DESC));
+	tBSDesc.AlphaToCoverageEnable = false;
+	tBSDesc.IndependentBlendEnable = false;
 
 	tBSDesc.RenderTarget[0].BlendEnable = TRUE;
 	tBSDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
@@ -478,7 +495,7 @@ HRESULT CGraphicDev::Ready_GraphicDev(HWND hWnd, WINMODE eWinMode, const _ushort
 	tBSDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
 	tBSDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 	tBSDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	tBSDesc.RenderTarget[0].RenderTargetWriteMask = 0x0F;
+	tBSDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
 
 	if (FAILED(m_pGraphicDev->CreateBlendState(&tBSDesc, &m_pAlphaBlendState)))
@@ -675,6 +692,9 @@ void CGraphicDev::Release(void)
 
 	if (Safe_Com_Release(m_pAlphaBlendState))
 		MSG_BOX(L"m_pAlphaBlendState Release Failed");
+
+	if (Safe_Com_Release(m_pAlphaToCoverageBlendState))
+		MSG_BOX(L"m_pAlphaToCoverageBlendState Release Failed");
 
 	if (Safe_Com_Release(m_pBaseSampler))
 		MSG_BOX(L"m_pBaseSampler Release Failed");

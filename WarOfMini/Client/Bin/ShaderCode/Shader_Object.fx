@@ -8,7 +8,6 @@ cbuffer ConstantBuffer : register(b0)
 	matrix matProj;
 };
 
-
 cbuffer ConstantLightBuffer : register(b1)
 {
 	float4   Light_Ambient;
@@ -31,8 +30,8 @@ struct VS_OUTPUT
 {
 	float4 vPos		: SV_POSITION;
 	float2 vTexUV	: TEXCOORD0;
-	float fShade	: COLOR0;
-	float4 vPosW	: TEXCOORD1;
+	float4 vProjPos : TEXCOORD1;
+	float4 vPosW	: TEXCOORD2;
 	float3 fNormal  : NORMAL;
 };
 
@@ -50,21 +49,29 @@ VS_OUTPUT VS(float4 vPos : POSITION, float2 vTexUV : TEXCOORD0, float3 vNormal :
 
 	vector vWorld_Normal = normalize(mul(vector(vNormal.xyz, 0.f), matWorld));
 	output.fNormal = vWorld_Normal;
+	output.vProjPos = output.vPos;
 	output.vTexUV = vTexUV;
 
 	return output;
 }
 
-
 //--------------------------------------------------------------------------------------
 // Pixel Shader
 //--------------------------------------------------------------------------------------
-float4 PS(VS_OUTPUT input) : SV_Target
+struct PS_OUTPUT
 {
-	vector vColor = txDiffuse.Sample(BaseSampler, input.vTexUV);
+	float4 vColor	: SV_Target0;
+	float4 vDepth	: SV_Target1;
+};
+
+PS_OUTPUT PS(VS_OUTPUT input)
+{
+	PS_OUTPUT output = (PS_OUTPUT)0;
+
+	output.vColor = txDiffuse.Sample(BaseSampler, input.vTexUV);
+
 
 	input.fNormal = normalize(input.fNormal);
-
 	float3 toEye = Eye - input.vPosW;
 	float distToEye = length(toEye);
 	// Normalize.
@@ -73,6 +80,7 @@ float4 PS(VS_OUTPUT input) : SV_Target
 	float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 spec = float4(0.0f, 0.0f, 0.0f, 0.0f);
+
 
 	float3 lightVec = -Light_Direction;
 
@@ -85,6 +93,7 @@ float4 PS(VS_OUTPUT input) : SV_Target
 
 
 	// Flatten to avoid dynamic branching.
+
 	if (diffuseFactor > 0.0f)
 	{
 		float3 v = reflect(-lightVec, input.fNormal);
@@ -96,30 +105,18 @@ float4 PS(VS_OUTPUT input) : SV_Target
 
 	float4 litColor = ambient + diffuse;
 
-	vColor.rgb *= litColor.rgb;
 
-	vColor.rgba += spec;
+	output.vColor.rgb *= litColor.rgb;
+
+	output.vColor.rgba += spec;
 
 
-	clip(vColor.a);
+	if (0.3f < input.vProjPos.z * 0.005f)
+		output.vColor.a = 0.f;
 
-	return vColor;
+	output.vDepth = input.vProjPos.z * 0.005f;
+	output.vDepth.a = output.vColor.a;
+
+
+	return output;
 }
-
-
-
-
-
-
-/*
-float4 PS(VS_OUTPUT input) : SV_Target
-{
-vector vColor = txDiffuse.Sample(BaseSampler, input.vTexUV);
-
-vColor.rgb *= input.fShade;
-clip(vColor.a);
-
-return vColor;
-}
-
-*/
