@@ -104,6 +104,8 @@ PS_OUTPUT PS(VS_OUTPUT input)
 	// Normalize.
 	toEye /= distToEye;
 
+	//½ºÆåÅ§·¯ ÇØÁ¦
+	toEye = float3(0.0f, 0.0f, 0.0f);
 	
 	float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
@@ -120,8 +122,7 @@ PS_OUTPUT PS(VS_OUTPUT input)
 	float diffuseFactor = dot(lightVec, input.fNormal);
 
 	
-	// Flatten to avoid dynamic branching.
-	
+	// Flatten to avoid dynamic branching.	
 	if (diffuseFactor > 0.0f)
 	{
 		float3 v = reflect(-lightVec, input.fNormal);

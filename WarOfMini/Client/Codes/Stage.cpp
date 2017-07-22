@@ -49,7 +49,12 @@ CStage* CStage::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext,
 HRESULT CStage::Ready_Scene(void)
 {
 	//PxMaterial : 표면 특성 집합을 나타내는 재질 클래스
-	m_pPxMaterial = m_pPxPhysicsSDK->createMaterial(0.5f, 0.5f, 0.1f); //1.정지 마찰계수 운동마찰계수, 반발계수
+	m_pPxMaterial = m_pPxPhysicsSDK->createMaterial(0.5f, 0.5f, 0.2f); //1.정지 마찰계수 운동마찰계수, 반발계수
+
+	g_tDirectionalLight.Ambient = XMVectorSet(0.9f, 0.9f, 0.9f, 1.0f);
+	g_tDirectionalLight.Diffuse = XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
+	g_tDirectionalLight.Specular = XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
+	g_tDirectionalLight.Direction = XMVectorSet(500.0f, 1500.0f, 500.0f, 0.0f);
 
 
 	if (FAILED(Ready_GameLogic()))		return E_FAIL;

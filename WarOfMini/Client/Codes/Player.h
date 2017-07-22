@@ -10,7 +10,7 @@ class CInput;
 class CGun;
 
 class CPlayer
-	: public CDynamicObject
+	: public CDynamicObject,  public PxUserControllerHitReport
 {
 protected:
 	explicit CPlayer(ID3D11DeviceContext* pContext);
@@ -131,6 +131,16 @@ public:
 	//test
 	void			SetHP(void) { --m_iHP; }
 	bool			UseTank(void);
+
+
+public:
+	virtual void							onShapeHit(const PxControllerShapeHit& hit);
+	virtual void							onControllerHit(const PxControllersHit& hit) {}
+	virtual void							onObstacleHit(const PxControllerObstacleHit& hit) {}
+
+	void AddForceAtLocalPos(PxRigidBody& body, const PxVec3& force, const PxVec3& pos, PxForceMode::Enum mode, bool wakeup = true);
+	void AddForceAtPosInternal(PxRigidBody& body, const PxVec3& force, const PxVec3& pos, PxForceMode::Enum mode, bool wakeup);
+
 };
 
 #endif //

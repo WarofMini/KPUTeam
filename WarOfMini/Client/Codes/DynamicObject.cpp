@@ -64,10 +64,10 @@ void CDynamicObject::Render(void)
 
 	DIRECTIONALIGHT_CB tDirCB;
 
-	tDirCB.Ambient = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
-	tDirCB.Diffuse = XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
-	tDirCB.Specular = XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
-	tDirCB.Direction = XMVectorSet(0.57735f, -0.17735f, 0.57735f, 0.0f);
+	tDirCB.Ambient   = g_tDirectionalLight.Ambient;
+	tDirCB.Diffuse   = g_tDirectionalLight.Diffuse;
+	tDirCB.Specular  = g_tDirectionalLight.Specular;
+	tDirCB.Direction = XMVector4Normalize(XMLoadFloat3(&m_pTransform->m_vPos) - g_tDirectionalLight.Direction);
 
 	m_pContext->UpdateSubresource(pDirShaderCB, 0, NULL, &tDirCB, 0, 0);
 
@@ -75,7 +75,7 @@ void CDynamicObject::Render(void)
 
 	tMaterialCB.Ambient = XMVectorSet(0.8f, 0.8f, 0.8f, 1.0f);
 	tMaterialCB.Diffuse = XMVectorSet(0.8f, 0.8f, 0.8f, 1.0f);
-	tMaterialCB.Specular = XMVectorSet(0.8f, 0.8f, 0.8f, 10.0f);
+	tMaterialCB.Specular = XMVectorSet(0.8f, 0.8f, 0.8f, 50.0f);
 	tMaterialCB.Eye = XMLoadFloat3(&CCameraMgr::GetInstance()->Get_CurCameraEye());
 
 	m_pContext->UpdateSubresource(pMaterialCB, 0, NULL, &tMaterialCB, 0, 0);

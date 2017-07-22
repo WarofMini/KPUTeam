@@ -32,7 +32,7 @@ struct VS_OUTPUT
 	float2 vTexUV	: TEXCOORD0;
 	float4 vProjPos : TEXCOORD1;
 	float4 vPosW	: TEXCOORD2;
-	float3 fNormal  : NORMAL;
+	float3 vNormal  : NORMAL;
 };
 
 //--------------------------------------------------------------------------------------
@@ -43,14 +43,15 @@ VS_OUTPUT VS(float4 vPos : POSITION, float2 vTexUV : TEXCOORD0, float3 vNormal :
 	VS_OUTPUT output = (VS_OUTPUT)0;
 
 	output.vPos = mul(vPos, matWorld);
-	output.vPosW = output.vPos;
+	output.vPosW = mul(vPos, matWorld);
 	output.vPos = mul(output.vPos, matView);
 	output.vPos = mul(output.vPos, matProj);
 
-	vector vWorld_Normal = normalize(mul(vector(vNormal.xyz, 0.f), matWorld));
-	output.fNormal = vWorld_Normal;
-	output.vProjPos = output.vPos;
 	output.vTexUV = vTexUV;
+
+	vector vWorld_Normal = normalize(mul(vector(vNormal.xyz, 0.f), matWorld));
+	output.vNormal = vWorld_Normal;
+	output.vProjPos = output.vPos;
 
 	return output;
 }
@@ -71,11 +72,15 @@ PS_OUTPUT PS(VS_OUTPUT input)
 	output.vColor = txDiffuse.Sample(BaseSampler, input.vTexUV);
 
 
-	input.fNormal = normalize(input.fNormal);
+	input.vNormal = normalize(input.vNormal);
+
 	float3 toEye = Eye - input.vPosW;
 	float distToEye = length(toEye);
 	// Normalize.
 	toEye /= distToEye;
+
+	//½ºÆåÅ§·¯ ÇØÁ¦
+	toEye = float3(0.0f, 0.0f, 0.0f);
 
 	float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
@@ -89,14 +94,12 @@ PS_OUTPUT PS(VS_OUTPUT input)
 
 
 	// Add ambient term.
-	float diffuseFactor = dot(lightVec, input.fNormal);
-
+	float diffuseFactor = dot(lightVec, input.vNormal);
 
 	// Flatten to avoid dynamic branching.
-
 	if (diffuseFactor > 0.0f)
 	{
-		float3 v = reflect(-lightVec, input.fNormal);
+		float3 v = reflect(-lightVec, input.vNormal);
 		float specFactor = pow(max(dot(v, toEye), 0.0f), Specular.w);
 
 		diffuse = diffuseFactor * Diffuse * Light_Diffuse;

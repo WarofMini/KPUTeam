@@ -121,6 +121,7 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 {
 	m_fTimeDelta = fTimeDelta;
 
+
 	CDynamicObject::Update(fTimeDelta);
 	
 	//PhysX 함수
@@ -807,8 +808,9 @@ void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *
 	PxCapsuledesc.contactOffset = 0.1f; //접촉 오프셋
 	PxCapsuledesc.material = pPxMaterial;
 
-	m_pPxCharacterController = pPxControllerManager->createController(PxCapsuledesc);
+	PxCapsuledesc.reportCallback = this;
 
+	m_pPxCharacterController = pPxControllerManager->createController(PxCapsuledesc);
 
 }
 
@@ -843,7 +845,6 @@ void CPlayer::PhysXUpdate(const FLOAT& fTimeDelta)
 		m_pPxState.collisionFlags == PxControllerCollisionFlag::eCOLLISION_UP)
 		m_fFallvelocity = 0.f;
 
-
 	//현재 PhysX의 값으로 객체의 월드행렬을 만들어준다.
 	m_pTransform->m_vPos = XMFLOAT3((_float)m_pPxCharacterController->getFootPosition().x, (_float)m_pPxCharacterController->getFootPosition().y,(_float) m_pPxCharacterController->getFootPosition().z);
 
@@ -869,6 +870,46 @@ bool CPlayer::UseTank(void)
 	if (m_pTank)
 		return true;
 	else return false;	
+}
+
+
+void CPlayer::onShapeHit(const PxControllerShapeHit & hit)
+{
+	PxRigidDynamic* actor = hit.shape->getActor()->is<PxRigidDynamic>();
+
+	if (actor)
+	{
+		if (actor->getRigidBodyFlags() & PxRigidBodyFlag::eKINEMATIC)
+			return;
+
+		const PxVec3 upVector = hit.controller->getUpDirection();
+		const PxF32 dp = hit.dir.dot(upVector);
+
+		if (fabsf(dp) < 1e-3f)
+		{
+			const PxTransform globalPose = actor->getGlobalPose();
+			const PxVec3 localPos = globalPose.transformInv(toVec3(hit.worldPos));
+			AddForceAtLocalPos(*actor, hit.dir * hit.length * 0.1f, localPos, PxForceMode::eACCELERATION);
+		}
+	}
+}
+
+void CPlayer::AddForceAtLocalPos(PxRigidBody & body, const PxVec3 & force, const PxVec3 & pos, PxForceMode::Enum mode, bool wakeup)
+{
+	//transform pos to world space
+	const PxVec3 globalForcePos = body.getGlobalPose().transform(pos);
+
+	AddForceAtPosInternal(body, force, globalForcePos, mode, wakeup);
+}
+
+void CPlayer::AddForceAtPosInternal(PxRigidBody & body, const PxVec3 & force, const PxVec3 & pos, PxForceMode::Enum mode, bool wakeup)
+{
+	const PxTransform globalPose = body.getGlobalPose();
+	const PxVec3 centerOfMass = globalPose.transform(body.getCMassLocalPose().p);
+
+	const PxVec3 torque = (pos - centerOfMass).cross(force);
+	body.addForce(force, mode, wakeup);
+	body.addTorque(torque, mode, wakeup);
 }
 
 void CPlayer::SendPacketAlways(void)

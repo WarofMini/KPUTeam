@@ -36,4 +36,6 @@ extern _bool		g_bCollisionDraw;
 extern _uint		WINCX;
 extern _uint		WINCY;
 
+extern DIRECTIONALIGHT_CB g_tDirectionalLight;
+
 #endif

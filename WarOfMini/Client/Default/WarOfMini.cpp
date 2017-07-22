@@ -28,7 +28,7 @@ _bool g_bSetAquire;
 _bool g_bCollisionDraw;
 _uint WINCX;
 _uint WINCY;
-
+DIRECTIONALIGHT_CB g_tDirectionalLight;
 AsynchronousClientClass* g_Client = NULL;
 
 

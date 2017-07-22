@@ -70,6 +70,9 @@ float4 PS(VS_OUTPUT input) : SV_Target
 	// Normalize.
 	toEye /= distToEye;
 
+	//Ω∫∆Â≈ß∑Ø «ÿ¡¶
+	toEye = float3(0.0f, 0.0f, 0.0f);
+
 	float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 spec = float4(0.0f, 0.0f, 0.0f, 0.0f);
