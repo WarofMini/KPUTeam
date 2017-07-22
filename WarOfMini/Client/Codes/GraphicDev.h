@@ -33,6 +33,12 @@ private:
 	ID3D11Buffer*					m_pDynamicShaderCB;
 	ID3D11Buffer*					m_pSpriteShaderCB;
 	ID3D11Buffer*					m_pUIShaderCB;
+
+	ID3D11Buffer*					m_pDirLightShaderCB;
+	ID3D11Buffer*					m_pPointLightShaderCB;
+	ID3D11Buffer*					m_pSpotLightShaderCB;
+	ID3D11Buffer*					m_pMaterialShaderCB;
+
 	ID3D11SamplerState*				m_pBaseSampler;
 
 
@@ -73,8 +79,14 @@ public:
 	ID3D11Buffer*					GetInstShaderCB();
 	ID3D11Buffer*					GetDynamicShaderCB();
 	ID3D11Buffer*					GetSpriteShaderCB();
-	ID3D11SamplerState*				GetBaseSampler();
 	ID3D11Buffer*					GetUIShaderCB();
+
+	ID3D11Buffer*					GetDirLightShaderCB();
+	ID3D11Buffer*					GetPointLightShaderCB();
+	ID3D11Buffer*					GetSpotLightShaderCB();
+	ID3D11Buffer*					GetMaterialShaderCB();
+
+	ID3D11SamplerState*				GetBaseSampler();
 	ID3D11Device*					GetGraphicDevice();
 	ID3D11DeviceContext*			GetContext();
 

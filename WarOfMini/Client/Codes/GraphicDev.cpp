@@ -20,6 +20,10 @@ CGraphicDev::CGraphicDev(void)
 , m_pDynamicShaderCB(NULL)
 , m_pSpriteShaderCB(NULL)
 , m_pUIShaderCB(NULL)
+, m_pDirLightShaderCB(NULL)
+, m_pPointLightShaderCB(NULL)
+, m_pSpotLightShaderCB(NULL)
+, m_pMaterialShaderCB(NULL)
 , m_b4xMsaaCheck(true)
 , m_usFPS(0)
 , m_bWireEnable(false)
@@ -371,6 +375,41 @@ HRESULT CGraphicDev::Ready_GraphicDev(HWND hWnd, WINMODE eWinMode, const _ushort
 		return E_FAIL;
 	}
 
+	//Light를 위한 버퍼
+	tBufferDesc.ByteWidth = sizeof(DIRECTIONALIGHT_CB);
+
+	if (FAILED(m_pGraphicDev->CreateBuffer(&tBufferDesc, NULL, &m_pDirLightShaderCB)))
+	{
+		MSG_BOX(L"DirectionalLightBuffer ConstantBuffer Created Failed");
+		return E_FAIL;
+	}
+
+	tBufferDesc.ByteWidth = sizeof(SPOTLIGHT_CB);
+
+	if (FAILED(m_pGraphicDev->CreateBuffer(&tBufferDesc, NULL, &m_pSpotLightShaderCB)))
+	{
+		MSG_BOX(L"m_pSpotLightShaderCB ConstantBuffer Created Failed");
+		return E_FAIL;
+	}
+
+	tBufferDesc.ByteWidth = sizeof(POINTLIGHT_CB);
+
+	if (FAILED(m_pGraphicDev->CreateBuffer(&tBufferDesc, NULL, &m_pPointLightShaderCB)))
+	{
+		MSG_BOX(L"m_pPointLightShaderCB ConstantBuffer Created Failed");
+		return E_FAIL;
+	}
+
+	tBufferDesc.ByteWidth = sizeof(MATERIAL_CB);
+
+	if (FAILED(m_pGraphicDev->CreateBuffer(&tBufferDesc, NULL, &m_pMaterialShaderCB)))
+	{
+		MSG_BOX(L"m_pMaterialShaderCB ConstantBuffer Created Failed");
+		return E_FAIL;
+	}
+
+
+
 	//텍스처 렌더링
 	//샘플러 스테이트 오브젝트 설정
 	D3D11_SAMPLER_DESC sampDesc;
@@ -497,6 +536,26 @@ ID3D11SamplerState * CGraphicDev::GetBaseSampler()
 ID3D11Buffer * CGraphicDev::GetUIShaderCB()
 {
 	return m_pUIShaderCB;
+}
+
+ID3D11Buffer * CGraphicDev::GetDirLightShaderCB()
+{
+	return m_pDirLightShaderCB;
+}
+
+ID3D11Buffer * CGraphicDev::GetPointLightShaderCB()
+{
+	return m_pPointLightShaderCB;
+}
+
+ID3D11Buffer * CGraphicDev::GetSpotLightShaderCB()
+{
+	return m_pSpotLightShaderCB;
+}
+
+ID3D11Buffer * CGraphicDev::GetMaterialShaderCB()
+{
+	return m_pMaterialShaderCB;
 }
 
 ID3D11Device * CGraphicDev::GetGraphicDevice()
@@ -631,6 +690,21 @@ void CGraphicDev::Release(void)
 
 	if (Safe_Com_Release(m_pUIShaderCB))
 		MSG_BOX(L"m_pUICB Release Failed");
+
+	if (Safe_Com_Release(m_pDirLightShaderCB))
+		MSG_BOX(L"m_pDirLightShaderCB Release Failed");
+
+	if (Safe_Com_Release(m_pSpotLightShaderCB))
+		MSG_BOX(L"m_pSpotLightShaderCB Release Failed");
+
+	if (Safe_Com_Release(m_pPointLightShaderCB))
+		MSG_BOX(L"m_pPointLightShaderCB Release Failed");
+
+	if (Safe_Com_Release(m_pMaterialShaderCB))
+		MSG_BOX(L"m_pMaterialShaderCB Release Failed");
+
+
+
 
 	if (Safe_Com_Release(m_pBaseShaderCB))
 		MSG_BOX(L"m_pBaseShaderCB Release Failed");

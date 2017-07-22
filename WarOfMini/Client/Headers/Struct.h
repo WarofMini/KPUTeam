@@ -71,6 +71,51 @@ typedef struct tagUI_CB
 	XMVECTOR vPadding;
 }UI_CB;
 
+//Light=================================
+typedef struct tagDirectionalLight_CB
+{
+	XMVECTOR Ambient;
+	XMVECTOR Diffuse;
+	XMVECTOR Specular;
+	XMVECTOR Direction;
+	float	 m_fPad;
+}DIRECTIONALIGHT_CB;
+
+typedef struct tagPointLight_CB
+{
+	XMVECTOR Ambient;
+	XMVECTOR Diffuse;
+	XMVECTOR Specular;
+	XMVECTOR Position;
+	XMVECTOR Att;
+	float	 m_fRange;
+	float	 m_fPad; 
+
+}POINTLIGHT_CB;
+
+typedef struct SpotLight_CB
+{
+	XMVECTOR Ambient;
+	XMVECTOR Diffuse;
+	XMVECTOR Specular;
+	XMVECTOR Position;
+	XMVECTOR Direction;
+	XMVECTOR Att;
+	float	 m_fRange;
+	float	 m_fSpot;
+	float	 m_fPad;
+}SPOTLIGHT_CB;
+
+typedef struct Material_CB
+{
+	XMVECTOR Ambient;
+	XMVECTOR Diffuse;
+	XMVECTOR Specular;
+	XMVECTOR Reflect;
+	XMVECTOR Eye;
+
+}MATERIAL_CB;
+//===============================================
 
 
 
