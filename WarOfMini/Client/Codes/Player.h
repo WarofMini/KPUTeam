@@ -10,7 +10,7 @@ class CInput;
 class CGun;
 
 class CPlayer
-	: public CDynamicObject,  public PxUserControllerHitReport
+	: public CDynamicObject,  public PxUserControllerHitReport, public PxControllerBehaviorCallback, public PxSceneQueryFilterCallback
 {
 protected:
 	explicit CPlayer(ID3D11DeviceContext* pContext);
@@ -69,11 +69,9 @@ public:
 private:
 	CInput*			m_pInput;
 	XMFLOAT3		m_vLook;
-
 	XMFLOAT4X4		m_matEquipBone[2];
 	CGun*			m_pEquipment[2];
 	_int			m_iEquipBone;
-
 	FLOAT			m_fTimeDelta;
 
 	//Player Animation
@@ -109,7 +107,6 @@ private:
 private:
 	PxController*		m_pPxCharacterController;
 
-
 	//객체에 충돌박스 입히기===============================
 	CGameObject*		pSphereMesh;
 private:
@@ -140,6 +137,15 @@ public:
 
 	void AddForceAtLocalPos(PxRigidBody& body, const PxVec3& force, const PxVec3& pos, PxForceMode::Enum mode, bool wakeup = true);
 	void AddForceAtPosInternal(PxRigidBody& body, const PxVec3& force, const PxVec3& pos, PxForceMode::Enum mode, bool wakeup);
+
+	// Implements PxControllerBehaviorCallback
+	virtual PxControllerBehaviorFlags		getBehaviorFlags(const PxShape& shape, const PxActor& actor);
+	virtual PxControllerBehaviorFlags		getBehaviorFlags(const PxController& controller);
+	virtual PxControllerBehaviorFlags		getBehaviorFlags(const PxObstacle& obstacle);
+
+	// Implements PxSceneQueryFilterCallback
+	virtual PxQueryHitType::Enum			preFilter(const PxFilterData& filterData, const PxShape* shape, const PxRigidActor* actor, PxSceneQueryFlags& queryFlags);
+	virtual	PxQueryHitType::Enum			postFilter(const PxFilterData& filterData, const PxSceneQueryHit& hit);
 
 };
 

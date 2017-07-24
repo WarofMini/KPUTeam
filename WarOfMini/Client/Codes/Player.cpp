@@ -872,7 +872,7 @@ bool CPlayer::UseTank(void)
 	else return false;	
 }
 
-
+//타 객체 충돌감지
 void CPlayer::onShapeHit(const PxControllerShapeHit & hit)
 {
 	PxRigidDynamic* actor = hit.shape->getActor()->is<PxRigidDynamic>();
@@ -910,6 +910,39 @@ void CPlayer::AddForceAtPosInternal(PxRigidBody & body, const PxVec3 & force, co
 	const PxVec3 torque = (pos - centerOfMass).cross(force);
 	body.addForce(force, mode, wakeup);
 	body.addTorque(torque, mode, wakeup);
+}
+
+//세이프의 동작 플래그를 검색하는 함수
+//CCT가 모양에 닿으면 CCT의 동작은 사용자가 사용자 정의 할 수 있습니다. 
+//이 함수는 원하는 동작을 원하는 PxControllerBehaviorFlag플래그를 검색한다.
+PxControllerBehaviorFlags CPlayer::getBehaviorFlags(const PxShape& shape, const PxActor& actor)
+{
+	//const char* actorName = actor.getName();
+
+	if(actor.getType() == PxActorType::eRIGID_DYNAMIC)
+		return PxControllerBehaviorFlag::eCCT_SLIDE;
+
+	return PxControllerBehaviorFlags(0);
+}
+
+PxControllerBehaviorFlags CPlayer::getBehaviorFlags(const PxController &)
+{
+	return PxControllerBehaviorFlags(0);
+}
+
+PxControllerBehaviorFlags CPlayer::getBehaviorFlags(const PxObstacle &)
+{
+	return PxControllerBehaviorFlags(0);
+}
+
+PxQueryHitType::Enum CPlayer::preFilter(const PxFilterData & filterData, const PxShape * shape, const PxRigidActor * actor, PxSceneQueryFlags & queryFlags)
+{
+	return PxSceneQueryHitType::eBLOCK;
+}
+
+PxQueryHitType::Enum CPlayer::postFilter(const PxFilterData & filterData, const PxSceneQueryHit & hit)
+{
+	return PxSceneQueryHitType::eBLOCK;
 }
 
 void CPlayer::SendPacketAlways(void)
