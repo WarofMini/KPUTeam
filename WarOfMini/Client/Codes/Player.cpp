@@ -715,6 +715,24 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 					pGameObject->SetTransformPosition(m_vtestpos);
 				
 					pLayer->Ready_Object(L"Effect", pGameObject);
+
+					//Dynamic Actor(::레이에 맞은 다이나믹 오브젝트 리액션)
+					PxRigidDynamic* actor = Gunhit.block.actor->is<PxRigidDynamic>();
+
+					if (actor)
+					{
+						if (actor->getRigidBodyFlags() & PxRigidBodyFlag::eKINEMATIC)
+							return;
+						
+						const PxTransform globalPose = actor->getGlobalPose();
+						const PxVec3 localPos = globalPose.transformInv((Gunhit.block.position));
+						//PxReal coeff = actor->getMass() * hit.length;
+						//PxRigidBodyExt::addForceAtLocalPos(*actor,hit.dir*coeff, PxVec3(0,0,0), PxForceMode::eIMPULSE);
+						AddForceAtLocalPos(*actor, BulletDir * 10.f, localPos, PxForceMode::eACCELERATION);					
+					}
+
+
+
 					
 				}
 
@@ -807,7 +825,7 @@ void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *
 	PxCapsuledesc.upDirection = PxVec3(0, 1, 0);
 	PxCapsuledesc.contactOffset = 0.1f; //접촉 오프셋
 	PxCapsuledesc.material = pPxMaterial;
-
+	PxCapsuledesc.behaviorCallback = this;
 	PxCapsuledesc.reportCallback = this;
 
 	m_pPxCharacterController = pPxControllerManager->createController(PxCapsuledesc);
@@ -920,7 +938,7 @@ PxControllerBehaviorFlags CPlayer::getBehaviorFlags(const PxShape& shape, const 
 	//const char* actorName = actor.getName();
 
 	if(actor.getType() == PxActorType::eRIGID_DYNAMIC)
-		return PxControllerBehaviorFlag::eCCT_SLIDE;
+		return PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT | PxControllerBehaviorFlag::eCCT_SLIDE;
 
 	return PxControllerBehaviorFlags(0);
 }
@@ -933,16 +951,6 @@ PxControllerBehaviorFlags CPlayer::getBehaviorFlags(const PxController &)
 PxControllerBehaviorFlags CPlayer::getBehaviorFlags(const PxObstacle &)
 {
 	return PxControllerBehaviorFlags(0);
-}
-
-PxQueryHitType::Enum CPlayer::preFilter(const PxFilterData & filterData, const PxShape * shape, const PxRigidActor * actor, PxSceneQueryFlags & queryFlags)
-{
-	return PxSceneQueryHitType::eBLOCK;
-}
-
-PxQueryHitType::Enum CPlayer::postFilter(const PxFilterData & filterData, const PxSceneQueryHit & hit)
-{
-	return PxSceneQueryHitType::eBLOCK;
 }
 
 void CPlayer::SendPacketAlways(void)

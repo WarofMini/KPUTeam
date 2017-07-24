@@ -10,7 +10,7 @@ class CInput;
 class CGun;
 
 class CPlayer
-	: public CDynamicObject,  public PxUserControllerHitReport, public PxControllerBehaviorCallback, public PxSceneQueryFilterCallback
+	: public CDynamicObject,  public PxUserControllerHitReport, public PxControllerBehaviorCallback
 {
 protected:
 	explicit CPlayer(ID3D11DeviceContext* pContext);
@@ -142,10 +142,6 @@ public:
 	virtual PxControllerBehaviorFlags		getBehaviorFlags(const PxShape& shape, const PxActor& actor);
 	virtual PxControllerBehaviorFlags		getBehaviorFlags(const PxController& controller);
 	virtual PxControllerBehaviorFlags		getBehaviorFlags(const PxObstacle& obstacle);
-
-	// Implements PxSceneQueryFilterCallback
-	virtual PxQueryHitType::Enum			preFilter(const PxFilterData& filterData, const PxShape* shape, const PxRigidActor* actor, PxSceneQueryFlags& queryFlags);
-	virtual	PxQueryHitType::Enum			postFilter(const PxFilterData& filterData, const PxSceneQueryHit& hit);
 
 };
 
