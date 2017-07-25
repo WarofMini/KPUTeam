@@ -11,6 +11,7 @@ XMFLOAT3 g_vPos;
 
 AsynchronousClientClass::AsynchronousClientClass()
 {
+	ZeroMemory(&m_time, sizeof(Ser_Time_DATA));
 }
 
 AsynchronousClientClass::~AsynchronousClientClass()
@@ -385,6 +386,7 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 	}
 		break;
 	case COLLISION_LAY:
+	{
 		Ser_COLLLAY_DATA strCollData = *reinterpret_cast<Ser_COLLLAY_DATA*>((Ser_COLLLAY_DATA*)buf);
 
 		if (g_myid == strCollData.ID)
@@ -395,7 +397,17 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 			list<CGameObject*>::iterator iter = pObjList->begin();
 			((CPlayer*)*iter)->SetHP();
 		}
+	}
 		break;
+	case TIMECOUNT:
+	{
+		Ser_Time_DATA timedata = *reinterpret_cast<Ser_Time_DATA*>((Ser_Time_DATA*)buf);
+		m_time = &timedata;
+
+		cout << "TimeCount : " << m_time << endl;
+
+	}
+	break;
 	case PLAYER_DISCONNECTED:
 	{
 
