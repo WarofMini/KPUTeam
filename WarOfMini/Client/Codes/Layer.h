@@ -35,6 +35,7 @@ public:
 
 public:
 	list<CGameObject*>* Find_ObjectList(const _tchar* pObjectTag);
+	CGameObject*		Find_Object(const _tchar* pObjectTag);
 
 };
 

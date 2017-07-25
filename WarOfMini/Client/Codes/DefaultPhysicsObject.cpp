@@ -93,8 +93,9 @@ void CDefaultPhysicsObect::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene,
 
 	PxBoxGeometry _PxBoxGeometry(_d3dxvExtents.x, _d3dxvExtents.y, _d3dxvExtents.z);
 
-	m_pPxActor = PxCreateDynamic(*pPxPhysics, _PxTransform, _PxBoxGeometry, *pPxMaterial, 1.0f); //밀도
+	m_pPxActor = PxCreateDynamic(*pPxPhysics, _PxTransform, _PxBoxGeometry, *pPxMaterial, 10.0f); //밀도
 	m_pPxActor->setName(name);
+
 	pPxScene->addActor(*m_pPxActor);
 
 	m_pTransform->m_vScale = XMFLOAT3(vScale.x, vScale.y, vScale.z);

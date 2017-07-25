@@ -674,7 +674,6 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 
 				bool m_bTwoCheck = false;
 
-
 				PxVec3 StartPos = PxVec3(m_vWorldGunPos.x, m_vWorldGunPos.y, m_vWorldGunPos.z);
 
 
@@ -721,19 +720,23 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 
 					if (actor)
 					{
+						
 						if (actor->getRigidBodyFlags() & PxRigidBodyFlag::eKINEMATIC)
 							return;
 						
 						const PxTransform globalPose = actor->getGlobalPose();
 						const PxVec3 localPos = globalPose.transformInv((Gunhit.block.position));
-						//PxReal coeff = actor->getMass() * hit.length;
-						//PxRigidBodyExt::addForceAtLocalPos(*actor,hit.dir*coeff, PxVec3(0,0,0), PxForceMode::eIMPULSE);
-						AddForceAtLocalPos(*actor, BulletDir * 10.f, localPos, PxForceMode::eACCELERATION);					
+
+						
+						TCHAR szUniCode[256] = { 0, };
+						MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, actor->getName(), strlen(actor->getName()), szUniCode, 256);
+
+						CGameObject* pObject = pLayer->Find_Object(szUniCode);
+		
+						if(pObject)
+							AddForceAtLocalPos(*actor, BulletDir * pObject->GetWeight(), localPos, PxForceMode::eACCELERATION);
 					}
 
-
-
-					
 				}
 
 			}

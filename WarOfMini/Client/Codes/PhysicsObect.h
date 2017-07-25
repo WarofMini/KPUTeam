@@ -24,6 +24,7 @@ protected:
 	//Physx SDK Member Variables =========================
 	PxRigidDynamic*		m_pPxActor;
 
+
 public:
 	virtual void	BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, XMFLOAT3 vScale, PxCooking* pCooking, const char* name);
 	void			PhysXUpdate(const _float& fTimeDelta);

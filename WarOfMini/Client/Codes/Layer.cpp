@@ -153,3 +153,13 @@ list<CGameObject*>* CLayer::Find_ObjectList(const _tchar * pObjectTag)
 
 	return &iter->second;
 }
+
+CGameObject* CLayer::Find_Object(const _tchar * pObjectTag)
+{
+	map<const _tchar*, list<CGameObject*>>::iterator	iter = find_if(m_mapObjlist.begin(), m_mapObjlist.end(), CTag_Finder(pObjectTag));
+
+	if (iter == m_mapObjlist.end())
+		return NULL;
+
+	return *iter->second.begin();
+}

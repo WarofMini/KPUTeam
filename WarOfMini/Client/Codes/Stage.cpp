@@ -595,12 +595,13 @@ HRESULT CStage::InitPhysicsObject(void)
 	
 	CGameObject* pGameObject = CDefaultPhysicsObect::Create(m_pContext);
 	pGameObject->SetObjNum(MESHNUM_BOOK1);
-	((CDefaultPhysicsObect*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(2.f, 2.f, 2.f), m_pCooking, "Physics");
+	((CDefaultPhysicsObect*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(2.f, 2.f, 2.f), m_pCooking, "PhysicsBook");
 
 	//x, y, z, = x,z, y축으로 돌아간다...
 	//((CPhysicsObect*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f)));
 	((CPhysicsObect*)pGameObject)->SetPosition(XMFLOAT3(30.f, 100.f, 30.f));
-	pLayer->Ready_Object(L"PhysicsObject", pGameObject);
+	pGameObject->SetWeight(3.f); //숫자가 클수록 피격됬을시 충격으로 멀리 날아간다.
+	pLayer->Ready_Object(L"PhysicsBook", pGameObject);
 	
 
 

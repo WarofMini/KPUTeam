@@ -22,6 +22,7 @@ protected:
 	wstring										m_strTextureName;
 	CTransform*									m_pTransform;
 	_uint										m_uiObjNum; //메시 번호
+	_float										m_fWeight;
 
 protected:
 	ID3D11DeviceContext* m_pContext;
@@ -67,6 +68,9 @@ public:
 
 	void			SetObjNum(_uint uNum) { m_uiObjNum = uNum; }
 	_uint			GetObjNum(void) { return m_uiObjNum; }
+
+	void			SetWeight(_float fWeight) { m_fWeight = fWeight; }
+	_float			GetWeight(void) { return m_fWeight; }
 };
 
 #endif
