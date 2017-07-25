@@ -826,7 +826,7 @@ void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *
 	PxCapsuledesc.slopeLimit = cosf(XMConvertToRadians(15.f));
 	//PxCapsuledesc.nonWalkableMode = PxControllerNonWalkableMode::eFORCE_SLIDING;
 	PxCapsuledesc.upDirection = PxVec3(0, 1, 0);
-	PxCapsuledesc.contactOffset = 0.1f; //Á¢ÃË ¿ÀÇÁ¼Â
+	PxCapsuledesc.contactOffset = 0.0001f; //Á¢ÃË ¿ÀÇÁ¼Â-> ¿ä°Ô Å¸ °´Ã¼¿Í ºÎµúÇûÀ»¶§ ¿µÇâÀ» ÁÖ´Â º¯¼öÀÎµí(³ôÀ»¼ö·Ï ´ú´ú¶³¸²)
 	PxCapsuledesc.material = pPxMaterial;
 	PxCapsuledesc.behaviorCallback = this;
 	PxCapsuledesc.reportCallback = this;
@@ -910,7 +910,7 @@ void CPlayer::onShapeHit(const PxControllerShapeHit & hit)
 		{
 			const PxTransform globalPose = actor->getGlobalPose();
 			const PxVec3 localPos = globalPose.transformInv(toVec3(hit.worldPos));
-			AddForceAtLocalPos(*actor, hit.dir * hit.length * 0.1f, localPos, PxForceMode::eACCELERATION);
+			AddForceAtLocalPos(*actor, hit.dir * hit.length * 0.4f, localPos, PxForceMode::eACCELERATION);
 		}
 	}
 }
@@ -940,8 +940,8 @@ PxControllerBehaviorFlags CPlayer::getBehaviorFlags(const PxShape& shape, const 
 {
 	//const char* actorName = actor.getName();
 
-	if(actor.getType() == PxActorType::eRIGID_DYNAMIC)
-		return PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT | PxControllerBehaviorFlag::eCCT_SLIDE;
+	//if(actor.getType() == PxActorType::eRIGID_DYNAMIC)
+	//	return PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT | PxControllerBehaviorFlag::eCCT_SLIDE;
 
 	return PxControllerBehaviorFlags(0);
 }
