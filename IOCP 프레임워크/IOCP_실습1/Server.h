@@ -36,7 +36,7 @@ public:
 	void Worker_thread();
 	void Timer_Thread();
 	void Add_Timer(int id, int do_event, int wakeup);
-	void SCSendCount();
+	
 	void SendRemovePlayerPacket(DWORD dwKey);
 
 	void Process_Event(event_type ev_Now);
@@ -44,12 +44,16 @@ public:
 	void SendPacket(unsigned int id, const Packet* packet);
 	void ProcessPacket(const Packet* buf, const unsigned int& id);
 
+
+	void CountTime(void);
+
 private:
 	vector<Ser_PLAYER_DATA> m_vecPlayer;
 
 public:
 	priority_queue<event_type, vector<event_type>, mycomp> timer_queue;
 	mutex timer_lock;
+	event_type topEvent;
 
 public:
 	CServer();

@@ -113,7 +113,7 @@ void CServer::MakeWorkerThread_AcceptThread()
 
 	thread acceptThread{ &CServer::Accept_thread, this };
 
-	//thread timer_thread{ &CServer::Timer_Thread, this };
+	thread timer_thread{ &CServer::Timer_Thread, this };
 
 	while (g_bShoutdown)
 	{
@@ -216,12 +216,12 @@ void CServer::Accept_thread()
 
 		SendPacket(PlayerTemp.ID, reinterpret_cast<Packet*>(&PlayerTemp));
 
-		if (playerIndex >= 1)
+		/*if (playerIndex >= 1)
 		{
 			BYTE Time = GetTickCount();
 
 			timer_queue.push(event_type{ reinterpret_cast<BYTE>(&playerIndex), Time + 1000, OP_TIME });
-		}
+		}*/
 		
 		//플레이어가 2명이상 입장 하게되면 시간이 가게 하자.
 		//int TimeInteeger = GetTickCount() + 1000;
@@ -230,6 +230,8 @@ void CServer::Accept_thread()
 		//	//timer_queue.push(event_type{ User->id, m_state
 		//}
 		
+		if (playerIndex == 0)
+			CountTime();
 
 		DWORD flags{ 0 };
 
@@ -344,7 +346,7 @@ void CServer::Worker_thread()
 		else if (overlap->operation_type == OP_TIME)
 		{
 			//Do_Timer(key);
-			Add_Timer(key, OP_TIME, 1000);
+			//Add_Timer(key, OP_TIME, 1000);
 			delete overlap;
 		}
 	
@@ -362,19 +364,38 @@ void CServer::Worker_thread()
 }
 void CServer::Timer_Thread()
 {
+	while (1)
+	{
+		for (int i = 6; i > 0; --i)
+		{
+			CTimer::TimerCount(1.f);
+			cout << "ReCount : " << i - 1 << endl;
+			if (i == 1)
+			{
+				startTime = CTimer::SetTime();
+				cout << "Play ~!" << endl;
+
+			}
+		}
+	}
 	while (true) {
 		Sleep(1);
+		if (timer_queue.size() == 0)
+			continue;
+
 		timer_lock.lock();
-		while (false == timer_queue.empty()) {
-			if (timer_queue.top().wakeup_time > GetTickCount()) break;
-			event_type ev = timer_queue.top();
+		topEvent = timer_queue.top();
+		while (topEvent.wakeup_time <= GetTickCount())
+		{
+			//if (timer_queue.top().wakeup_time > GetTickCount()) break;
+			//event_type ev = timer_queue.top();
 			timer_queue.pop();
 			timer_lock.unlock();
 			Overlap_ex *over = new Overlap_ex;
-			over->operation_type = ev.event_id;
+			over->operation_type = topEvent.event_id;
 			//Process_Event(over->operation_type);
 			PostQueuedCompletionStatus(g_hIocp, 1,
-				ev.obj_id,
+				topEvent.obj_id,
 				&(over->Original_Overlap));
 			timer_lock.lock();
 		}
@@ -413,16 +434,7 @@ void CServer::SendRemovePlayerPacket(DWORD dwKey)
 		SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&packet));
 	}
 }
-void CServer::SCSendCount()
-{
-	/*Ser_Time_DATA Time;
-	Time.size = sizeof(Ser_Time_DATA);
-	Time.time = CTimer::GetTime(starttime);
 
-	for (int i = 0; i < playerIndex; ++i)
-		SendPacket(i, reinterpret_cast<Packet*>(&Time));*/
-
-}
 void CServer::SendPacket(unsigned int id, const Packet* packet)
 {	
 	Overlap_ex* overlap = new Overlap_ex;
@@ -499,10 +511,7 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 					m_vecPlayer[vecID[j]].type = INIT_CLIENT;
 					SendPacket(strPlayerData.ID, reinterpret_cast<Packet*>(&m_vecPlayer[vecID[j]]));
 
-
 					
-					/*if (START == m_state.gamestate)
-						SCSendCount();*/
 				}
 			}
 			else
@@ -625,11 +634,24 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 			m_vecPlayer[i].type = PLAYER_DISCONNECTED;
 			SendRemovePlayerPacket(i, i);
 		}
-*/
+	*/
 	}
 	break;
 	}
 	
+}
+
+void CServer::CountTime(void)	//시간을 계속해서 보내주자.
+{
+
+	Ser_Time_DATA Time;
+	Time.size = sizeof(Ser_Time_DATA);
+	Time.type = TIMECOUNT;
+
+	cout << "TimeCount : " << Time.time << endl;
+
+	for (int i = 0; i < playerIndex; ++i)
+		SendPacket(i, reinterpret_cast<Packet*>(&Time));
 }
 
 

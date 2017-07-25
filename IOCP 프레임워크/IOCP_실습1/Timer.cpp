@@ -48,10 +48,19 @@ float CTimer::FrameSec(void)
 	return m_Time;
 }
 
-float CTimer::GetTime(float fStart)
+float CTimer::GetTime(DWORD fStart)
 {
 	QueryPerformanceCounter(&m_cpuClock);
+	//fStart = 0;
+	//DWORD End = 0;
+
+
+	//fStart = GetTickCount() / 1000;
+	//End = GetTickCount() / 1000;
+	//QueryPerformanceCounter(&m_Cpustop);
+
 	
+
 	return ((m_cpuStop.QuadPart - fStart) / m_cpuFreq.QuadPart);
 }
 

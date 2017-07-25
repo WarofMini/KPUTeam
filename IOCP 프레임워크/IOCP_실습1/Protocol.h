@@ -169,6 +169,7 @@ enum ProcessPacket
 	CLIENT_DIRECTION,	 // direction 값을 받아오자.
 	CLIENT_ANIMATION,
 	COLLISION_LAY,
+	TIMECOUNT,
 	PLAYER_DISCONNECTED, // 연결이 끊기면 삭제시켜주자.
 	SEND_POSITION,
 };

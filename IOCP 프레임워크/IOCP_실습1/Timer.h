@@ -16,7 +16,7 @@ public:
 
 	static bool TimerCount(float fCount);
 	static float FrameSec(void);
-	static float GetTime(float fStart);
+	static float GetTime(DWORD fStart);
 	static float SetTime(void);
 
 public:
