@@ -216,12 +216,16 @@ void CServer::Accept_thread()
 
 		SendPacket(PlayerTemp.ID, reinterpret_cast<Packet*>(&PlayerTemp));
 
-		/*if (playerIndex >= 1)
-		{
-			BYTE Time = GetTickCount();
 
-			timer_queue.push(event_type{ reinterpret_cast<BYTE>(&playerIndex), Time + 1000, OP_TIME });
-		}*/
+
+		if (playerIndex <= 1)	//일단 두명이 들어오면 스테이지상태가 됨.
+		{
+			m_state.gamestate = SCENE_STAGE;
+			//CountTime();
+			//BYTE Time = GetTickCount();
+
+			//timer_queue.push(event_type{ reinterpret_cast<BYTE>(&playerIndex), Time + 1000, OP_TIME });
+		}
 		
 		//플레이어가 2명이상 입장 하게되면 시간이 가게 하자.
 		//int TimeInteeger = GetTickCount() + 1000;
@@ -230,9 +234,7 @@ void CServer::Accept_thread()
 		//	//timer_queue.push(event_type{ User->id, m_state
 		//}
 		
-		if (playerIndex == 0)
-			CountTime();
-
+		
 		DWORD flags{ 0 };
 
 		// 그리고 이제 이 클라이언트가 만약 어떤 무언가의 패킷이되었든 보내면, 받을 수 있도록 준비자세를 취해 그게 WSARecv 여
@@ -364,7 +366,10 @@ void CServer::Worker_thread()
 }
 void CServer::Timer_Thread()
 {
-	while (1)
+	// 클라에서 서버에게 씬의 상태를 보낸다.
+	// 서버에서 그 씬의 상태를 받아서 모두가 스테이지 상태에 도달하면 카운트 다운.
+
+	while (1)	
 	{
 		for (int i = 6; i > 0; --i)
 		{
@@ -376,6 +381,8 @@ void CServer::Timer_Thread()
 				cout << "Play ~!" << endl;
 
 			}
+			
+
 		}
 	}
 	while (true) {
@@ -511,7 +518,6 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 					m_vecPlayer[vecID[j]].type = INIT_CLIENT;
 					SendPacket(strPlayerData.ID, reinterpret_cast<Packet*>(&m_vecPlayer[vecID[j]]));
 
-					
 				}
 			}
 			else
@@ -641,17 +647,18 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 	
 }
 
-void CServer::CountTime(void)	//시간을 계속해서 보내주자.
+void CServer::CountTime()	//시간을 계속해서 보내주자.
 {
 
 	Ser_Time_DATA Time;
 	Time.size = sizeof(Ser_Time_DATA);
 	Time.type = TIMECOUNT;
-
+	Time.time = CTimer::GetTime(startTime);
+	
 	cout << "TimeCount : " << Time.time << endl;
-
-	for (int i = 0; i < playerIndex; ++i)
-		SendPacket(i, reinterpret_cast<Packet*>(&Time));
+	//i++;
+	//for (int i = 0; i <= playerIndex; ++i)
+	//SendPacket(, reinterpret_cast<Packet*>(&Time));
 }
 
 

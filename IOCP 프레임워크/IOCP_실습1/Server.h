@@ -7,6 +7,8 @@ class CServer
 public:
 	enum MOVE_DIR { DIR_U, DIR_UR, DIR_UL, DIR_R, DIR_L, DIR_D, DIR_DR, DIR_DL, DIR_END };
 	enum STATE_SOLDIER { SOLDIER_IDLE, SOLDIER_MOVE, SOLDIER_LYING, SOLDIER_ROLL, SOLDIER_JUMP, SOLDIER_END };
+	enum Scene_Type { SCENE_TITLE, SCENE_LOGO, SCENE_STAGE, SCENE_END };
+
 private:
 
 	//D3DXVECTOR3 vPosition;
@@ -18,12 +20,15 @@ private:
 	int iCpuCore;
 	unsigned int playerIndex{ UINT_MAX };
 
+	
+
 	bool m_bReady = false;
 	CRITICAL_SECTION cs;
 	float startTime;
 
 	//DWORD KeyValue;
 	//CPlayer*	m_pPlayer;
+	Ser_STATE_DATA m_state;
 
 public:
 	void error_display(char *msg, int err_no);
@@ -45,7 +50,7 @@ public:
 	void ProcessPacket(const Packet* buf, const unsigned int& id);
 
 
-	void CountTime(void);
+	void CountTime();
 
 private:
 	vector<Ser_PLAYER_DATA> m_vecPlayer;
