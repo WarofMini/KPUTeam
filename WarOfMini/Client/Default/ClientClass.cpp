@@ -12,6 +12,7 @@ XMFLOAT3 g_vPos;
 AsynchronousClientClass::AsynchronousClientClass()
 {
 	ZeroMemory(&m_time, sizeof(Ser_Time_DATA));
+	ZeroMemory(&m_state, sizeof(Ser_ANIMATION_DATA));
 }
 
 AsynchronousClientClass::~AsynchronousClientClass()
@@ -311,6 +312,7 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 			pLayer = pScene->FindLayer(L"Layer_GameLogic");
 			pLayer->Ready_Object(L"OtherPlayer", pGameObject);
 		}
+
 	}
 	break;
 	case INIT_OTHER_PLAYER:
@@ -405,6 +407,16 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 		m_time = &timedata;
 
 		cout << "TimeCount : " << m_time << endl;
+
+	}
+	break;
+	case CLIENT_READY:
+	{
+
+	}
+	break;
+	case CLIENT_STAGE:
+	{
 
 	}
 	break;

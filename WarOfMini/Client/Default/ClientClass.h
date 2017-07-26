@@ -36,6 +36,7 @@ private:
 
 	Ser_PLAYER_DATA* m_pPlayerData;
 	Ser_Time_DATA* m_time;
+	Ser_STATE_DATA* m_state;
 	//////////////////////////////////////
 	int myID;
 	//통신 변수
