@@ -52,7 +52,7 @@ _int CLogo::Update(const _float & fTimeDelta)
 
 	if (m_pLoading->GetComplete() == true && (GetAsyncKeyState(VK_RETURN) & 0x8000))
 	{
-		CManagement::GetInstance()->Change_Scene(CSceneSelector(SCENE_STAGE));		
+		CManagement::GetInstance()->Change_Scene(CSceneSelector(SCENE_STAGE));	
 	}
 	
 	return 0;

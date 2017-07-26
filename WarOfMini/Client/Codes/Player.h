@@ -100,7 +100,8 @@ private:
 	PxScene*		m_pScene;
 
 	//test
-	int				m_iHP;
+	_int			m_iHP;
+	_int			m_iOriginHP; //ÃÊ±â HP°ª
 	CGameObject*	m_pTank;
 
 	//Physx SDK Member Variables =========================
@@ -128,7 +129,8 @@ public:
 	//test
 	void			SetHP(void) { --m_iHP; }
 	bool			UseTank(void);
-
+	_int			GetHP(void) { return m_iHP; }
+	_int			GetOriginHP(void) { return m_iOriginHP;  }
 
 public:
 	virtual void							onShapeHit(const PxControllerShapeHit& hit);

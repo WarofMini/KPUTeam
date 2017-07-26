@@ -38,6 +38,7 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 , m_fFallAcceleration(9.8f)
 , m_fFallvelocity(0.f)
 , m_iHP(5)
+, m_iOriginHP(m_iHP)
 , m_pTank(NULL)
 {
 	m_pInput = CInput::GetInstance();
@@ -147,9 +148,12 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 	{
 		m_iBoneNum -= 1;
 		cout << "BoneNum" << m_iBoneNum << endl;
+	}	
+	if (GetAsyncKeyState('J') & 1)
+	{
+		--m_iHP;
 	}
 	
-
 
 	// Update
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
@@ -247,7 +251,7 @@ HRESULT CPlayer::Prepare_StateMachine(void)
 
 void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 {
-	if (m_iHP < 0)
+	if (m_iHP <= 0)
 	{
 		if (m_dwState != SOLDIER_DEAD)
 		{
@@ -901,7 +905,7 @@ void CPlayer::onShapeHit(const PxControllerShapeHit & hit)
 	if (actor)
 	{
 		if (actor->getRigidBodyFlags() & PxRigidBodyFlag::eKINEMATIC)
-			return;
+			return ;
 
 		const PxVec3 upVector = hit.controller->getUpDirection();
 		const PxF32 dp = hit.dir.dot(upVector);
@@ -938,10 +942,11 @@ void CPlayer::AddForceAtPosInternal(PxRigidBody & body, const PxVec3 & force, co
 //이 함수는 원하는 동작을 원하는 PxControllerBehaviorFlag플래그를 검색한다.
 PxControllerBehaviorFlags CPlayer::getBehaviorFlags(const PxShape& shape, const PxActor& actor)
 {
-	//const char* actorName = actor.getName();
+	const char* actorName = actor.getName();
 
-	//if(actor.getType() == PxActorType::eRIGID_DYNAMIC)
-	//	return PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT | PxControllerBehaviorFlag::eCCT_SLIDE;
+	if (actor.getType() == PxActorType::eRIGID_DYNAMIC)
+		//return PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT | PxControllerBehaviorFlag::eCCT_SLIDE;
+		return PxControllerBehaviorFlag::eCCT_SLIDE;
 
 	return PxControllerBehaviorFlags(0);
 }

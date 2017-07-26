@@ -211,9 +211,6 @@
     <Filter Include="02.Object\07.Effect\00.Bomb">
       <UniqueIdentifier>{d580296d-bea1-4959-9dad-9517d2276c8b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Scene\02.Title">
-      <UniqueIdentifier>{e4f973a3-1721-436e-a38c-ac9df8dfb3aa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Object\10.LogoBack">
       <UniqueIdentifier>{253bb7a9-a45f-438f-9d30-30f71f9a96ab}</UniqueIdentifier>
     </Filter>
@@ -276,6 +273,15 @@
     </Filter>
     <Filter Include="02.Object\08.UI\04.Gage">
       <UniqueIdentifier>{7f08e589-9042-444f-a00b-726d6186c72f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\05.HP">
+      <UniqueIdentifier>{d4938a6b-c265-411d-b813-aee06ec08d66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\06.Boost">
+      <UniqueIdentifier>{e1858ea8-6a3c-41a4-9a34-e2307958cc42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\02.Title">
+      <UniqueIdentifier>{e4f973a3-1721-436e-a38c-ac9df8dfb3aa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -558,6 +564,12 @@
     <ClInclude Include="..\Codes\GageUI.h">
       <Filter>02.Object\08.UI\04.Gage</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\HP.h">
+      <Filter>02.Object\08.UI\05.HP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Boost.h">
+      <Filter>02.Object\08.UI\06.Boost</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -796,6 +808,12 @@
     </ClCompile>
     <ClCompile Include="..\Codes\GageUI.cpp">
       <Filter>02.Object\08.UI\04.Gage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\HP.cpp">
+      <Filter>02.Object\08.UI\05.HP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Boost.cpp">
+      <Filter>02.Object\08.UI\06.Boost</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

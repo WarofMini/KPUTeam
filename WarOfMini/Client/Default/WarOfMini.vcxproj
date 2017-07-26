@@ -165,6 +165,7 @@
     <ClInclude Include="..\Codes\Animation.h" />
     <ClInclude Include="..\Codes\AnimationInfo.h" />
     <ClInclude Include="..\Codes\Bomb.h" />
+    <ClInclude Include="..\Codes\Boost.h" />
     <ClInclude Include="..\Codes\BulletNumbering.h" />
     <ClInclude Include="..\Codes\Camera.h" />
     <ClInclude Include="..\Codes\CameraMgr.h" />
@@ -189,6 +190,7 @@
     <ClInclude Include="..\Codes\GameObject.h" />
     <ClInclude Include="..\Codes\GraphicDev.h" />
     <ClInclude Include="..\Codes\Gun.h" />
+    <ClInclude Include="..\Codes\HP.h" />
     <ClInclude Include="..\Codes\Input.h" />
     <ClInclude Include="..\Codes\Layer.h" />
     <ClInclude Include="..\Codes\Loading.h" />
@@ -260,6 +262,7 @@
     <ClCompile Include="..\Codes\Animation.cpp" />
     <ClCompile Include="..\Codes\AnimationInfo.cpp" />
     <ClCompile Include="..\Codes\Bomb.cpp" />
+    <ClCompile Include="..\Codes\Boost.cpp" />
     <ClCompile Include="..\Codes\BulletNumbering.cpp" />
     <ClCompile Include="..\Codes\Camera.cpp" />
     <ClCompile Include="..\Codes\CameraMgr.cpp" />
@@ -284,6 +287,7 @@
     <ClCompile Include="..\Codes\GameObject.cpp" />
     <ClCompile Include="..\Codes\GraphicDev.cpp" />
     <ClCompile Include="..\Codes\Gun.cpp" />
+    <ClCompile Include="..\Codes\HP.cpp" />
     <ClCompile Include="..\Codes\Input.cpp" />
     <ClCompile Include="..\Codes\Layer.cpp" />
     <ClCompile Include="..\Codes\Loading.cpp" />
