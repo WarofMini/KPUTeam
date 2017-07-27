@@ -40,6 +40,10 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 , m_iHP(5)
 , m_iOriginHP(m_iHP)
 , m_pTank(NULL)
+, m_fBoost(0.0f)
+, m_fMaxBoost(100.0f)
+, m_bBoostDelay(false)
+, m_fDelayCount(0.0f)
 {
 	m_pInput = CInput::GetInstance();
 	m_vLook = XMFLOAT3(0.f, 1.f, 0.f);
@@ -122,6 +126,7 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 {
 	m_fTimeDelta = fTimeDelta;
 
+	UpdateBoost(fTimeDelta);
 
 	CDynamicObject::Update(fTimeDelta);
 	
@@ -378,9 +383,12 @@ MOVE_DIR* CPlayer::GetMoveDir(void)
 	return &m_eMoveDir;
 }
 
-void CPlayer::SoldierChange(void)
+void CPlayer::SoldierChange(void) //솔져 변신
 {
-	if (m_bIsSoldier)
+	if (m_fBoost < m_fMaxBoost)
+		return;
+
+	if (m_bIsSoldier) //일반상태 -> 변신으로 변환
 	{
 		m_bIsSoldier = false;
 		m_uiObjNum = m_uiObjNum_Iron;
@@ -390,7 +398,8 @@ void CPlayer::SoldierChange(void)
 		((CGun*)m_pEquipment[0])->ChangeWeapon(MESHNUM_SPECIALGUN);
 		m_iEquipBone = 2;
 	}
-	else
+	/*
+	else //변환상태->일반상태로 변환
 	{
 		m_bIsSoldier = true;
 		m_uiObjNum = m_uiObjNum_Normal;
@@ -400,7 +409,7 @@ void CPlayer::SoldierChange(void)
 		((CGun*)m_pEquipment[0])->ChangeWeapon(MESHNUM_GUN);
 		m_iEquipBone = 0;
 	}
-
+	*/
 	m_pAnimInfo->Update(1.f);
 }
 
@@ -888,6 +897,56 @@ void CPlayer::PhysXUpdate(const FLOAT& fTimeDelta)
 
 	XMStoreFloat4x4(&m_pTransform->m_matWorld, matScale * matRotX * matRotY * matRotZ * matTrans);
 
+}
+
+void CPlayer::UpdateBoost(const FLOAT& fTimeDelta)
+{
+	_float m_fSpeed = 0.0f;
+
+	if (m_bIsSoldier) //일반상태
+	{
+		if(m_bBoostDelay)
+		{
+			m_fDelayCount += fTimeDelta;
+
+			if (m_fDelayCount >= 5.0f)
+			{
+				m_fDelayCount = 0.0f;
+				m_bBoostDelay = false;
+			}
+		}
+		else
+		{
+			m_fSpeed = 10.f;
+
+			m_fBoost += (fTimeDelta * m_fSpeed);
+
+			if (m_fBoost >= m_fMaxBoost)
+				m_fBoost = m_fMaxBoost;
+		}
+	}
+	else //변신상태
+	{
+		m_fSpeed = 30.f;
+
+		m_fBoost -= (fTimeDelta * m_fSpeed);
+
+		if (m_fBoost <= 0.0f) //변신상태 -> 일반상태로 변환
+		{
+			//변신상태->일반상태로 변환될경우 Delay를 준다.
+			m_bBoostDelay = true;
+
+			m_fBoost = 0.0f;
+			m_bIsSoldier = true;
+			m_uiObjNum = m_uiObjNum_Normal;
+			m_pAnimInfo = m_pAnimInfo_Normal;
+			m_pMatBoneNode = m_pMatBoneNode_Normal;
+			PlayAnimation((_ushort)PLAYER_idle);
+			((CGun*)m_pEquipment[0])->ChangeWeapon(MESHNUM_GUN);
+			m_iEquipBone = 0;
+			m_pAnimInfo->Update(1.f);
+		}
+	}
 }
 
 bool CPlayer::UseTank(void)

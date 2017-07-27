@@ -58,8 +58,8 @@ HRESULT CHPUI::Initialize(void)
 
 _int CHPUI::Update(const _float & fTimeDelta)
 {
-	//if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
-	//	return 0;
+	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
+		return 0;
 
 	if (m_pPlayer == NULL)
 		CheckPlayer();
@@ -79,8 +79,8 @@ _int CHPUI::Update(const _float & fTimeDelta)
 
 void CHPUI::Render(void)
 {
-	//if(CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
-	//	return;
+	if(CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
+		return;
 
 
 	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Gage"));

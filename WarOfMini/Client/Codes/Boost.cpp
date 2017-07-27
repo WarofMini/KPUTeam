@@ -6,9 +6,14 @@
 #include "GraphicDev.h"
 #include "CameraMgr.h"
 #include "Transform.h"
+#include "Scene.h"
+#include "Player.h"
+#include "Layer.h"
 
 CBoostUI::CBoostUI(ID3D11DeviceContext * pContext)
 : CUI(pContext)
+, m_fXGage(0.0f)
+, m_pPlayer(NULL)
 {
 }
 
@@ -29,17 +34,23 @@ CBoostUI* CBoostUI::Create(ID3D11DeviceContext * pContext)
 HRESULT CBoostUI::Initialize(void)
 {
 	if (FAILED(Ready_Component()))
-		return E_FAIL ;
+		return E_FAIL;
+
+	m_fMoveX = -150.f;
+	m_fOriginMoveX = -150.f;
+
+	m_fMoveY = 350.f;
+	m_fOriginMoveY = 350.f;
 
 
-	m_fX = (_float)(WINCX >> 1);
-	m_fY = (_float)(WINCY >> 2);
+	m_fX = (_float)(WINCX >> 2) + m_fMoveX;
+	m_fY = (_float)(WINCY >> 1) + m_fMoveY;
 
-	m_fSizeX = 800;
-	m_fSizeY = 50;
+	m_fSizeX = 400;
+	m_fSizeY = 40;
 
-	m_fOriginSizeX = 800;
-	m_fOriginSizeY = 50;
+	m_fOriginSizeX = 400;
+	m_fOriginSizeY = 40;
 
 
 	return S_OK;
@@ -50,6 +61,10 @@ _int CBoostUI::Update(const _float & fTimeDelta)
 	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
 		return 0;
 
+	if (m_pPlayer == NULL)
+		CheckPlayer();
+
+	UpdateGage();
 
 
 	CGameObject::Update(fTimeDelta);
@@ -64,7 +79,7 @@ _int CBoostUI::Update(const _float & fTimeDelta)
 
 void CBoostUI::Render(void)
 {
-	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
+	if(CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
 		return;
 
 
@@ -82,8 +97,8 @@ void CBoostUI::Render(void)
 
 	ComputeChangeWindowSize();
 
-	m_fX = (_float)(WINCX >> 1);
-	m_fY = (_float)(WINCY >> 2);
+	m_fX = (_float)(WINCX >> 2) + m_fMoveX;
+	m_fY = (_float)(WINCY >> 1) + m_fMoveY;
 
 
 	m_matWorld._11 = m_fSizeX;
@@ -100,7 +115,7 @@ void CBoostUI::Render(void)
 
 	UI_CB tUIShaderCB;
 
-	//tUIShaderCB.fXGage = m_fXGage;
+	tUIShaderCB.fXGage = m_fXGage;
 
 	m_pContext->UpdateSubresource(pUIShaderCB, 0, NULL, &tUIShaderCB, 0, 0);
 
@@ -130,7 +145,7 @@ HRESULT CBoostUI::Ready_Component(void)
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Buffer", pComponent));
 
 	//Texture
-	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, L"Texture_Gage");
+	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, L"Texture_BoostBar");
 	m_pTexture = dynamic_cast<CTextures*>(pComponent);
 	if (pComponent == NULL) return E_FAIL;
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Texture", pComponent));
@@ -143,4 +158,32 @@ HRESULT CBoostUI::Ready_Component(void)
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Transform", pComponent));
 
 	return S_OK;
+}
+
+void CBoostUI::CheckPlayer(void)
+{
+
+	CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
+	list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"Player");
+
+	if (pObjList != NULL)
+		m_pPlayer = (CPlayer*)(*pObjList->begin());
+}
+
+void CBoostUI::UpdateGage(void)
+{
+	if (m_pPlayer == NULL)
+		return;
+
+	_float m_fMaxBoost = m_pPlayer->GetMaxBoost();
+
+	_float m_fRatio = (_float)(m_fOriginSizeX / m_fMaxBoost); //ºñÀ²
+
+	_float m_fBoost = m_pPlayer->GetBoost();
+
+	m_fBoost *= m_fRatio;
+
+
+	m_fXGage = (_float)(m_fBoost / m_fOriginSizeX);
+
 }

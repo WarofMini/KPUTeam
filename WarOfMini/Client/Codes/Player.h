@@ -102,6 +102,11 @@ private:
 	//test
 	_int			m_iHP;
 	_int			m_iOriginHP; //초기 HP값
+	_float			m_fBoost;    //부스트 게이지
+	_float			m_fMaxBoost; //초기 부스트 게이지
+	_bool			m_bBoostDelay;
+	_float			m_fDelayCount;
+
 	CGameObject*	m_pTank;
 
 	//Physx SDK Member Variables =========================
@@ -126,11 +131,15 @@ public:
 	
 	CGun*	GetEquipment(void) { return m_pEquipment[0]; }
 
+	void	UpdateBoost(const FLOAT& fTimeDelta); //변신을 하기 위한 부스트 게이지
+
 	//test
 	void			SetHP(void) { --m_iHP; }
 	bool			UseTank(void);
 	_int			GetHP(void) { return m_iHP; }
 	_int			GetOriginHP(void) { return m_iOriginHP;  }
+	_float			GetBoost(void) { return m_fBoost; }
+	_float			GetMaxBoost(void) { return m_fMaxBoost; }
 
 public:
 	virtual void							onShapeHit(const PxControllerShapeHit& hit);
