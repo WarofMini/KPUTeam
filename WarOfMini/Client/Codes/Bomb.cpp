@@ -53,7 +53,14 @@ INT CBomb::Update(const FLOAT & fTimeDelta)
 	m_iFrame = int((m_fRealTime / m_fLifeTime) * (m_iSizeX * m_iSizeY));
 
 	CEffect::Update(fTimeDelta);
-	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ALPHA, this);
+	
+
+	XMMATRIX matView = XMLoadFloat4x4(CCameraMgr::GetInstance()->Get_CurCameraView());
+	XMFLOAT4X4 matViewWorld;
+
+	XMStoreFloat4x4(&matViewWorld, XMLoadFloat4x4(&m_pTransform->m_matWorld) * matView);
+		
+	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_EFFECT_ALPHA, this, matViewWorld._43);
 
 	ComputeBillboard();
 

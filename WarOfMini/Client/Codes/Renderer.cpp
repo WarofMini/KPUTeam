@@ -33,6 +33,9 @@ void CRenderer::Add_RenderGroup(RENDERTYPE eType, CGameObject* pGameObject, _flo
 
 	if (eType == RENDER_ALPHA)
 		m_mapAlpha.insert(MAPALPHA::value_type(fViewZ, pGameObject));
+
+	if (eType == RENDER_EFFECT_ALPHA)
+		m_mapEffectAlpha.insert(MAPEFFECTALPHA::value_type(fViewZ, pGameObject));
 }
 
 
@@ -130,6 +133,8 @@ void CRenderer::Render(void)
 	//Render_AlphaInst();
 	Render_Alpha();
 
+	Render_Effect_Alpha();
+
 	Render_UI();
 
 	// Render Window
@@ -176,6 +181,8 @@ void CRenderer::Clear_RenderGroup(void)
 	}
 
 	m_mapAlpha.clear();
+
+	m_mapEffectAlpha.clear();
 
 	MAPINST::iterator	iter = m_mapAlphaInst.begin();
 	MAPINST::iterator	iter_end = m_mapAlphaInst.end();
@@ -279,6 +286,24 @@ void CRenderer::Render_Alpha(void)
 		iter->second->Render();
 	}
 
+	CGraphicDev::GetInstance()->SetAlphaEnable(FALSE);
+}
+
+void CRenderer::Render_Effect_Alpha(void)
+{
+	CRenderTargetMgr::GetInstance()->Set_RenderTarget(L"RT_Blend", 2, TRUE);
+	CGraphicDev::GetInstance()->SetAlphaEnable(TRUE);
+	CGraphicDev::GetInstance()->SetDepthStencilState(TRUE);
+
+	MAPEFFECTALPHA::iterator iter = m_mapEffectAlpha.begin();
+	MAPEFFECTALPHA::iterator iter_end = m_mapEffectAlpha.end();
+
+	for (; iter != iter_end; ++iter)
+	{
+		iter->second->Render();
+	}
+
+	CGraphicDev::GetInstance()->SetDepthStencilState(FALSE);
 	CGraphicDev::GetInstance()->SetAlphaEnable(FALSE);
 }
 

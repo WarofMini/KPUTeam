@@ -315,6 +315,7 @@ HRESULT CGraphicDev::Ready_GraphicDev(HWND hWnd, WINMODE eWinMode, const _ushort
 	dsDesc.BackFace.StencilFunc == D3D11_STENCIL_OP_KEEP;
 
 	m_pGraphicDev->CreateDepthStencilState(&dsDesc, &m_pDepthStencilState);
+
 	//========================================================================================
 
 

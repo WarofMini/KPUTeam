@@ -36,20 +36,20 @@ HRESULT CBoostUI::Initialize(void)
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
 
-	m_fMoveX = -150.f;
-	m_fOriginMoveX = -150.f;
+	m_fMoveX = -250.f;
+	m_fOriginMoveX = -250.f;
 
-	m_fMoveY = 350.f;
-	m_fOriginMoveY = 350.f;
+	m_fMoveY = 400.f;
+	m_fOriginMoveY = 400.f;
 
 
 	m_fX = (_float)(WINCX >> 2) + m_fMoveX;
 	m_fY = (_float)(WINCY >> 1) + m_fMoveY;
 
-	m_fSizeX = 400;
+	m_fSizeX = 250;
 	m_fSizeY = 40;
 
-	m_fOriginSizeX = 400;
+	m_fOriginSizeX = 250;
 	m_fOriginSizeY = 40;
 
 

@@ -10,7 +10,7 @@ class CGameObject;
 class CRenderer
 {
 public:
-	enum RENDERTYPE { RENDER_PRIORITY, RENDER_ZSORT, RENDER_UI, RENDER_END, RENDER_INST, RENDER_ALPHA, RENDER_ALPHAINST };
+	enum RENDERTYPE { RENDER_PRIORITY, RENDER_ZSORT, RENDER_UI, RENDER_END, RENDER_INST, RENDER_ALPHA, RENDER_EFFECT_ALPHA, RENDER_ALPHAINST };
 
 private:
 	explicit CRenderer(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);
@@ -32,6 +32,7 @@ private:
 	void Render_ZSort(void);
 	void Render_AlphaInst(void);
 	void Render_Alpha(void);
+	void Render_Effect_Alpha(void);
 	void Render_UI(void);
 
 public:
@@ -59,6 +60,9 @@ private:
 
 	typedef multimap<_float, CGameObject*, greater<_float>> MAPALPHA;
 	MAPALPHA m_mapAlpha;
+
+	typedef multimap<_float, CGameObject*, greater<_float>> MAPEFFECTALPHA;
+	MAPEFFECTALPHA m_mapEffectAlpha;
 
 private:
 	CRcTex* m_pRcTex;

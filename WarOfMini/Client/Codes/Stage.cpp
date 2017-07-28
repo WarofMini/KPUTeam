@@ -735,8 +735,8 @@ HRESULT CStage::InitUIObject(void)
 	if (NULL == pGameObject)
 		return E_FAIL;
 
-	((CBulletNumbering*)pGameObject)->SetNumberSize(80.f, 80.f);
-	((CBulletNumbering*)pGameObject)->SetNumberPosition(400.f, 400.f);
+	((CBulletNumbering*)pGameObject)->SetNumberSize(50.f, 50.f);
+	((CBulletNumbering*)pGameObject)->SetNumberPosition(550.f, 400.f);
 	((CBulletNumbering*)pGameObject)->ComputeFXFY();
 	((CBulletNumbering*)pGameObject)->SetState(CBulletNumbering::CHANGE_BULLETNUMBER);
 
@@ -752,14 +752,28 @@ HRESULT CStage::InitUIObject(void)
 	pLayer->Ready_Object(L"UI", pGameObject);
 
 
+	//Slash
+	pGameObject = CDefaultUI::Create(m_pContext, L"Texture_Slash");
+	if (NULL == pGameObject)
+		return E_FAIL;
+
+	((CUI*)pGameObject)->SetSizeX(70);
+	((CUI*)pGameObject)->SetSizeY(60);
+	((CUI*)pGameObject)->SetMoveX(660.f);
+	((CUI*)pGameObject)->SetMoveY(400.f);
+	((CUI*)pGameObject)->ComputeFXFY();
+
+	pLayer->Ready_Object(L"UI", pGameObject);
+
+
 	
 	//BulletNumber
 	pGameObject = CBulletNumbering::Create(m_pContext);
 	if (NULL == pGameObject)
 		return E_FAIL;
 
-	((CBulletNumbering*)pGameObject)->SetNumberSize(80.f, 80.f);
-	((CBulletNumbering*)pGameObject)->SetNumberPosition(655.f, 400.f);
+	((CBulletNumbering*)pGameObject)->SetNumberSize(50.f, 50.f);
+	((CBulletNumbering*)pGameObject)->SetNumberPosition(700.f, 400.f);
 	((CBulletNumbering*)pGameObject)->ComputeFXFY();
 	((CBulletNumbering*)pGameObject)->SetState(CBulletNumbering::ORIGIN_BULLETNUMBER);
 
@@ -767,20 +781,6 @@ HRESULT CStage::InitUIObject(void)
 	{
 		((CBulletNumbering*)pGameObject)->SetGun(m_pGun);
 	}
-
-	pLayer->Ready_Object(L"UI", pGameObject);
-
-
-	//Slash
-	pGameObject = CDefaultUI::Create(m_pContext, L"Texture_Slash");
-	if (NULL == pGameObject)
-		return E_FAIL;
-
-	((CUI*)pGameObject)->SetSizeX(100);
-	((CUI*)pGameObject)->SetSizeY(80);
-	((CUI*)pGameObject)->SetMoveX(567.f);
-	((CUI*)pGameObject)->SetMoveY(400.f);
-	((CUI*)pGameObject)->ComputeFXFY();
 
 	pLayer->Ready_Object(L"UI", pGameObject);
 
@@ -799,6 +799,34 @@ HRESULT CStage::InitUIObject(void)
 
 	pLayer->Ready_Object(L"UI", pGameObject);
 
+
+	//HP BinBar
+	pGameObject = CDefaultUI::Create(m_pContext, L"Texture_BinBar");
+	
+	if (NULL == pGameObject)
+		return E_FAIL;
+
+	((CUI*)pGameObject)->SetSizeX(250);
+	((CUI*)pGameObject)->SetSizeY(45);
+	((CUI*)pGameObject)->SetMoveX(-650.f);
+	((CUI*)pGameObject)->SetMoveY(400.f);
+	((CUI*)pGameObject)->ComputeFXFY();
+
+	pLayer->Ready_Object(L"UI", pGameObject);
+
+	//Boost BinBar
+	pGameObject = CDefaultUI::Create(m_pContext, L"Texture_BinBar");
+
+	if (NULL == pGameObject)
+		return E_FAIL;
+
+	((CUI*)pGameObject)->SetSizeX(250);
+	((CUI*)pGameObject)->SetSizeY(45);
+	((CUI*)pGameObject)->SetMoveX(-650.f);
+	((CUI*)pGameObject)->SetMoveY(400.f);
+	((CUI*)pGameObject)->ComputeFXFY();
+
+	pLayer->Ready_Object(L"UI", pGameObject);
 	
 
 	return S_OK;
