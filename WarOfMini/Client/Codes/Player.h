@@ -109,6 +109,8 @@ private:
 
 	CGameObject*	m_pTank;
 
+	Ser_COLLLAY_DATA m_ColllayData;
+
 	//Physx SDK Member Variables =========================
 private:
 	PxController*		m_pPxCharacterController;

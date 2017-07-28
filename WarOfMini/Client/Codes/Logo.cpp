@@ -9,6 +9,8 @@
 #include "ResourcesMgr.h"
 #include "CameraMgr.h"
 
+BYTE		g_CurrentScene = SC_LOGO;
+
 CLogo::CLogo(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 : CScene(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking)
 , m_pLoading(NULL)

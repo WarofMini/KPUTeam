@@ -75,11 +75,13 @@ _int CStage::Update(const _float& fTimeDelta)
 {
 	if (m_bEnterGame == false)
 	{
+		g_CurrentScene = SC_STAGE;
 		Ser_PLAYER_DATA m_pPlayerData;
 		m_pPlayerData.size = sizeof(Ser_PLAYER_DATA);
 		m_pPlayerData.type = INIT_CLIENT;
 		m_pPlayerData.ID = g_myid;
 		m_pPlayerData.vPos = g_vPos;
+		m_pPlayerData.SC_ID = g_CurrentScene;
 		g_Client->sendPacket(sizeof(Ser_PLAYER_DATA), INIT_CLIENT, reinterpret_cast<BYTE*>(&m_pPlayerData));
 		m_bEnterGame = true;
 	}
@@ -94,7 +96,6 @@ HRESULT CStage::Ready_GameLogic(void)
 {
 	CLayer* pLayer = CLayer::Create();
 	CGameObject* pGameObject = NULL;
-
 
 	//Player
 	pGameObject = CPlayer::Create(m_pGraphicDev, m_pContext);

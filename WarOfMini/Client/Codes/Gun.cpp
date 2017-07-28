@@ -43,7 +43,6 @@ HRESULT CGun::Initialize(void)
 
 INT CGun::Update(const FLOAT& fTimeDelta)
 {
-
 	CEquipment::Update(fTimeDelta);
 	XMStoreFloat4x4(&m_pTransform->m_matWorld, XMLoadFloat4x4(&m_pTransform->m_matWorld) * XMLoadFloat4x4(&m_matParent));
 

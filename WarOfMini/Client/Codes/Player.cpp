@@ -53,7 +53,8 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 
 	ZeroMemory(m_pEquipment, sizeof(CEquipment*) * 2);
 	ZeroMemory(&m_bKey, sizeof(bool) * KEY_END);
-
+	ZeroMemory(&m_ColllayData, sizeof(Ser_COLLLAY_DATA));
+	
 	m_pServer_PlayerData = new Ser_PLAYER_DATA;
 
 	m_fSpeed = 40.f;
@@ -540,9 +541,9 @@ void CPlayer::KeyState(const FLOAT& fTimeDelta)
 				((CTank*)m_pTank)->SetUse(true, g_myid);
 			}
 		}
-	}
+	}*/
 
-	if (m_pTank)
+	/*if (m_pTank)
 		SetPosition(((CTank*)m_pTank)->GetPos());*/
 }
 
@@ -618,6 +619,8 @@ void CPlayer::Soldier_Iron_Move(const FLOAT& fTimeDelta)
 
 void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 {
+	ZeroMemory(&m_ColllayData, sizeof(Ser_COLLLAY_DATA));
+
 	if (!m_bFire)
 	{
 		m_fRateOfFire = 0.f;
@@ -698,34 +701,33 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 
 				if (m_bTwoCheck == true)
 				{
+
 					CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
-
-
 					m_vtestpos = XMFLOAT3(Gunhit.block.position.x, Gunhit.block.position.y, Gunhit.block.position.z);
-
 
 					const char* pName = Gunhit.block.actor->getName();
 					string strFullName = pName;
 					int iStartIdx = strFullName.find("OtherPlayer_");
 
+					int intValue = -1;
+					m_ColllayData.bShoot = true;
+					m_ColllayData.iCollPlayerID = -1;
+					m_ColllayData.xmf3CollPos = m_vtestpos;
+					
 					if (iStartIdx != -1)
 					{
 						string strID = strFullName.substr(12, strFullName.length() - 11);
-						int intValue = atoi(strID.c_str());
-
-						Ser_COLLLAY_DATA strColData;
-						strColData.size = sizeof(Ser_COLLLAY_DATA);
-						strColData.type = COLLISION_LAY;
-						strColData.ID = intValue;
-						g_Client->sendPacket(sizeof(Ser_COLLLAY_DATA), COLLISION_LAY, reinterpret_cast<BYTE*>(&strColData));
+						intValue = atoi(strID.c_str());
+						m_ColllayData.iCollPlayerID = intValue;
 					}
 
+					//g_Client->sendPacket(sizeof(Ser_COLLLAY_DATA), COLLISION_LAY, reinterpret_cast<BYTE*>(&strColData));
 
 					//Effect
 					CGameObject* pGameObject = CBomb::Create(m_pContext);
 
 					pGameObject->SetTransformPosition(m_vtestpos);
-				
+
 					pLayer->Ready_Object(L"Effect", pGameObject);
 
 					//Dynamic Actor(::레이에 맞은 다이나믹 오브젝트 리액션)
@@ -1028,5 +1030,7 @@ void CPlayer::SendPacketAlways(void)
 	m_pPlayerData.ID = g_myid;
 	m_pPlayerData.vPos = m_pTransform->m_vPos;
 	m_pPlayerData.vDir = m_pTransform->m_vAngle;
+	m_pPlayerData.SC_ID = g_CurrentScene;
+	m_pPlayerData.strColllayData = m_ColllayData;
 	g_Client->sendPacket(sizeof(Ser_PLAYER_DATA), CLIENT_POSITION, reinterpret_cast<BYTE*>(&m_pPlayerData));
 }

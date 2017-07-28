@@ -38,4 +38,6 @@ extern _uint		WINCY;
 
 extern DIRECTIONALIGHT_CB g_tDirectionalLight;
 
+extern BYTE		g_CurrentScene;
+
 #endif

@@ -5,6 +5,7 @@
 #include "OtherPlayer.h"
 #include "GraphicDev.h"
 #include "Player.h"
+#include "Bomb.h"
 
 int		g_myid;
 XMFLOAT3 g_vPos;
@@ -356,6 +357,18 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 			if (((COtherPlayer*)*iter)->GetID() == m_pPlayerData->ID)
 			{
 				((COtherPlayer*)*iter)->SetPlayerData(m_pPlayerData->vPos, m_pPlayerData->vDir);
+				if (m_pPlayerData->strColllayData.bShoot)
+				{
+					CGameObject* pGameObject = CBomb::Create(CGraphicDev::GetInstance()->GetContext());
+					pGameObject->SetTransformPosition(m_pPlayerData->strColllayData.xmf3CollPos);
+					pLayer->Ready_Object(L"Effect", pGameObject);
+					if (g_myid == m_pPlayerData->strColllayData.iCollPlayerID)
+					{
+						list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"Player");
+						list<CGameObject*>::iterator iter = pObjList->begin();
+						((CPlayer*)*iter)->SetHP();
+					}
+				}
 			}
 		}
 	}
@@ -389,16 +402,20 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 		break;
 	case COLLISION_LAY:
 	{
-		Ser_COLLLAY_DATA strCollData = *reinterpret_cast<Ser_COLLLAY_DATA*>((Ser_COLLLAY_DATA*)buf);
+		/*Ser_COLLLAY_DATA strCollData = *reinterpret_cast<Ser_COLLLAY_DATA*>((Ser_COLLLAY_DATA*)buf);
 
+		pScene = CManagement::GetInstance()->GetScene();
+		pLayer = pScene->FindLayer(L"Layer_GameLogic");
 		if (g_myid == strCollData.ID)
 		{
-			pScene = CManagement::GetInstance()->GetScene();
-			pLayer = pScene->FindLayer(L"Layer_GameLogic");
 			list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"Player");
 			list<CGameObject*>::iterator iter = pObjList->begin();
 			((CPlayer*)*iter)->SetHP();
 		}
+
+		CGameObject* pGameObject = CBomb::Create(CGraphicDev::GetInstance()->GetContext());
+		pGameObject->SetTransformPosition(strCollData.xmf3CollPos);
+		pLayer->Ready_Object(L"Effect", pGameObject);*/
 	}
 		break;
 	case TIMECOUNT:
@@ -406,8 +423,7 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 		Ser_Time_DATA timedata = *reinterpret_cast<Ser_Time_DATA*>((Ser_Time_DATA*)buf);
 		m_time = &timedata;
 
-		cout << "TimeCount : " << m_time << endl;
-
+		cout << "TimeCount : " << m_time->time << endl;
 	}
 	break;
 	case CLIENT_READY:
