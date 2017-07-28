@@ -358,10 +358,13 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 			{
 				((COtherPlayer*)*iter)->SetPlayerData(m_pPlayerData->vPos, m_pPlayerData->vDir);
 
-				if (((COtherPlayer*)*iter)->IsSoldier() == m_pPlayerData->strAniData.bIsSoldier)
-					((COtherPlayer*)*iter)->PlayAnimation(m_pPlayerData->strAniData.dwAniIdx, m_pPlayerData->strAniData.bImmediate);
-				else
-					((COtherPlayer*)*iter)->SoldierChange();
+				if (m_pPlayerData->strAniData.bAniChange)
+				{
+					if (((COtherPlayer*)*iter)->IsSoldier() == m_pPlayerData->strAniData.bIsSoldier)
+						((COtherPlayer*)*iter)->PlayAnimation(m_pPlayerData->strAniData.dwAniIdx, m_pPlayerData->strAniData.bImmediate);
+					else
+						((COtherPlayer*)*iter)->SoldierChange();
+				}
 
 				if (m_pPlayerData->strColllayData.bShoot)
 				{

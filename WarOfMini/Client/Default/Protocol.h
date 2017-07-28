@@ -88,6 +88,7 @@ struct Ser_COLLLAY_DATA
 };
 struct Ser_ANIMATION_DATA
 {
+	bool bAniChange;
 	bool bImmediate;
 	DWORD dwAniIdx;
 	bool bIsSoldier;

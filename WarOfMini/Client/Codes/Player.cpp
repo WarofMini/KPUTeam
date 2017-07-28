@@ -142,6 +142,7 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 	//Dynamic카메라 체크 함수(Dynamic 카메라일시 Update 안돌린다.
 	if (!DynamicCameraCheck())
 	{
+		m_AniData.bAniChange = false;
 		Operate_StateMAchine(fTimeDelta);
 		KeyState(fTimeDelta);
 		SendPacketAlways();
@@ -351,6 +352,7 @@ void CPlayer::PlayAnimation(DWORD dwAniIdx, bool bImmediate)//
 	m_pAnimInfo->Set_Key((_ushort)dwAniIdx);
 	m_dwAniIdx = dwAniIdx;
 
+	m_AniData.bAniChange = true;
 	m_AniData.bImmediate = bImmediate;
 	m_AniData.bIsSoldier = m_bIsSoldier;
 	m_AniData.dwAniIdx = dwAniIdx;
