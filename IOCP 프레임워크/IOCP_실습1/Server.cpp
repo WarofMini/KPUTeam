@@ -564,7 +564,7 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//±Ùµ¥ ¾ê
 				m_vecPlayer[vecID[i]].vPos = strPlayerData.vPos;
 				m_vecPlayer[vecID[i]].vDir = strPlayerData.vDir;
 				m_vecPlayer[vecID[i]].strColllayData = strPlayerData.strColllayData;
-				m_vecPlayer[vecID[i]].strAniData = strPlayerData.strAniData;
+				//m_vecPlayer[vecID[i]].strAniData = strPlayerData.strAniData;
 				//m_vecPlayer[vecID[i]].dwState = strPlayerData.dwState;
 			}
 			else
@@ -577,7 +577,7 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//±Ùµ¥ ¾ê
 	break;
 	case CLIENT_ANIMATION:
 	{//ÀÏ´Ü³ÀµÎ°í
-		/*Ser_ANIMATION_DATA strAnimationData;
+		Ser_ANIMATION_DATA strAnimationData;
 		strAnimationData = *reinterpret_cast<Ser_ANIMATION_DATA*>((Ser_ANIMATION_DATA*)&buf[2]);
 
 		for (int i = 0; i < vecID.size(); ++i)
@@ -586,7 +586,7 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//±Ùµ¥ ¾ê
 				continue;
 			m_vecPlayer[vecID[i]].type = CLIENT_ANIMATION;
 			SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strAnimationData));
-		}*/
+		}
 	}
 	break;
 	case COLLISION_LAY:
