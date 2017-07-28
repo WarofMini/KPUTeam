@@ -10,6 +10,7 @@
 #include "Layer.h"
 #include "Scene.h"
 #include "GageUI.h"
+#include "Circle.h"
 
 CStation::CStation(ID3D11DeviceContext* pContext)
 : CGameObject(pContext)
@@ -19,6 +20,8 @@ CStation::CStation(ID3D11DeviceContext* pContext)
 , m_fFlagDist(100.f)
 , m_eFlagState(FLAG_EMPTY)
 , m_pGage(NULL)
+, m_pCircle(NULL)
+, m_fCircleRadius(1.0f)
 {
 	m_uiObjNum = MESHNUM_TOWER;
 }
@@ -49,7 +52,7 @@ HRESULT CStation::Initialize()
 _int CStation::Update(const _float& fTimeDelta)
 {
 	//거점에서 일정거리 이하로 객체가 있는지 확인
-	CollisionObject();
+	CollisionObject(fTimeDelta);
 
 	CGameObject::Update(fTimeDelta);
 
@@ -216,7 +219,7 @@ PxRigidStatic * CStation::GetPxActor(void)
 	return m_pPxActor;
 }
 
-void CStation::CollisionObject(void) //객체 충돌
+void CStation::CollisionObject(const _float& fTimeDelta) //객체 충돌
 {
 	if (m_pPlayer == NULL)
 	{
@@ -235,6 +238,12 @@ void CStation::CollisionObject(void) //객체 충돌
 
 		if (m_fDist <= m_fFlagDist) //거점 범위안에 있는경우
 		{
+			//Circle Update
+
+			m_fCircleRadius = 190.0f;
+			m_pCircle->SetTransformScale(XMFLOAT3(m_fCircleRadius, m_fCircleRadius, m_fCircleRadius));
+
+
 			if (m_eFlagState == FLAG_TEAM1/*객체가 어느쪽 팀인지*/) //이미 점령한 곳인 경우
 			{
 				
@@ -254,6 +263,9 @@ void CStation::CollisionObject(void) //객체 충돌
 		else
 		{
 			m_pGage->ResetValue();
+
+			m_fCircleRadius = 1.0f;
+			m_pCircle->SetTransformScale(XMFLOAT3(m_fCircleRadius, m_fCircleRadius, m_fCircleRadius));
 		}
 	}
 
@@ -268,4 +280,12 @@ _float CStation::Length(XMFLOAT3& xmf3Vector1, XMFLOAT3& xmf3Vector2)
 	XMStoreFloat3(&xmf3Result, XMVector3Length(XMLoadFloat3(&xmf3Result)));
 
 	return (xmf3Result.x);
+}
+
+void CStation::SetCircle(CCircle * pCircle)
+{
+	m_pCircle = pCircle;
+	m_pCircle->SetTransformPosition(XMFLOAT3(m_pTransform->m_vPos.x, m_pTransform->m_vPos.y - 37.5f, m_pTransform->m_vPos.z));
+	m_pCircle->SetTransformRotate(XMFLOAT3(90.f, 0.0f, 0.0f));
+	m_pCircle->SetTransformScale(XMFLOAT3(m_fCircleRadius, m_fCircleRadius, m_fCircleRadius));
 }

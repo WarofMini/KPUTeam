@@ -169,6 +169,7 @@
     <ClInclude Include="..\Codes\BulletNumbering.h" />
     <ClInclude Include="..\Codes\Camera.h" />
     <ClInclude Include="..\Codes\CameraMgr.h" />
+    <ClInclude Include="..\Codes\Circle.h" />
     <ClInclude Include="..\Codes\Cloth.h" />
     <ClInclude Include="..\Codes\Component.h" />
     <ClInclude Include="..\Codes\CubeTex.h" />
@@ -266,6 +267,7 @@
     <ClCompile Include="..\Codes\BulletNumbering.cpp" />
     <ClCompile Include="..\Codes\Camera.cpp" />
     <ClCompile Include="..\Codes\CameraMgr.cpp" />
+    <ClCompile Include="..\Codes\Circle.cpp" />
     <ClCompile Include="..\Codes\Cloth.cpp" />
     <ClCompile Include="..\Codes\Component.cpp" />
     <ClCompile Include="..\Codes\CubeTex.cpp" />

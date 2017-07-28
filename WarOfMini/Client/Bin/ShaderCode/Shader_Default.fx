@@ -48,11 +48,11 @@ PS_OUTPUT PS(VS_OUTPUT input)
 
 	output.vColor = txDiffuse.Sample(BaseSampler, input.vTexUV);
 
-	if (0.3f < input.vProjPos.z * 0.005f)
-		output.vColor.a = 0.f;
+	//if (0.3f < input.vProjPos.z * 0.005f)
+	//	output.vColor.a = 0.f;
 
-	output.vDepth = input.vProjPos.z * 0.005f;
-	output.vDepth.a = output.vColor.a;
+	//output.vDepth = input.vProjPos.z * 0.005f;
+	//output.vDepth.a = output.vColor.a;
 
 	return output;
 }

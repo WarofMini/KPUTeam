@@ -283,6 +283,9 @@
     <Filter Include="01.Scene\02.Title">
       <UniqueIdentifier>{e4f973a3-1721-436e-a38c-ac9df8dfb3aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\07.Effect\01.Circle">
+      <UniqueIdentifier>{acf3d0a9-ddb2-4142-9023-a2614601ea8b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -570,6 +573,9 @@
     <ClInclude Include="..\Codes\Boost.h">
       <Filter>02.Object\08.UI\06.Boost</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Circle.h">
+      <Filter>02.Object\07.Effect\01.Circle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -814,6 +820,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Boost.cpp">
       <Filter>02.Object\08.UI\06.Boost</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Circle.cpp">
+      <Filter>02.Object\07.Effect\01.Circle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

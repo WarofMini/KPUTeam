@@ -23,6 +23,7 @@
 #include "GageUI.h"
 #include "HP.h"
 #include "Boost.h"
+#include "Circle.h"
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 : CScene(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking)
@@ -595,7 +596,6 @@ HRESULT CStage::InitPhysicsObject(void)
 	pLayer->Ready_Object(L"PhysicsDoor", pDoorObject);
 
 
-	
 	CGameObject* pGameObject = CDefaultPhysicsObect::Create(m_pContext);
 	pGameObject->SetObjNum(MESHNUM_BOOK1);
 	((CDefaultPhysicsObect*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(2.f, 2.f, 2.f), m_pCooking, "PhysicsBook");
@@ -628,6 +628,13 @@ HRESULT CStage::InitPhysicsObject(void)
 	pLayer->Ready_Object(L"GageUI", pGageUI);
 
 
+	//Circle
+	CCircle* pCircle = CCircle::Create(m_pContext);
+	if (NULL == pCircle)
+		return E_FAIL;
+	pLayer->Ready_Object(L"Circle", pCircle);
+
+
 	//Station One
 	CStation* pStation = CStation::Create(m_pContext);
 
@@ -642,6 +649,7 @@ HRESULT CStage::InitPhysicsObject(void)
 	pStation->SetTransformScale(vScale);
 	pStation->SetFlag(pClothObject);
 	pStation->SetGageUI(pGageUI);
+	pStation->SetCircle(pCircle);
 	pLayer->Ready_Object(L"Station", pStation);
 	//============================================================================================================
 
@@ -665,6 +673,13 @@ HRESULT CStage::InitPhysicsObject(void)
 	pLayer->Ready_Object(L"GageUI", pGageUI);
 
 
+	//Circle
+	CCircle* pCircleTwo = CCircle::Create(m_pContext);
+	if (NULL == pCircleTwo)
+		return E_FAIL;
+	pLayer->Ready_Object(L"Circle", pCircleTwo);
+
+
 
 	//Station Two
 	CStation* pStationTwo = CStation::Create(m_pContext);
@@ -677,6 +692,7 @@ HRESULT CStage::InitPhysicsObject(void)
 	pStationTwo->SetTransformScale(vScale);
 	pStationTwo->SetFlag(pClothObjectTwo);
 	pStationTwo->SetGageUI(pGageUI);
+	pStationTwo->SetCircle(pCircleTwo);
 	pLayer->Ready_Object(L"StationTwo", pStationTwo);
 	//============================================================================================================
 
@@ -698,6 +714,13 @@ HRESULT CStage::InitPhysicsObject(void)
 		return E_FAIL;
 	pLayer->Ready_Object(L"GageUI", pGageUI);
 
+
+	//Circle
+	CCircle* pCircleThree = CCircle::Create(m_pContext);
+	if (NULL == pCircleThree)
+		return E_FAIL;
+	pLayer->Ready_Object(L"Circle", pCircleThree);
+
 	//Station Three
 	CStation* pStationThree = CStation::Create(m_pContext);
 	if (NULL == pStationThree)
@@ -709,6 +732,7 @@ HRESULT CStage::InitPhysicsObject(void)
 	pStationThree->SetTransformScale(vScale);
 	pStationThree->SetFlag(pClothObjectThree);
 	pStationThree->SetGageUI(pGageUI);
+	pStationThree->SetCircle(pCircleThree);
 	pLayer->Ready_Object(L"StationThree", pStationThree);
 	//============================================================================================================
 

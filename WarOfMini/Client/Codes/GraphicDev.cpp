@@ -304,7 +304,7 @@ HRESULT CGraphicDev::Ready_GraphicDev(HWND hWnd, WINMODE eWinMode, const _ushort
 	dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
 	dsDesc.StencilEnable = FALSE;
 	dsDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
-	dsDesc.StencilWriteMask == D3D11_DEFAULT_STENCIL_WRITE_MASK;
+	dsDesc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
 	dsDesc.FrontFace.StencilFailOp == D3D11_COMPARISON_ALWAYS;
 	dsDesc.FrontFace.StencilDepthFailOp == D3D11_STENCIL_OP_KEEP;
 	dsDesc.FrontFace.StencilPassOp == D3D11_STENCIL_OP_KEEP;

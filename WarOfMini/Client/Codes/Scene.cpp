@@ -15,6 +15,7 @@ CScene::CScene(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysi
 
 CScene::~CScene(void)
 {
+
 }
 
 INT CScene::Update(const _float &fTimeDelta)

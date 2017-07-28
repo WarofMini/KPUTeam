@@ -16,3 +16,4 @@ Flag-png-3
 RedBar-png-0
 BoostBar-png-0
 BinBar-png-0
+Circle-png-0
