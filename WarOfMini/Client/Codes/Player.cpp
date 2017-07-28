@@ -120,9 +120,6 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 	else 
 		m_iTextureNumber = 1;
 
-	m_AniData.bImmediate = true;
-	m_AniData.bIsSoldier = true;
-	m_AniData.dwAniIdx = SOLDIER_IDLE;
 	return S_OK;
 }
 
@@ -142,7 +139,6 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 	//Dynamic카메라 체크 함수(Dynamic 카메라일시 Update 안돌린다.
 	if (!DynamicCameraCheck())
 	{
-		m_AniData.bAniChange = false;
 		Operate_StateMAchine(fTimeDelta);
 		KeyState(fTimeDelta);
 		SendPacketAlways();
@@ -345,17 +341,22 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 	}
 }
 
-void CPlayer::PlayAnimation(DWORD dwAniIdx, bool bImmediate)//
+void CPlayer::PlayAnimation(DWORD dwAniIdx, bool bImmediate)
 {
 	if (bImmediate)
 		m_pAnimInfo->Set_KeyImm((_ushort)dwAniIdx);
 	m_pAnimInfo->Set_Key((_ushort)dwAniIdx);
 	m_dwAniIdx = dwAniIdx;
 
-	m_AniData.bAniChange = true;
-	m_AniData.bImmediate = bImmediate;
-	m_AniData.bIsSoldier = m_bIsSoldier;
-	m_AniData.dwAniIdx = dwAniIdx;
+	Ser_ANIMATION_DATA m_AnimationData;
+	m_AnimationData.size = sizeof(Ser_ANIMATION_DATA);
+	m_AnimationData.type = CLIENT_ANIMATION;
+	m_AnimationData.ID = g_myid;
+	m_AnimationData.bImmediate = bImmediate;
+	m_AnimationData.dwAniIdx = dwAniIdx;
+	m_AnimationData.bIsSoldier = m_bIsSoldier;
+	g_Client->sendPacket(sizeof(Ser_ANIMATION_DATA), CLIENT_ANIMATION, reinterpret_cast<BYTE*>(&m_AnimationData));
+
 }
 
 bool CPlayer::Check_AnimationFrame(void)
@@ -1031,6 +1032,5 @@ void CPlayer::SendPacketAlways(void)
 	m_pPlayerData.vDir = m_pTransform->m_vAngle;
 	m_pPlayerData.SC_ID = g_CurrentScene;
 	m_pPlayerData.strColllayData = m_ColllayData;
-	m_pPlayerData.strAniData = m_AniData;
 	g_Client->sendPacket(sizeof(Ser_PLAYER_DATA), CLIENT_POSITION, reinterpret_cast<BYTE*>(&m_pPlayerData));
 }
