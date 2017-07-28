@@ -357,6 +357,12 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 			if (((COtherPlayer*)*iter)->GetID() == m_pPlayerData->ID)
 			{
 				((COtherPlayer*)*iter)->SetPlayerData(m_pPlayerData->vPos, m_pPlayerData->vDir);
+
+				if (((COtherPlayer*)*iter)->IsSoldier() == m_pPlayerData->strAniData.bIsSoldier)
+					((COtherPlayer*)*iter)->PlayAnimation(m_pPlayerData->strAniData.dwAniIdx, m_pPlayerData->strAniData.bImmediate);
+				else
+					((COtherPlayer*)*iter)->SoldierChange();
+
 				if (m_pPlayerData->strColllayData.bShoot)
 				{
 					CGameObject* pGameObject = CBomb::Create(CGraphicDev::GetInstance()->GetContext());
@@ -377,7 +383,7 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 		break;
 	case CLIENT_ANIMATION:
 	{
-		Ser_ANIMATION_DATA AnimationData = *reinterpret_cast<Ser_ANIMATION_DATA*>((Ser_ANIMATION_DATA*)buf);
+		/*Ser_ANIMATION_DATA AnimationData = *reinterpret_cast<Ser_ANIMATION_DATA*>((Ser_ANIMATION_DATA*)buf);
 
 		pScene = CManagement::GetInstance()->GetScene();
 		pLayer = pScene->FindLayer(L"Layer_GameLogic");
@@ -397,7 +403,7 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 				else
 					((COtherPlayer*)*iter)->SoldierChange();
 			}
-		}
+		}*/
 	}
 		break;
 	case COLLISION_LAY:
