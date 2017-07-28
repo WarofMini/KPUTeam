@@ -20,9 +20,9 @@ private:
 	int iCpuCore;
 	unsigned int playerIndex{ UINT_MAX };
 
+	int		m_iStarterCnt;
+	bool	m_bReady = false;
 	
-
-	bool m_bReady = false;
 	CRITICAL_SECTION cs;
 	float startTime;
 

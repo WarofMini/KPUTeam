@@ -49,12 +49,14 @@ using namespace chrono;
 
 
 // Game State !
+#define SC_LOGO					0
+#define SC_STAGE				1
+#define SC_END					2
 
-#define LOGO					0
-#define READY					1
-#define START					2
-#define END						3
-
+// Game State !
+#define GS_READY				0
+#define GS_START				1
+#define GS_END					2
 
 struct Overlap_ex
 {
@@ -78,6 +80,13 @@ struct PLAYER_INFO
 };
 //////////////////////////////////////////
 
+struct Ser_COLLLAY_DATA
+{
+	bool bShoot;
+	int iCollPlayerID;	// 이게 클라이언트에게 줄 id 값이야
+	XMFLOAT3 xmf3CollPos;
+};
+
 struct Ser_PLAYER_DATA
 {
 	BYTE size;	// 이게 전체 size 이고
@@ -85,6 +94,8 @@ struct Ser_PLAYER_DATA
 	int ID;	// 이게 클라이언트에게 줄 id 값이야
 	XMFLOAT3 vPos;
 	XMFLOAT3 vDir;
+	BYTE SC_ID;
+	Ser_COLLLAY_DATA strColllayData;
 };
 
 struct Ser_Vec_PLAYER_DATA
@@ -106,15 +117,10 @@ struct Ser_ANIMATION_DATA
 	bool bIsSoldier;
 };
 
-struct Ser_COLLLAY_DATA
-{
-	BYTE size;	// 이게 전체 size 이고
-	BYTE type;	// 너가 말한 서버의 buf[1] 이 요거고 -> 아까 process packet 에서 구분한 이벤트는 요 type 인거야.
-	int ID;	// 이게 클라이언트에게 줄 id 값이야
-};
 struct Ser_Time_DATA {
 	BYTE size;
 	BYTE type;
+	BYTE gamestate;					// 0, 1, 2, 3
 	float time;						//시간 float값
 };
 
