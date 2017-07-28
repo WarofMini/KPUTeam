@@ -86,6 +86,12 @@ struct Ser_COLLLAY_DATA
 	int iCollPlayerID;	// 이게 클라이언트에게 줄 id 값이야
 	XMFLOAT3 xmf3CollPos;
 };
+struct Ser_ANIMATION_DATA
+{
+	bool bImmediate;
+	DWORD dwAniIdx;
+	bool bIsSoldier;
+};
 
 struct Ser_PLAYER_DATA
 {
@@ -96,6 +102,7 @@ struct Ser_PLAYER_DATA
 	XMFLOAT3 vDir;
 	BYTE SC_ID;
 	Ser_COLLLAY_DATA strColllayData;
+	Ser_ANIMATION_DATA strAniData;
 };
 
 struct Ser_Vec_PLAYER_DATA
@@ -105,16 +112,6 @@ struct Ser_Vec_PLAYER_DATA
 	int ID;	// 이게 클라이언트에게 줄 id 값이야
 	BYTE PlayerSize;
 	Ser_PLAYER_DATA vecPlayerData[10];
-};
-
-struct Ser_ANIMATION_DATA
-{
-	BYTE size;	// 이게 전체 size 이고
-	BYTE type;	// 너가 말한 서버의 buf[1] 이 요거고 -> 아까 process packet 에서 구분한 이벤트는 요 type 인거야.
-	int ID;	// 이게 클라이언트에게 줄 id 값이야
-	bool bImmediate;
-	DWORD dwAniIdx;
-	bool bIsSoldier;
 };
 
 struct Ser_Time_DATA {
