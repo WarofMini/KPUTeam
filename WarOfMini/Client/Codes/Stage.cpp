@@ -721,7 +721,7 @@ HRESULT CStage::InitUIObject(void)
 
 	CGameObject* pGameObject = NULL;
 
-	//UI
+	// Aim UI
 	pGameObject = CAim::Create(m_pContext);
 	if (NULL == pGameObject)
 		return E_FAIL;
@@ -730,6 +730,7 @@ HRESULT CStage::InitUIObject(void)
 
 	//BulletNumber
 	pGameObject = CBulletNumbering::Create(m_pContext);
+
 	if (NULL == pGameObject)
 		return E_FAIL;
 

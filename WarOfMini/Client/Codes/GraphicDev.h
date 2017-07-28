@@ -26,6 +26,7 @@ private:
 	ID3D11RenderTargetView*			m_pRenderTargetView;
 	ID3D11Texture2D*				m_pDepthStencilBuffer;
 	ID3D11DepthStencilView*			m_pDepthStencilView;
+	ID3D11DepthStencilState*		m_pDepthStencilState;
 
 	//Ω¶¿Ã¥ı
 	ID3D11Buffer*					m_pBaseShaderCB;
@@ -67,6 +68,7 @@ public:
 	void							SetCullEnable(_bool bCullEnable);
 	void							SetWireFrame(_bool bWireEnable);
 	_bool							GetWireFrame(void);
+	void							SetDepthStencilState(_bool bDepthState);
 
 public:
 	HRESULT Ready_GraphicDev(HWND hWnd, WINMODE eWinMode, const _ushort& wSizeX, const _ushort& wSizeY
@@ -89,8 +91,7 @@ public:
 	ID3D11SamplerState*				GetBaseSampler();
 	ID3D11Device*					GetGraphicDevice();
 	ID3D11DeviceContext*			GetContext();
-
-
+		
 public:
 	void							ChangeScreenMode(void);
 

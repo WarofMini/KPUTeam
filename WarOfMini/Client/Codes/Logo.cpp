@@ -67,8 +67,9 @@ HRESULT CLogo::Ready_GameLogic(void)
 	//LogoBack
 	pGameObject = CLogoBack::Create(m_pContext, L"Texture_LogoBack");
 
-	if (NULL == pGameObject) 
+	if (NULL == pGameObject)
 		return E_FAIL;
+
 	pLayer->Ready_Object(L"LogoBack", pGameObject);
 
 

@@ -10,10 +10,12 @@
 CNumbering::CNumbering(ID3D11DeviceContext * pContext)
 : CUI(pContext)
 {
+
 }
 
 CNumbering::~CNumbering(void)
 {
+
 }
 
 CNumbering * CNumbering::Create(ID3D11DeviceContext * pContext)
@@ -55,7 +57,7 @@ _int CNumbering::Update(const _float & fTimeDelta)
 void CNumbering::Render(void)
 {
 	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
-		return;
+		return ;
 
 	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Default"));
 
@@ -66,7 +68,6 @@ void CNumbering::Render(void)
 
 	XMFLOAT4X4			m_matWorld;
 	XMStoreFloat4x4(&m_matWorld, XMMatrixIdentity());
-
 
 	ComputeChangeWindowSize();
 

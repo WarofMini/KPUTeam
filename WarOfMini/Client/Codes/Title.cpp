@@ -9,6 +9,7 @@
 #include "CameraMgr.h"
 #include "LogoBack.h"
 
+
 CTitle::CTitle(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 : CScene(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking)
 , m_bSceneCheck(NULL)
@@ -61,6 +62,7 @@ HRESULT CTitle::Ready_GameLogic(void)
 
 	CGameObject* pGameObject = NULL;
 
+
 	//TitleBack
 	pGameObject = CTitleBack::Create(m_pContext);
 
@@ -68,6 +70,7 @@ HRESULT CTitle::Ready_GameLogic(void)
 
 	if (NULL == pGameObject)
 		return E_FAIL;
+
 	pLayer->Ready_Object(L"TitleBack", pGameObject);
 
 	m_mapLayer.insert(MAPLAYER::value_type(L"Layer_GameLogic", pLayer));
@@ -83,6 +86,7 @@ HRESULT CTitle::Ready_Environment(void)
 
 	// RenderTarget
 	CRenderTargetMgr::GetInstance()->Ready_RenderTarget(m_pGraphicDev, m_pContext, L"RT_Blend", DXGI_FORMAT_R8G8B8A8_UNORM, WINCX, WINCY, -0.8f, 0.8f);
+
 
 	m_mapLayer.insert(MAPLAYER::value_type(L"Layer_Environment", pLayer));
 

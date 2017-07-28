@@ -54,6 +54,5 @@ PS_OUTPUT PS(VS_OUTPUT input)
 	output.vDepth = input.vProjPos.z * 0.005f;
 	output.vDepth.a = output.vColor.a;
 
-
 	return output;
 }

@@ -35,6 +35,7 @@ void CRenderer::Add_RenderGroup(RENDERTYPE eType, CGameObject* pGameObject, _flo
 		m_mapAlpha.insert(MAPALPHA::value_type(fViewZ, pGameObject));
 }
 
+
 void CRenderer::Add_RenderInstGroup(RENDERTYPE eType, UINT uiObjNum, XMFLOAT4X4* pMatWorld)
 {
 	if (eType != RENDER_INST && eType != RENDER_ALPHAINST)
@@ -57,7 +58,6 @@ void CRenderer::Add_RenderInstGroup(RENDERTYPE eType, UINT uiObjNum, XMFLOAT4X4*
 		vecObjWorld.push_back(pMatWorld);
 		pMapInst->insert(MAPINST::value_type(uiObjNum, vecObjWorld));
 	}
-
 	else
 		iter->second.push_back(pMatWorld);
 }
@@ -98,6 +98,7 @@ HRESULT CRenderer::Ready_Renderer(void)
 
 	if (FAILED(CShaderMgr::GetInstance()->Ready_ShaderFromFiles(m_pGraphicDev, m_pContext, L"Shader_Object", L"../Bin/ShaderCode/Shader_Object.fx", 0)))
 		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -273,9 +274,8 @@ void CRenderer::Render_Alpha(void)
 	MAPALPHA::iterator	iter = m_mapAlpha.begin();
 	MAPALPHA::iterator	iter_end = m_mapAlpha.end();
 
-	for (; iter != iter_end; ++iter)
+	for(; iter != iter_end; ++iter)
 	{
-
 		iter->second->Render();
 	}
 
@@ -284,17 +284,18 @@ void CRenderer::Render_Alpha(void)
 
 void CRenderer::Render_UI(void)
 {
-	CRenderTargetMgr::GetInstance()->Set_RenderTarget(L"RT_Blend", 2, TRUE);
+	//CRenderTargetMgr::GetInstance()->Set_RenderTarget(L"RT_Blend", 2, TRUE);
 	CGraphicDev::GetInstance()->SetAlphaEnable(TRUE);
+	CGraphicDev::GetInstance()->SetDepthStencilState(TRUE);
 
 	RENDERLIST::iterator iter = m_RenderGroup[RENDER_UI].begin();
 	RENDERLIST::iterator iter_end = m_RenderGroup[RENDER_UI].end();
 
-	for (; iter != iter_end; ++iter)
+	for (iter; iter != iter_end; ++iter)
 	{
 		(*iter)->Render();
 	}
-
+	CGraphicDev::GetInstance()->SetDepthStencilState(FALSE);
 	CGraphicDev::GetInstance()->SetAlphaEnable(FALSE);
 }
 

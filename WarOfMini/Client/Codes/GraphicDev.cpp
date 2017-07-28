@@ -25,6 +25,7 @@ CGraphicDev::CGraphicDev(void)
 , m_pPointLightShaderCB(NULL)
 , m_pSpotLightShaderCB(NULL)
 , m_pMaterialShaderCB(NULL)
+, m_pDepthStencilState(NULL)
 , m_b4xMsaaCheck(true)
 , m_usFPS(0)
 , m_bWireEnable(false)
@@ -115,9 +116,9 @@ void CGraphicDev::Set_DepthStencil(D3D11_TEXTURE2D_DESC & td, const _ushort & wS
 	}
 
 	td.Usage = D3D11_USAGE_DEFAULT;
-	//텍스처의 용도  
+	//텍스처의 용도
 	//1.DEFAULT : 자원 GPU가 일고 쓸 경우 -> CPU는 자원을 읽거나 쓸 수 없다.
-	//2.IMMUTABLE :  자원을 일단 생성후 내용을 바꾸지 않는 경우 지정
+	//2.IMMUTABLE :자원을 일단 생성후 내용을 바꾸지 않는 경우 지정
 	//3 DYNAMIC  : 응용프로그램(CPU)이 자원의 내용을 빈번하게 갱신할 경우 지정
 	//4.STAGING : CPU가 자원의 복사본을 읽어야 할경우(느린연산)
 
@@ -169,6 +170,14 @@ void CGraphicDev::SetWireFrame(_bool bWireEnable)
 _bool CGraphicDev::GetWireFrame(void)
 {
 	return m_bWireEnable;
+}
+
+void CGraphicDev::SetDepthStencilState(_bool bDepthState)
+{
+	if (bDepthState)
+		m_pContext->OMSetDepthStencilState(m_pDepthStencilState, 1);
+	else
+		m_pContext->OMSetDepthStencilState(0, 0);
 }
 
 HRESULT CGraphicDev::Ready_GraphicDev(HWND hWnd, WINMODE eWinMode, const _ushort & wSizeX, const _ushort & wSizeY, ID3D11Device *& pGraphicDev, ID3D11DeviceContext *& pContext)
@@ -286,6 +295,27 @@ HRESULT CGraphicDev::Ready_GraphicDev(HWND hWnd, WINMODE eWinMode, const _ushort
 	//후면 버퍼 해제
 	Safe_Release(pBackBuffer);
 	//=======================================================================================
+
+	//깊이 스텐실 상태 생성==================================================================
+	//Z버퍼를 꺼버리는 상태이다.
+	D3D11_DEPTH_STENCIL_DESC dsDesc;
+	dsDesc.DepthEnable = TRUE;
+	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	dsDesc.StencilEnable = FALSE;
+	dsDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
+	dsDesc.StencilWriteMask == D3D11_DEFAULT_STENCIL_WRITE_MASK;
+	dsDesc.FrontFace.StencilFailOp == D3D11_COMPARISON_ALWAYS;
+	dsDesc.FrontFace.StencilDepthFailOp == D3D11_STENCIL_OP_KEEP;
+	dsDesc.FrontFace.StencilPassOp == D3D11_STENCIL_OP_KEEP;
+	dsDesc.FrontFace.StencilFunc == D3D11_STENCIL_OP_KEEP;
+	dsDesc.BackFace.StencilFailOp == D3D11_COMPARISON_ALWAYS;
+	dsDesc.BackFace.StencilDepthFailOp == D3D11_STENCIL_OP_KEEP;
+	dsDesc.BackFace.StencilPassOp == D3D11_STENCIL_OP_KEEP;
+	dsDesc.BackFace.StencilFunc == D3D11_STENCIL_OP_KEEP;
+
+	m_pGraphicDev->CreateDepthStencilState(&dsDesc, &m_pDepthStencilState);
+	//========================================================================================
 
 
 	//깊이 스텐실 버퍼 생성========================================================================
@@ -596,7 +626,6 @@ void CGraphicDev::ChangeScreenMode(void)
 
 	if (!m_bScreenState)
 	{
-
 		DXGI_MODE_DESC dxgiTargetParameters;
 		dxgiTargetParameters.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		dxgiTargetParameters.Width = WINCX;
@@ -607,6 +636,7 @@ void CGraphicDev::ChangeScreenMode(void)
 		dxgiTargetParameters.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 		m_pSwapChain->ResizeTarget(&dxgiTargetParameters);
 	}
+
 	m_pSwapChain->SetFullscreenState(!m_bScreenState, NULL);
 
 }
@@ -696,6 +726,9 @@ void CGraphicDev::Release(void)
 	if (Safe_Com_Release(m_pAlphaToCoverageBlendState))
 		MSG_BOX(L"m_pAlphaToCoverageBlendState Release Failed");
 
+	if (Safe_Com_Release(m_pDepthStencilState))
+		MSG_BOX(L"m_pDepthStencilState Release Failed");
+
 	if (Safe_Com_Release(m_pBaseSampler))
 		MSG_BOX(L"m_pBaseSampler Release Failed");
 
@@ -722,9 +755,6 @@ void CGraphicDev::Release(void)
 
 	if (Safe_Com_Release(m_pMaterialShaderCB))
 		MSG_BOX(L"m_pMaterialShaderCB Release Failed");
-
-
-
 
 	if (Safe_Com_Release(m_pBaseShaderCB))
 		MSG_BOX(L"m_pBaseShaderCB Release Failed");

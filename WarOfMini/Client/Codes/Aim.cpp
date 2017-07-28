@@ -34,11 +34,11 @@ HRESULT CAim::Initialize(void)
 	m_fX = (_float)(WINCX >> 1);
 	m_fY = (_float)(WINCY >> 1);
 
-	m_fSizeX = 150;
-	m_fSizeY = 150;
+	m_fSizeX = 50;
+	m_fSizeY = 50;
 
-	m_fOriginSizeX = 150;
-	m_fOriginSizeY = 150;
+	m_fOriginSizeX = 50;
+	m_fOriginSizeY = 50;
 
 	return S_OK;
 }

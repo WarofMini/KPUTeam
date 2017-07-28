@@ -134,6 +134,7 @@ HRESULT CRenderTexture::Ready_RenderTexture(const DXGI_FORMAT& eFormat, const _u
 	}
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+
 	dsvDesc.Format = dtDesc.Format;
 	dsvDesc.Flags = 0;
 	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
