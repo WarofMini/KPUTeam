@@ -95,6 +95,10 @@ void CServer::Initialize(void)
 	ZeroMemory(m_strStation, sizeof(strStation) * 3);
 	for (int i = 0; i < 3; ++i)
 		m_strStation[i].stationID = i;
+
+	Ateam = 0;
+	Bteam = 0;
+
 }
 
 void CServer::CheckCPUCoreCount()
@@ -139,6 +143,8 @@ void CServer::Accept_thread()
 	//새 플레이어의 위치를 다른 모든 플레이어에게 전송
 	//다른 플에이어의 위치를 새 플레이어에게 전송
 	int retval{ 0 };
+
+	
 
 	//socket()
 	SOCKET listen_sock = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, WSA_FLAG_OVERLAPPED);
@@ -211,32 +217,29 @@ void CServer::Accept_thread()
 		PlayerTemp.size = sizeof(Ser_PLAYER_DATA);
 		PlayerTemp.type = INIT_CLIENT;
 		
-		
-		for (int i = 0; i < MAX_USER; ++i)
+		if (Ateam <= Bteam)
 		{
-			if ((i % 2) == 0)	//블루팀
-			{
-				PlayerTemp.m_bRedBlue = true;
-				break;
-			}
-				
-			else							//레드팀
-			{
-				PlayerTemp.m_bRedBlue = false;
-				break;
-			}
-
-		}
-		if (PlayerTemp.m_bRedBlue == true)
-		{
+			++Ateam;
+			User->m_bRedBlue = true;
 			PlayerTemp.vPos = XMFLOAT3(20.f * User->id, 0.f, 0.f);
 			PlayerTemp.vDir = XMFLOAT3(0.f, 0.f, 0.f);
 		}
 		else
 		{
+			++Bteam;
+			User->m_bRedBlue = false;
 			PlayerTemp.vPos = XMFLOAT3(500.f * User->id, 0.f, 0.f);
 			PlayerTemp.vDir = XMFLOAT3(0.f, 0.f, 0.f);
 		}
+
+	/*	if (User->m_bRedBlue == true)
+		{
+			
+		}
+		else
+		{
+			
+		}*/
 		//PlayerTemp.dwState = SOLDIER_IDLE;
 		
 		m_vecPlayer.push_back(PlayerTemp);
@@ -302,7 +305,6 @@ void CServer::Worker_thread()
 			SendRemovePlayerPacket(key);
 
 			cout << "[No. " << key << "] Disconnected "<< endl;
-
 			continue;
 
 		}
@@ -510,6 +512,10 @@ void CServer::SendRemovePlayerPacket(DWORD dwKey)
 		}
 		SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&packet));
 	}
+	/*if (m_Client[dwKey]->m_bRedBlue)
+		Ateam--;
+	else
+		Bteam--;*/
 }
 
 void CServer::SendPacket(unsigned int id, const Packet* packet)

@@ -76,6 +76,7 @@ struct PLAYER_INFO
 	Overlap_ex my_overapped;	// 여기안의 IOCPbuf 에 최초 recv 를 하면 
 	unsigned char Packetbuf[MAX_PACKET_SIZE]; // 요기 버퍼랑은 무슨 상관일까? -> 너가말한 버퍼를 담는 공간은 여기야
 	int id;
+	bool m_bRedBlue;
 	CRITICAL_SECTION cs;
 };
 //////////////////////////////////////////
@@ -96,7 +97,6 @@ struct Ser_PLAYER_DATA
 	XMFLOAT3 vDir;
 	BYTE SC_ID;
 	Ser_COLLLAY_DATA strColllayData;
-	bool m_bRedBlue;
 
 };
 
