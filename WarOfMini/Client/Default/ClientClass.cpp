@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "Bomb.h"
 #include "Station.h"
+#include "Count.h"
 
 int		g_myid;
 XMFLOAT3 g_vPos;
@@ -438,10 +439,24 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 		}
 	}
 	break;
-	case TIMECOUNT:
+	case TIMECOUNT: //½Ã°£
 	{
 		Ser_Time_DATA timedata = *reinterpret_cast<Ser_Time_DATA*>((Ser_Time_DATA*)buf);
 		m_time = &timedata;
+
+		pScene = CManagement::GetInstance()->GetScene();
+		pLayer = pScene->FindLayer(L"Layer_GameLogic");
+		list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"Count");
+		if (pObjList == NULL)
+			break;
+
+		list<CGameObject*>::iterator iter = pObjList->begin();
+		list<CGameObject*>::iterator iter_end = pObjList->end();
+
+		for (int i = 0; iter != iter_end; ++iter)
+		{
+			((CCountUI*)*iter)->SetCount(m_time->time);
+		}
 
 		cout << "TimeCount : " << m_time->time << endl;
 	}

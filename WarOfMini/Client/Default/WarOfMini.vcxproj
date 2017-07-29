@@ -172,6 +172,7 @@
     <ClInclude Include="..\Codes\Circle.h" />
     <ClInclude Include="..\Codes\Cloth.h" />
     <ClInclude Include="..\Codes\Component.h" />
+    <ClInclude Include="..\Codes\Count.h" />
     <ClInclude Include="..\Codes\CubeTex.h" />
     <ClInclude Include="..\Codes\DefaultObject.h" />
     <ClInclude Include="..\Codes\DefaultPhysicsObject.h" />
@@ -270,6 +271,7 @@
     <ClCompile Include="..\Codes\Circle.cpp" />
     <ClCompile Include="..\Codes\Cloth.cpp" />
     <ClCompile Include="..\Codes\Component.cpp" />
+    <ClCompile Include="..\Codes\Count.cpp" />
     <ClCompile Include="..\Codes\CubeTex.cpp" />
     <ClCompile Include="..\Codes\DefaultObject.cpp" />
     <ClCompile Include="..\Codes\DefaultPhysicsObject.cpp" />

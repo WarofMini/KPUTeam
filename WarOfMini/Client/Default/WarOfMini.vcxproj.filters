@@ -286,6 +286,9 @@
     <Filter Include="02.Object\07.Effect\01.Circle">
       <UniqueIdentifier>{acf3d0a9-ddb2-4142-9023-a2614601ea8b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\08.UI\07.Count">
+      <UniqueIdentifier>{b901bc5e-5da0-499e-ad56-d4b652244470}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -576,6 +579,9 @@
     <ClInclude Include="..\Codes\Circle.h">
       <Filter>02.Object\07.Effect\01.Circle</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Count.h">
+      <Filter>02.Object\08.UI\07.Count</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -773,9 +779,6 @@
     <ClCompile Include="..\Codes\Effect.cpp">
       <Filter>02.Object\07.Effect</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\UI.cpp">
-      <Filter>02.Object\08.UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\Codes\Aim.cpp">
       <Filter>02.Object\08.UI\00.Aim</Filter>
     </ClCompile>
@@ -823,6 +826,12 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Circle.cpp">
       <Filter>02.Object\07.Effect\01.Circle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Count.cpp">
+      <Filter>02.Object\08.UI\07.Count</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\UI.cpp">
+      <Filter>02.Object\08.UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
