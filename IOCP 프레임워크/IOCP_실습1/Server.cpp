@@ -91,6 +91,7 @@ void CServer::Initialize(void)
 		int Error_No = WSAGetLastError();
 		error_quit(L"Server Initalize Fail", Error_No);
 	}
+
 }
 
 void CServer::CheckCPUCoreCount()
@@ -179,6 +180,8 @@ void CServer::Accept_thread()
 
 		}
 
+		
+
 		// 그럼 여기서 이제 id 값이 증가 되었찌
 
 		playerIndex += 1;
@@ -186,7 +189,6 @@ void CServer::Accept_thread()
 
 		CreateIoCompletionPort(reinterpret_cast<HANDLE>(client_sock), g_hIocp, playerIndex, 0);
 
-		
 		// 여기서 이제 클라이언트 관련 정보를 초기화 해서 받아서 넣었어
 		PLAYER_INFO* User = new PLAYER_INFO;
 
@@ -205,8 +207,18 @@ void CServer::Accept_thread()
 		PlayerTemp.ID = User->id;
 		PlayerTemp.size = sizeof(Ser_PLAYER_DATA);
 		PlayerTemp.type = INIT_CLIENT;
-		PlayerTemp.vPos = XMFLOAT3(20.f * User->id, 0.f, 0.f);
-		PlayerTemp.vDir = XMFLOAT3(0.f, 0.f, 0.f);
+
+
+		if ((PlayerTemp.ID % 2) == 0)	//블루팀
+		{
+			PlayerTemp.vPos = XMFLOAT3(20.f, 0.f, 0.f);
+			PlayerTemp.vDir = XMFLOAT3(0.f, 0.f, 0.f);
+		}
+		else							//레드팀
+		{ 
+			PlayerTemp.vPos = XMFLOAT3(100, 0.f, 0.f);
+			PlayerTemp.vDir = XMFLOAT3(0.f, 0.f, 0.f);
+		}
 		//PlayerTemp.dwState = SOLDIER_IDLE;
 		
 		m_vecPlayer.push_back(PlayerTemp);
@@ -217,7 +229,7 @@ void CServer::Accept_thread()
 
 		SendPacket(PlayerTemp.ID, reinterpret_cast<Packet*>(&PlayerTemp));
 
-
+		
 		//플레이어가 2명이상 입장 하게되면 시간이 가게 하자.
 		//int TimeInteeger = GetTickCount() + 1000;
 		//if (playerIndex >= 1)
@@ -536,13 +548,13 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 			
 			if (m_Client[vecID[i]]->id == strPlayerData.ID)
 			{
+			
 				for (int j = 0; j < vecID.size(); ++j)
 				{
 					if (m_Client[vecID[j]]->id == strPlayerData.ID)
 						continue;
 					m_vecPlayer[vecID[j]].type = INIT_CLIENT;
 					SendPacket(strPlayerData.ID, reinterpret_cast<Packet*>(&m_vecPlayer[vecID[j]]));
-
 				}
 			}
 			else

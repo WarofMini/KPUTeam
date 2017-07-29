@@ -105,6 +105,8 @@ struct Ser_Vec_PLAYER_DATA
 	int ID;	// 이게 클라이언트에게 줄 id 값이야
 	BYTE PlayerSize;
 	Ser_PLAYER_DATA vecPlayerData[10];
+	bool m_bRedBlue;
+
 };
 
 struct Ser_ANIMATION_DATA
