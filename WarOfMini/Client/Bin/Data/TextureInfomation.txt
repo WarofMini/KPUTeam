@@ -17,5 +17,4 @@ RedBar-png-0
 BoostBar-png-0
 BinBar-png-0
 Circle-png-5
-CountNumber-png-3
-Start-png-0
+CountNumber-png-4

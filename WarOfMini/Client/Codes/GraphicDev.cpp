@@ -25,6 +25,7 @@ CGraphicDev::CGraphicDev(void)
 , m_pPointLightShaderCB(NULL)
 , m_pSpotLightShaderCB(NULL)
 , m_pMaterialShaderCB(NULL)
+, m_pAlphaShaderCB(NULL)
 , m_pDepthStencilState(NULL)
 , m_b4xMsaaCheck(true)
 , m_usFPS(0)
@@ -416,6 +417,15 @@ HRESULT CGraphicDev::Ready_GraphicDev(HWND hWnd, WINMODE eWinMode, const _ushort
 		return E_FAIL;
 	}
 
+	//Alpha를 위한 버퍼
+	tBufferDesc.ByteWidth = sizeof(ALPHA_CB);
+
+	if (FAILED(m_pGraphicDev->CreateBuffer(&tBufferDesc, NULL, &m_pAlphaShaderCB)))
+	{
+		MSG_BOX(L"AlphaBuffer ConstantBuffer Created Failed");
+		return E_FAIL;
+	}
+
 	tBufferDesc.ByteWidth = sizeof(SPOTLIGHT_CB);
 
 	if (FAILED(m_pGraphicDev->CreateBuffer(&tBufferDesc, NULL, &m_pSpotLightShaderCB)))
@@ -606,6 +616,11 @@ ID3D11Buffer * CGraphicDev::GetMaterialShaderCB()
 	return m_pMaterialShaderCB;
 }
 
+ID3D11Buffer * CGraphicDev::GetAlphaShaderCB()
+{
+	return m_pAlphaShaderCB;
+}
+
 ID3D11Device * CGraphicDev::GetGraphicDevice()
 {
 	return m_pGraphicDev;
@@ -760,6 +775,8 @@ void CGraphicDev::Release(void)
 	if (Safe_Com_Release(m_pBaseShaderCB))
 		MSG_BOX(L"m_pBaseShaderCB Release Failed");
 
+	if(Safe_Com_Release(m_pAlphaShaderCB))
+		MSG_BOX(L"m_pAlphaShaderCB Release Failed");
 
 	if (Safe_Com_Release(m_pRenderTargetView))
 		MSG_BOX(L"m_pRenderTargetView Release Failed");

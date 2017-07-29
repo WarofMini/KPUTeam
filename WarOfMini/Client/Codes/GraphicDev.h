@@ -39,6 +39,8 @@ private:
 	ID3D11Buffer*					m_pPointLightShaderCB;
 	ID3D11Buffer*					m_pSpotLightShaderCB;
 	ID3D11Buffer*					m_pMaterialShaderCB;
+	ID3D11Buffer*					m_pAlphaShaderCB;
+
 
 	ID3D11SamplerState*				m_pBaseSampler;
 
@@ -87,6 +89,7 @@ public:
 	ID3D11Buffer*					GetPointLightShaderCB();
 	ID3D11Buffer*					GetSpotLightShaderCB();
 	ID3D11Buffer*					GetMaterialShaderCB();
+	ID3D11Buffer*					GetAlphaShaderCB();
 
 	ID3D11SamplerState*				GetBaseSampler();
 	ID3D11Device*					GetGraphicDevice();

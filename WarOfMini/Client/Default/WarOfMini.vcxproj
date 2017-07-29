@@ -357,6 +357,10 @@
     <Image Include="WarOfMini.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderCode\Shader_Alpha.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="..\Bin\ShaderCode\Shader_Default.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </ShaderType>

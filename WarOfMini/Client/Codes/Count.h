@@ -13,6 +13,9 @@ private:
 private:
 	_float	m_fCount;
 	_bool	m_bCheck;
+	_float	m_fAlpha;
+	_bool	m_bChangeCount;
+	_bool	m_bEnd;
 
 public:
 	static CCountUI* Create(ID3D11DeviceContext* pContext);
@@ -28,6 +31,11 @@ protected:
 
 public:
 	void	SetCount(_float fCount);
+	void	AlphaUpdate(const _float & fTimeDelta);
+	void	ResetSize(void);
+	void	LastResetSize(void);
+	void	GrowSize(const _float & fTimeDelta);
+	void	LastGrowSize(const _float & fTimeDelta);
 };
 
 

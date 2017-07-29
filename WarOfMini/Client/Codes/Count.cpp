@@ -11,6 +11,9 @@ CCountUI::CCountUI(ID3D11DeviceContext * pContext)
 : CUI(pContext)
 , m_fCount(-1.0f)
 , m_bCheck(false)
+, m_fAlpha(1.0f)
+, m_bChangeCount(false)
+, m_bEnd(false)
 {
 }
 
@@ -30,7 +33,6 @@ CCountUI* CCountUI::Create(ID3D11DeviceContext * pContext)
 
 HRESULT CCountUI::Initialize(void)
 {
-	m_strTextureName = L"Texture_CountNumber";
 
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
@@ -64,15 +66,7 @@ _int CCountUI::Update(const _float & fTimeDelta)
 	if (m_bCheck == false)
 		return 0;
 
-	if (m_fCount == 3)
-		m_iTextureNumber = 2;
-	else if(m_fCount == 2)
-		m_iTextureNumber = 1;
-	else if (m_fCount == 1)
-		m_iTextureNumber = 0;
-	
-
-
+	AlphaUpdate(fTimeDelta);
 
 	CGameObject::Update(fTimeDelta);
 
@@ -81,7 +75,7 @@ _int CCountUI::Update(const _float & fTimeDelta)
 	XMStoreFloat4x4(&m_pProj, XMMatrixOrthographicLH(_float(WINCX), _float(WINCY), 0.0f, 1.0f));
 
 
-	return 0;
+	return m_bEnd;
 }
 
 void CCountUI::Render(void)
@@ -93,9 +87,12 @@ void CCountUI::Render(void)
 		return ;
 
 
-	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Default"));
+	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Alpha"));
 
 	ID3D11Buffer* pBaseShaderCB = CGraphicDev::GetInstance()->GetBaseShaderCB();
+	ID3D11Buffer* pCountShaderCB = CGraphicDev::GetInstance()->GetAlphaShaderCB();
+
+
 	ID3D11SamplerState* pBaseSampler = CGraphicDev::GetInstance()->GetBaseSampler();
 
 	BASESHADER_CB tBaseShaderCB;
@@ -120,9 +117,15 @@ void CCountUI::Render(void)
 
 	m_pContext->UpdateSubresource(pBaseShaderCB, 0, NULL, &tBaseShaderCB, 0, 0);
 
-	m_pContext->VSSetShader(CShaderMgr::GetInstance()->Get_VertexShader(L"Shader_Default"), NULL, 0);
+	ALPHA_CB tAlphaShaderCB;
+	tAlphaShaderCB.fAlpha = m_fAlpha;
+
+	m_pContext->UpdateSubresource(pCountShaderCB, 0, NULL, &tAlphaShaderCB, 0, 0);
+
+	m_pContext->VSSetShader(CShaderMgr::GetInstance()->Get_VertexShader(L"Shader_Alpha"), NULL, 0);
 	m_pContext->VSSetConstantBuffers(0, 1, &pBaseShaderCB);
-	m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_Default"), NULL, 0);
+	m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_Alpha"), NULL, 0);
+	m_pContext->PSSetConstantBuffers(1, 1, &pCountShaderCB);
 	m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
 
 	m_pTexture->Render(0, m_iTextureNumber);
@@ -145,7 +148,7 @@ HRESULT CCountUI::Ready_Component(void)
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Buffer", pComponent));
 
 	//Texture
-	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, m_strTextureName.c_str());
+	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, L"Texture_CountNumber");
 	m_pTexture = dynamic_cast<CTextures*>(pComponent);
 	if (pComponent == NULL) return E_FAIL;
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Texture", pComponent));
@@ -166,4 +169,120 @@ void CCountUI::SetCount(_float fCount)
 
 	if (m_fCount == 3)
 		m_bCheck = true;
+}
+
+void CCountUI::AlphaUpdate(const _float & fTimeDelta)
+{
+
+	if (m_fCount == 3)
+	{
+		m_iTextureNumber = 2;
+
+		if (!m_bChangeCount)
+		{
+			m_fAlpha = 1.f;
+			m_bChangeCount = true;
+			ResetSize();
+		}
+		else
+		{
+			m_fAlpha = max(m_fAlpha - fTimeDelta, 0.0f);
+			GrowSize(fTimeDelta);
+
+		}
+
+	}
+	else if (m_fCount == 2)
+	{
+		m_iTextureNumber = 1;
+
+		if (m_bChangeCount)
+		{
+			m_fAlpha = 1.f;
+			m_bChangeCount = false;
+			ResetSize();
+		}
+		else
+		{
+			m_fAlpha = max(m_fAlpha - fTimeDelta, 0.0f);
+			GrowSize(fTimeDelta);
+		}
+	}
+	else if (m_fCount == 1)
+	{
+		m_iTextureNumber = 0;
+
+		if (!m_bChangeCount)
+		{
+			m_fAlpha = 1.f;
+			m_bChangeCount = true;
+			ResetSize();
+		}
+		else
+		{
+			m_fAlpha = max(m_fAlpha - fTimeDelta, 0.0f);
+			GrowSize(fTimeDelta);
+		}
+	}
+	else if (m_fCount == 0)
+	{
+		m_iTextureNumber = 3;
+
+		if(m_bChangeCount)
+		{
+			m_fAlpha = 1.f;
+			m_bChangeCount = false;
+			LastResetSize();
+		}
+		else
+		{
+			m_fAlpha = max(m_fAlpha - fTimeDelta, 0.0f);
+			LastGrowSize(fTimeDelta);
+
+			if (m_fAlpha <= 0.0f)
+			{
+				m_bCheck = false;
+				m_fAlpha = 1.f;
+				m_bChangeCount = false;
+				ResetSize();
+				m_bEnd = true;
+			}
+		}
+	}
+}
+
+void CCountUI::ResetSize(void)
+{
+	m_fSizeX = 100;
+	m_fSizeY = 100;
+
+	m_fOriginSizeX = 100;
+	m_fOriginSizeY = 100;
+}
+
+void CCountUI::LastResetSize(void)
+{
+	m_fSizeX = 200;
+	m_fSizeY = 100;
+
+	m_fOriginSizeX = 200;
+	m_fOriginSizeY = 100;
+}
+
+void CCountUI::GrowSize(const _float & fTimeDelta)
+{
+	m_fSizeX += (fTimeDelta * 100.f);
+	m_fSizeY += (fTimeDelta * 100.f);
+
+	m_fOriginSizeX += (fTimeDelta * 100.f);
+	m_fOriginSizeY += (fTimeDelta * 100.f);
+}
+
+void CCountUI::LastGrowSize(const _float & fTimeDelta)
+{
+	m_fSizeX += (fTimeDelta * 200.f);
+	m_fSizeY += (fTimeDelta * 100.f);
+
+	m_fOriginSizeX += (fTimeDelta * 200.f);
+	m_fOriginSizeY += (fTimeDelta * 100.f);
 }

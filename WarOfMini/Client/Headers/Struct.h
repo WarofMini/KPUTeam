@@ -71,6 +71,12 @@ typedef struct tagUI_CB
 	XMVECTOR vPadding;
 }UI_CB;
 
+typedef struct tagALPHA_CB
+{
+	_float	 fAlpha;
+	XMVECTOR vPadding;
+}ALPHA_CB;
+
 //Light=================================
 typedef struct tagDirectionalLight_CB
 {

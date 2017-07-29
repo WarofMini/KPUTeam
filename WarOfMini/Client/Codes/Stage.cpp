@@ -834,7 +834,7 @@ HRESULT CStage::InitUIObject(void)
 	((CUI*)pGameObject)->SetSizeX(250);
 	((CUI*)pGameObject)->SetSizeY(45);
 	((CUI*)pGameObject)->SetMoveX(-650.f);
-	((CUI*)pGameObject)->SetMoveY(400.f);
+	((CUI*)pGameObject)->SetMoveY(350.f);
 	((CUI*)pGameObject)->ComputeFXFY();
 
 	pLayer->Ready_Object(L"UI", pGameObject);
