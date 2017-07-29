@@ -54,7 +54,7 @@ public:
 
 private:
 	vector<Ser_PLAYER_DATA> m_vecPlayer;
-
+	strStation				m_strStation[3];
 public:
 	priority_queue<event_type, vector<event_type>, mycomp> timer_queue;
 	mutex timer_lock;

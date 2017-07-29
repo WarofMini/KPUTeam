@@ -126,6 +126,29 @@ struct Ser_Time_DATA {
 	float time;						//시간 float값
 };
 
+struct Ser_Station_DATA
+{
+	BYTE size;
+	BYTE type;
+	int team;
+	bool occupation;//true 점령하러옴-false-아님
+	BYTE stationID;
+};
+struct strStation
+{
+	BYTE stationID;
+	BYTE flagState;	//현재 깃발 상태 0 X, 1 1팀, 2 2팀
+	BYTE ATeamCnt;
+	BYTE BTeamCnt;
+	float fTime;
+};
+struct Ser_CurStation_DATA
+{
+	BYTE size;
+	BYTE type;
+	strStation station[3];
+};
+
 struct Ser_Packet_Remove_Player
 {
 	BYTE size;
@@ -177,6 +200,8 @@ enum ProcessPacket
 	CLIENT_DIRECTION,	 // direction 값을 받아오자.
 	CLIENT_ANIMATION,
 	COLLISION_LAY,
+	INGAME_STATION,
+	INGAME_CUR_STATION,
 	TIMECOUNT,
 	CLIENT_READY,
 	CLIENT_STAGE,

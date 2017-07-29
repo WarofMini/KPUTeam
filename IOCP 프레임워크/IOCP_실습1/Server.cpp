@@ -92,6 +92,9 @@ void CServer::Initialize(void)
 		error_quit(L"Server Initalize Fail", Error_No);
 	}
 
+	ZeroMemory(m_strStation, sizeof(strStation) * 3);
+	for (int i = 0; i < 3; ++i)
+		m_strStation[i].stationID = i;
 }
 
 void CServer::CheckCPUCoreCount()
@@ -375,7 +378,7 @@ void CServer::Timer_Thread()
 
 	while (1)
 	{
-		if (m_iStarterCnt >= 2)
+		//if (m_iStarterCnt >= 2)
 		{
 			for (int i = 6; i > 0; --i)
 			{
@@ -401,21 +404,38 @@ void CServer::Timer_Thread()
 				}
 			}
 
-			int iTime = 100;
+			float fTime = 0.f;
 			while (true)
 			{
-				CTimer::TimerCount(1.f);
-				iTime--;
-				Ser_Time_DATA timepacket;
-				timepacket.size = sizeof(timepacket);
-				timepacket.type = TIMECOUNT;
-				timepacket.gamestate = GS_START;
-				timepacket.time = iTime;
+				fTime = CTimer::FrameSec();
+				for (int i = 0; i < 3; ++i)
+				{
+					if (m_strStation[i].ATeamCnt != 0 && m_strStation[i].BTeamCnt == 0)
+						m_strStation[i].fTime += fTime * m_strStation[i].ATeamCnt;
+					if (m_strStation[i].fTime >= 3.f)
+					{
+						m_strStation[i].fTime = 3.f;
+						m_strStation[i].flagState = 1;// FLAG_TEAM1;
 
+					}
+
+					if (m_strStation[i].BTeamCnt != 0 && m_strStation[i].ATeamCnt == 0)
+						m_strStation[i].fTime -= fTime * m_strStation[i].BTeamCnt;
+					if (m_strStation[i].fTime <= -3.f)
+					{
+						m_strStation[i].fTime = -3.f;
+						m_strStation[i].flagState = 2;// FLAG_TEAM1;
+					}
+				}
+
+				Ser_CurStation_DATA curStationData;
+				memcpy(&curStationData.station[0], m_strStation, sizeof(strStation) * 3);
+				curStationData.size = sizeof(Ser_CurStation_DATA);
+				curStationData.type = INGAME_CUR_STATION;
 				for (int i = 0; i < m_Client.size(); ++i)
 				{
 					if (m_Client[i]->connected)
-						SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&timepacket));
+						SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&curStationData));
 				}
 			}
 		}
@@ -612,6 +632,38 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//±Ùµ¥ ¾ê
 		}*/
 	}
 		break;
+	case INGAME_STATION:
+	{
+		Ser_Station_DATA strStationData;
+		strStationData = *reinterpret_cast<Ser_Station_DATA*>((Ser_Station_DATA*)&buf[2]);
+
+		strStation& Station = m_strStation[strStationData.stationID];
+		
+		if (strStationData.team == 0)//TeamA
+		{
+			if(strStationData.occupation)
+				++Station.ATeamCnt;
+			else
+				--Station.ATeamCnt;
+		}
+		else//TeamB
+		{
+			if (strStationData.occupation)
+				++Station.BTeamCnt;
+			else
+				--Station.BTeamCnt;
+		}
+
+		/*Ser_CurStation_DATA curStationData;
+		memcpy(&curStationData.station[0], m_strStation, sizeof(strStation) * 3);
+		curStationData.size = sizeof(Ser_CurStation_DATA);
+		curStationData.type = INGAME_CUR_STATION;
+		for (int i = 0; i < vecID.size(); ++i)
+		{
+			SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&curStationData));
+		}*/
+	}
+	break;
 	case PLAYER_DISCONNECTED:
 	{
 	/*	Ser_Packet_Remove_Player RemovePlayer;
