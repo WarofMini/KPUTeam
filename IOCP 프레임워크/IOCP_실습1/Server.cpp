@@ -296,15 +296,14 @@ void CServer::Worker_thread()
 		// 근데 이건 아니지, 왜냐? 서버 자기 자신이 딴 클라한테 보냈기 때문에, return 이 false 일 수가 없어
 		if (FALSE == Result || 0 == iosize)
 		{
-			/*if (FALSE == Result)
+			if (FALSE == Result)
 			{
 				int Error_no = WSAGetLastError();
 				error_display("WorkerThread Start GetQueuedCompletionStatus", Error_no);
-			}*/
+			}
 
-			SendRemovePlayerPacket(key);
-
-			cout << "[No. " << key << "] Disconnected "<< endl;
+			//SendRemovePlayerPacket(key);
+			//cout << "[No. " << key << "] Disconnected "<< endl;
 			continue;
 
 		}
@@ -711,17 +710,20 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 	break;
 	case PLAYER_DISCONNECTED:
 	{
-	/*	Ser_Packet_Remove_Player RemovePlayer;
-		RemovePlayer = *reinterpret_cast<Ser_Packet_Remove_Player*>((Ser_Packet_Remove_Player*)&buf[2]);
+		Ser_EscapeGame EscapeGameData;
+		EscapeGameData = *reinterpret_cast<Ser_EscapeGame*>((Ser_EscapeGame*)&buf[2]);
 
-		for (int i = 0; i < m_vecPlayer.size(); ++i)
+		for (int i = 0; i < vecID.size(); ++i)
 		{
-			if (m_vecPlayer[i].ID == RemovePlayer.id)
+			if (m_vecPlayer[vecID[i]].ID == EscapeGameData.id)
 				continue;
-			m_vecPlayer[i].type = PLAYER_DISCONNECTED;
-			SendRemovePlayerPacket(i, i);
+			m_vecPlayer[vecID[i]].type = PLAYER_DISCONNECTED;
+			SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&EscapeGameData));
 		}
-	*/
+
+		closesocket(m_Client[EscapeGameData.id]->sock);
+		m_Client[EscapeGameData.id]->connected = false;
+		cout << "[No. " << EscapeGameData.id << "] Disconnected " << endl;
 	}
 	break;
 	}

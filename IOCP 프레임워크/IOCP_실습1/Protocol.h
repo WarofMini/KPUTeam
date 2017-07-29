@@ -163,6 +163,13 @@ struct Ser_STATE_DATA {				// 게임 전체 상태
 	BYTE gamestate;					// 0, 1, 2, 3
 	BYTE timecount;					// 4, 3, 2, 1, 
 };
+
+struct Ser_EscapeGame
+{
+	BYTE size;
+	BYTE type;						// 1
+	WORD id;
+};
 ////////////////////////////////////////////////타이머
 
 struct event_type {
