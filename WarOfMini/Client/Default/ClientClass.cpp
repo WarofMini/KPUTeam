@@ -457,8 +457,6 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 		{
 			((CCountUI*)*iter)->SetCount(m_time->time);
 		}
-
-		cout << "TimeCount : " << m_time->time << endl;
 	}
 	break;
 	case CLIENT_READY:
