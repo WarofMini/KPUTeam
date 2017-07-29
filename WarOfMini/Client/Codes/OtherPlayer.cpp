@@ -66,7 +66,7 @@ HRESULT COtherPlayer::Initialize(ID3D11Device* pGraphicDev)
 	m_pEquipment[0] = CGun::Create(pGraphicDev, m_pContext);
 
 	if (m_iID % 2 == 0)
-		m_iTextureNumber = 0;
+		m_iTextureNumber = 0;		//이걸 그냥 전역으로 만들어버려 ?
 	else
 		m_iTextureNumber = 1;
 
