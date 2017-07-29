@@ -333,7 +333,7 @@ _float CStation::Length(XMFLOAT3& xmf3Vector1, XMFLOAT3& xmf3Vector2)
 void CStation::SetCircleGage(CCircle * pGage)
 {
 	m_pCircleGage = pGage;
-	m_pCircleGage->SetTransformPosition(XMFLOAT3(m_pTransform->m_vPos.x, m_pTransform->m_vPos.y - 37.0f, m_pTransform->m_vPos.z));
+	m_pCircleGage->SetTransformPosition(XMFLOAT3(m_pTransform->m_vPos.x, m_pTransform->m_vPos.y - 36.0f, m_pTransform->m_vPos.z));
 	m_pCircleGage->SetTransformRotate(XMFLOAT3(90.f, 0.0f, 0.0f));
 	m_pCircleGage->SetTransformScale(XMFLOAT3(m_fCircleGageRadius, m_fCircleGageRadius, m_fCircleGageRadius));
 }
@@ -341,7 +341,7 @@ void CStation::SetCircleGage(CCircle * pGage)
 void CStation::SetCircle(CCircle * pCircle)
 {
 	m_pCircle = pCircle;
-	m_pCircle->SetTransformPosition(XMFLOAT3(m_pTransform->m_vPos.x, m_pTransform->m_vPos.y - 37.5f, m_pTransform->m_vPos.z));
+	m_pCircle->SetTransformPosition(XMFLOAT3(m_pTransform->m_vPos.x, m_pTransform->m_vPos.y - 36.5f, m_pTransform->m_vPos.z));
 	m_pCircle->SetTransformRotate(XMFLOAT3(90.f, 0.0f, 0.0f));
 	m_pCircle->SetTransformScale(XMFLOAT3(m_fCircleRadius, m_fCircleRadius, m_fCircleRadius));
 }

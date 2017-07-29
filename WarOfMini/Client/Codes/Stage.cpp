@@ -610,12 +610,12 @@ HRESULT CStage::InitPhysicsObject(void)
 
 	//점령전을 위한 첫번째 기지================================================================================
 
-	XMFLOAT3 vStationOnePos = XMFLOAT3(300.f, 38.f, 100.f);
+	XMFLOAT3 vStationOnePos = XMFLOAT3(300.f, 37.f, 200.f);
 
 	//Flag
 	CCloth* pClothObject = CCloth::Create(m_pContext, L"Buffer_FlagTexOne");
 	(pClothObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(1.0f, 1.0f, 1.0f), m_pCooking, "PhysicsCloth");
-	(pClothObject)->ClothSetPosition(XMFLOAT3(vStationOnePos.x + 20.f, vStationOnePos.y + 35.f, vStationOnePos.z));
+	(pClothObject)->ClothSetPosition(XMFLOAT3(vStationOnePos.x + 20.f, vStationOnePos.y + 36.f, vStationOnePos.z));
 	(pClothObject)->ClothSetRotate(XMFLOAT3((_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f)));
 	(pClothObject)->SetWind(PxVec3(1.0f, 0.1f, 0.0f), 40.0f, PxVec3(0.0f, 10.0f, 10.0f));
 	pLayer->Ready_Object(L"PhysicsCloth", pClothObject);
@@ -656,11 +656,11 @@ HRESULT CStage::InitPhysicsObject(void)
 
 	//점령전을 위한 두번째 기지==================================================================================
 
-	XMFLOAT3 vStationTwoPos = XMFLOAT3(500.f, 38.f, 100.f);
+	XMFLOAT3 vStationTwoPos = XMFLOAT3(1000.f, 37.f, 1100.f);
 
 	CCloth* pClothObjectTwo = CCloth::Create(m_pContext, L"Buffer_FlagTexTwo");
 	(pClothObjectTwo)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(1.0f, 1.0f, 1.0f), m_pCooking, "PhysicsCloth");
-	(pClothObjectTwo)->ClothSetPosition(XMFLOAT3(vStationTwoPos.x + 20.f, vStationTwoPos.y + 35.f, vStationTwoPos.z));
+	(pClothObjectTwo)->ClothSetPosition(XMFLOAT3(vStationTwoPos.x + 20.f, vStationTwoPos.y + 36.f, vStationTwoPos.z));
 	(pClothObjectTwo)->ClothSetRotate(XMFLOAT3((_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f)));
 	(pClothObjectTwo)->SetWind(PxVec3(1.0f, 0.1f, 0.0f), 40.0f, PxVec3(0.0f, 10.0f, 10.0f));
 	pLayer->Ready_Object(L"PhysicsCloth", pClothObjectTwo);
@@ -698,11 +698,11 @@ HRESULT CStage::InitPhysicsObject(void)
 
 	//점령전을 위한 세번째 기지==================================================================================
 
-	XMFLOAT3 vStationThreePos = XMFLOAT3(700.f, 38.f, 100.f);
+	XMFLOAT3 vStationThreePos = XMFLOAT3(1800.f, 37.f, 500.f);
 
 	CCloth* pClothObjectThree = CCloth::Create(m_pContext, L"Buffer_FlagTexThree");
 	(pClothObjectThree)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(1.0f, 1.0f, 1.0f), m_pCooking, "PhysicsCloth");
-	(pClothObjectThree)->ClothSetPosition(XMFLOAT3(vStationThreePos.x + 20.f, vStationThreePos.y + 35.f, vStationThreePos.z));
+	(pClothObjectThree)->ClothSetPosition(XMFLOAT3(vStationThreePos.x + 20.f, vStationThreePos.y + 36.f, vStationThreePos.z));
 	(pClothObjectThree)->ClothSetRotate(XMFLOAT3((_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f)));
 	(pClothObjectThree)->SetWind(PxVec3(1.0f, 0.1f, 0.0f), 40.0f, PxVec3(0.0f, 10.0f, 10.0f));
 	pLayer->Ready_Object(L"PhysicsCloth", pClothObjectThree);
