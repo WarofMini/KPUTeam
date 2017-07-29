@@ -393,92 +393,92 @@ void CServer::Timer_Thread()
 
 	while (1)
 	{
-		//if (m_iStarterCnt >= 2)
+		if(m_iStarterCnt < 2)
+			continue;
+
+		for (int i = 4; i > 0; --i)
 		{
-			for (int i = 6; i > 0; --i)
+			CTimer::TimerCount(1.f);
+			cout << "ReCount : " << i - 1 << endl;
+
+			Ser_Time_DATA timepacket;
+			timepacket.size = sizeof(timepacket);
+			timepacket.type = TIMECOUNT;
+			timepacket.gamestate = GS_READY;
+			timepacket.time = i - 1;
+
+			if (i == 1)
 			{
-				CTimer::TimerCount(1.f);
-				cout << "ReCount : " << i - 1 << endl;
-
-				Ser_Time_DATA timepacket;
-				timepacket.size = sizeof(timepacket);
-				timepacket.type = TIMECOUNT;
-				timepacket.gamestate = GS_READY;
-				timepacket.time = i - 1;
-
-				if (i == 1)
-				{
-					//startTime = CTimer::SetTime();
-					cout << "Play ~!" << endl;
-				}
-
-				for (int i = 0; i < m_Client.size(); ++i)
-				{
-					if(m_Client[i]->connected)
-						SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&timepacket));
-				}
+				//startTime = CTimer::SetTime();
+				cout << "Play ~!" << endl;
 			}
 
-			float fTime = 0.f;
-			while (true)
+			for (int i = 0; i < m_Client.size(); ++i)
 			{
-				fTime = CTimer::FrameSec();
-				for (int i = 0; i < 3; ++i)
+				if (m_Client[i]->connected)
+					SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&timepacket));
+			}
+		}
+
+		float fTime = 0.f;
+		while (true)
+		{
+			fTime = CTimer::FrameSec();
+			for (int i = 0; i < 3; ++i)
+			{
+				if (m_strStation[i].ATeamCnt != 0 && m_strStation[i].BTeamCnt == 0)
 				{
-					if (m_strStation[i].ATeamCnt != 0 && m_strStation[i].BTeamCnt == 0)
-					{
-						m_strStation[i].fTime += fTime * m_strStation[i].ATeamCnt;
-						if (m_strStation[i].flagState == 1)
-							m_strStation[i].fTime = 0.f;
-					}
-					if (m_strStation[i].fTime >= 3.f)
-					{
-						m_strStation[i].fTime = 3.f;
-						m_strStation[i].flagState = 1;// FLAG_TEAM1;
+					m_strStation[i].fTime += fTime * m_strStation[i].ATeamCnt;
+					if (m_strStation[i].flagState == 1)
+						m_strStation[i].fTime = 0.f;
+				}
+				if (m_strStation[i].fTime >= 3.f)
+				{
+					m_strStation[i].fTime = 3.f;
+					m_strStation[i].flagState = 1;// FLAG_TEAM1;
 
-					}
+				}
 
-					if (m_strStation[i].BTeamCnt != 0 && m_strStation[i].ATeamCnt == 0)
-					{
-						m_strStation[i].fTime -= fTime * m_strStation[i].BTeamCnt;
-						if (m_strStation[i].flagState == 2)
-							m_strStation[i].fTime = 0.f;
-					}
-					if (m_strStation[i].fTime <= -3.f)
-					{
-						m_strStation[i].fTime = -3.f;
-						m_strStation[i].flagState = 2;// FLAG_TEAM1;
-					}
+				if (m_strStation[i].BTeamCnt != 0 && m_strStation[i].ATeamCnt == 0)
+				{
+					m_strStation[i].fTime -= fTime * m_strStation[i].BTeamCnt;
+					if (m_strStation[i].flagState == 2)
+						m_strStation[i].fTime = 0.f;
+				}
+				if (m_strStation[i].fTime <= -3.f)
+				{
+					m_strStation[i].fTime = -3.f;
+					m_strStation[i].flagState = 2;// FLAG_TEAM1;
+				}
 
-					if (m_strStation[i].ATeamCnt == 0 && m_strStation[i].BTeamCnt == 0)
+				if (m_strStation[i].ATeamCnt == 0 && m_strStation[i].BTeamCnt == 0)
+				{
+					if (m_strStation[i].fTime < 0.f)
 					{
-						if (m_strStation[i].fTime < 0.f)
-						{
-							m_strStation[i].fTime += fTime;
-							if (m_strStation[i].fTime > 0.f)
-								m_strStation[i].fTime = 0.f;
-						}
+						m_strStation[i].fTime += fTime;
 						if (m_strStation[i].fTime > 0.f)
-						{
-							m_strStation[i].fTime -= fTime;
-							if (m_strStation[i].fTime < 0.f)
-								m_strStation[i].fTime = 0.f;
-						}
+							m_strStation[i].fTime = 0.f;
+					}
+					if (m_strStation[i].fTime > 0.f)
+					{
+						m_strStation[i].fTime -= fTime;
+						if (m_strStation[i].fTime < 0.f)
+							m_strStation[i].fTime = 0.f;
 					}
 				}
-
-				
-				Ser_CurStation_DATA curStationData;
-				memcpy(&curStationData.station[0], m_strStation, sizeof(strStation) * 3);
-				curStationData.size = sizeof(Ser_CurStation_DATA);
-				curStationData.type = INGAME_CUR_STATION;
-				for (int i = 0; i < m_Client.size(); ++i)
-				{
-					if (m_Client[i]->connected)
-						SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&curStationData));
-				}
-				
 			}
+
+
+			Ser_CurStation_DATA curStationData;
+			memcpy(&curStationData.station[0], m_strStation, sizeof(strStation) * 3);
+			curStationData.size = sizeof(Ser_CurStation_DATA);
+			curStationData.type = INGAME_CUR_STATION;
+			for (int i = 0; i < m_Client.size(); ++i)
+			{
+				if (m_Client[i]->connected)
+					SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&curStationData));
+			}
+
 		}
 	}
 
