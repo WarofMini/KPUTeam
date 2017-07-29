@@ -288,13 +288,13 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 				break;*/
 	case INIT_CLIENT:
 	{
- 		m_pPlayerData = reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)buf);
+		m_pPlayerData = reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)buf);
 
 		//첫 입장시 플레이어 id 값. 
 
 		id = m_pPlayerData->ID;
 
-//		sendPacket(sizeof(Ser_PLAYER_DATA), INIT_CLIENT, reinterpret_cast<BYTE*>(&id));
+		//		sendPacket(sizeof(Ser_PLAYER_DATA), INIT_CLIENT, reinterpret_cast<BYTE*>(&id));
 
 		if (first_time)
 		{
@@ -340,6 +340,7 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 			}
 		}
 	}
+	break;
 	case CLIENT_POSITION:
 	{
 		m_pPlayerData = reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)buf);
@@ -373,7 +374,7 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 			}
 		}
 	}
-		break;
+	break;
 	case CLIENT_DIRECTION:
 		break;
 	case CLIENT_ANIMATION:
@@ -400,7 +401,7 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 			}
 		}
 	}
-		break;
+	break;
 	case COLLISION_LAY:
 	{
 		/*Ser_COLLLAY_DATA strCollData = *reinterpret_cast<Ser_COLLLAY_DATA*>((Ser_COLLLAY_DATA*)buf);
@@ -418,7 +419,7 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 		pGameObject->SetTransformPosition(strCollData.xmf3CollPos);
 		pLayer->Ready_Object(L"Effect", pGameObject);*/
 	}
-		break;
+	break;
 	case INGAME_CUR_STATION:
 	{
 		Ser_CurStation_DATA curStationdata = *reinterpret_cast<Ser_CurStation_DATA*>((Ser_CurStation_DATA*)buf);
@@ -436,7 +437,7 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 			((CStation*)*iter)->SerTest(curStationdata.station[i++].flagState);
 		}
 	}
-		break;
+	break;
 	case TIMECOUNT:
 	{
 		Ser_Time_DATA timedata = *reinterpret_cast<Ser_Time_DATA*>((Ser_Time_DATA*)buf);
@@ -460,7 +461,7 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 
 		Ser_Packet_Remove_Player PlayerRemove = *reinterpret_cast<Ser_Packet_Remove_Player*>((Ser_Packet_Remove_Player*)buf);
 
-		
+
 		pScene = CManagement::GetInstance()->GetScene();
 		pLayer = pScene->FindLayer(L"Layer_GameLogic");
 		list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"OtherPlayer");
@@ -477,8 +478,8 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 			}
 		}
 
-	//	list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"")
+		//	list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"")
 	}
-		break;
+	break;
 	}
 }
