@@ -467,6 +467,7 @@ void CServer::Timer_Thread()
 					}
 				}
 
+				
 				Ser_CurStation_DATA curStationData;
 				memcpy(&curStationData.station[0], m_strStation, sizeof(strStation) * 3);
 				curStationData.size = sizeof(Ser_CurStation_DATA);
@@ -476,6 +477,7 @@ void CServer::Timer_Thread()
 					if (m_Client[i]->connected)
 						SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&curStationData));
 				}
+				
 			}
 		}
 	}
