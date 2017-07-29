@@ -705,9 +705,14 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 					CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
 					m_vtestpos = XMFLOAT3(Gunhit.block.position.x, Gunhit.block.position.y, Gunhit.block.position.z);
 
+					list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"OtherPlayer");
+
 					const char* pName = Gunhit.block.actor->getName();
 					string strFullName = pName;
-					int iStartIdx = strFullName.find("OtherPlayer_");
+					int iStartIdx = -1;
+					
+					if(pObjList)
+						iStartIdx = strFullName.find("OtherPlayer_");
 
 					int intValue = -1;
 					m_ColllayData.bShoot = true;

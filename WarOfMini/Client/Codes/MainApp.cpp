@@ -109,9 +109,18 @@ INT CMainApp::Update(const _float& fTimeDelta)
 	Set_Focus();
 	Debug_KeyCheck();
 
+	if (CInput::GetInstance()->Get_DIKeyState(DIK_ESCAPE))
+	{
+		Ser_EscapeGame EscapeGameData;
+		EscapeGameData.size = sizeof(Ser_EscapeGame);
+		EscapeGameData.type = PLAYER_DISCONNECTED;
+		EscapeGameData.id = g_myid;
+		g_Client->sendPacket(sizeof(Ser_EscapeGame), PLAYER_DISCONNECTED, reinterpret_cast<BYTE*>(&EscapeGameData));
+		Sleep(1000);
+		return 1;
+	}
 
 	return CManagement::GetInstance()->Update(fTimeDelta);
-
 	return 0;
 }
 

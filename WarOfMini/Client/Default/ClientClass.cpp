@@ -433,7 +433,7 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 		list<CGameObject*>::iterator iter = pObjList->begin();
 		list<CGameObject*>::iterator iter_end = pObjList->end();
 		for (int i = 0; iter != iter_end; ++iter, ++i)
-		{//게이지차는것도...
+		{//
 			((CStation*)*iter)->SerSetStation(curStationdata.station[i].flagState, curStationdata.station[i].fTime);
 		}
 	}
@@ -458,9 +458,7 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 	break;
 	case PLAYER_DISCONNECTED:
 	{
-
 		Ser_Packet_Remove_Player PlayerRemove = *reinterpret_cast<Ser_Packet_Remove_Player*>((Ser_Packet_Remove_Player*)buf);
-
 
 		pScene = CManagement::GetInstance()->GetScene();
 		pLayer = pScene->FindLayer(L"Layer_GameLogic");

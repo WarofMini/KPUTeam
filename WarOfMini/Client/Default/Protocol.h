@@ -29,7 +29,7 @@ using namespace chrono;
 #define MAX_BUFFER_SIZE	4000
 #define MAX_PACKET_SIZE 255
 
-#define MAX_USER 10
+#define MAX_USER 9
 
 #define OP_RECV 1
 #define OP_SEND 2
@@ -76,6 +76,7 @@ struct PLAYER_INFO
 	Overlap_ex my_overapped;	// 여기안의 IOCPbuf 에 최초 recv 를 하면 
 	unsigned char Packetbuf[MAX_PACKET_SIZE]; // 요기 버퍼랑은 무슨 상관일까? -> 너가말한 버퍼를 담는 공간은 여기야
 	int id;
+	bool m_bRedBlue;
 	CRITICAL_SECTION cs;
 };
 //////////////////////////////////////////
@@ -96,6 +97,7 @@ struct Ser_PLAYER_DATA
 	XMFLOAT3 vDir;
 	BYTE SC_ID;
 	Ser_COLLLAY_DATA strColllayData;
+
 };
 
 struct Ser_Vec_PLAYER_DATA
@@ -105,6 +107,7 @@ struct Ser_Vec_PLAYER_DATA
 	int ID;	// 이게 클라이언트에게 줄 id 값이야
 	BYTE PlayerSize;
 	Ser_PLAYER_DATA vecPlayerData[10];
+
 };
 
 struct Ser_ANIMATION_DATA
@@ -159,6 +162,13 @@ struct Ser_STATE_DATA {				// 게임 전체 상태
 	BYTE type;						// 1
 	BYTE gamestate;					// 0, 1, 2, 3
 	BYTE timecount;					// 4, 3, 2, 1, 
+};
+
+struct Ser_EscapeGame
+{
+	BYTE size;
+	BYTE type;						// 1
+	WORD id;
 };
 ////////////////////////////////////////////////타이머
 

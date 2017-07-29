@@ -127,7 +127,8 @@ int APIENTRY wWinMain( HINSTANCE hInstance,
 
 				_float fTimeDelta_60 = CTimeMgr::GetInstance()->Get_TimeDelta(L"Timer_FPS:60");
 
-				pMainApp->Update(fTimeDelta_60);
+				if(pMainApp->Update(fTimeDelta_60))
+					break;
 				pMainApp->Render();
 			}
 
@@ -262,17 +263,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
 
-	case WM_KEYDOWN:
+	/*case WM_KEYDOWN:
 		switch (wParam)
 		{
 		case VK_ESCAPE:
 			PostQuitMessage(0);
 			break;
 		}
-		break;
-	case WM_DESTROY:
+		break;*/
+	/*case WM_DESTROY:
 		PostQuitMessage(0);
-		break;
+		break;*/
 	case WM_SOCKET:
 		g_Client->ProcessWinMessage(hWnd, message, wParam, lParam);
 		return 0;
