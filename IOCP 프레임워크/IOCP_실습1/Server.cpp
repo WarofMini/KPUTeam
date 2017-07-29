@@ -427,7 +427,11 @@ void CServer::Timer_Thread()
 				for (int i = 0; i < 3; ++i)
 				{
 					if (m_strStation[i].ATeamCnt != 0 && m_strStation[i].BTeamCnt == 0)
+					{
 						m_strStation[i].fTime += fTime * m_strStation[i].ATeamCnt;
+						if (m_strStation[i].flagState == 1)
+							m_strStation[i].fTime = 0.f;
+					}
 					if (m_strStation[i].fTime >= 3.f)
 					{
 						m_strStation[i].fTime = 3.f;
@@ -436,11 +440,31 @@ void CServer::Timer_Thread()
 					}
 
 					if (m_strStation[i].BTeamCnt != 0 && m_strStation[i].ATeamCnt == 0)
+					{
 						m_strStation[i].fTime -= fTime * m_strStation[i].BTeamCnt;
+						if (m_strStation[i].flagState == 2)
+							m_strStation[i].fTime = 0.f;
+					}
 					if (m_strStation[i].fTime <= -3.f)
 					{
 						m_strStation[i].fTime = -3.f;
 						m_strStation[i].flagState = 2;// FLAG_TEAM1;
+					}
+
+					if (m_strStation[i].ATeamCnt == 0 && m_strStation[i].BTeamCnt == 0)
+					{
+						if (m_strStation[i].fTime < 0.f)
+						{
+							m_strStation[i].fTime += fTime;
+							if (m_strStation[i].fTime > 0.f)
+								m_strStation[i].fTime = 0.f;
+						}
+						if (m_strStation[i].fTime > 0.f)
+						{
+							m_strStation[i].fTime -= fTime;
+							if (m_strStation[i].fTime < 0.f)
+								m_strStation[i].fTime = 0.f;
+						}
 					}
 				}
 
@@ -510,7 +534,8 @@ void CServer::SendRemovePlayerPacket(DWORD dwKey)
 			m_Client[i]->connected = false;
 			continue;
 		}
-		SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&packet));
+		//if(m_Client[i]->connected)
+			SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&packet));
 	}
 	/*if (m_Client[dwKey]->m_bRedBlue)
 		Ateam--;
