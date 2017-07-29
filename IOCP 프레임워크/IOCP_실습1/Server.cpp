@@ -210,16 +210,31 @@ void CServer::Accept_thread()
 		PlayerTemp.ID = User->id;
 		PlayerTemp.size = sizeof(Ser_PLAYER_DATA);
 		PlayerTemp.type = INIT_CLIENT;
-
-
-		if ((PlayerTemp.ID % 2) == 0)	//블루팀
+		
+		
+		for (int i = 0; i < MAX_USER; ++i)
 		{
-			PlayerTemp.vPos = XMFLOAT3(20.f, 0.f, 0.f);
+			if ((i % 2) == 0)	//블루팀
+			{
+				PlayerTemp.m_bRedBlue = true;
+				break;
+			}
+				
+			else							//레드팀
+			{
+				PlayerTemp.m_bRedBlue = false;
+				break;
+			}
+
+		}
+		if (PlayerTemp.m_bRedBlue == true)
+		{
+			PlayerTemp.vPos = XMFLOAT3(20.f * User->id, 0.f, 0.f);
 			PlayerTemp.vDir = XMFLOAT3(0.f, 0.f, 0.f);
 		}
-		else							//레드팀
-		{ 
-			PlayerTemp.vPos = XMFLOAT3(100, 0.f, 0.f);
+		else
+		{
+			PlayerTemp.vPos = XMFLOAT3(500.f * User->id, 0.f, 0.f);
 			PlayerTemp.vDir = XMFLOAT3(0.f, 0.f, 0.f);
 		}
 		//PlayerTemp.dwState = SOLDIER_IDLE;
@@ -233,7 +248,6 @@ void CServer::Accept_thread()
 		SendPacket(PlayerTemp.ID, reinterpret_cast<Packet*>(&PlayerTemp));
 
 		
-		//플레이어가 2명이상 입장 하게되면 시간이 가게 하자.
 		//int TimeInteeger = GetTickCount() + 1000;
 		//if (playerIndex >= 1)
 		//{

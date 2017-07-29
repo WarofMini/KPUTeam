@@ -29,7 +29,7 @@ using namespace chrono;
 #define MAX_BUFFER_SIZE	4000
 #define MAX_PACKET_SIZE 255
 
-#define MAX_USER 10
+#define MAX_USER 9
 
 #define OP_RECV 1
 #define OP_SEND 2
@@ -96,6 +96,8 @@ struct Ser_PLAYER_DATA
 	XMFLOAT3 vDir;
 	BYTE SC_ID;
 	Ser_COLLLAY_DATA strColllayData;
+	bool m_bRedBlue;
+
 };
 
 struct Ser_Vec_PLAYER_DATA
@@ -105,7 +107,6 @@ struct Ser_Vec_PLAYER_DATA
 	int ID;	// 이게 클라이언트에게 줄 id 값이야
 	BYTE PlayerSize;
 	Ser_PLAYER_DATA vecPlayerData[10];
-	bool m_bRedBlue;
 
 };
 
