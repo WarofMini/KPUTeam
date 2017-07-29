@@ -393,7 +393,9 @@ void CServer::Timer_Thread()
 
 	while (1)
 	{
-		if(m_iStarterCnt < 2)
+		cout << m_iStarterCnt;
+
+		if (m_iStarterCnt < 1)
 			continue;
 
 		for (int i = 4; i > 0; --i)
@@ -607,7 +609,7 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//±Ùµ¥ ¾ê
 	{
 		Ser_PLAYER_DATA strPlayerData;
 		strPlayerData = *reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)&buf[2]);
-		m_iStarterCnt++;
+		++m_iStarterCnt;
 		cout << "[NO. " << strPlayerData.ID << "]ID value Recv.. " << endl;
 		for (int i = 0; i < vecID.size(); ++i)
 		{
@@ -726,6 +728,7 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//±Ùµ¥ ¾ê
 		closesocket(m_Client[EscapeGameData.id]->sock);
 		m_Client[EscapeGameData.id]->connected = false;
 		cout << "[No. " << EscapeGameData.id << "] Disconnected " << endl;
+		--m_iStarterCnt;
 	}
 	break;
 	}
