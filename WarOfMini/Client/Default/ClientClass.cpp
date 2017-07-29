@@ -6,6 +6,7 @@
 #include "GraphicDev.h"
 #include "Player.h"
 #include "Bomb.h"
+#include "Station.h"
 
 int		g_myid;
 XMFLOAT3 g_vPos;
@@ -416,6 +417,24 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 		CGameObject* pGameObject = CBomb::Create(CGraphicDev::GetInstance()->GetContext());
 		pGameObject->SetTransformPosition(strCollData.xmf3CollPos);
 		pLayer->Ready_Object(L"Effect", pGameObject);*/
+	}
+		break;
+	case INGAME_CUR_STATION:
+	{
+		Ser_CurStation_DATA curStationdata = *reinterpret_cast<Ser_CurStation_DATA*>((Ser_CurStation_DATA*)buf);
+
+		pScene = CManagement::GetInstance()->GetScene();
+		pLayer = pScene->FindLayer(L"Layer_GameLogic");
+		list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"Station");
+		if (pObjList == NULL)
+			break;
+
+		list<CGameObject*>::iterator iter = pObjList->begin();
+		list<CGameObject*>::iterator iter_end = pObjList->end();
+		for (int i = 0; iter != iter_end; ++iter)
+		{//게이지차는것도...
+			((CStation*)*iter)->SerTest(curStationdata.station[i++].flagState);
+		}
 	}
 		break;
 	case TIMECOUNT:

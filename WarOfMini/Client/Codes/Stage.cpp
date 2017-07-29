@@ -636,7 +636,7 @@ HRESULT CStage::InitPhysicsObject(void)
 
 
 	//Station One
-	CStation* pStation = CStation::Create(m_pContext);
+	CStation* pStation = CStation::Create(m_pContext, 0);
 
 	if (NULL == pStation)
 		return E_FAIL;
@@ -682,7 +682,7 @@ HRESULT CStage::InitPhysicsObject(void)
 
 
 	//Station Two
-	CStation* pStationTwo = CStation::Create(m_pContext);
+	CStation* pStationTwo = CStation::Create(m_pContext, 1);
 	if (NULL == pStationTwo)
 		return E_FAIL;
 
@@ -693,7 +693,7 @@ HRESULT CStage::InitPhysicsObject(void)
 	pStationTwo->SetFlag(pClothObjectTwo);
 	pStationTwo->SetGageUI(pGageUI);
 	pStationTwo->SetCircle(pCircleTwo);
-	pLayer->Ready_Object(L"StationTwo", pStationTwo);
+	pLayer->Ready_Object(L"Station", pStationTwo);
 	//============================================================================================================
 
 	//점령전을 위한 세번째 기지==================================================================================
@@ -722,7 +722,7 @@ HRESULT CStage::InitPhysicsObject(void)
 	pLayer->Ready_Object(L"Circle", pCircleThree);
 
 	//Station Three
-	CStation* pStationThree = CStation::Create(m_pContext);
+	CStation* pStationThree = CStation::Create(m_pContext, 2);
 	if (NULL == pStationThree)
 		return E_FAIL;
 
@@ -733,7 +733,7 @@ HRESULT CStage::InitPhysicsObject(void)
 	pStationThree->SetFlag(pClothObjectThree);
 	pStationThree->SetGageUI(pGageUI);
 	pStationThree->SetCircle(pCircleThree);
-	pLayer->Ready_Object(L"StationThree", pStationThree);
+	pLayer->Ready_Object(L"Station", pStationThree);
 	//============================================================================================================
 
 

@@ -16,7 +16,7 @@ private:
 	virtual ~CStation(void);
 
 public:
-	static CStation* Create(ID3D11DeviceContext* pContext);
+	static CStation* Create(ID3D11DeviceContext* pContext, BYTE byStationID);
 
 public:
 	enum eFlagState { FLAG_EMPTY, FLAG_TEAM1, FLAG_TEAM2, FLAG_END };
@@ -31,6 +31,9 @@ private:
 	virtual HRESULT Ready_Component(void);
 
 private:
+	BYTE			m_byStationID;
+	bool			m_bPlayerInStation;
+
 	CCloth*			m_pFlag;
 	PxRigidStatic*	m_pPxActor;
 	CPlayer*		m_pPlayer;
@@ -54,6 +57,8 @@ public:
 
 	void			SetGageUI(CGageUI* pGage) { m_pGage = pGage; }
 	void			SetCircle(CCircle* pCircle);
+
+	void			SerTest(BYTE flagState);
 };
 
 #endif // Station_h__

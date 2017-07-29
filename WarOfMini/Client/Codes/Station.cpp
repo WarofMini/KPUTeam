@@ -22,6 +22,7 @@ CStation::CStation(ID3D11DeviceContext* pContext)
 , m_pGage(NULL)
 , m_pCircle(NULL)
 , m_fCircleRadius(1.0f)
+, m_bPlayerInStation(false)
 {
 	m_uiObjNum = MESHNUM_TOWER;
 }
@@ -30,12 +31,14 @@ CStation::~CStation(void)
 {
 }
 
-CStation* CStation::Create(ID3D11DeviceContext* pContext)
+CStation* CStation::Create(ID3D11DeviceContext* pContext, BYTE byStationID)
 {
 	CStation* pObject = new CStation(pContext);
 
 	if (FAILED(pObject->Initialize()))
 		Safe_Release(pObject);
+
+	pObject->m_byStationID = byStationID;
 
 	return pObject;
 }
@@ -238,34 +241,57 @@ void CStation::CollisionObject(const _float& fTimeDelta) //객체 충돌
 
 		if (m_fDist <= m_fFlagDist) //거점 범위안에 있는경우
 		{
+			if (m_bPlayerInStation == false)//처음 들어오는 경우
+			{
+				m_bPlayerInStation = true;
+				Ser_Station_DATA strStationData;
+				strStationData.size = sizeof(Ser_Station_DATA);
+				strStationData.type = INGAME_STATION;
+				strStationData.occupation = true;
+				strStationData.stationID = m_byStationID;
+				strStationData.team = g_myid % 2;
+				g_Client->sendPacket(sizeof(Ser_Station_DATA), INGAME_STATION, reinterpret_cast<BYTE*>(&strStationData));
+			}
+
 			//Circle Update
+			/*m_fCircleRadius = 190.0f;
+			m_pCircle->SetTransformScale(XMFLOAT3(m_fCircleRadius, m_fCircleRadius, m_fCircleRadius));*/
 
-			m_fCircleRadius = 190.0f;
-			m_pCircle->SetTransformScale(XMFLOAT3(m_fCircleRadius, m_fCircleRadius, m_fCircleRadius));
 
+			//if (m_eFlagState == FLAG_TEAM1/*객체가 어느쪽 팀인지*/) //이미 점령한 곳인 경우
+			//{
+			//	
+			//}
+			//else //점령 못한 거점일 경우
+			//{
+			//	m_pGage->SetGageStart(true);
 
-			if (m_eFlagState == FLAG_TEAM1/*객체가 어느쪽 팀인지*/) //이미 점령한 곳인 경우
-			{
-				
-			}
-			else //점령 못한 거점일 경우
-			{
-				m_pGage->SetGageStart(true);
-
-				if (m_pGage->GetGoalCheck() == true)
-				{
-					m_eFlagState = FLAG_TEAM1;
-					m_pFlag->Set_TextureNumber(m_eFlagState); //깃발의 텍스쳐 팀껄로 변환
-					m_pGage->ResetValue();
-				}
-			}
+			//	if (m_pGage->GetGoalCheck() == true)
+			//	{
+			//		m_eFlagState = FLAG_TEAM1;
+			//		m_pFlag->Set_TextureNumber(m_eFlagState); //깃발의 텍스쳐 팀껄로 변환
+			//		m_pGage->ResetValue();
+			//	}
+			//}
 		}
 		else
 		{
-			m_pGage->ResetValue();
+			if (m_bPlayerInStation == true)//
+			{
+				m_bPlayerInStation = false;
+				Ser_Station_DATA strStationData;
+				strStationData.size = sizeof(Ser_Station_DATA);
+				strStationData.type = INGAME_STATION;
+				strStationData.occupation = false;
+				strStationData.stationID = m_byStationID;
+				strStationData.team = g_myid % 2;
+				g_Client->sendPacket(sizeof(Ser_Station_DATA), INGAME_STATION, reinterpret_cast<BYTE*>(&strStationData));
+			}
+
+			/*m_pGage->ResetValue();
 
 			m_fCircleRadius = 1.0f;
-			m_pCircle->SetTransformScale(XMFLOAT3(m_fCircleRadius, m_fCircleRadius, m_fCircleRadius));
+			m_pCircle->SetTransformScale(XMFLOAT3(m_fCircleRadius, m_fCircleRadius, m_fCircleRadius));*/
 		}
 	}
 
@@ -288,4 +314,24 @@ void CStation::SetCircle(CCircle * pCircle)
 	m_pCircle->SetTransformPosition(XMFLOAT3(m_pTransform->m_vPos.x, m_pTransform->m_vPos.y - 37.5f, m_pTransform->m_vPos.z));
 	m_pCircle->SetTransformRotate(XMFLOAT3(90.f, 0.0f, 0.0f));
 	m_pCircle->SetTransformScale(XMFLOAT3(m_fCircleRadius, m_fCircleRadius, m_fCircleRadius));
+}
+
+void CStation::SerTest(BYTE flagState)
+{
+	switch (flagState)
+	{
+	case 0:
+		m_eFlagState = FLAG_EMPTY;
+		break;
+	case 1:
+		m_eFlagState = FLAG_TEAM1;
+		break;
+	case 2:
+		m_eFlagState = FLAG_TEAM2;
+		break;
+	default:
+		break;
+	}
+	m_pFlag->Set_TextureNumber(m_eFlagState); //깃발의 텍스쳐 팀껄로 변환
+
 }
