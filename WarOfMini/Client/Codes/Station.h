@@ -5,7 +5,6 @@
 
 class CCloth;
 class CPlayer;
-class CGageUI;
 class CCircle;
 
 class CStation
@@ -39,9 +38,10 @@ private:
 	CPlayer*		m_pPlayer;
 	_float			m_fFlagDist;
 	eFlagState		m_eFlagState;
-	CGageUI*		m_pGage;
+	CCircle*		m_pCircleGage;
 	CCircle*		m_pCircle;
 	_float			m_fCircleRadius;
+	_float			m_fCircleGageRadius;
 
 public:
 	void			BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, XMFLOAT3 vScale, PxCooking* pCooking, const char* name);
@@ -55,7 +55,7 @@ public:
 	void			SetFlagState(eFlagState eState) { m_eFlagState = eState; }
 	eFlagState		GetFlagState(void) { return m_eFlagState; }
 
-	void			SetGageUI(CGageUI* pGage) { m_pGage = pGage; }
+	void			SetCircleGage(CCircle* pGage);
 	void			SetCircle(CCircle* pCircle);
 
 	void			SerTest(BYTE flagState);

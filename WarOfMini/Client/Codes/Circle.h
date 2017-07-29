@@ -14,10 +14,6 @@ private:
 	explicit CCircle(ID3D11DeviceContext* pContext);
 	virtual ~CCircle(void);
 
-
-private:
-	_bool			m_bActiveCheck;
-
 public:
 	static CCircle* Create(ID3D11DeviceContext* pContext);
 
@@ -29,11 +25,6 @@ public:
 
 protected:
 	virtual HRESULT Ready_Component(void);
-
-
-public:
-	void			SetCheck(_bool bCheck) { m_bActiveCheck = bCheck; }
-	_bool			GetCheck(void) { return m_bActiveCheck; }
 };
 
 #endif

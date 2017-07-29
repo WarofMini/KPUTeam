@@ -19,10 +19,11 @@ CStation::CStation(ID3D11DeviceContext* pContext)
 , m_pPlayer(NULL)
 , m_fFlagDist(100.f)
 , m_eFlagState(FLAG_EMPTY)
-, m_pGage(NULL)
+, m_pCircleGage(NULL)
 , m_pCircle(NULL)
 , m_fCircleRadius(1.0f)
 , m_bPlayerInStation(false)
+, m_fCircleGageRadius(1.0f)
 {
 	m_uiObjNum = MESHNUM_TOWER;
 }
@@ -224,6 +225,10 @@ PxRigidStatic * CStation::GetPxActor(void)
 
 void CStation::CollisionObject(const _float& fTimeDelta) //객체 충돌
 {
+	m_fCircleRadius = 190.0f;
+	m_pCircle->SetTransformScale(XMFLOAT3(m_fCircleRadius, m_fCircleRadius, m_fCircleRadius));
+
+
 	if (m_pPlayer == NULL)
 	{
 		CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
@@ -250,8 +255,20 @@ void CStation::CollisionObject(const _float& fTimeDelta) //객체 충돌
 				strStationData.occupation = true;
 				strStationData.stationID = m_byStationID;
 				strStationData.team = g_myid % 2;
-				g_Client->sendPacket(sizeof(Ser_Station_DATA), INGAME_STATION, reinterpret_cast<BYTE*>(&strStationData));
+				g_Client->sendPacket(sizeof(Ser_Station_DATA), INGAME_STATION, reinterpret_cast<BYTE*>(&strStationData));	
 			}
+
+			//점점 커지는 원
+			if (m_fCircleGageRadius >= 180.0f)
+				m_fCircleGageRadius = 180.f;
+			else
+			{
+				m_fCircleGageRadius += fTimeDelta * 100.f;
+			}
+			m_pCircleGage->SetTransformScale(XMFLOAT3(m_fCircleGageRadius, m_fCircleGageRadius, m_fCircleGageRadius));
+			m_pCircleGage->Set_TextureNumber(1); //0번 : 빨간색 테두리 1번 : 파란색  2번 : 빨간색
+
+
 
 			//Circle Update
 			/*m_fCircleRadius = 190.0f;
@@ -274,7 +291,7 @@ void CStation::CollisionObject(const _float& fTimeDelta) //객체 충돌
 			//	}
 			//}
 		}
-		else
+		else //거점 밖에 있는 경우
 		{
 			if (m_bPlayerInStation == true)//
 			{
@@ -292,6 +309,11 @@ void CStation::CollisionObject(const _float& fTimeDelta) //객체 충돌
 
 			m_fCircleRadius = 1.0f;
 			m_pCircle->SetTransformScale(XMFLOAT3(m_fCircleRadius, m_fCircleRadius, m_fCircleRadius));*/
+
+			//점점 커지는 원 초기화
+			m_fCircleGageRadius = 1.f;			
+			m_pCircleGage->SetTransformScale(XMFLOAT3(m_fCircleGageRadius, m_fCircleGageRadius, m_fCircleGageRadius));
+			m_pCircleGage->Set_TextureNumber(0); //0번 : 빨간색 테두리 1번 : 파란색  2번 : 빨간색
 		}
 	}
 
@@ -306,6 +328,14 @@ _float CStation::Length(XMFLOAT3& xmf3Vector1, XMFLOAT3& xmf3Vector2)
 	XMStoreFloat3(&xmf3Result, XMVector3Length(XMLoadFloat3(&xmf3Result)));
 
 	return (xmf3Result.x);
+}
+
+void CStation::SetCircleGage(CCircle * pGage)
+{
+	m_pCircleGage = pGage;
+	m_pCircleGage->SetTransformPosition(XMFLOAT3(m_pTransform->m_vPos.x, m_pTransform->m_vPos.y - 37.0f, m_pTransform->m_vPos.z));
+	m_pCircleGage->SetTransformRotate(XMFLOAT3(90.f, 0.0f, 0.0f));
+	m_pCircleGage->SetTransformScale(XMFLOAT3(m_fCircleGageRadius, m_fCircleGageRadius, m_fCircleGageRadius));
 }
 
 void CStation::SetCircle(CCircle * pCircle)

@@ -10,7 +10,6 @@
 
 CCircle::CCircle(ID3D11DeviceContext * pContext)
 :CEffect(pContext)
-, m_bActiveCheck(false)
 {
 }
 
@@ -38,15 +37,6 @@ HRESULT CCircle::Initialize(void)
 
 INT CCircle::Update(const FLOAT & fTimeDelta)
 {
-	if (m_bActiveCheck)
-	{
-
-	}
-	else
-	{
-	}
-
-
 
 	CEffect::Update(fTimeDelta);
 

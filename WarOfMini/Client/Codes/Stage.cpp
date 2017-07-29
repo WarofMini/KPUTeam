@@ -621,11 +621,11 @@ HRESULT CStage::InitPhysicsObject(void)
 	pLayer->Ready_Object(L"PhysicsCloth", pClothObject);
 
 
-	//Gage One
-	CGageUI* pGageUI = CGageUI::Create(m_pContext);
-	if (NULL == pGageUI)
+	//Gage Circle
+	CCircle* pGageCircle = CCircle::Create(m_pContext);
+	if (NULL == pGageCircle)
 		return E_FAIL;
-	pLayer->Ready_Object(L"GageUI", pGageUI);
+	pLayer->Ready_Object(L"CircleGage", pGageCircle);
 
 
 	//Circle
@@ -648,7 +648,7 @@ HRESULT CStage::InitPhysicsObject(void)
 	pStation->SetRotate(XMFLOAT3(-90.f, 0.f, 0.f));
 	pStation->SetTransformScale(vScale);
 	pStation->SetFlag(pClothObject);
-	pStation->SetGageUI(pGageUI);
+	pStation->SetCircleGage(pGageCircle);
 	pStation->SetCircle(pCircle);
 	pLayer->Ready_Object(L"Station", pStation);
 	//============================================================================================================
@@ -666,11 +666,11 @@ HRESULT CStage::InitPhysicsObject(void)
 	pLayer->Ready_Object(L"PhysicsCloth", pClothObjectTwo);
 
 
-	//Gage Two
-	pGageUI = CGageUI::Create(m_pContext);
-	if (NULL == pGageUI)
+	//CircleGage Two
+	pGageCircle = CCircle::Create(m_pContext);
+	if (NULL == pGageCircle)
 		return E_FAIL;
-	pLayer->Ready_Object(L"GageUI", pGageUI);
+	pLayer->Ready_Object(L"CircleGage", pGageCircle);
 
 
 	//Circle
@@ -691,7 +691,7 @@ HRESULT CStage::InitPhysicsObject(void)
 	pStationTwo->SetRotate(XMFLOAT3(-90.f, 0.f, 0.f));
 	pStationTwo->SetTransformScale(vScale);
 	pStationTwo->SetFlag(pClothObjectTwo);
-	pStationTwo->SetGageUI(pGageUI);
+	pStationTwo->SetCircleGage(pGageCircle);
 	pStationTwo->SetCircle(pCircleTwo);
 	pLayer->Ready_Object(L"Station", pStationTwo);
 	//============================================================================================================
@@ -708,11 +708,11 @@ HRESULT CStage::InitPhysicsObject(void)
 	pLayer->Ready_Object(L"PhysicsCloth", pClothObjectThree);
 
 
-	//Gage Three
-	pGageUI = CGageUI::Create(m_pContext);
-	if (NULL == pGageUI)
+	//CircleGage Three
+	pGageCircle = CCircle::Create(m_pContext);
+	if (NULL == pGageCircle)
 		return E_FAIL;
-	pLayer->Ready_Object(L"GageUI", pGageUI);
+	pLayer->Ready_Object(L"CircleGage", pGageCircle);
 
 
 	//Circle
@@ -731,7 +731,7 @@ HRESULT CStage::InitPhysicsObject(void)
 	pStationThree->SetRotate(XMFLOAT3(-90.f, 0.f, 0.f)); //x, z, y
 	pStationThree->SetTransformScale(vScale);
 	pStationThree->SetFlag(pClothObjectThree);
-	pStationThree->SetGageUI(pGageUI);
+	pStationThree->SetCircleGage(pGageCircle);
 	pStationThree->SetCircle(pCircleThree);
 	pLayer->Ready_Object(L"Station", pStationThree);
 	//============================================================================================================
