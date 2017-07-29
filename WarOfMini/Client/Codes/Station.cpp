@@ -24,6 +24,7 @@ CStation::CStation(ID3D11DeviceContext* pContext)
 , m_fCircleRadius(1.0f)
 , m_bPlayerInStation(false)
 , m_fCircleGageRadius(1.0f)
+, m_fGage(0.f)
 {
 	m_uiObjNum = MESHNUM_TOWER;
 }
@@ -49,6 +50,7 @@ HRESULT CStation::Initialize()
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
 
+	m_fCircleRadius = 190.0f;
 
 	return S_OK;
 }
@@ -225,9 +227,10 @@ PxRigidStatic * CStation::GetPxActor(void)
 
 void CStation::CollisionObject(const _float& fTimeDelta) //객체 충돌
 {
-	m_fCircleRadius = 190.0f;
 	m_pCircle->SetTransformScale(XMFLOAT3(m_fCircleRadius, m_fCircleRadius, m_fCircleRadius));
 
+	m_fCircleGageRadius = 180.f * (abs(m_fGage) / 3.f);
+	m_pCircleGage->SetTransformScale(XMFLOAT3(m_fCircleGageRadius, m_fCircleGageRadius, m_fCircleGageRadius));
 
 	if (m_pPlayer == NULL)
 	{
@@ -259,14 +262,14 @@ void CStation::CollisionObject(const _float& fTimeDelta) //객체 충돌
 			}
 
 			//점점 커지는 원
-			if (m_fCircleGageRadius >= 180.0f)
-				m_fCircleGageRadius = 180.f;
-			else
-			{
-				m_fCircleGageRadius += fTimeDelta * 100.f;
-			}
-			m_pCircleGage->SetTransformScale(XMFLOAT3(m_fCircleGageRadius, m_fCircleGageRadius, m_fCircleGageRadius));
-			m_pCircleGage->Set_TextureNumber(1); //0번 : 빨간색 테두리 1번 : 파란색  2번 : 빨간색
+// 			if (m_fCircleGageRadius >= 180.0f)
+// 				m_fCircleGageRadius = 180.f;
+// 			else
+// 			{
+// 				m_fCircleGageRadius += fTimeDelta * 100.f;
+// 			}
+// 			m_pCircleGage->SetTransformScale(XMFLOAT3(m_fCircleGageRadius, m_fCircleGageRadius, m_fCircleGageRadius));
+// 			m_pCircleGage->Set_TextureNumber(4); //0번 깜둥이 1번 : 파란색 테두리 2번 : 빨간색 테두리 3번 : 파란색  4번 : 빨간색
 
 
 
@@ -311,9 +314,9 @@ void CStation::CollisionObject(const _float& fTimeDelta) //객체 충돌
 			m_pCircle->SetTransformScale(XMFLOAT3(m_fCircleRadius, m_fCircleRadius, m_fCircleRadius));*/
 
 			//점점 커지는 원 초기화
-			m_fCircleGageRadius = 1.f;			
-			m_pCircleGage->SetTransformScale(XMFLOAT3(m_fCircleGageRadius, m_fCircleGageRadius, m_fCircleGageRadius));
-			m_pCircleGage->Set_TextureNumber(0); //0번 : 빨간색 테두리 1번 : 파란색  2번 : 빨간색
+// 			m_fCircleGageRadius = 1.f;			
+// 			m_pCircleGage->SetTransformScale(XMFLOAT3(m_fCircleGageRadius, m_fCircleGageRadius, m_fCircleGageRadius));
+// 			m_pCircleGage->Set_TextureNumber(0); 
 		}
 	}
 
@@ -346,22 +349,29 @@ void CStation::SetCircle(CCircle * pCircle)
 	m_pCircle->SetTransformScale(XMFLOAT3(m_fCircleRadius, m_fCircleRadius, m_fCircleRadius));
 }
 
-void CStation::SerTest(BYTE flagState)
+void CStation::SerSetStation(BYTE flagState, float fTime)
 {
 	switch (flagState)
 	{
 	case 0:
 		m_eFlagState = FLAG_EMPTY;
+		m_pCircle->Set_TextureNumber(0);
 		break;
 	case 1:
 		m_eFlagState = FLAG_TEAM1;
+		m_pCircle->Set_TextureNumber(1);
 		break;
 	case 2:
 		m_eFlagState = FLAG_TEAM2;
-		break;
-	default:
+		m_pCircle->Set_TextureNumber(2);
 		break;
 	}
-	m_pFlag->Set_TextureNumber(m_eFlagState); //깃발의 텍스쳐 팀껄로 변환
 
+	if (m_fGage >= 0.f)
+		m_pCircleGage->Set_TextureNumber(3);
+	else
+		m_pCircleGage->Set_TextureNumber(4);
+
+	m_pFlag->Set_TextureNumber(m_eFlagState); //깃발의 텍스쳐 팀껄로 변환
+	m_fGage = fTime;
 }

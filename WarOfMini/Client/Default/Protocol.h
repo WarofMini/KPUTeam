@@ -152,7 +152,6 @@ struct Ser_Packet_Remove_Player
 	BYTE size;
 	BYTE type;
 	WORD id;
-	Ser_PLAYER_DATA vecPlayerData[10];
 };
 
 struct Ser_STATE_DATA {				// 게임 전체 상태

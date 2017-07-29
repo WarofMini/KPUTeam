@@ -42,6 +42,7 @@ private:
 	CCircle*		m_pCircle;
 	_float			m_fCircleRadius;
 	_float			m_fCircleGageRadius;
+	_float			m_fGage;
 
 public:
 	void			BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, XMFLOAT3 vScale, PxCooking* pCooking, const char* name);
@@ -58,7 +59,7 @@ public:
 	void			SetCircleGage(CCircle* pGage);
 	void			SetCircle(CCircle* pCircle);
 
-	void			SerTest(BYTE flagState);
+	void			SerSetStation(BYTE flagState, float fTime);
 };
 
 #endif // Station_h__

@@ -429,12 +429,12 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 		list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"Station");
 		if (pObjList == NULL)
 			break;
-
+		
 		list<CGameObject*>::iterator iter = pObjList->begin();
 		list<CGameObject*>::iterator iter_end = pObjList->end();
-		for (int i = 0; iter != iter_end; ++iter)
+		for (int i = 0; iter != iter_end; ++iter, ++i)
 		{//게이지차는것도...
-			((CStation*)*iter)->SerTest(curStationdata.station[i++].flagState);
+			((CStation*)*iter)->SerSetStation(curStationdata.station[i].flagState, curStationdata.station[i].fTime);
 		}
 	}
 	break;
