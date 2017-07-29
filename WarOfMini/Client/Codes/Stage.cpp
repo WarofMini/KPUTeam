@@ -70,6 +70,11 @@ HRESULT CStage::Ready_Scene(void)
 	InitPhysicsObject();
 	InitUIObject();
 
+
+	//Plane¹Ù´Ú »ý¼º
+	PxRigidStatic* groundPlane = PxCreatePlane(*m_pPxPhysicsSDK, PxPlane(0, 1, 0, 0), *m_pPxMaterial);
+	m_pPxScene->addActor(*groundPlane);
+
 	return S_OK;
 }
 
