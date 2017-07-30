@@ -292,6 +292,9 @@
     <Filter Include="02.Object\08.UI\04.LoadingUI">
       <UniqueIdentifier>{7f08e589-9042-444f-a00b-726d6186c72f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\07.Effect\02.GunFlash">
+      <UniqueIdentifier>{632dc0f9-6b20-419e-a17e-0dd09e6ee59b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -588,6 +591,9 @@
     <ClInclude Include="..\Codes\UIEffect.h">
       <Filter>02.Object\08.UI\09.UIEffect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\GunFlash.h">
+      <Filter>02.Object\07.Effect\02.GunFlash</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -842,6 +848,9 @@
     <ClCompile Include="..\Codes\UIEffect.cpp">
       <Filter>02.Object\08.UI\09.UIEffect</Filter>
     </ClCompile>
+    <ClCompile Include="..\Codes\GunFlash.cpp">
+      <Filter>02.Object\07.Effect\02.GunFlash</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -896,6 +905,9 @@
       <Filter>95.Engine\00.Utility\05.Shader\01.ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderCode\Shader_Alpha.fx">
+      <Filter>95.Engine\00.Utility\05.Shader\01.ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderCode\Shader_GunFlash.fx">
       <Filter>95.Engine\00.Utility\05.Shader\01.ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>

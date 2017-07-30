@@ -105,6 +105,9 @@ HRESULT CRenderer::Ready_Renderer(void)
 	if (FAILED(CShaderMgr::GetInstance()->Ready_ShaderFromFiles(m_pGraphicDev, m_pContext, L"Shader_Alpha", L"../Bin/ShaderCode/Shader_Alpha.fx", 0)))
 		return E_FAIL;
 
+	if (FAILED(CShaderMgr::GetInstance()->Ready_ShaderFromFiles(m_pGraphicDev, m_pContext, L"Shader_GunFlash", L"../Bin/ShaderCode/Shader_GunFlash.fx", 0)))
+		return E_FAIL;
+
 
 	return S_OK;
 }

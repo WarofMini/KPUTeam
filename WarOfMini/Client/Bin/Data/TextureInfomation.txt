@@ -17,3 +17,4 @@ BoostBar-png-0
 BinBar-png-0
 Circle-png-5
 CountNumber-png-4
+GunFlash-png-2

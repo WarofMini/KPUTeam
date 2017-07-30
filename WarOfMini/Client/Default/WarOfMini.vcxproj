@@ -192,6 +192,7 @@
     <ClInclude Include="..\Codes\GameObject.h" />
     <ClInclude Include="..\Codes\GraphicDev.h" />
     <ClInclude Include="..\Codes\Gun.h" />
+    <ClInclude Include="..\Codes\GunFlash.h" />
     <ClInclude Include="..\Codes\HP.h" />
     <ClInclude Include="..\Codes\Input.h" />
     <ClInclude Include="..\Codes\Layer.h" />
@@ -292,6 +293,7 @@
     <ClCompile Include="..\Codes\GameObject.cpp" />
     <ClCompile Include="..\Codes\GraphicDev.cpp" />
     <ClCompile Include="..\Codes\Gun.cpp" />
+    <ClCompile Include="..\Codes\GunFlash.cpp" />
     <ClCompile Include="..\Codes\HP.cpp" />
     <ClCompile Include="..\Codes\Input.cpp" />
     <ClCompile Include="..\Codes\Layer.cpp" />
@@ -385,6 +387,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderCode\Shader_Gage.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderCode\Shader_GunFlash.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </FxCompile>

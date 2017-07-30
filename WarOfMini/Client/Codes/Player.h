@@ -111,6 +111,9 @@ private:
 
 	Ser_COLLLAY_DATA m_ColllayData;
 
+
+	_uint			m_iGunFlashTexture;
+
 	//Physx SDK Member Variables =========================
 private:
 	PxController*		m_pPxCharacterController;

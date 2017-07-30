@@ -17,6 +17,7 @@
 #include "SphereMesh.h"
 #include "Tank.h"
 #include "Bomb.h"
+#include "GunFlash.h"
 
 XMFLOAT3		g_vPlayerPos;
 
@@ -44,6 +45,7 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 , m_fMaxBoost(100.0f)
 , m_bBoostDelay(false)
 , m_fDelayCount(0.0f)
+, m_iGunFlashTexture(1)
 {
 	m_pInput = CInput::GetInstance();
 	m_vLook = XMFLOAT3(0.f, 1.f, 0.f);
@@ -651,30 +653,53 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 
 			m_bOneCheck = m_pScene->raycast(OriginPos, Dir, maxDistance, Onehit, PxHitFlags(PxHitFlag::eDEFAULT), Onefd);
 
+			//Player의 월드 총구 포지션 설정
+			XMFLOAT4X4 vmatWorld = ((CTransform*)m_pEquipment[0]->Get_Component(L"Com_Transform"))->m_matWorld;
+
+
+			XMFLOAT3 m_vWorldGunPos;
+
+			if (m_bIsSoldier)
+			{
+				//x 가 z축의 역할을하네   z+가 x-
+				m_vWorldGunPos = XMFLOAT3(50.f, -27.f, 40.f);
+			}
+			else
+			{
+				//x+가 z+축 z축 -x
+				m_vWorldGunPos = XMFLOAT3(45.f, 5.f, 0.f);
+			}
+
+			XMStoreFloat3(&m_vWorldGunPos, XMVector3TransformCoord(XMLoadFloat3(&m_vWorldGunPos), XMLoadFloat4x4(&vmatWorld)));
+
+			CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
+
+			//GunFlash
+			CGameObject* pGunFlash = CGunFlash::Create(m_pContext);
+
+			pGunFlash->SetTransformPosition(XMFLOAT3(m_vWorldGunPos.x, m_vWorldGunPos.y, m_vWorldGunPos.z));
+
+			if (m_iGunFlashTexture == 1)
+			{
+				m_iGunFlashTexture = 0;
+				pGunFlash->SetTransformScale(XMFLOAT3(70.f, 50.f, 50.f));
+				((CGunFlash*)pGunFlash)->SetAlphaSpeed(15.f);
+			}
+			else
+			{
+				m_iGunFlashTexture = 1;
+				pGunFlash->SetTransformScale(XMFLOAT3(30.f, 30.f, 30.f));
+				((CGunFlash*)pGunFlash)->SetAlphaSpeed(15.f);
+			}
+
+			pGunFlash->Set_TextureNumber(m_iGunFlashTexture);
+			pLayer->Ready_Object(L"Effect", pGunFlash);
+
+
 			//최종 검사
 			if (m_bOneCheck == true)
 			{
 				XMFLOAT3 m_vGoalPos = XMFLOAT3(Onehit.block.position.x, Onehit.block.position.y, Onehit.block.position.z);
-
-				//Player의 월드 총구 포지션 설정
-				XMFLOAT4X4 vmatWorld = ((CTransform*)m_pEquipment[0]->Get_Component(L"Com_Transform"))->m_matWorld;
-
-
-				XMFLOAT3 m_vWorldGunPos;
-
-				if (m_bIsSoldier)
-				{
-					//x 가 z축의 역할을하네   z+가 x-
-					m_vWorldGunPos = XMFLOAT3(50.f, -27.f, 40.f);
-				}
-				else
-				{
-					//x+가 z+축 z축 -x
-					m_vWorldGunPos = XMFLOAT3(45.f, 5.f, 0.f);
-				}
-
-
-				XMStoreFloat3(&m_vWorldGunPos, XMVector3TransformCoord(XMLoadFloat3(&m_vWorldGunPos), XMLoadFloat4x4(&vmatWorld)));
 
 
 				//Bullet의 방향벡터
@@ -698,11 +723,8 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 				m_bTwoCheck = m_pScene->raycast(StartPos, BulletDir, maxGunDistance, Gunhit, PxHitFlags(PxHitFlag::eDEFAULT), Gunfd);
 
 
-
 				if (m_bTwoCheck == true)
 				{
-
-					CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
 					m_vtestpos = XMFLOAT3(Gunhit.block.position.x, Gunhit.block.position.y, Gunhit.block.position.z);
 
 					list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"OtherPlayer");
@@ -710,11 +732,14 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 					const char* pName = NULL;// Gunhit.block.actor->getName();
 					string strFullName;
 					int iStartIdx = -1;
-					
+
+				
 					if (pObjList)
 					{
 						pName = Gunhit.block.actor->getName();
+						strFullName = pName;
 						if (pName)
+						iStartIdx = strFullName.find("OtherPlayer_");
 						{
 							strFullName = pName;
 							iStartIdx = strFullName.find("OtherPlayer_");
@@ -941,7 +966,7 @@ void CPlayer::UpdateBoost(const FLOAT& fTimeDelta)
 	}
 	else //변신상태
 	{
-		m_fSpeed = 30.f;
+		m_fSpeed = 1.f;
 
 		m_fBoost -= (fTimeDelta * m_fSpeed);
 
