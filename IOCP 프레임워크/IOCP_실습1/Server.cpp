@@ -434,26 +434,28 @@ void CServer::Timer_Thread()
 					m_strStation[i].fTime += fTime * m_strStation[i].ATeamCnt;
 					if (m_strStation[i].flagState == 1)
 						m_strStation[i].fTime = 0.f;
-				}
-				if (m_strStation[i].fTime >= 3.f && m_strStation[i].flagState != 1)
-				{
-					m_strStation[i].fTime = 3.f;
-					m_strStation[i].flagState = 1;// FLAG_TEAM1;
-					bDataChanged = true;
 
+					if (m_strStation[i].fTime >= 3.f && m_strStation[i].flagState != 1)
+					{
+						m_strStation[i].fTime = 3.f;
+						m_strStation[i].flagState = 1;// FLAG_TEAM1;
+						bDataChanged = true;
+					}
 				}
+				
 
 				if (m_strStation[i].BTeamCnt != 0 && m_strStation[i].ATeamCnt == 0)
 				{
 					m_strStation[i].fTime -= fTime * m_strStation[i].BTeamCnt;
 					if (m_strStation[i].flagState == 2)
 						m_strStation[i].fTime = 0.f;
-				}
-				if (m_strStation[i].fTime <= -3.f && m_strStation[i].flagState != 2)
-				{
-					m_strStation[i].fTime = -3.f;
-					m_strStation[i].flagState = 2;// FLAG_TEAM2;
-					bDataChanged = true;
+					
+					if (m_strStation[i].fTime <= -3.f && m_strStation[i].flagState != 2)
+					{
+						m_strStation[i].fTime = -3.f;
+						m_strStation[i].flagState = 2;// FLAG_TEAM2;
+						bDataChanged = true;
+					}
 				}
 
 				if (m_strStation[i].ATeamCnt == 0 && m_strStation[i].BTeamCnt == 0)
