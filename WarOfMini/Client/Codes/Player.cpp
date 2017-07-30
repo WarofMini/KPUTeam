@@ -714,9 +714,11 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 					if (pObjList)
 					{
 						pName = Gunhit.block.actor->getName();
-						strFullName = pName;
-						iStartIdx = strFullName.find("OtherPlayer_");
-
+						if (pName)
+						{
+							strFullName = pName;
+							iStartIdx = strFullName.find("OtherPlayer_");
+						}
 					}
 
 					int intValue = -1;
