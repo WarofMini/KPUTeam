@@ -423,6 +423,7 @@ void CServer::Timer_Thread()
 		}
 
 		float fTime = 0.f;
+		bool	bDataChanged = false;
 		while (true)
 		{
 			fTime = CTimer::FrameSec();
@@ -434,10 +435,11 @@ void CServer::Timer_Thread()
 					if (m_strStation[i].flagState == 1)
 						m_strStation[i].fTime = 0.f;
 				}
-				if (m_strStation[i].fTime >= 3.f)
+				if (m_strStation[i].fTime >= 3.f && m_strStation[i].flagState != 1)
 				{
 					m_strStation[i].fTime = 3.f;
 					m_strStation[i].flagState = 1;// FLAG_TEAM1;
+					bDataChanged = true;
 
 				}
 
@@ -447,10 +449,11 @@ void CServer::Timer_Thread()
 					if (m_strStation[i].flagState == 2)
 						m_strStation[i].fTime = 0.f;
 				}
-				if (m_strStation[i].fTime <= -3.f)
+				if (m_strStation[i].fTime <= -3.f && m_strStation[i].flagState != 2)
 				{
 					m_strStation[i].fTime = -3.f;
-					m_strStation[i].flagState = 2;// FLAG_TEAM1;
+					m_strStation[i].flagState = 2;// FLAG_TEAM2;
+					bDataChanged = true;
 				}
 
 				if (m_strStation[i].ATeamCnt == 0 && m_strStation[i].BTeamCnt == 0)
@@ -470,8 +473,22 @@ void CServer::Timer_Thread()
 				}
 			}
 
+			//점령되고 안되고 값 바뀌면 보내주는걸로하자
+			if (bDataChanged == true)
+			{
+				bDataChanged = false;
+				Ser_CurStation_DATA curStationData;
+				memcpy(&curStationData.station[0], m_strStation, sizeof(strStation) * 3);
+				curStationData.size = sizeof(Ser_CurStation_DATA);
+				curStationData.type = INGAME_CUR_STATION;
 
-			Ser_CurStation_DATA curStationData;
+				for (int i = 0; i < m_Client.size(); ++i)
+				{
+					SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&curStationData));
+				}
+			}
+
+			/*Ser_CurStation_DATA curStationData;
 			memcpy(&curStationData.station[0], m_strStation, sizeof(strStation) * 3);
 			curStationData.size = sizeof(Ser_CurStation_DATA);
 			curStationData.type = INGAME_CUR_STATION;
@@ -479,7 +496,7 @@ void CServer::Timer_Thread()
 			{
 				if (m_Client[i]->connected)
 					SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&curStationData));
-			}
+			}*/
 
 		}
 	}
@@ -684,7 +701,7 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 	{
 		Ser_Station_DATA strStationData;
 		strStationData = *reinterpret_cast<Ser_Station_DATA*>((Ser_Station_DATA*)&buf[2]);
-
+		
 		strStation& Station = m_strStation[strStationData.stationID];
 		
 		if (strStationData.team == 0)//TeamA
@@ -700,6 +717,16 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 				++Station.BTeamCnt;
 			else
 				--Station.BTeamCnt;
+		}
+		
+		Ser_CurStation_DATA curStationData;
+		memcpy(&curStationData.station[0], m_strStation, sizeof(strStation) * 3);
+		curStationData.size = sizeof(Ser_CurStation_DATA);
+		curStationData.type = INGAME_CUR_STATION;
+
+		for (int i = 0; i < vecID.size(); ++i)
+		{
+			SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&curStationData));
 		}
 
 		/*Ser_CurStation_DATA curStationData;
