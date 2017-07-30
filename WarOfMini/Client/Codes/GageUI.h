@@ -3,21 +3,21 @@
 
 #include "UI.h"
 
-class CGageUI
+
+
+class CLoadingBarUI
 	: public CUI
 {
 private:
-	explicit CGageUI(ID3D11DeviceContext* pContext);
-	virtual ~CGageUI(void);
+	explicit CLoadingBarUI(ID3D11DeviceContext* pContext);
+	virtual ~CLoadingBarUI(void);
 
 public:
-	static CGageUI* Create(ID3D11DeviceContext* pContext);
+	static CLoadingBarUI* Create(ID3D11DeviceContext* pContext);
 
 
 private:
 	_float		m_fXGage;
-	_bool		m_bGageStart;
-	_bool		m_bGoalCheck;
 
 public:
 	virtual HRESULT	Initialize(void);
@@ -29,14 +29,8 @@ protected:
 	virtual HRESULT Ready_Component(void);
 
 public:
-	void	UpdateGage(void);
-	void	SetGageStart(_bool bCheck) { m_bGageStart = bCheck; }
-	_bool	GetGageStart(void) { return m_bGageStart; }
+	_float	GetGage(void) { return m_fXGage; }
 
-	void	SetGoalCheck(_bool bCheck) { m_bGoalCheck = bCheck; }
-	_bool	GetGoalCheck(void) { return m_bGoalCheck; }
-	void	SetXGage(_float fGage) { m_fXGage = fGage; }
-	void	ResetValue(void);
 };
 
 

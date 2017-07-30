@@ -8,6 +8,11 @@
 #include "Management.h"
 #include "ResourcesMgr.h"
 #include "CameraMgr.h"
+#include "GageUI.h"
+#include "DefaultUI.h"
+#include "UIEffect.h"
+#include "UI.h"
+#include "FontMgr.h"
 
 BYTE		g_CurrentScene = SC_LOGO;
 
@@ -54,11 +59,13 @@ _int CLogo::Update(const _float & fTimeDelta)
 
 	if (m_pLoading->GetComplete() == true && (GetAsyncKeyState(VK_RETURN) & 0x8000))
 	{
+		g_strFullPath = L"";
 		CManagement::GetInstance()->Change_Scene(CSceneSelector(SCENE_STAGE));	
 	}
 	
 	return 0;
 }
+
 
 HRESULT CLogo::Ready_GameLogic(void)
 {
@@ -67,12 +74,49 @@ HRESULT CLogo::Ready_GameLogic(void)
 	CGameObject* pGameObject = NULL;
 	
 	//LogoBack
-	pGameObject = CLogoBack::Create(m_pContext, L"Texture_LogoBack");
+
+	pGameObject = CLogoBack::Create(m_pContext);
 
 	if (NULL == pGameObject)
 		return E_FAIL;
 
 	pLayer->Ready_Object(L"LogoBack", pGameObject);
+
+	//LoadingBar	
+	CLoadingBarUI* pLoadingBar = CLoadingBarUI::Create(m_pContext);
+	if (NULL == pLoadingBar)
+		return E_FAIL;
+
+	pLayer->Ready_Object(L"Loading", pLoadingBar);
+
+	//LoadingGage
+	pGameObject = CDefaultUI::Create(m_pContext, L"Texture_LoadingBar");
+	if (NULL == pGameObject)
+		return E_FAIL;
+
+	((CUI*)pGameObject)->SetSizeX(1230);
+	((CUI*)pGameObject)->SetSizeY(40);
+	((CUI*)pGameObject)->SetMoveX(0.f);
+	((CUI*)pGameObject)->SetMoveY(400.f);
+	((CUI*)pGameObject)->ComputeFXFY();
+	((CDefaultUI*)pGameObject)->SetCameraCheck(true);
+
+	pLayer->Ready_Object(L"Loading", pGameObject);
+
+	//UIEffect
+	pGameObject = CUIEffect::Create(m_pContext, L"Texture_LoadingEffectGage");
+	if (NULL == pGameObject)
+		return E_FAIL;
+
+	((CUI*)pGameObject)->SetSizeX(60);
+	((CUI*)pGameObject)->SetSizeY(45);
+	((CUI*)pGameObject)->SetMoveX(-585.f);
+	((CUI*)pGameObject)->SetMoveY(400.f);
+	((CUI*)pGameObject)->ComputeFXFY();
+	((CUIEffect*)pGameObject)->SetLoadingBar(pLoadingBar);
+
+	pLayer->Ready_Object(L"Loading", pGameObject);
+
 
 
 	m_mapLayer.insert(MAPLAYER::value_type(L"Layer_GameLogic", pLayer));

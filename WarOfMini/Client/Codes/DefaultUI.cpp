@@ -10,6 +10,7 @@
 
 CDefaultUI::CDefaultUI(ID3D11DeviceContext * pContext)
 : CUI(pContext)
+, m_bCameraCheck(false)
 {
 }
 
@@ -42,7 +43,7 @@ HRESULT CDefaultUI::Initialize(void)
 
 _int CDefaultUI::Update(const _float & fTimeDelta)
 {
-	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
+	if ((CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC) && (m_bCameraCheck == false))
 		return 0;
 
 	CGameObject::Update(fTimeDelta);
@@ -56,8 +57,8 @@ _int CDefaultUI::Update(const _float & fTimeDelta)
 
 void CDefaultUI::Render(void)
 {
-	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
-		return;
+	if ((CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC) && (m_bCameraCheck == false))
+		return ;
 
 	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Default"));
 

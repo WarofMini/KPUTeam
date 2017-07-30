@@ -21,6 +21,8 @@ CLoading::CLoading(LOADINGID eLoadID)
 	pGraphicDev = CGraphicDev::GetInstance()->GetGraphicDevice();
 	pContext	= CGraphicDev::GetInstance()->GetContext();
 
+	g_bCountCheck = true;
+
 }
 
 CLoading::~CLoading(void)
@@ -66,6 +68,7 @@ void CLoading::LogoLoading(void)
 
 
 	cout << "Thread Logo Loading End" << endl;
+
 	m_bComplete = true;
 	m_bLogoLoading = TRUE;
 }
@@ -153,6 +156,8 @@ void CLoading::Ready_TextureFromFile(ID3D11Device * pGraphicDev, ID3D11DeviceCon
 			eTextureType = CTextures::TYPE_DDSCUBE;
 
 		CResourcesMgr::GetInstance()->Ready_Texture(pGraphicDev, pContext, RESOURCE_STAGE, wstrTextureKey.c_str(), eTextureType, wstrTexturePath.c_str(), wTextureCnt);
+
+
 	}
 
 	inFile.close();
@@ -202,6 +207,12 @@ void CLoading::Ready_DynamicMeshFromFile(ID3D11Device * pGraphicDev, ID3D11Devic
 
 		//MeshMgr에 pMeshData의 정보를 넣어논다.
 		CMeshMgr::GetInstance()->Ready_MeshMgr(pMeshData);
+
+		if (g_bCountCheck)
+		{
+			++g_iCurrentCount;
+			g_strFullPath = wstrMeshPath;
+		}
 	}
 
 	inFile.close();
@@ -248,6 +259,12 @@ void CLoading::Ready_StaticMeshFromFile(ID3D11Device * pGraphicDev, ID3D11Device
 		pMeshData->bBillboard = (_bool)wBillboard;
 
 		CMeshMgr::GetInstance()->Ready_MeshMgr(pMeshData);
+
+		if (g_bCountCheck)
+		{
+			++g_iCurrentCount;
+			g_strFullPath = wstrMeshPath;
+		}
 	}
 
 	inFile.close();

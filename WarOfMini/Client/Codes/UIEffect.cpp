@@ -1,57 +1,61 @@
 #include "stdafx.h"
-#include "LogoBack.h"
+#include "UIEffect.h"
 #include "Management.h"
 #include "ResourcesMgr.h"
 #include "ShaderMgr.h"
 #include "GraphicDev.h"
-#include "RcTex.h"
 #include "CameraMgr.h"
 #include "Transform.h"
+#include "GageUI.h"
 
-CLogoBack::CLogoBack(ID3D11DeviceContext * pContext)
+
+CUIEffect::CUIEffect(ID3D11DeviceContext * pContext)
 : CUI(pContext)
+, m_pLoadingBar(NULL)
 {
 }
 
-CLogoBack::~CLogoBack(void)
+CUIEffect::~CUIEffect(void)
 {
 }
 
-CLogoBack * CLogoBack::Create(ID3D11DeviceContext * pContext)
+CUIEffect* CUIEffect::Create(ID3D11DeviceContext * pContext, wstring strName)
 {
-	CLogoBack* pLogoBack = new CLogoBack(pContext);
+	CUIEffect* pUI = new CUIEffect(pContext);
 
-	if (FAILED(pLogoBack->Initialize()))
-		Safe_Release(pLogoBack);
+	pUI->SetName(strName);
 
-	return pLogoBack;
+	if (FAILED(pUI->Initialize()))
+		Safe_Release(pUI);
+
+	return pUI;
 }
 
-HRESULT CLogoBack::Initialize(void)
+HRESULT CUIEffect::Initialize(void)
 {
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
 
-	m_fMoveX = 0.f;
-	m_fOriginMoveX = 0.f;
-
-	m_fMoveY = 0.f;
-	m_fOriginMoveY = 0.f;
-
 	m_fX = (WINCX >> 1) + m_fMoveX;
 	m_fY = (WINCY >> 1) + m_fMoveY;
-
-	m_fSizeX = 1600;
-	m_fSizeY = 900;
-
-	m_fOriginSizeX = 1600;
-	m_fOriginSizeY = 900;
 
 	return S_OK;
 }
 
-INT CLogoBack::Update(const FLOAT & fTimeDelta)
+_int CUIEffect::Update(const _float & fTimeDelta)
 {
+	if (m_pLoadingBar != NULL)
+	{
+		m_fMoveX = (1200.f * m_pLoadingBar->GetGage()) - 600.f;
+
+		if (m_fMoveX <= -585.f)
+			m_fMoveX = -585.f;
+		else if(m_fMoveX >= 580.f)
+			m_fMoveX = 580.f;
+
+		m_fOriginMoveX = m_fMoveX;
+	}
+
 	CGameObject::Update(fTimeDelta);
 
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_UI, this);
@@ -61,8 +65,9 @@ INT CLogoBack::Update(const FLOAT & fTimeDelta)
 	return 0;
 }
 
-void CLogoBack::Render(void)
+void CUIEffect::Render(void)
 {
+
 	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Default"));
 
 	ID3D11Buffer* pBaseShaderCB = CGraphicDev::GetInstance()->GetBaseShaderCB();
@@ -99,13 +104,12 @@ void CLogoBack::Render(void)
 	m_pBuffer->Render();
 }
 
-void CLogoBack::Release(void)
+void CUIEffect::Release(void)
 {
-	CGameObject::Release();
-	delete this;
+	CUI::Release();
 }
 
-HRESULT CLogoBack::Ready_Component(void)
+HRESULT CUIEffect::Ready_Component(void)
 {
 	CComponent* pComponent = NULL;
 
@@ -116,7 +120,7 @@ HRESULT CLogoBack::Ready_Component(void)
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Buffer", pComponent));
 
 	//Texture
-	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, L"Texture_LogoBack");
+	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, m_strTextureName.c_str());
 	m_pTexture = dynamic_cast<CTextures*>(pComponent);
 	if (pComponent == NULL) return E_FAIL;
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Texture", pComponent));

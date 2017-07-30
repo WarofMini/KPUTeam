@@ -6,22 +6,21 @@
 #include "GraphicDev.h"
 #include "CameraMgr.h"
 #include "Transform.h"
+#include "Loading.h"
 
-CGageUI::CGageUI(ID3D11DeviceContext * pContext)
+CLoadingBarUI::CLoadingBarUI(ID3D11DeviceContext * pContext)
 : CUI(pContext)
 , m_fXGage(0.0f)
-, m_bGageStart(false)
-, m_bGoalCheck(false)
 {
 }
 
-CGageUI::~CGageUI(void)
+CLoadingBarUI::~CLoadingBarUI(void)
 {
 }
 
-CGageUI* CGageUI::Create(ID3D11DeviceContext * pContext)
+CLoadingBarUI* CLoadingBarUI::Create(ID3D11DeviceContext * pContext)
 {
-	CGageUI* pGage = new CGageUI(pContext);
+	CLoadingBarUI* pGage = new CLoadingBarUI(pContext);
 
 	if (FAILED(pGage->Initialize()))
 		Safe_Release(pGage);
@@ -29,32 +28,37 @@ CGageUI* CGageUI::Create(ID3D11DeviceContext * pContext)
 	return pGage;
 }
 
-HRESULT CGageUI::Initialize(void)
+HRESULT CLoadingBarUI::Initialize(void)
 {
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
 
+	m_fMoveX = 0.f;
+	m_fOriginMoveX = 0.f;
 
-	m_fX = (_float)(WINCX >> 1);
-	m_fY = (_float)(WINCY >> 2);
+	m_fMoveY = 400.f;
+	m_fOriginMoveY = 400.f;
 
-	m_fSizeX = 800;
-	m_fSizeY = 50;
 
-	m_fOriginSizeX = 800;
-	m_fOriginSizeY = 50;
+	m_fX = (_float)(WINCX >> 1) + m_fMoveX;
+	m_fY = (_float)(WINCY >> 1) + m_fMoveY;
+
+	m_fSizeX = 1200;
+	m_fSizeY = 40;
+
+	m_fOriginSizeX = 1200;
+	m_fOriginSizeY = 40;
 
 
 	return S_OK;
 }
 
-_int CGageUI::Update(const _float & fTimeDelta)
+_int CLoadingBarUI::Update(const _float & fTimeDelta)
 {
-	if ((CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC) ||
-		(!m_bGageStart))
-		return 0;
 
-	UpdateGage();
+	_float m_fCurCount = (_float)g_iCurrentCount;
+
+	m_fXGage = m_fCurCount / (_float)g_TotalLoadingCount;
 
 
 	CGameObject::Update(fTimeDelta);
@@ -67,12 +71,8 @@ _int CGageUI::Update(const _float & fTimeDelta)
 	return 0;
 }
 
-void CGageUI::Render(void)
+void CLoadingBarUI::Render(void)
 {
-	if ((CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC) ||
-		(!m_bGageStart))
-		return;
-
 
 	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Gage"));
 
@@ -88,8 +88,8 @@ void CGageUI::Render(void)
 
 	ComputeChangeWindowSize();
 
-	m_fX = (_float)(WINCX >> 1);
-	m_fY = (_float)(WINCY >> 2);
+	m_fX = (_float)(WINCX >> 1) + m_fMoveX;
+	m_fY = (_float)(WINCY >> 1) + m_fMoveY;
 
 
 	m_matWorld._11 = m_fSizeX;
@@ -120,12 +120,12 @@ void CGageUI::Render(void)
 	m_pBuffer->Render();
 }
 
-void CGageUI::Release(void)
+void CLoadingBarUI::Release(void)
 {
 	CUI::Release();
 }
 
-HRESULT CGageUI::Ready_Component(void)
+HRESULT CLoadingBarUI::Ready_Component(void)
 {
 	CComponent* pComponent = NULL;
 
@@ -149,34 +149,4 @@ HRESULT CGageUI::Ready_Component(void)
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Transform", pComponent));
 
 	return S_OK;
-}
-
-void CGageUI::UpdateGage(void)
-{
-	if (m_bGageStart)
-	{
-		if (m_fXGage >= 1.f) //게이지 풀 완성 (점령 완료)
-		{
-			m_bGoalCheck = true;
-			m_fXGage = 0.0f;
-			m_bGageStart = false;
-		}
-		else
-		{
-			m_fXGage += 0.01f;
-		}
-	}
-	else
-	{
-		m_fXGage = 0.0f;
-		m_bGoalCheck = false;
-	}
-
-}
-
-void CGageUI::ResetValue(void)
-{
-	m_fXGage = 0.0f;
-	m_bGageStart = false;
-	m_bGoalCheck = false;
 }

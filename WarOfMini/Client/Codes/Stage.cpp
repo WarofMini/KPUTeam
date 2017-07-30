@@ -20,7 +20,6 @@
 #include "Cloth.h"
 #include "Station.h"
 #include "DefaultPhysicsObject.h"
-#include "GageUI.h"
 #include "HP.h"
 #include "Boost.h"
 #include "Circle.h"

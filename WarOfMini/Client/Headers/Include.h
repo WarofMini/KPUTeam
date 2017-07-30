@@ -40,4 +40,10 @@ extern DIRECTIONALIGHT_CB g_tDirectionalLight;
 
 extern BYTE		g_CurrentScene;
 
+extern _uint	g_iCurrentCount;
+
+extern _bool	g_bCountCheck;
+
+extern wstring  g_strFullPath;
+
 #endif

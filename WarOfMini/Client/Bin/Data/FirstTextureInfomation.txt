@@ -3,3 +3,6 @@ TitleBack-png-0
 LogoBack-png-0
 SphereColor-png-0
 Office-png-0
+LoadingBar-png-0
+Gage-png-0
+LoadingEffectGage-png-0

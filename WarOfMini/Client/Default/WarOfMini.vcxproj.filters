@@ -211,9 +211,6 @@
     <Filter Include="02.Object\07.Effect\00.Bomb">
       <UniqueIdentifier>{d580296d-bea1-4959-9dad-9517d2276c8b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\10.LogoBack">
-      <UniqueIdentifier>{253bb7a9-a45f-438f-9d30-30f71f9a96ab}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Object\09.TitleBack">
       <UniqueIdentifier>{9ce6982e-689c-40f2-b0cd-b337e2376405}</UniqueIdentifier>
     </Filter>
@@ -271,9 +268,6 @@
     <Filter Include="02.Object\05.PhysicsObject\04.Station">
       <UniqueIdentifier>{abf63ea3-6f55-4924-be59-93f247a82057}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\08.UI\04.Gage">
-      <UniqueIdentifier>{7f08e589-9042-444f-a00b-726d6186c72f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Object\08.UI\05.HP">
       <UniqueIdentifier>{d4938a6b-c265-411d-b813-aee06ec08d66}</UniqueIdentifier>
     </Filter>
@@ -288,6 +282,15 @@
     </Filter>
     <Filter Include="02.Object\08.UI\07.Count">
       <UniqueIdentifier>{b901bc5e-5da0-499e-ad56-d4b652244470}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\08.LogoBack">
+      <UniqueIdentifier>{253bb7a9-a45f-438f-9d30-30f71f9a96ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\09.UIEffect">
+      <UniqueIdentifier>{72491e1b-2431-4791-a9c1-2acdbdb36424}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\04.LoadingUI">
+      <UniqueIdentifier>{7f08e589-9042-444f-a00b-726d6186c72f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -466,7 +469,7 @@
       <Filter>02.Object\05.PhysicsObject\03.DefaultObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\LogoBack.h">
-      <Filter>02.Object\10.LogoBack</Filter>
+      <Filter>02.Object\08.UI\08.LogoBack</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Player.h">
       <Filter>02.Object\01.Soldier\00.SoldierMain</Filter>
@@ -568,7 +571,7 @@
       <Filter>95.Engine\00.Utility\13.Collision\02.CollisionSphere</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\GageUI.h">
-      <Filter>02.Object\08.UI\04.Gage</Filter>
+      <Filter>02.Object\08.UI\04.LoadingUI</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\HP.h">
       <Filter>02.Object\08.UI\05.HP</Filter>
@@ -581,6 +584,9 @@
     </ClInclude>
     <ClInclude Include="..\Codes\Count.h">
       <Filter>02.Object\08.UI\07.Count</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\UIEffect.h">
+      <Filter>02.Object\08.UI\09.UIEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -720,7 +726,7 @@
       <Filter>02.Object\05.PhysicsObject\03.DefaultObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\LogoBack.cpp">
-      <Filter>02.Object\10.LogoBack</Filter>
+      <Filter>02.Object\08.UI\08.LogoBack</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Player.cpp">
       <Filter>02.Object\01.Soldier\00.SoldierMain</Filter>
@@ -816,7 +822,7 @@
       <Filter>95.Engine\00.Utility\13.Collision\02.CollisionSphere</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\GageUI.cpp">
-      <Filter>02.Object\08.UI\04.Gage</Filter>
+      <Filter>02.Object\08.UI\04.LoadingUI</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\HP.cpp">
       <Filter>02.Object\08.UI\05.HP</Filter>
@@ -832,6 +838,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\UI.cpp">
       <Filter>02.Object\08.UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\UIEffect.cpp">
+      <Filter>02.Object\08.UI\09.UIEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

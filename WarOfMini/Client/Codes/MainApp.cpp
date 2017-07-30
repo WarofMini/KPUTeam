@@ -50,6 +50,9 @@ HRESULT CMainApp::Initialize(void)
 		return E_FAIL;
 	}
 
+	//Ready Font
+	CFontMgr::GetInstance()->Ready_Font(pGraphicDev, pContext, L"°íµñ");
+
 	// Resource
 	CResourcesMgr::GetInstance()->Reserve_ContainerSize(RESOURCE_END);
 
@@ -86,10 +89,6 @@ HRESULT CMainApp::Initialize(void)
 		MSG_BOX(L"Ready_InputDev Failed");
 		return FALSE;
 	}
-
-
-	//Ready Font
-	CFontMgr::GetInstance()->Ready_Font(pGraphicDev, pContext, L"°íµñ");
 
 	return S_OK;
 }
@@ -154,6 +153,10 @@ void CMainApp::Render(void)
 		Render_CurrentScene();
 	}
 
+	if(g_strFullPath != L"")
+		CFontMgr::GetInstance()->Render_Font(L"°íµñ", g_strFullPath.c_str(), 15.f, 220.f, 870.f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.f));
+
+	//10.f, 50.f, 850.f
 	CManagement::GetInstance()->GetRenderer()->SwapChain_Clear_RenderGroup();
 }
 

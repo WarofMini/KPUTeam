@@ -48,7 +48,6 @@ private:
 
 	void		Ready_StaticMeshFromFile(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext);
 
-
 };
 
 

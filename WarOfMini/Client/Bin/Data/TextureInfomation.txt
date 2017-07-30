@@ -11,7 +11,6 @@ Aim-png-0
 Number-png-10
 Slash-png-0
 Tower-tga-0
-Gage-png-0
 Flag-png-3
 RedBar-png-0
 BoostBar-png-0

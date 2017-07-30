@@ -18,7 +18,6 @@ public:
 	virtual HRESULT Ready_Scene(void);
 	virtual _int Update(const _float& fTimeDelta);
 
-
 private:
 	HRESULT Ready_GameLogic(void);
 	HRESULT Ready_Environment(void);

@@ -10,6 +10,9 @@ private:
 	explicit CDefaultUI(ID3D11DeviceContext* pContext);
 	virtual ~CDefaultUI(void);
 
+private:
+	_bool	m_bCameraCheck;
+
 public:
 	static CDefaultUI* Create(ID3D11DeviceContext* pContext, wstring strName);
 
@@ -22,6 +25,9 @@ public:
 
 protected:
 	virtual HRESULT Ready_Component(void);
+
+public:
+	void	SetCameraCheck(_bool bCheck) { m_bCameraCheck = bCheck; }
 
 };
 

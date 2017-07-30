@@ -19,6 +19,8 @@ const _ubyte NODELAYANICNT = 3;		//??
 const _ubyte MAX_BONE_MATRICES = 100;
 const _ubyte INSTCNT = 32;
 
+const _uint	 g_TotalLoadingCount = 119; //총 로딩할 텍스쳐, 메시 갯수
+
 #define VS_SLOT_VIEW_MATRIX			0x00
 #define VS_SLOT_PROJECTION_MATRIX	0x01
 #define VS_SLOT_WORLD_MATRIX		0x02

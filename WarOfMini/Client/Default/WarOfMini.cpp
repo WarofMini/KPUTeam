@@ -28,9 +28,11 @@ _bool g_bSetAquire;
 _bool g_bCollisionDraw;
 _uint WINCX;
 _uint WINCY;
+_uint g_iCurrentCount;
+_bool g_bCountCheck;
 DIRECTIONALIGHT_CB g_tDirectionalLight;
 AsynchronousClientClass* g_Client = NULL;
-
+wstring g_strFullPath;
 
 
 // 이 코드 모듈에 들어 있는 함수의 정방향 선언입니다.
@@ -56,6 +58,9 @@ int APIENTRY wWinMain( HINSTANCE hInstance,
     MyRegisterClass(hInstance);
 
 	WINCX = 1600, WINCY = 900;
+	g_iCurrentCount = 0;
+	g_bCountCheck = false;
+	g_strFullPath = L"";
 
     // 응용 프로그램 초기화를 수행합니다.
     if (!InitInstance (hInstance, nCmdShow))

@@ -86,6 +86,12 @@ HRESULT CTextures::Create_Texture(TEXTURETYPE eTextureType, const _tchar* pFileP
 			return E_FAIL;
 
 		m_vecTexture.push_back(pShaderResourceView);
+	
+		if (g_bCountCheck) //텍스쳐 갯수 세기
+		{
+			++g_iCurrentCount;
+			g_strFullPath = szFullPath;
+		}
 	}
 
 	m_sizetContainerSize = m_vecTexture.size();
