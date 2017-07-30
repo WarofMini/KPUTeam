@@ -707,12 +707,17 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 
 					list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"OtherPlayer");
 
-					const char* pName = Gunhit.block.actor->getName();
-					string strFullName = pName;
+					const char* pName = NULL;// Gunhit.block.actor->getName();
+					string strFullName;
 					int iStartIdx = -1;
 					
-					if(pObjList)
+					if (pObjList)
+					{
+						pName = Gunhit.block.actor->getName();
+						strFullName = pName;
 						iStartIdx = strFullName.find("OtherPlayer_");
+
+					}
 
 					int intValue = -1;
 					m_ColllayData.bShoot = true;
