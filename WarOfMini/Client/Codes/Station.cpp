@@ -25,6 +25,9 @@ CStation::CStation(ID3D11DeviceContext* pContext)
 , m_bPlayerInStation(false)
 , m_fCircleGageRadius(1.0f)
 , m_fGage(0.f)
+, m_byATeamCnt(0)
+, m_byBTeamCnt(0)
+, m_fClientTime(0.f)
 {
 	m_uiObjNum = MESHNUM_TOWER;
 }
@@ -229,7 +232,7 @@ void CStation::CollisionObject(const _float& fTimeDelta) //°´Ã¼ Ãæµ¹
 {
 	m_pCircle->SetTransformScale(XMFLOAT3(m_fCircleRadius, m_fCircleRadius, m_fCircleRadius));
 
-	m_fCircleGageRadius = 180.f * (abs(m_fGage) / 3.f);
+	m_fCircleGageRadius = 180.f * (abs(m_fGage + m_fClientTime) / 3.f);
 	m_pCircleGage->SetTransformScale(XMFLOAT3(m_fCircleGageRadius, m_fCircleGageRadius, m_fCircleGageRadius));
 
 	if (m_pPlayer == NULL)
@@ -320,6 +323,49 @@ void CStation::CollisionObject(const _float& fTimeDelta) //°´Ã¼ Ãæµ¹
 		}
 	}
 
+	if (m_byATeamCnt != 0 && m_byBTeamCnt == 0)
+	{
+		if(m_fGage + m_fClientTime > 0.f)
+			m_pCircleGage->Set_TextureNumber(3);
+		m_fClientTime += fTimeDelta * m_byATeamCnt;
+		if (m_eFlagState == FLAG_TEAM1)
+		{
+			m_fGage = 0.f;
+			m_fClientTime = 0.f;
+		}
+		if (m_fGage + m_fClientTime >= 3.f)
+			m_fClientTime = 3.f - m_fGage;
+	}
+
+	if (m_byBTeamCnt != 0 && m_byATeamCnt == 0)
+	{
+		if (m_fGage + m_fClientTime < 0.f)
+			m_pCircleGage->Set_TextureNumber(4);
+		m_fClientTime -= fTimeDelta * m_byBTeamCnt;
+		if (m_eFlagState == FLAG_TEAM2)
+		{
+			m_fGage = 0.f;
+			m_fClientTime = 0.f;
+		}
+		if (m_fGage + m_fClientTime <= -3.f)
+			m_fClientTime = -3.f - m_fGage;
+	}
+
+	if (m_byATeamCnt == 0 && m_byBTeamCnt == 0)
+	{
+		if (m_fGage + m_fClientTime < 0.f)
+		{
+			m_fClientTime += fTimeDelta;
+			if (m_fGage + m_fClientTime > 0.f)
+				m_fClientTime = -m_fGage;
+		}
+		if (m_fGage + m_fClientTime > 0.f)
+		{
+			m_fClientTime -= fTimeDelta;
+			if (m_fGage + m_fClientTime < 0.f)
+				m_fClientTime = -m_fGage;
+		}
+	}
 }
 
 _float CStation::Length(XMFLOAT3& xmf3Vector1, XMFLOAT3& xmf3Vector2)
@@ -349,7 +395,7 @@ void CStation::SetCircle(CCircle * pCircle)
 	m_pCircle->SetTransformScale(XMFLOAT3(m_fCircleRadius, m_fCircleRadius, m_fCircleRadius));
 }
 
-void CStation::SerSetStation(BYTE flagState, float fTime)
+void CStation::SerSetStation(BYTE flagState, BYTE ATeamCnt, BYTE BTeamCnt, float fTime)
 {
 	switch (flagState)
 	{
@@ -367,11 +413,14 @@ void CStation::SerSetStation(BYTE flagState, float fTime)
 		break;
 	}
 
-	if (m_fGage >= 0.f)
-		m_pCircleGage->Set_TextureNumber(3);
-	else
-		m_pCircleGage->Set_TextureNumber(4);
+	//if (m_fGage >= 0.f)
+	//	m_pCircleGage->Set_TextureNumber(3);
+	//else
+	//	m_pCircleGage->Set_TextureNumber(4);
 
 	m_pFlag->Set_TextureNumber(m_eFlagState); //±ê¹ßÀÇ ÅØ½ºÃÄ ÆÀ²¬·Î º¯È¯
+	m_byATeamCnt = ATeamCnt;
+	m_byBTeamCnt = BTeamCnt;
 	m_fGage = fTime;
+	m_fClientTime = 0.f;
 }

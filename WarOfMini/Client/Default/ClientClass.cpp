@@ -435,7 +435,8 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 		list<CGameObject*>::iterator iter_end = pObjList->end();
 		for (int i = 0; iter != iter_end; ++iter, ++i)
 		{//
-			((CStation*)*iter)->SerSetStation(curStationdata.station[i].flagState, curStationdata.station[i].fTime);
+			((CStation*)*iter)->SerSetStation(curStationdata.station[i].flagState, 
+				curStationdata.station[i].ATeamCnt, curStationdata.station[i].BTeamCnt, curStationdata.station[i].fTime);
 		}
 	}
 	break;
