@@ -9,7 +9,7 @@ IMPLEMENT_SINGLETON(CCameraMgr)
 
 
 CCameraMgr::CCameraMgr(void)
-	: m_eCurCamera(CAMERA_DYNAMIC)
+: m_eCurCamera(CAMERA_STATIC)
 {
 	m_vecCamera.reserve(CAMERA_END);
 
