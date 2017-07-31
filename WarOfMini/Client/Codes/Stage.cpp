@@ -608,7 +608,7 @@ HRESULT CStage::InitPhysicsObject(void)
 
 	//x, y, z, = x,z, y축으로 돌아간다...
 	//((CPhysicsObect*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f)));
-	((CPhysicsObect*)pGameObject)->SetPosition(XMFLOAT3(30.f, 100.f, 30.f));
+	((CPhysicsObect*)pGameObject)->SetPosition(XMFLOAT3(100.f, 100.f, 30.f));
 	pGameObject->SetWeight(3.f); //숫자가 클수록 피격됬을시 충격으로 멀리 날아간다.
 	pLayer->Ready_Object(L"PhysicsBook", pGameObject);
 	

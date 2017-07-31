@@ -15,7 +15,7 @@ CBomb::CBomb(ID3D11DeviceContext * pContext)
 	m_iSizeX = 4;
 	m_iSizeY = 4;
 
-	m_fLifeTime = 0.5f;
+	m_fLifeTime = 0.25f;
 	m_fRealTime = 0.0f;
 	m_fDelayTime = 0.0f;
 	m_bAllBillboardCheck = true;
@@ -40,7 +40,7 @@ HRESULT CBomb::Initialize(void)
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
 
-	m_pTransform->m_vScale = XMFLOAT3(40.f, 40.f, 0.f);
+	m_pTransform->m_vScale = XMFLOAT3(20.f, 20.f, 20.f);
 
 	return S_OK;
 }

@@ -64,7 +64,7 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 
 	XMStoreFloat4x4(&m_matBone, XMMatrixIdentity());
 	m_iBoneNum = 0;
-	pSphereMesh = CSphereMesh::Create(m_pContext, 1.f);
+	//pSphereMesh = CSphereMesh::Create(m_pContext, 1.f);
 }
 
 CPlayer::~CPlayer(void)
@@ -171,7 +171,7 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 	Update_Equipment(fTimeDelta);
 
 
-	pSphereMesh->Update(fTimeDelta);
+	//pSphereMesh->Update(fTimeDelta);
 
 	return 0;
 }
@@ -227,8 +227,8 @@ void CPlayer::Update_Equipment(const FLOAT& fTimeDelta)
 	XMMATRIX matWorld = XMLoadFloat4x4(&m_pTransform->m_matWorld);
 	XMStoreFloat4x4(&m_matEquipBone[0], XMLoadFloat4x4(&m_matEquipBone[0]) * matWorld);
 
-	XMStoreFloat4x4(&m_matBone, XMLoadFloat4x4(&m_matBone) * matWorld);
-	((CSphereMesh*)pSphereMesh)->SetmatWorld(&m_matBone);
+	//XMStoreFloat4x4(&m_matBone, XMLoadFloat4x4(&m_matBone) * matWorld);
+	//((CSphereMesh*)pSphereMesh)->SetmatWorld(&m_matBone);
 
 	m_pEquipment[0]->SetParent(m_matEquipBone[0]);
 	m_pEquipment[0]->Update(fTimeDelta);
@@ -838,7 +838,7 @@ void CPlayer::Render(void)
 {
 	CDynamicObject::Render();
 
-	pSphereMesh->Render();
+	//pSphereMesh->Render();
 }
 
 void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, PxControllerManager *pPxControllerManager)
@@ -878,7 +878,7 @@ void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *
 	PxCapsuledesc.slopeLimit = cosf(XMConvertToRadians(15.f));
 	//PxCapsuledesc.nonWalkableMode = PxControllerNonWalkableMode::eFORCE_SLIDING;
 	PxCapsuledesc.upDirection = PxVec3(0, 1, 0);
-	PxCapsuledesc.contactOffset = 0.0001f; //접촉 오프셋-> 요게 타 객체와 부딪혔을때 영향을 주는 변수인듯(높을수록 덜덜떨림)
+	PxCapsuledesc.contactOffset = 0.001f; //접촉 오프셋-> 요게 타 객체와 부딪혔을때 영향을 주는 변수인듯(높을수록 덜덜떨림)
 	PxCapsuledesc.material = pPxMaterial;
 	PxCapsuledesc.behaviorCallback = this;
 	PxCapsuledesc.reportCallback = this;

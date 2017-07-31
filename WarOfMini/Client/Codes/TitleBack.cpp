@@ -13,7 +13,7 @@ CTitleBack::CTitleBack(ID3D11DeviceContext * pContext)
 , m_pBuffer(NULL)
 , m_pTexture(NULL)
 , m_fAlpha(0.f)
-, m_fAlphaSpeed(0.5f)
+, m_fAlphaSpeed(0.3f)
 , m_bAlphaCheck(false)
 {
 }
