@@ -8,7 +8,8 @@ CGameObject::CGameObject(ID3D11DeviceContext * pContext)
 , m_iTextureNumber(0)
 , m_pTransform(NULL)
 , m_uiObjNum(0)
-, m_fWeight(0)
+, m_fWeight(0.0f)
+, m_fMass(0.0f)
 {
 }
 

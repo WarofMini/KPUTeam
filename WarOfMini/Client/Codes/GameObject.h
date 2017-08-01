@@ -22,7 +22,8 @@ protected:
 	wstring										m_strTextureName;
 	CTransform*									m_pTransform;
 	_uint										m_uiObjNum; //¸Þ½Ã ¹øÈ£
-	_float										m_fWeight;
+	_float										m_fWeight; //·¹ÀÌ¿Í °´Ã¼°¡ ºÎµóÇûÀ»¶§
+	_float										m_fMass; //°´Ã¼¿Í °´Ã¼°¡ ºÎµóÇûÀ»¶§
 
 protected:
 	ID3D11DeviceContext* m_pContext;
@@ -71,6 +72,9 @@ public:
 
 	void			SetWeight(_float fWeight) { m_fWeight = fWeight; }
 	_float			GetWeight(void) { return m_fWeight; }
+
+	void			SetMass(_float fMass) { m_fMass = fMass; }
+	_float			GetMass(void) { return m_fMass; }
 };
 
 #endif

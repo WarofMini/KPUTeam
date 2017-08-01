@@ -1012,7 +1012,18 @@ void CPlayer::onShapeHit(const PxControllerShapeHit & hit)
 		{
 			const PxTransform globalPose = actor->getGlobalPose();
 			const PxVec3 localPos = globalPose.transformInv(toVec3(hit.worldPos));
-			AddForceAtLocalPos(*actor, hit.dir * hit.length * 0.4f, localPos, PxForceMode::eACCELERATION);
+		
+			
+			TCHAR szUniCode[256] = { 0, };
+			MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, actor->getName(), strlen(actor->getName()), szUniCode, 256);
+
+			CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
+			CGameObject* pObject = pLayer->Find_Object(szUniCode);
+
+
+			if (pObject)
+				AddForceAtLocalPos(*actor, hit.dir * hit.length * pObject->GetMass(), localPos, PxForceMode::eACCELERATION);
+
 		}
 	}
 }

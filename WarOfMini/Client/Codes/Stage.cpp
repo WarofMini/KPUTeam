@@ -610,6 +610,7 @@ HRESULT CStage::InitPhysicsObject(void)
 	//((CPhysicsObect*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f)));
 	((CPhysicsObect*)pGameObject)->SetPosition(XMFLOAT3(100.f, 100.f, 30.f));
 	pGameObject->SetWeight(3.f); //숫자가 클수록 피격됬을시 충격으로 멀리 날아간다.
+	pGameObject->SetMass(0.4f); //객체와 객체가 부딛혔을때 밀리는 정도 (값이 높을수록 강하게 밀린다.)
 	pLayer->Ready_Object(L"PhysicsBook", pGameObject);
 	
 
