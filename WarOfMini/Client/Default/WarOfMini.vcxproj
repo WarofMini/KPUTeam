@@ -205,6 +205,7 @@
     <ClInclude Include="..\Codes\MeshMgr.h" />
     <ClInclude Include="..\Codes\Numbering.h" />
     <ClInclude Include="..\Codes\OtherPlayer.h" />
+    <ClInclude Include="..\Codes\Panel.h" />
     <ClInclude Include="..\Codes\PhysicsDoor.h" />
     <ClInclude Include="..\Codes\PhysicsObect.h" />
     <ClInclude Include="..\Codes\Player.h" />
@@ -214,6 +215,7 @@
     <ClInclude Include="..\Codes\RenderTargetMgr.h" />
     <ClInclude Include="..\Codes\Resources.h" />
     <ClInclude Include="..\Codes\ResourcesMgr.h" />
+    <ClInclude Include="..\Codes\RespawnUI.h" />
     <ClInclude Include="..\Codes\Scene.h" />
     <ClInclude Include="..\Codes\SceneSelector.h" />
     <ClInclude Include="..\Codes\Shader.h" />
@@ -306,6 +308,7 @@
     <ClCompile Include="..\Codes\MeshMgr.cpp" />
     <ClCompile Include="..\Codes\Numbering.cpp" />
     <ClCompile Include="..\Codes\OtherPlayer.cpp" />
+    <ClCompile Include="..\Codes\Panel.cpp" />
     <ClCompile Include="..\Codes\PhysicsDoor.cpp" />
     <ClCompile Include="..\Codes\PhysicsObject.cpp" />
     <ClCompile Include="..\Codes\Player.cpp" />
@@ -315,6 +318,7 @@
     <ClCompile Include="..\Codes\RenderTargetMgr.cpp" />
     <ClCompile Include="..\Codes\Resources.cpp" />
     <ClCompile Include="..\Codes\ResourcesMgr.cpp" />
+    <ClCompile Include="..\Codes\RespawnUI.cpp" />
     <ClCompile Include="..\Codes\Scene.cpp" />
     <ClCompile Include="..\Codes\Shader.cpp" />
     <ClCompile Include="..\Codes\ShaderMgr.cpp" />
@@ -405,6 +409,10 @@
     <FxCompile Include="..\Bin\ShaderCode\Shader_Object.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderCode\Shader_Panel.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderCode\Shader_Skybox.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

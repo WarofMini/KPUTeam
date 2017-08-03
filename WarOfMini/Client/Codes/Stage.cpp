@@ -25,6 +25,7 @@
 #include "Circle.h"
 #include "Count.h"
 #include "GunFlash.h"
+#include "RespawnUI.h"
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 : CScene(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking)
@@ -144,6 +145,7 @@ HRESULT CStage::Ready_Environment(void)
 
 	//다이나믹 카메라 적용
 	CCameraMgr::GetInstance()->Ready_DynamicCamera(m_pContext, m_pPxScene, CCameraMgr::CAMERA_DYNAMIC, 0.1f, 10000.f, XMFLOAT3(681.f, 269.f, -45.f), XMFLOAT3(672.f, 251.f, -7.8f));
+
 
 	//플레이어 카메라 적용
 	CComponent* pTransform = (CComponent*)FindLayer(L"Layer_GameLogic")->Get_Component(L"Player", L"Com_Transform");
@@ -599,6 +601,8 @@ HRESULT CStage::InitPhysicsObject(void)
 	(pDoorObject)->SetPosition(XMFLOAT3(1168.0f, 161.0f, 310.0f));
 	(pDoorObject)->SetSeparation(XMFLOAT3(80.f, 0.0f, 0.0f));
 	(pDoorObject)->CreateChain(m_pPxPhysicsSDK, m_pPxScene);
+	(pDoorObject)->SetWeight(0.05f); //숫자가 클수록 피격됬을시 충격으로 멀리 날아간다.
+	(pDoorObject)->SetMass(0.001f); //객체와 객체가 부딛혔을때 밀리는 정도 (값이 높을수록 강하게 밀린다.)
 	pLayer->Ready_Object(L"PhysicsDoor", pDoorObject);
 
 
@@ -628,12 +632,12 @@ HRESULT CStage::InitPhysicsObject(void)
 	pLayer->Ready_Object(L"PhysicsCloth", pClothObject);
 
 
+
 	//Gage Circle
 	CCircle* pGageCircle = CCircle::Create(m_pContext);
 	if (NULL == pGageCircle)
 		return E_FAIL;
 	pLayer->Ready_Object(L"CircleGage", pGageCircle);
-
 
 	//Circle
 	CCircle* pCircle = CCircle::Create(m_pContext);
@@ -865,6 +869,14 @@ HRESULT CStage::InitUIObject(void)
 	if (NULL == pGameObject)
 		return E_FAIL;
 	pLayer->Ready_Object(L"Count", pGameObject);
+
+
+	
+	//Respawn
+	pGameObject = CRespawnUI::Create(m_pContext);
+	if (NULL == pGameObject)
+		return E_FAIL;
+	pLayer->Ready_Object(L"Respawn", pGameObject);
 
 	return S_OK;
 }

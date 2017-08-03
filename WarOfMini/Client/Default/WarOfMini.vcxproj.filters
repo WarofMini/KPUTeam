@@ -295,6 +295,12 @@
     <Filter Include="02.Object\07.Effect\02.GunFlash">
       <UniqueIdentifier>{632dc0f9-6b20-419e-a17e-0dd09e6ee59b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\08.UI\10.RespawnUI">
+      <UniqueIdentifier>{7edbd4b5-a46a-4900-80c5-a19b5c0f6cb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\10.RespawnUI\00.Panel">
+      <UniqueIdentifier>{c967c2ff-4feb-4433-81c8-989323d79bfd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -594,6 +600,12 @@
     <ClInclude Include="..\Codes\GunFlash.h">
       <Filter>02.Object\07.Effect\02.GunFlash</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\RespawnUI.h">
+      <Filter>02.Object\08.UI\10.RespawnUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Panel.h">
+      <Filter>02.Object\08.UI\10.RespawnUI\00.Panel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -851,6 +863,12 @@
     <ClCompile Include="..\Codes\GunFlash.cpp">
       <Filter>02.Object\07.Effect\02.GunFlash</Filter>
     </ClCompile>
+    <ClCompile Include="..\Codes\RespawnUI.cpp">
+      <Filter>02.Object\08.UI\10.RespawnUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Panel.cpp">
+      <Filter>02.Object\08.UI\10.RespawnUI\00.Panel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -908,6 +926,9 @@
       <Filter>95.Engine\00.Utility\05.Shader\01.ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderCode\Shader_GunFlash.fx">
+      <Filter>95.Engine\00.Utility\05.Shader\01.ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderCode\Shader_Panel.fx">
       <Filter>95.Engine\00.Utility\05.Shader\01.ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>

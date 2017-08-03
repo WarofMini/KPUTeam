@@ -18,3 +18,5 @@ BinBar-png-0
 Circle-png-5
 CountNumber-png-4
 GunFlash-png-2
+Panel-png-0
+MiniMap-png-0
