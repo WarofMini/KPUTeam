@@ -20,3 +20,4 @@ CountNumber-png-4
 GunFlash-png-2
 Panel-png-0
 MiniMap-png-0
+Station-png-0

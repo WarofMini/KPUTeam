@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Panel.h"
+#include "StationUI.h"
 #include "Management.h"
 #include "ResourcesMgr.h"
 #include "ShaderMgr.h"
@@ -8,31 +8,29 @@
 #include "Transform.h"
 
 
-CPanel::CPanel(ID3D11DeviceContext * pContext)
+CStationUI::CStationUI(ID3D11DeviceContext * pContext)
 : CUI(pContext)
-, m_fAlpha(0.0f)
+, m_fAlpha(1.0f)
 , m_bStart(false)
 , m_bEnd(false)
 {
 }
 
-CPanel::~CPanel(void)
+CStationUI::~CStationUI(void)
 {
 }
 
-CPanel* CPanel::Create(ID3D11DeviceContext * pContext, wstring strName)
+CStationUI* CStationUI::Create(ID3D11DeviceContext * pContext)
 {
-	CPanel* pUI = new CPanel(pContext);
+	CStationUI* pStation = new CStationUI(pContext);
 
-	pUI->SetName(strName);
+	if (FAILED(pStation->Initialize()))
+		Safe_Release(pStation);
 
-	if (FAILED(pUI->Initialize()))
-		Safe_Release(pUI);
-
-	return pUI;
+	return pStation;
 }
 
-HRESULT CPanel::Initialize(void)
+HRESULT CStationUI::Initialize(void)
 {
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
@@ -43,14 +41,11 @@ HRESULT CPanel::Initialize(void)
 	return S_OK;
 }
 
-_int CPanel::Update(const _float & fTimeDelta)
+_int CStationUI::Update(const _float & fTimeDelta)
 {
 	if ((CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC) || (!m_bStart))
 		return 0;
 
-	PanelUpdate(fTimeDelta);
-
-	
 
 
 	CGameObject::Update(fTimeDelta);
@@ -62,7 +57,7 @@ _int CPanel::Update(const _float & fTimeDelta)
 	return 0;
 }
 
-void CPanel::Render(void)
+void CStationUI::Render(void)
 {
 	if ((CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC) || (!m_bStart))
 		return;
@@ -72,7 +67,7 @@ void CPanel::Render(void)
 	ID3D11Buffer* pBaseShaderCB = CGraphicDev::GetInstance()->GetBaseShaderCB();
 	ID3D11Buffer* pAlphaShaderCB = CGraphicDev::GetInstance()->GetAlphaShaderCB();
 
-	
+
 	ID3D11SamplerState* pBaseSampler = CGraphicDev::GetInstance()->GetBaseSampler();
 
 	BASESHADER_CB tBaseShaderCB;
@@ -113,12 +108,12 @@ void CPanel::Render(void)
 	m_pBuffer->Render();
 }
 
-void CPanel::Release(void)
+void CStationUI::Release(void)
 {
 	CUI::Release();
 }
 
-HRESULT CPanel::Ready_Component(void)
+HRESULT CStationUI::Ready_Component(void)
 {
 	CComponent* pComponent = NULL;
 
@@ -129,7 +124,7 @@ HRESULT CPanel::Ready_Component(void)
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Buffer", pComponent));
 
 	//Texture
-	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, m_strTextureName.c_str());
+	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, L"Texture_Station");
 	m_pTexture = dynamic_cast<CTextures*>(pComponent);
 	if (pComponent == NULL) return E_FAIL;
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Texture", pComponent));
@@ -142,22 +137,4 @@ HRESULT CPanel::Ready_Component(void)
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Transform", pComponent));
 
 	return S_OK;
-}
-
-void CPanel::PanelUpdate(const _float & fTimeDelta)
-{
-	if (m_bStart && (!m_bEnd))
-	{
-		m_fAlpha = min(m_fAlpha + fTimeDelta, 0.5f);
-	}
-	if (m_bEnd)
-	{
-		m_fAlpha = max(m_fAlpha - fTimeDelta, 0.0f);
-
-		if (m_fAlpha <= 0.0f)
-		{
-			m_bStart = false;
-			m_bEnd = false;
-		}
-	}
 }

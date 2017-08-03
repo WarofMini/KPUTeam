@@ -235,6 +235,7 @@
     <ClInclude Include="..\Codes\StaticMesh.h" />
     <ClInclude Include="..\Codes\StaticObject.h" />
     <ClInclude Include="..\Codes\Station.h" />
+    <ClInclude Include="..\Codes\StationUI.h" />
     <ClInclude Include="..\Codes\Tank.h" />
     <ClInclude Include="..\Codes\Texture.h" />
     <ClInclude Include="..\Codes\Timer_Manager.h" />
@@ -336,6 +337,7 @@
     <ClCompile Include="..\Codes\StaticMesh.cpp" />
     <ClCompile Include="..\Codes\StaticObject.cpp" />
     <ClCompile Include="..\Codes\Station.cpp" />
+    <ClCompile Include="..\Codes\StationUI.cpp" />
     <ClCompile Include="..\Codes\Tank.cpp" />
     <ClCompile Include="..\Codes\Texture.cpp" />
     <ClCompile Include="..\Codes\Timer_Manager.cpp" />

@@ -4,6 +4,7 @@
 #include "UI.h"
 
 class CPanel;
+class CStationUI;
 
 class CRespawnUI
 	: public CUI
@@ -15,7 +16,7 @@ private:
 private:
 	CPanel*		m_pPanel;
 	CPanel*		m_pMiniMap;
-
+	CStationUI* m_pStationUI[3];
 
 public:
 	static CRespawnUI* Create(ID3D11DeviceContext* pContext);
@@ -29,6 +30,9 @@ public:
 
 protected:
 	virtual HRESULT Ready_Component(void);
+
+public:
+	void  StationUIUpdate(void);
 
 };
 
