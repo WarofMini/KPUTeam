@@ -24,6 +24,8 @@ private:
 	CFlagUI*	m_pFlagUI[3]; //깃발
 	CStation*   m_pStation[3]; //타워 포인터
 	CPlayer*	m_pPlayer;
+	_bool		m_bRespawnSelect;
+	XMFLOAT3	m_vRespawnPos;
 
 private:
 	CInput*			m_pInput;
@@ -48,6 +50,8 @@ public:
 	void  StationCollision(void);
 
 	_float PositionRand(_float a, _float b);
+
+	void  RespawnSelectUpdate(void);
 
 };
 

@@ -13,12 +13,14 @@
 #include "Station.h"
 #include "Player.h"
 #include "Input.h"
+#include "CameraMgr.h"
 
 CRespawnUI::CRespawnUI(ID3D11DeviceContext * pContext)
 : CUI(pContext)
 , m_pPanel(NULL)
 , m_pMiniMap(NULL)
 , m_pPlayer(NULL)
+, m_bRespawnSelect(false)
 {
 	ZeroMemory(m_pStationUI, sizeof(CStationUI*) * 3);
 	ZeroMemory(m_pFlagUI, sizeof(CFlagUI*) * 3);
@@ -113,23 +115,26 @@ HRESULT CRespawnUI::Initialize(void)
 
 _int CRespawnUI::Update(const _float & fTimeDelta)
 {
-
-	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
-		return 0;
+	RespawnSelectUpdate();
 
 	StationCollision();
-	
 
-	if(GetAsyncKeyState('B') & 1)
+	if(GetAsyncKeyState('B') & 1) //리스폰 UI 실행 -> 나중에 플레이어가 죽으면 알아서 뜨도록 변경
 	{
 		m_pPanel->SetStart(true);
 		m_pMiniMap->SetStart(true);
+
+		CCameraMgr::GetInstance()->Set_CurCamera(CCameraMgr::CAMERALIST::CAMERA_DYNAMIC);
 	}
+	/*
 	if (GetAsyncKeyState('N') & 1)
 	{
 		m_pPanel->SetEnd(true);
 		m_pMiniMap->SetEnd(true);
+
+		CCameraMgr::GetInstance()->Set_CurCamera(CCameraMgr::CAMERALIST::CAMERA_STATIC);
 	}
+	*/
 
 	StationFlagUIUpdate();
 	StationUIUpdate();
@@ -143,13 +148,13 @@ _int CRespawnUI::Update(const _float & fTimeDelta)
 		m_pStationUI[i]->Update(fTimeDelta);
 		m_pFlagUI[i]->Update(fTimeDelta);
 	}
+
+
 	return 0;
 }
 
 void CRespawnUI::Render(void)
 {
-	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
-		return;
 
 	m_pPanel->Render();
 	m_pMiniMap->Render();
@@ -235,6 +240,8 @@ void CRespawnUI::StationFlagUIUpdate(void)
 
 void CRespawnUI::StationCollision(void)
 {
+	if(m_bRespawnSelect)
+		return;
 
 	POINT		ptMouse;
 	GetCursorPos(&ptMouse);
@@ -242,6 +249,8 @@ void CRespawnUI::StationCollision(void)
 
 	for (int i = 0; i < 3; ++i)
 	{
+		if (m_pStationUI[i]->GetStart() == false)
+			continue ;
 		
 		RECT rcUI = { long(m_pStationUI[i]->GetfX() - m_pStationUI[i]->GetSizeX() * 0.5f)
 					, long(m_pStationUI[i]->GetfY() - m_pStationUI[i]->GetSizeY() * 0.5f)
@@ -255,13 +264,19 @@ void CRespawnUI::StationCollision(void)
 
 			if(m_pInput->Get_DIMouseState(CInput::DIM_LB)) //플레이어가 점령한 타워이고 L버튼을 클릭한경우 -> 해당 타워로 이동
 			{
-				XMFLOAT3 m_vPos = m_pStation[i]->GetTransformPosition();
+				
+				m_vRespawnPos = m_pStation[i]->GetTransformPosition();
 
-				m_vPos.x += PositionRand(-50.f, 50.f);
-				m_vPos.z += PositionRand(-50.f, 50.f);
-				m_vPos.y += 20.f;
+				m_vRespawnPos.x += PositionRand(-50.f, 50.f);
+				m_vRespawnPos.z += PositionRand(-50.f, 50.f);
+				m_vRespawnPos.y += 20.f;
 
-				m_pPlayer->SetPosition(m_vPos);
+
+				m_bRespawnSelect = true;
+
+				m_pPanel->SetEnd(true);
+				m_pMiniMap->SetEnd(true);
+				
 			}
 		}
 		else //다른 팀의 타워일경우 -> 반응없음
@@ -276,4 +291,17 @@ void CRespawnUI::StationCollision(void)
 _float CRespawnUI::PositionRand(_float a, _float b)
 {
 	return ((b - a)*((float)rand() / RAND_MAX)) + a;
+}
+
+void CRespawnUI::RespawnSelectUpdate(void)
+{
+	if (!m_bRespawnSelect)
+		return;
+
+	if (m_pPanel->GetResetCheck() == true)
+	{
+		m_pPlayer->SetPosition(m_vRespawnPos);
+		CCameraMgr::GetInstance()->Set_CurCamera(CCameraMgr::CAMERALIST::CAMERA_STATIC);
+		m_bRespawnSelect = false;
+	}
 }

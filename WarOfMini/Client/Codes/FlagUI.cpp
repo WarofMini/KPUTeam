@@ -43,7 +43,7 @@ HRESULT CFlagUI::Initialize(void)
 
 _int CFlagUI::Update(const _float & fTimeDelta)
 {
-	if ((CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC) || (!m_bStart))
+	if ((!m_bStart))
 		return 0;
 
 
@@ -59,7 +59,7 @@ _int CFlagUI::Update(const _float & fTimeDelta)
 
 void CFlagUI::Render(void)
 {
-	if ((CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC) || (!m_bStart))
+	if ((!m_bStart))
 		return;
 
 	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Panel"));

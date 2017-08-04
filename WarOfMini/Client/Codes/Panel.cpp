@@ -45,7 +45,7 @@ HRESULT CPanel::Initialize(void)
 
 _int CPanel::Update(const _float & fTimeDelta)
 {
-	if ((CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC) || (!m_bStart))
+	if ((!m_bStart))
 		return 0;
 
 	PanelUpdate(fTimeDelta);
@@ -64,7 +64,7 @@ _int CPanel::Update(const _float & fTimeDelta)
 
 void CPanel::Render(void)
 {
-	if ((CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC) || (!m_bStart))
+	if ((!m_bStart))
 		return;
 
 	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Panel"));
@@ -160,4 +160,12 @@ void CPanel::PanelUpdate(const _float & fTimeDelta)
 			m_bEnd = false;
 		}
 	}
+}
+
+_bool CPanel::GetResetCheck(void)
+{
+	if ((m_bStart == false) && (m_bEnd == false))
+		return true;
+	else
+		return false;
 }

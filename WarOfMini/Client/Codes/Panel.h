@@ -35,6 +35,7 @@ public:
 	_bool	GetEnd(void) { return m_bEnd; }
 	_float	GetAlpha(void) { return m_fAlpha; }
 	void	PanelUpdate(const _float & fTimeDelta);
+	_bool	GetResetCheck(void);
 
 };
 
