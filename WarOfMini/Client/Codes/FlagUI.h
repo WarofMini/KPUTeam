@@ -1,14 +1,14 @@
-#ifndef StationUI_h__
-#define StationUI_h__
+#ifndef FlagUI_h__
+#define FlagUI_h__
 
 #include "UI.h"
 
-class CStationUI
+class CFlagUI
 	: public CUI
 {
 private:
-	explicit CStationUI(ID3D11DeviceContext* pContext);
-	virtual ~CStationUI(void);
+	explicit CFlagUI(ID3D11DeviceContext* pContext);
+	virtual ~CFlagUI(void);
 
 private:
 	_float	m_fAlpha;
@@ -17,7 +17,7 @@ private:
 
 
 public:
-	static CStationUI* Create(ID3D11DeviceContext* pContext);
+	static CFlagUI* Create(ID3D11DeviceContext* pContext);
 
 
 public:

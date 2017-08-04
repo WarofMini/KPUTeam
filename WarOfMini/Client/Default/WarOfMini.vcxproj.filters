@@ -304,6 +304,9 @@
     <Filter Include="02.Object\08.UI\10.RespawnUI\01.StationUI">
       <UniqueIdentifier>{aabf53df-5210-4d2d-b418-f914bc8fbda5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\08.UI\10.RespawnUI\02.FlagUI">
+      <UniqueIdentifier>{dd3735e0-f367-4438-9cfe-48fcfe9ddc12}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -612,6 +615,9 @@
     <ClInclude Include="..\Codes\StationUI.h">
       <Filter>02.Object\08.UI\10.RespawnUI\01.StationUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\FlagUI.h">
+      <Filter>02.Object\08.UI\10.RespawnUI\02.FlagUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -877,6 +883,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\StationUI.cpp">
       <Filter>02.Object\08.UI\10.RespawnUI\01.StationUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\FlagUI.cpp">
+      <Filter>02.Object\08.UI\10.RespawnUI\02.FlagUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

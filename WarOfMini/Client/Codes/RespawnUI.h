@@ -5,6 +5,10 @@
 
 class CPanel;
 class CStationUI;
+class CFlagUI;
+class CStation;
+class CPlayer;
+class CInput;
 
 class CRespawnUI
 	: public CUI
@@ -15,8 +19,14 @@ private:
 
 private:
 	CPanel*		m_pPanel;
-	CPanel*		m_pMiniMap;
-	CStationUI* m_pStationUI[3];
+	CPanel*		m_pMiniMap; //맵 텍스쳐
+	CStationUI* m_pStationUI[3]; //타워
+	CFlagUI*	m_pFlagUI[3]; //깃발
+	CStation*   m_pStation[3]; //타워 포인터
+	CPlayer*	m_pPlayer;
+
+private:
+	CInput*			m_pInput;
 
 public:
 	static CRespawnUI* Create(ID3D11DeviceContext* pContext);
@@ -33,6 +43,11 @@ protected:
 
 public:
 	void  StationUIUpdate(void);
+	void  StationFlagUIUpdate(void);
+
+	void  StationCollision(void);
+
+	_float PositionRand(_float a, _float b);
 
 };
 

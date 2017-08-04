@@ -53,7 +53,7 @@ _int CPlayerCamera::Update(const _float& fTimeDelta)
 	CheckCollision();
 
 	MakeView();
-	FixMouse();
+	//FixMouse();
 
 	return 0;
 }

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Numbering.h"
+#include "FlagUI.h"
 #include "Management.h"
 #include "ResourcesMgr.h"
 #include "ShaderMgr.h"
@@ -7,28 +7,30 @@
 #include "CameraMgr.h"
 #include "Transform.h"
 
-CNumbering::CNumbering(ID3D11DeviceContext * pContext)
+
+CFlagUI::CFlagUI(ID3D11DeviceContext * pContext)
 : CUI(pContext)
+, m_fAlpha(1.0f)
+, m_bStart(false)
+, m_bEnd(false)
 {
-
 }
 
-CNumbering::~CNumbering(void)
+CFlagUI::~CFlagUI(void)
 {
-
 }
 
-CNumbering * CNumbering::Create(ID3D11DeviceContext * pContext)
+CFlagUI* CFlagUI::Create(ID3D11DeviceContext * pContext)
 {
-	CNumbering* pNumbering = new CNumbering(pContext);
+	CFlagUI* pFlag = new CFlagUI(pContext);
 
-	if (FAILED(pNumbering->Initialize()))
-		Safe_Release(pNumbering);
+	if (FAILED(pFlag->Initialize()))
+		Safe_Release(pFlag);
 
-	return pNumbering;
+	return pFlag;
 }
 
-HRESULT CNumbering::Initialize(void)
+HRESULT CFlagUI::Initialize(void)
 {
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
@@ -39,10 +41,12 @@ HRESULT CNumbering::Initialize(void)
 	return S_OK;
 }
 
-_int CNumbering::Update(const _float & fTimeDelta)
+_int CFlagUI::Update(const _float & fTimeDelta)
 {
-	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
+	if ((CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC) || (!m_bStart))
 		return 0;
+
+
 
 	CGameObject::Update(fTimeDelta);
 
@@ -50,18 +54,20 @@ _int CNumbering::Update(const _float & fTimeDelta)
 
 	XMStoreFloat4x4(&m_pProj, XMMatrixOrthographicLH(_float(WINCX), _float(WINCY), 0.0f, 1.0f));
 
-
 	return 0;
 }
 
-void CNumbering::Render(void)
+void CFlagUI::Render(void)
 {
-	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
-		return ;
+	if ((CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC) || (!m_bStart))
+		return;
 
-	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Default"));
+	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Panel"));
 
 	ID3D11Buffer* pBaseShaderCB = CGraphicDev::GetInstance()->GetBaseShaderCB();
+	ID3D11Buffer* pAlphaShaderCB = CGraphicDev::GetInstance()->GetAlphaShaderCB();
+
+
 	ID3D11SamplerState* pBaseSampler = CGraphicDev::GetInstance()->GetBaseSampler();
 
 	BASESHADER_CB tBaseShaderCB;
@@ -73,7 +79,6 @@ void CNumbering::Render(void)
 
 	m_fX = (WINCX >> 1) + m_fMoveX;
 	m_fY = (WINCY >> 1) + m_fMoveY;
-
 
 	m_matWorld._11 = m_fSizeX;
 	m_matWorld._22 = m_fSizeY;
@@ -87,21 +92,28 @@ void CNumbering::Render(void)
 
 	m_pContext->UpdateSubresource(pBaseShaderCB, 0, NULL, &tBaseShaderCB, 0, 0);
 
-	m_pContext->VSSetShader(CShaderMgr::GetInstance()->Get_VertexShader(L"Shader_Default"), NULL, 0);
+	ALPHA_CB tAlphaShaderCB;
+	tAlphaShaderCB.fAlpha = m_fAlpha;
+
+	m_pContext->UpdateSubresource(pAlphaShaderCB, 0, NULL, &tAlphaShaderCB, 0, 0);
+
+
+	m_pContext->VSSetShader(CShaderMgr::GetInstance()->Get_VertexShader(L"Shader_Panel"), NULL, 0);
 	m_pContext->VSSetConstantBuffers(0, 1, &pBaseShaderCB);
-	m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_Default"), NULL, 0);
+	m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_Panel"), NULL, 0);
+	m_pContext->PSSetConstantBuffers(1, 1, &pAlphaShaderCB);
 	m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
 
 	m_pTexture->Render(0, m_iTextureNumber);
 	m_pBuffer->Render();
 }
 
-void CNumbering::Release(void)
+void CFlagUI::Release(void)
 {
 	CUI::Release();
 }
 
-HRESULT CNumbering::Ready_Component(void)
+HRESULT CFlagUI::Ready_Component(void)
 {
 	CComponent* pComponent = NULL;
 
@@ -112,7 +124,7 @@ HRESULT CNumbering::Ready_Component(void)
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Buffer", pComponent));
 
 	//Texture
-	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, L"Texture_Number");
+	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, L"Texture_Flag");
 	m_pTexture = dynamic_cast<CTextures*>(pComponent);
 	if (pComponent == NULL) return E_FAIL;
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Texture", pComponent));

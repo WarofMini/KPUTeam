@@ -183,6 +183,7 @@
     <ClInclude Include="..\Codes\Effect.h" />
     <ClInclude Include="..\Codes\Equipment.h" />
     <ClInclude Include="..\Codes\FlagTex.h" />
+    <ClInclude Include="..\Codes\FlagUI.h" />
     <ClInclude Include="..\Codes\Font.h" />
     <ClInclude Include="..\Codes\FontMgr.h" />
     <ClInclude Include="..\Codes\Frame.h" />
@@ -287,6 +288,7 @@
     <ClCompile Include="..\Codes\Effect.cpp" />
     <ClCompile Include="..\Codes\Equipment.cpp" />
     <ClCompile Include="..\Codes\FlagTex.cpp" />
+    <ClCompile Include="..\Codes\FlagUI.cpp" />
     <ClCompile Include="..\Codes\Font.cpp" />
     <ClCompile Include="..\Codes\FontMgr.cpp" />
     <ClCompile Include="..\Codes\Frame.cpp" />
