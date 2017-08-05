@@ -51,7 +51,7 @@ public:
 	void SendPacket(unsigned int id, const Packet* packet);
 	void ProcessPacket(const Packet* buf, const unsigned int& id);
 
-
+	void CommandStrategy();
 	void CountTime();
 
 private:

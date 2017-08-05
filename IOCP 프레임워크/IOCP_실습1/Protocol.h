@@ -77,6 +77,7 @@ struct PLAYER_INFO
 	unsigned char Packetbuf[MAX_PACKET_SIZE]; // 요기 버퍼랑은 무슨 상관일까? -> 너가말한 버퍼를 담는 공간은 여기야
 	int id;
 	bool m_bRedBlue;
+	mutex lock;
 	CRITICAL_SECTION cs;
 };
 //////////////////////////////////////////

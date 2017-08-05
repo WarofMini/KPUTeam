@@ -63,19 +63,19 @@ void CServer::ServerIpAddress(void)
 
 void CServer::Process_Event(event_type ev_Now)
 {
-	switch (ev_Now.do_event)
-	{
-	case EV_GAMECOUNT:
-	{
-		Overlap_ex* over = new Overlap_ex;
-		over->operation_type = EV_GAMECOUNT;
-		PostQueuedCompletionStatus(g_hIocp, 1, ev_Now.obj_id, &(over->Original_Overlap));
-		break;
-	}
-	default:
-		break;
-	}
-	
+	//switch (ev_Now.do_event)
+	//{
+	//case EV_GAMECOUNT:
+	//{
+	//	Overlap_ex* over = new Overlap_ex;
+	//	over->operation_type = EV_GAMECOUNT;
+	//	PostQueuedCompletionStatus(g_hIocp, 1, ev_Now.obj_id, &(over->Original_Overlap));
+	//	break;
+	//}
+	//default:
+	//	break;
+	//}
+	//
 
 }
 
@@ -228,7 +228,7 @@ void CServer::Accept_thread()
 		{
 			++Bteam;
 			User->m_bRedBlue = false;
-			PlayerTemp.vPos = XMFLOAT3(500.f * User->id, 0.f, 0.f);
+			PlayerTemp.vPos = XMFLOAT3(100.f * User->id, 0.f, 0.f);
 			PlayerTemp.vDir = XMFLOAT3(0.f, 0.f, 0.f);
 		}
 
@@ -393,7 +393,7 @@ void CServer::Timer_Thread()
 
 	while (1)
 	{
-		cout << m_iStarterCnt;
+		//cout << m_iStarterCnt;
 
 		if (m_iStarterCnt < 1)
 			continue;
