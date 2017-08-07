@@ -118,7 +118,6 @@ HRESULT CLogo::Ready_GameLogic(void)
 	pLayer->Ready_Object(L"Loading", pGameObject);
 
 
-
 	m_mapLayer.insert(MAPLAYER::value_type(L"Layer_GameLogic", pLayer));
 
 	return S_OK;
