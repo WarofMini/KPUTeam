@@ -359,19 +359,17 @@ void CServer::Worker_thread()
 
 				}			
 			}
-
-
 		}
 		else if (overlap->operation_type == OP_SEND)
 		{
 			delete overlap;
 		}
-		else if (overlap->operation_type == OP_TIME)
-		{
-			//Do_Timer(key);
-			//Add_Timer(key, OP_TIME, 1000);
-			delete overlap;
-		}
+		//else if (overlap->operation_type == OP_TIME)
+		//{
+		//	//Do_Timer(key);
+		//	//Add_Timer(key, OP_TIME, 1000);
+		//	delete overlap;
+		//}
 	
 		else
 		{
@@ -397,112 +395,113 @@ void CServer::Timer_Thread()
 
 		if (m_iStarterCnt < 1)
 			continue;
-
-		for (int i = 4; i > 0; --i)
-		{
-			CTimer::TimerCount(1.f);
-			cout << "ReCount : " << i - 1 << endl;
-
-			Ser_Time_DATA timepacket;
-			timepacket.size = sizeof(timepacket);
-			timepacket.type = TIMECOUNT;
-			timepacket.gamestate = GS_READY;
-			timepacket.time = i - 1;
-
-			if (i == 1)
+		//else
+		//{
+			for (int i = 4; i > 0; --i)
 			{
-				//startTime = CTimer::SetTime();
-				cout << "Play ~!" << endl;
-			}
+				CTimer::TimerCount(1.f);
+				cout << "ReCount : " << i - 1 << endl;
 
-			for (int i = 0; i < m_Client.size(); ++i)
-			{
-				if (m_Client[i]->connected)
-					SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&timepacket));
-			}
-		}
+				Ser_Time_DATA timepacket;
+				timepacket.size = sizeof(timepacket);
+				timepacket.type = TIMECOUNT;
+				timepacket.gamestate = GS_READY;
+				timepacket.time = i - 1;
 
-		float fTime = 0.f;
-		bool	bDataChanged = false;
-		while (true)
-		{
-			fTime = CTimer::FrameSec();
-			for (int i = 0; i < 3; ++i)
-			{
-				if (m_strStation[i].ATeamCnt != 0 && m_strStation[i].BTeamCnt == 0)
+				if (i == 1)
 				{
-					m_strStation[i].fTime += fTime * m_strStation[i].ATeamCnt;
-					if (m_strStation[i].flagState == 1)
-						m_strStation[i].fTime = 0.f;
-
-					if (m_strStation[i].fTime >= 3.f && m_strStation[i].flagState != 1)
-					{
-						m_strStation[i].fTime = 3.f;
-						m_strStation[i].flagState = 1;// FLAG_TEAM1;
-						bDataChanged = true;
-					}
+					//startTime = CTimer::SetTime();
+					cout << "Play ~!" << endl;
 				}
-				
-
-				if (m_strStation[i].BTeamCnt != 0 && m_strStation[i].ATeamCnt == 0)
-				{
-					m_strStation[i].fTime -= fTime * m_strStation[i].BTeamCnt;
-					if (m_strStation[i].flagState == 2)
-						m_strStation[i].fTime = 0.f;
-					
-					if (m_strStation[i].fTime <= -3.f && m_strStation[i].flagState != 2)
-					{
-						m_strStation[i].fTime = -3.f;
-						m_strStation[i].flagState = 2;// FLAG_TEAM2;
-						bDataChanged = true;
-					}
-				}
-
-				if (m_strStation[i].ATeamCnt == 0 && m_strStation[i].BTeamCnt == 0)
-				{
-					if (m_strStation[i].fTime < 0.f)
-					{
-						m_strStation[i].fTime += fTime;
-						if (m_strStation[i].fTime > 0.f)
-							m_strStation[i].fTime = 0.f;
-					}
-					if (m_strStation[i].fTime > 0.f)
-					{
-						m_strStation[i].fTime -= fTime;
-						if (m_strStation[i].fTime < 0.f)
-							m_strStation[i].fTime = 0.f;
-					}
-				}
-			}
-
-			//점령되고 안되고 값 바뀌면 보내주는걸로하자
-			if (bDataChanged == true)
-			{
-				bDataChanged = false;
-				Ser_CurStation_DATA curStationData;
-				memcpy(&curStationData.station[0], m_strStation, sizeof(strStation) * 3);
-				curStationData.size = sizeof(Ser_CurStation_DATA);
-				curStationData.type = INGAME_CUR_STATION;
 
 				for (int i = 0; i < m_Client.size(); ++i)
 				{
-					SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&curStationData));
+					if (m_Client[i]->connected)
+						SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&timepacket));
 				}
 			}
 
-			/*Ser_CurStation_DATA curStationData;
-			memcpy(&curStationData.station[0], m_strStation, sizeof(strStation) * 3);
-			curStationData.size = sizeof(Ser_CurStation_DATA);
-			curStationData.type = INGAME_CUR_STATION;
-			for (int i = 0; i < m_Client.size(); ++i)
+			float fTime = 0.f;
+			bool  bDataChanged = false;
+			while (true)
 			{
-				if (m_Client[i]->connected)
-					SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&curStationData));
-			}*/
+				fTime = CTimer::FrameSec();
+				for (int i = 0; i < 3; ++i)
+				{
+					if (m_strStation[i].ATeamCnt != 0 && m_strStation[i].BTeamCnt == 0)
+					{
+						m_strStation[i].fTime += fTime * m_strStation[i].ATeamCnt;
+						if (m_strStation[i].flagState == 1)
+							m_strStation[i].fTime = 0.f;
 
+						if (m_strStation[i].fTime >= 3.f && m_strStation[i].flagState != 1)
+						{
+							m_strStation[i].fTime = 3.f;
+							m_strStation[i].flagState = 1;// FLAG_TEAM1;
+							bDataChanged = true;
+						}
+					}
+
+
+					if (m_strStation[i].BTeamCnt != 0 && m_strStation[i].ATeamCnt == 0)
+					{
+						m_strStation[i].fTime -= fTime * m_strStation[i].BTeamCnt;
+						if (m_strStation[i].flagState == 2)
+							m_strStation[i].fTime = 0.f;
+
+						if (m_strStation[i].fTime <= -3.f && m_strStation[i].flagState != 2)
+						{
+							m_strStation[i].fTime = -3.f;
+							m_strStation[i].flagState = 2;// FLAG_TEAM2;
+							bDataChanged = true;
+						}
+					}
+
+					if (m_strStation[i].ATeamCnt == 0 && m_strStation[i].BTeamCnt == 0)
+					{
+						if (m_strStation[i].fTime < 0.f)
+						{
+							m_strStation[i].fTime += fTime;
+							if (m_strStation[i].fTime > 0.f)
+								m_strStation[i].fTime = 0.f;
+						}
+						if (m_strStation[i].fTime > 0.f)
+						{
+							m_strStation[i].fTime -= fTime;
+							if (m_strStation[i].fTime < 0.f)
+								m_strStation[i].fTime = 0.f;
+						}
+					}
+				}
+
+				//점령되고 안되고 값 바뀌면 보내주는걸로하자
+				if (bDataChanged == true)
+				{
+					bDataChanged = false;
+					Ser_CurStation_DATA curStationData;
+					memcpy(&curStationData.station[0], m_strStation, sizeof(strStation) * 3);
+					curStationData.size = sizeof(Ser_CurStation_DATA);
+					curStationData.type = INGAME_CUR_STATION;
+
+					for (int i = 0; i < m_Client.size(); ++i)
+					{
+						SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&curStationData));
+					}
+				}
+
+				/*Ser_CurStation_DATA curStationData;
+				memcpy(&curStationData.station[0], m_strStation, sizeof(strStation) * 3);
+				curStationData.size = sizeof(Ser_CurStation_DATA);
+				curStationData.type = INGAME_CUR_STATION;
+				for (int i = 0; i < m_Client.size(); ++i)
+				{
+					if (m_Client[i]->connected)
+						SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&curStationData));
+				}*/
+
+			}
 		}
-	}
-
+	//}
 	//while (true) {
 	//	Sleep(1);
 	//	if (timer_queue.size() == 0)
@@ -628,14 +627,14 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 	{
 		Ser_PLAYER_DATA strPlayerData;
 		strPlayerData = *reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)&buf[2]);
+
 		++m_iStarterCnt;
+
 		cout << "[NO. " << strPlayerData.ID << "]ID value Recv.. " << endl;
 		for (int i = 0; i < vecID.size(); ++i)
 		{
-			
 			if (m_Client[vecID[i]]->id == strPlayerData.ID)
 			{
-			
 				for (int j = 0; j < vecID.size(); ++j)
 				{
 					if (m_Client[vecID[j]]->id == strPlayerData.ID)
