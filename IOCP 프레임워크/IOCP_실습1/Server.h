@@ -32,6 +32,8 @@ private:
 	//CPlayer*	m_pPlayer;
 	Ser_STATE_DATA m_state;
 
+	float		m_fTimeCnt;
+
 public:
 	void error_display(char *msg, int err_no);
 	void error_quit(wchar_t* msg, int err_no);

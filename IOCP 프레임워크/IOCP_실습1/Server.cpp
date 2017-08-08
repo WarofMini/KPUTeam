@@ -1,5 +1,5 @@
 #include "Server.h"
-
+#include <bitset>
 
 CServer::CServer()
 	: m_iStarterCnt(0)
@@ -216,20 +216,19 @@ void CServer::Accept_thread()
 		PlayerTemp.ID = User->id;
 		PlayerTemp.size = sizeof(Ser_PLAYER_DATA);
 		PlayerTemp.type = INIT_CLIENT;
-		
+		PlayerTemp.sHP = 5;
+
 		if (Ateam <= Bteam)
 		{
 			++Ateam;
 			User->m_bRedBlue = true;
-			PlayerTemp.vPos = XMFLOAT3(20.f * User->id, 0.f, 0.f);
-			PlayerTemp.vDir = XMFLOAT3(0.f, 0.f, 0.f);
+			PlayerTemp.vPos = XMFLOAT3(20.f * User->id, 0.f, 0.f);//여기이따가고치자씨발...
 		}
 		else
 		{
 			++Bteam;
 			User->m_bRedBlue = false;
 			PlayerTemp.vPos = XMFLOAT3(100.f * User->id, 0.f, 0.f);
-			PlayerTemp.vDir = XMFLOAT3(0.f, 0.f, 0.f);
 		}
 
 	/*	if (User->m_bRedBlue == true)
@@ -388,11 +387,11 @@ void CServer::Timer_Thread()
 	// 클라에서 서버에게 씬의 상태를 보낸다.
 	// 서버에서 그 씬의 상태를 받아서 모두가 스테이지 상태에 도달하면 카운트 다운.
 
+	m_fTimeCnt = 1.f;
 
 	while (1)
 	{
-		//cout << m_iStarterCnt;
-
+		cout << m_iStarterCnt;
 		if (m_iStarterCnt < 1)
 			continue;
 		//else
@@ -426,6 +425,8 @@ void CServer::Timer_Thread()
 			while (true)
 			{
 				fTime = CTimer::FrameSec();
+				m_fTimeCnt += fTime;
+
 				for (int i = 0; i < 3; ++i)
 				{
 					if (m_strStation[i].ATeamCnt != 0 && m_strStation[i].BTeamCnt == 0)
@@ -474,18 +475,54 @@ void CServer::Timer_Thread()
 					}
 				}
 
+				if (m_fTimeCnt >= 1.5f)
+				{
+					m_fTimeCnt = 0.f;
+
+					vector<int> vecID;//연결되있는 클라이언트들
+					for (int i = 0; i <= playerIndex; ++i)
+					{
+						if (m_Client[i]->connected)
+							vecID.push_back(i);
+					}
+
+					Ser_SEND_CHECK_PLAYER_DATA PlayerData;
+					PlayerData.size = sizeof(Ser_SEND_CHECK_PLAYER_DATA);
+					PlayerData.type = CLIENT_POSITION;
+					PlayerData.PlayerSize = vecID.size();
+
+					for (int i = 0; i < vecID.size(); ++i)
+					{
+						PlayerData.vecPositionData[i].ID = m_vecPlayer[vecID[i]].ID;
+						PlayerData.vecPositionData[i].fAngle = m_vecPlayer[vecID[i]].fAngle;
+						PlayerData.vecPositionData[i].vPos = m_vecPlayer[vecID[i]].vPos;
+					}
+
+					for (int i = 0; i < vecID.size(); ++i)
+					{
+						SendPacket(m_Client[vecID[i]]->id, reinterpret_cast<Packet*>(&PlayerData));
+					}
+				}
+
 				//점령되고 안되고 값 바뀌면 보내주는걸로하자
 				if (bDataChanged == true)
 				{
+					vector<int> vecID;//연결되있는 클라이언트들
+					for (int i = 0; i <= playerIndex; ++i)
+					{
+						if (m_Client[i]->connected)
+							vecID.push_back(i);
+					}
+
 					bDataChanged = false;
 					Ser_CurStation_DATA curStationData;
 					memcpy(&curStationData.station[0], m_strStation, sizeof(strStation) * 3);
 					curStationData.size = sizeof(Ser_CurStation_DATA);
 					curStationData.type = INGAME_CUR_STATION;
 
-					for (int i = 0; i < m_Client.size(); ++i)
+					for (int i = 0; i < vecID.size(); ++i)
 					{
-						SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&curStationData));
+						SendPacket(m_Client[vecID[i]]->id, reinterpret_cast<Packet*>(&curStationData));
 					}
 				}
 
@@ -654,28 +691,39 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 	{
 		Ser_PLAYER_DATA strPlayerData;
 		strPlayerData = *reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)&buf[2]);
+
+		Ser_SEND_PLAYER_DATA strSendData;
+		strSendData.size = sizeof(Ser_SEND_PLAYER_DATA);
+		strSendData.type = CLIENT_SEND_POSITION;
+		strSendData.ID = strPlayerData.ID;
+		strSendData.fAngle = strPlayerData.fAngle;
+		strSendData.sBitKey = strPlayerData.sBitKey;
+		strSendData.sHP = strPlayerData.sHP;
+
+// 		if (strPlayerData.strColllayData.bShoot)
+// 			strSendData.xmf3CollPos = strPlayerData.strColllayData.xmf3CollPos;
+
 		for (int i = 0; i < vecID.size(); ++i)
 		{
 			if (m_vecPlayer[vecID[i]].ID == strPlayerData.ID)
 			{
-				//m_vecPlayer[vecID[i]].vAngle = strPlayerData.vAngle;
 				m_vecPlayer[vecID[i]].vPos = strPlayerData.vPos;
-				m_vecPlayer[vecID[i]].vDir = strPlayerData.vDir;
-				m_vecPlayer[vecID[i]].strColllayData = strPlayerData.strColllayData;
-				//m_vecPlayer[vecID[i]].strAniData = strPlayerData.strAniData;
-				//m_vecPlayer[vecID[i]].dwState = strPlayerData.dwState;
+				m_vecPlayer[vecID[i]].fAngle = strPlayerData.fAngle;
+				/*m_vecPlayer[vecID[i]].strColllayData = strPlayerData.strColllayData;*/
+				m_vecPlayer[vecID[i]].sBitKey = strPlayerData.sBitKey;
+				m_vecPlayer[vecID[i]].sHP = strPlayerData.sHP;
+				SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strSendData));
 			}
 			else
 			{
-				m_vecPlayer[vecID[i]].type = CLIENT_POSITION;
-				SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strPlayerData));
+				SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strSendData));
 			}
 		}
 	}
 	break;
 	case CLIENT_ANIMATION:
 	{//일단냅두고
-		Ser_ANIMATION_DATA strAnimationData;
+		/*Ser_ANIMATION_DATA strAnimationData;
 		strAnimationData = *reinterpret_cast<Ser_ANIMATION_DATA*>((Ser_ANIMATION_DATA*)&buf[2]);
 
 		for (int i = 0; i < vecID.size(); ++i)
@@ -684,7 +732,7 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 				continue;
 			m_vecPlayer[vecID[i]].type = CLIENT_ANIMATION;
 			SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strAnimationData));
-		}
+		}*/
 	}
 	break;
 	case COLLISION_LAY:

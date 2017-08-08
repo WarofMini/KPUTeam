@@ -77,14 +77,14 @@ struct PLAYER_INFO
 	unsigned char Packetbuf[MAX_PACKET_SIZE]; // 요기 버퍼랑은 무슨 상관일까? -> 너가말한 버퍼를 담는 공간은 여기야
 	int id;
 	bool m_bRedBlue;
-	mutex lock;
 	CRITICAL_SECTION cs;
 };
 //////////////////////////////////////////
 
 struct Ser_COLLLAY_DATA
 {
-	bool bShoot;
+	BYTE size;	// 이게 전체 size 이고
+	BYTE type;	// 너가 말한 서버의 buf[1] 이 요거고 -> 아까 process packet 에서 구분한 이벤트는 요 type 인거야.
 	int iCollPlayerID;	// 이게 클라이언트에게 줄 id 값이야
 	XMFLOAT3 xmf3CollPos;
 };
@@ -94,11 +94,37 @@ struct Ser_PLAYER_DATA
 	BYTE size;	// 이게 전체 size 이고
 	BYTE type;	// 너가 말한 서버의 buf[1] 이 요거고 -> 아까 process packet 에서 구분한 이벤트는 요 type 인거야.
 	int ID;	// 이게 클라이언트에게 줄 id 값이야
-	XMFLOAT3 vPos;
-	XMFLOAT3 vDir;
 	BYTE SC_ID;
-	Ser_COLLLAY_DATA strColllayData;
+	XMFLOAT3 vPos;
+	float	fAngle;
+	short	sBitKey;
+	short	sHP;
+	//Ser_COLLLAY_DATA strColllayData;
+};
 
+struct Ser_SEND_PLAYER_DATA
+{
+	BYTE size;	// 이게 전체 size 이고
+	BYTE type;	// 너가 말한 서버의 buf[1] 이 요거고 -> 아까 process packet 에서 구분한 이벤트는 요 type 인거야.
+	int ID;	// 이게 클라이언트에게 줄 id 값이야
+	float	fAngle;
+	short	sBitKey;
+	XMFLOAT3 xmf3CollPos;
+	short	sHP;
+};
+
+struct Ser_Position
+{
+	int ID;	// 이게 클라이언트에게 줄 id 값이야
+	float	fAngle;
+	XMFLOAT3 vPos;
+};
+struct Ser_SEND_CHECK_PLAYER_DATA
+{
+	BYTE size;	// 이게 전체 size 이고
+	BYTE type;	// 너가 말한 서버의 buf[1] 이 요거고 -> 아까 process packet 에서 구분한 이벤트는 요 type 인거야.
+	BYTE PlayerSize;
+	Ser_Position vecPositionData[10];
 };
 
 struct Ser_Vec_PLAYER_DATA
@@ -205,6 +231,7 @@ enum ProcessPacket
 	INIT_CLIENT,		 // 클라이언트 객체 생성해주자.
 	INIT_OTHER_PLAYER,	 // 다른 플레이어가 들어오게 만든다.
 	CLIENT_POSITION,	 // 좌표를 주고받자.
+	CLIENT_SEND_POSITION,
 	CLIENT_DIRECTION,	 // direction 값을 받아오자.
 	CLIENT_ANIMATION,
 	COLLISION_LAY,
