@@ -7,9 +7,11 @@
 #include "RcTex.h"
 #include "CameraMgr.h"
 #include "Transform.h"
+#include "Sound.h"
 
 CLogoBack::CLogoBack(ID3D11DeviceContext * pContext)
 : CUI(pContext)
+, m_pSound(NULL)
 {
 }
 
@@ -46,6 +48,11 @@ HRESULT CLogoBack::Initialize(void)
 
 	m_fOriginSizeX = 1600;
 	m_fOriginSizeY = 900;
+
+	m_pSound->IsPlaying(L"Town");
+	m_pSound->MyStopSoundAll();
+	m_pSound->MyPlaySound(L"Town", true);
+	m_pSound->Update_Component(0.f);
 
 	return S_OK;
 }
@@ -101,6 +108,7 @@ void CLogoBack::Render(void)
 
 void CLogoBack::Release(void)
 {
+	m_pSound->MyStopSound(L"Town");
 	CGameObject::Release();
 	delete this;
 }
@@ -127,6 +135,13 @@ HRESULT CLogoBack::Ready_Component(void)
 	m_pTransform = dynamic_cast<CTransform*>(pComponent);
 	if (pComponent == NULL) return E_FAIL;
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Transform", pComponent));
+
+	//SoundBGM
+	pComponent = CSound::Create((CTransform*)pComponent);
+	m_pSound = dynamic_cast<CSound*>(pComponent);
+	if (pComponent == NULL) return E_FAIL;
+	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Sound", pComponent));
+	m_pSound->Set_Sound(L"Town", L"TownBGM.mp3");
 
 	return S_OK;
 }

@@ -46,4 +46,9 @@ extern _bool	g_bCountCheck;
 
 extern wstring  g_strFullPath;
 
+//Sound Value
+extern _float g_fBGMValue;
+extern _float g_fEffectSoundValue;
+
+
 #endif

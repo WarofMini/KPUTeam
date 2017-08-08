@@ -44,6 +44,14 @@
 
 using namespace XNA;
 
+//FMOD====================================================//
+#include <io.h>
+#include "fmod.h"
+#include "fmod.hpp"
+#include "fmod_dsp.h"
+#include "fmod_errors.h"
+//======================================================//
+
 //ÇÇÁ÷½º================================================//
 #include <PxPhysicsAPI.h>
 using namespace physx;

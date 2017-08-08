@@ -5,6 +5,7 @@
 
 class CTextures;
 class CRcTex;
+class CSound;
 
 class CBomb
 	: public CEffect
@@ -12,6 +13,10 @@ class CBomb
 private:
 	explicit CBomb(ID3D11DeviceContext* pContext);
 	virtual ~CBomb(void);
+
+private:
+	CSound*		m_pSound;
+	_bool		m_bSoundStart;
 
 public:
 	static CBomb* Create(ID3D11DeviceContext* pContext);

@@ -6,6 +6,7 @@
 #include "GraphicDev.h"
 #include "CameraMgr.h"
 #include "Transform.h"
+#include "Sound.h"
 
 
 CBomb::CBomb(ID3D11DeviceContext * pContext)
@@ -19,6 +20,7 @@ CBomb::CBomb(ID3D11DeviceContext * pContext)
 	m_fRealTime = 0.0f;
 	m_fDelayTime = 0.0f;
 	m_bAllBillboardCheck = true;
+	m_bSoundStart = false;
 }
 
 CBomb::~CBomb(void)
@@ -47,6 +49,12 @@ HRESULT CBomb::Initialize(void)
 
 INT CBomb::Update(const FLOAT & fTimeDelta)
 {
+	if (!m_bSoundStart)
+	{
+		m_pSound->MyPlaySound(L"Hit");
+		m_pSound->Check_Distance();
+		m_bSoundStart = true;
+	}
 
 	m_fRealTime += fTimeDelta;
 
@@ -65,14 +73,15 @@ INT CBomb::Update(const FLOAT & fTimeDelta)
 	ComputeBillboard();
 
 	if (m_fRealTime >= m_fLifeTime)
+	{
 		m_bDead = true;
+	}
 
 	if (m_bDead && m_bLoop)
 	{
 		m_fRealTime -= m_fLifeTime;
 		m_bDead = false;
 	}
-
 
 	return m_bDead;
 }
@@ -139,6 +148,13 @@ HRESULT CBomb::Ready_Component(void)
 	m_pTransform = dynamic_cast<CTransform*>(pComponent);
 	if (pComponent == NULL) return E_FAIL;
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Transform", pComponent));
+
+	//Sound
+	pComponent = CSound::Create((CTransform*)pComponent);
+	m_pSound = dynamic_cast<CSound*>(pComponent);
+	if (pComponent == NULL) return E_FAIL;
+	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Sound", pComponent));
+	m_pSound->Set_Sound(L"Hit", L"WitchHit.wav");
 
 	return S_OK;
 }

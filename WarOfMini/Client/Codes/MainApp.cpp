@@ -12,6 +12,7 @@
 #include "Timer_Manager.h"
 #include "FontMgr.h"
 #include "Input.h"
+#include "Sound_Manager.h"
 
 
 CMainApp::CMainApp(void)
@@ -49,6 +50,9 @@ HRESULT CMainApp::Initialize(void)
 		MSG_BOX(L"Ready_GraphicDev Failed");
 		return E_FAIL;
 	}
+
+	//Sound Manager Init
+	CSound_Manager::GetInstance()->Ready_SoundManager();
 
 	//Ready Font
 	CFontMgr::GetInstance()->Ready_Font(pGraphicDev, pContext, L"°íµñ");
@@ -201,7 +205,7 @@ void CMainApp::Release(void)
 	//Physx SDK Release=======================
 	ReleasePhysxEngine();
 	//========================================
-
+	CSound_Manager::GetInstance()->DestroyInstance();
 	CFrameMgr::GetInstance()->DestroyInstance();
 	CTimeMgr::GetInstance()->DestroyInstance();
 	CFontMgr::GetInstance()->DestroyInstance();

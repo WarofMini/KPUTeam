@@ -307,6 +307,12 @@
     <Filter Include="02.Object\08.UI\10.RespawnUI\02.FlagUI">
       <UniqueIdentifier>{dd3735e0-f367-4438-9cfe-48fcfe9ddc12}</UniqueIdentifier>
     </Filter>
+    <Filter Include="95.Engine\00.Utility\14.Sound">
+      <UniqueIdentifier>{8938a940-9e5e-46f7-89d4-e7df99ad3add}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.Engine\00.Utility\14.Sound\00.Manager">
+      <UniqueIdentifier>{a1ce6927-f3e7-431a-a8bf-d75cb5c15b0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -618,6 +624,12 @@
     <ClInclude Include="..\Codes\FlagUI.h">
       <Filter>02.Object\08.UI\10.RespawnUI\02.FlagUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Sound.h">
+      <Filter>95.Engine\00.Utility\14.Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Sound_Manager.h">
+      <Filter>95.Engine\00.Utility\14.Sound\00.Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -886,6 +898,12 @@
     </ClCompile>
     <ClCompile Include="..\Codes\FlagUI.cpp">
       <Filter>02.Object\08.UI\10.RespawnUI\02.FlagUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Sound.cpp">
+      <Filter>95.Engine\00.Utility\14.Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Sound_Manager.cpp">
+      <Filter>95.Engine\00.Utility\14.Sound\00.Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
