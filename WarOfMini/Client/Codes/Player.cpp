@@ -46,6 +46,7 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 , m_bBoostDelay(false)
 , m_fDelayCount(0.0f)
 , m_iGunFlashTexture(1)
+, m_fMoveAngleY(0.f)
 {
 	m_pInput = CInput::GetInstance();
 	m_vLook = XMFLOAT3(0.f, 1.f, 0.f);
@@ -143,6 +144,7 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 	{
 		Operate_StateMAchine(fTimeDelta);
 		KeyState(fTimeDelta);
+
 		SendPacketAlways();
 	}	
 
@@ -286,6 +288,17 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 	}
 	else
 	{
+		if (m_dwState == SOLDIER_DEAD && Check_AnimationFrame())
+		{
+			m_iHP = 5;
+			m_dwState = SOLDIER_IDLE;
+			if (m_bIsSoldier)
+				PlayAnimation(PLAYER_idle);
+			else
+				PlayAnimation(PLAYER_Iron_Idle);
+			m_pComStateMachine->Enter_State(SOLDIER_IDLE);
+		}
+
 		KeyCheck();
 
 		DWORD dwState = m_pComStateMachine->Get_State();
@@ -350,15 +363,14 @@ void CPlayer::PlayAnimation(DWORD dwAniIdx, bool bImmediate)
 	m_pAnimInfo->Set_Key((_ushort)dwAniIdx);
 	m_dwAniIdx = dwAniIdx;
 
-	Ser_ANIMATION_DATA m_AnimationData;
+	/*Ser_ANIMATION_DATA m_AnimationData;
 	m_AnimationData.size = sizeof(Ser_ANIMATION_DATA);
 	m_AnimationData.type = CLIENT_ANIMATION;
 	m_AnimationData.ID = g_myid;
 	m_AnimationData.bImmediate = bImmediate;
 	m_AnimationData.dwAniIdx = dwAniIdx;
 	m_AnimationData.bIsSoldier = m_bIsSoldier;
-	g_Client->sendPacket(sizeof(Ser_ANIMATION_DATA), CLIENT_ANIMATION, reinterpret_cast<BYTE*>(&m_AnimationData));
-
+	g_Client->sendPacket(sizeof(Ser_ANIMATION_DATA), CLIENT_ANIMATION, reinterpret_cast<BYTE*>(&m_AnimationData));*/
 }
 
 bool CPlayer::Check_AnimationFrame(void)
@@ -420,16 +432,32 @@ void CPlayer::KeyCheck(void)
 {
 	m_eMoveDir = DIR_END;
 	m_vMoveDir = XMFLOAT3(0.f, 0.f, 0.f);
-	ZeroMemory(&m_bKey, sizeof(bool) * KEY_END);
+	//ZeroMemory(&m_bKey, sizeof(bool) * KEY_END);
+	m_sBitKey = 0;
 
 	if (m_pInput->Get_DIKeyState(DIK_W))
-		m_bKey[KEY_UP] = true;
+		m_sBitKey += 1;//m_bKey[KEY_UP] = true;
 	if (m_pInput->Get_DIKeyState(DIK_S))
-		m_bKey[KEY_DOWN] = true;
+		m_sBitKey += 2;//m_bKey[KEY_DOWN] = true;
 	if (m_pInput->Get_DIKeyState(DIK_A))
-		m_bKey[KEY_LEFT] = true;
+		m_sBitKey += 4;//m_bKey[KEY_LEFT] = true;
 	if (m_pInput->Get_DIKeyState(DIK_D))
-		m_bKey[KEY_RIGHT] = true;
+		m_sBitKey += 8;//m_bKey[KEY_RIGHT] = true;
+	if (m_pInput->Get_DIKeyState(DIK_Q))
+		m_sBitKey += 16;//m_bKey[KEY_Q] = true;
+	if (m_pInput->Get_DIKeyState(DIK_R))
+		m_sBitKey += 32;//m_bKey[KEY_R] = true;
+
+	if (m_pInput->Get_DIKeyState(DIK_LSHIFT))
+		m_sBitKey += 64;//m_bKey[KEY_SHIFT] = true;
+	if (m_pInput->Get_DIKeyState(DIK_LCONTROL))
+		m_sBitKey += 128;//m_bKey[KEY_CTRL] = true;
+	if (m_pInput->Get_DIKeyState(DIK_SPACE))
+		m_sBitKey += 256;//m_bKey[KEY_SPACE] = true;
+	if (m_pInput->Get_DIMouseState(CInput::DIM_LB))
+		m_sBitKey += 512;//m_bKey[KEY_LCLICK] = true;
+	if (m_pInput->Get_DIMouseState(CInput::DIM_RB))
+		m_sBitKey += 1024;//m_bKey[KEY_RCLICK] = true;
 
 	if (m_bKey[KEY_UP] == true && m_bKey[KEY_DOWN] == true)
 	{
@@ -506,11 +534,16 @@ void CPlayer::KeyState(const FLOAT& fTimeDelta)
 
 	if (lMouseMove = m_pInput->Get_DIMouseMove(CInput::DIMS_X))
 	{
-		if (m_pTransform->m_vAngle.y >= 360.f)
+		if (m_fMoveAngleY >= 360.f)
+			m_fMoveAngleY = 0.f;
+		if (m_fMoveAngleY < 0.f)
+			m_fMoveAngleY = 360.f;
+		m_fMoveAngleY += lMouseMove * fTimeDelta * 5.f;
+		/*if (m_pTransform->m_vAngle.y >= 360.f)
 			m_pTransform->m_vAngle.y = 0.f;
 		if (m_pTransform->m_vAngle.y < 0.f)
 			m_pTransform->m_vAngle.y = 360.f;
-		m_pTransform->m_vAngle.y += lMouseMove * fTimeDelta * 5.f;
+		m_pTransform->m_vAngle.y += lMouseMove * fTimeDelta * 5.f;*/
 	}
 
 	if(m_bIsSoldier)
@@ -519,6 +552,11 @@ void CPlayer::KeyState(const FLOAT& fTimeDelta)
 		Soldier_Iron_Move(fTimeDelta);
 
 	Soldier_Fire(fTimeDelta);
+
+	if (m_bAbleReload)
+	{
+		m_sBitKey &= 0b10111111111;
+	}
 
 	/*if (m_pInput->GetDIKeyStateOnce(DIK_RETURN))
 	{
@@ -635,13 +673,10 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 		if (((CGun*)m_pEquipment[0])->Fire())
 		{
 			XMFLOAT3 m_vCameraEye = CCameraMgr::GetInstance()->Get_CurCameraEye();
-
 			XMFLOAT3 m_vCameraLookAt = CCameraMgr::GetInstance()->Get_CurCameraLookAt();
-
 
 			PxVec3 OriginPos = PxVec3(m_vCameraEye.x, m_vCameraEye.y, m_vCameraEye.z);
 			PxVec3 Dir = PxVec3(m_vCameraLookAt.x, m_vCameraLookAt.y, m_vCameraLookAt.z);
-
 
 			PxReal maxDistance = 1000.f;
 			PxRaycastBuffer Onehit;
@@ -649,7 +684,6 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 			Onefd.flags |= PxQueryFlag::ePOSTFILTER;
 
 			bool m_bOneCheck = false;
-
 
 			m_bOneCheck = m_pScene->raycast(OriginPos, Dir, maxDistance, Onehit, PxHitFlags(PxHitFlag::eDEFAULT), Onefd);
 
@@ -737,9 +771,7 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 					if (pObjList)
 					{
 						pName = Gunhit.block.actor->getName();
-						strFullName = pName;
 						if (pName)
-						iStartIdx = strFullName.find("OtherPlayer_");
 						{
 							strFullName = pName;
 							iStartIdx = strFullName.find("OtherPlayer_");
@@ -747,7 +779,7 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 					}
 
 					int intValue = -1;
-					m_ColllayData.bShoot = true;
+					//m_ColllayData.bShoot = true;
 					m_ColllayData.iCollPlayerID = -1;
 					m_ColllayData.xmf3CollPos = m_vtestpos;
 					
@@ -758,14 +790,16 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 						m_ColllayData.iCollPlayerID = intValue;
 					}
 
-					//g_Client->sendPacket(sizeof(Ser_COLLLAY_DATA), COLLISION_LAY, reinterpret_cast<BYTE*>(&strColData));
+					/*m_ColllayData.size = sizeof(Ser_COLLLAY_DATA);
+					m_ColllayData.type = COLLISION_LAY;
+					g_Client->sendPacket(sizeof(Ser_COLLLAY_DATA), COLLISION_LAY, reinterpret_cast<BYTE*>(&m_ColllayData));*/
 
 					//Effect
-					CGameObject* pGameObject = CBomb::Create(m_pContext);
+					/*CGameObject* pGameObject = CBomb::Create(m_pContext);
 
 					pGameObject->SetTransformPosition(m_vtestpos);
 
-					pLayer->Ready_Object(L"Effect", pGameObject);
+					pLayer->Ready_Object(L"Effect", pGameObject);*/
 
 					//Dynamic Actor(::레이에 맞은 다이나믹 오브젝트 리액션)
 					PxRigidDynamic* actor = Gunhit.block.actor->is<PxRigidDynamic>();
@@ -809,6 +843,24 @@ void CPlayer::Reload(void)
 {
 	((CGun*)m_pEquipment[0])->Reload();
 	m_bAbleReload = false;
+}
+
+void CPlayer::Set_KeyState(_short sBitKeyState, float fAngle, short sHP)
+{
+	m_bKey[KEY_UP] = sBitKeyState & 1;
+	m_bKey[KEY_DOWN] = sBitKeyState & 2;
+	m_bKey[KEY_LEFT] = sBitKeyState & 4;
+	m_bKey[KEY_RIGHT] = sBitKeyState & 8;
+	m_bKey[KEY_Q] = sBitKeyState & 16;
+	m_bKey[KEY_R] = sBitKeyState & 32;
+	m_bKey[KEY_SHIFT] = sBitKeyState & 64;
+	m_bKey[KEY_CTRL] = sBitKeyState & 128;
+	m_bKey[KEY_SPACE] = sBitKeyState & 256;
+	m_bKey[KEY_LCLICK] = sBitKeyState & 512;
+	m_bKey[KEY_RCLICK] = sBitKeyState & 1024;
+
+	m_pTransform->m_vAngle.y = fAngle;
+	m_iHP = sHP;
 }
 
 void CPlayer::UpdateDir(void)
@@ -1077,8 +1129,10 @@ void CPlayer::SendPacketAlways(void)
 	m_pPlayerData.type = CLIENT_POSITION;
 	m_pPlayerData.ID = g_myid;
 	m_pPlayerData.vPos = m_pTransform->m_vPos;
-	m_pPlayerData.vDir = m_pTransform->m_vAngle;
+	m_pPlayerData.fAngle = m_fMoveAngleY;
 	m_pPlayerData.SC_ID = g_CurrentScene;
-	m_pPlayerData.strColllayData = m_ColllayData;
+	//m_pPlayerData.strColllayData = m_ColllayData;
+	m_pPlayerData.sBitKey = m_sBitKey;
+	m_pPlayerData.sHP = m_iHP;
 	g_Client->sendPacket(sizeof(Ser_PLAYER_DATA), CLIENT_POSITION, reinterpret_cast<BYTE*>(&m_pPlayerData));
 }

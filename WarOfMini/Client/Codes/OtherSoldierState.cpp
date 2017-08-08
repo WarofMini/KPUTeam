@@ -1,45 +1,44 @@
 #include "stdafx.h"
-#include "SoldierState.h"
+#include "OtherSoldierState.h"
 #include "State.h"
 
-CSoldierState::CSoldierState(CPlayer* pSoldier)
+COtherSoldierState::COtherSoldierState(COtherPlayer* pSoldier)
 	: m_pSoldier(pSoldier)
-	, m_pInput(pSoldier->GetInput())
 	, m_pAniIdx(pSoldier->Get_AniIdx())
 	, m_pMoveDir(pSoldier->GetMoveDir())
 {
 
 }
 
-CSoldierState::~CSoldierState()
+COtherSoldierState::~COtherSoldierState()
 {
 
 }
 
-int CSoldierState::InState()
-{
-	m_pkey = m_pSoldier->Get_KeyState();
-	return 0;
-}
-
-int CSoldierState::OnState()
+int COtherSoldierState::InState()
 {
 	m_pkey = m_pSoldier->Get_KeyState();
 	return 0;
 }
 
-int CSoldierState::OutState()
+int COtherSoldierState::OnState()
 {
 	m_pkey = m_pSoldier->Get_KeyState();
 	return 0;
 }
 
-void CSoldierState::ShootCheck(void)
+int COtherSoldierState::OutState()
+{
+	m_pkey = m_pSoldier->Get_KeyState();
+	return 0;
+}
+
+void COtherSoldierState::ShootCheck(void)
 {
 
 }
 
-void CSoldierState::Release(void)
+void COtherSoldierState::Release(void)
 {
 	CState::Release();
 }

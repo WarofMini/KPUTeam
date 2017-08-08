@@ -1,13 +1,13 @@
-#ifndef SoldierJump_h__
-#define SoldierJump_h__
+#ifndef OtherSoldierJump_h__
+#define OtherSoldierJump_h__
 
-#include "SoldierState.h"
+#include "OtherSoldierState.h"
 
-class CSoldierJump : public CSoldierState
+class COtherSoldierJump : public COtherSoldierState
 {
 protected:
-	explicit	CSoldierJump(CPlayer*	pSoldier);
-	virtual		~CSoldierJump();
+	explicit	COtherSoldierJump(COtherPlayer*	pSoldier);
+	virtual		~COtherSoldierJump();
 
 protected:
 	virtual int	InState();
@@ -17,7 +17,7 @@ protected:
 	virtual void ShootCheck(void);
 
 public:
-	static	CSoldierJump*		Create(CPlayer* pSoldier);
+	static	COtherSoldierJump*		Create(COtherPlayer* pSoldier);
 
 protected:
 	virtual void Release(void);

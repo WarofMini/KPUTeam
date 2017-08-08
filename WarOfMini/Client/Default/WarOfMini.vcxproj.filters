@@ -307,6 +307,24 @@
     <Filter Include="02.Object\08.UI\10.RespawnUI\02.FlagUI">
       <UniqueIdentifier>{dd3735e0-f367-4438-9cfe-48fcfe9ddc12}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\01.Soldier\01.OtherPlayer\State">
+      <UniqueIdentifier>{adb41e67-b1c8-4bad-b593-4f3ab8458df7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\01.Soldier\01.OtherPlayer\State\Idle">
+      <UniqueIdentifier>{1db90032-e66b-4165-9cdc-0e19e0f70950}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\01.Soldier\01.OtherPlayer\State\Jump">
+      <UniqueIdentifier>{13c7b89a-1233-4b90-a699-bf0dc1a37eb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\01.Soldier\01.OtherPlayer\State\Lying">
+      <UniqueIdentifier>{fee1c278-66e2-4854-a522-adeffc4ef248}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\01.Soldier\01.OtherPlayer\State\Move">
+      <UniqueIdentifier>{34079e22-7433-4a06-8f18-341f46039c60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\01.Soldier\01.OtherPlayer\State\Roll">
+      <UniqueIdentifier>{f9510b85-dbcf-47fb-af53-c049f02c3579}</UniqueIdentifier>
+    </Filter>
     <Filter Include="95.Engine\00.Utility\14.Sound">
       <UniqueIdentifier>{8938a940-9e5e-46f7-89d4-e7df99ad3add}</UniqueIdentifier>
     </Filter>
@@ -624,6 +642,27 @@
     <ClInclude Include="..\Codes\FlagUI.h">
       <Filter>02.Object\08.UI\10.RespawnUI\02.FlagUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\OtherSoldierState.h">
+      <Filter>02.Object\01.Soldier\01.OtherPlayer\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\OtherSoldierDefine.h">
+      <Filter>02.Object\01.Soldier\01.OtherPlayer\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\OtherSoldierIdle.h">
+      <Filter>02.Object\01.Soldier\01.OtherPlayer\State\Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\OtherSoldierJump.h">
+      <Filter>02.Object\01.Soldier\01.OtherPlayer\State\Jump</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\OtherSoldierLying.h">
+      <Filter>02.Object\01.Soldier\01.OtherPlayer\State\Lying</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\OtherSoldierMove.h">
+      <Filter>02.Object\01.Soldier\01.OtherPlayer\State\Move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\OtherSoldierRoll.h">
+      <Filter>02.Object\01.Soldier\01.OtherPlayer\State\Roll</Filter>
+    </ClInclude>
     <ClInclude Include="..\Codes\Sound.h">
       <Filter>95.Engine\00.Utility\14.Sound</Filter>
     </ClInclude>
@@ -898,6 +937,24 @@
     </ClCompile>
     <ClCompile Include="..\Codes\FlagUI.cpp">
       <Filter>02.Object\08.UI\10.RespawnUI\02.FlagUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\OtherSoldierState.cpp">
+      <Filter>02.Object\01.Soldier\01.OtherPlayer\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\OtherSoldierIdle.cpp">
+      <Filter>02.Object\01.Soldier\01.OtherPlayer\State\Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\OtherSoldierJump.cpp">
+      <Filter>02.Object\01.Soldier\01.OtherPlayer\State\Jump</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\OtherSoldierLying.cpp">
+      <Filter>02.Object\01.Soldier\01.OtherPlayer\State\Lying</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\OtherSoldierMove.cpp">
+      <Filter>02.Object\01.Soldier\01.OtherPlayer\State\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\OtherSoldierRoll.cpp">
+      <Filter>02.Object\01.Soldier\01.OtherPlayer\State\Roll</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Sound.cpp">
       <Filter>95.Engine\00.Utility\14.Sound</Filter>

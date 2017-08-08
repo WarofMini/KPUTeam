@@ -344,38 +344,123 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 	break;
 	case CLIENT_POSITION:
 	{
-		m_pPlayerData = reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)buf);
+		Ser_SEND_CHECK_PLAYER_DATA* vecPlayerData = reinterpret_cast<Ser_SEND_CHECK_PLAYER_DATA*>((Ser_SEND_CHECK_PLAYER_DATA*)buf);
 
 		pScene = CManagement::GetInstance()->GetScene();
 		pLayer = pScene->FindLayer(L"Layer_GameLogic");
-		list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"OtherPlayer");
-		if (pObjList == NULL)
-			break;
-
-		list<CGameObject*>::iterator iter = pObjList->begin();
-		list<CGameObject*>::iterator iter_end = pObjList->end();
-
-		for (iter; iter != iter_end; ++iter)
+		
+		for (int i = 0; i < vecPlayerData->PlayerSize; ++i)
 		{
-			if (((COtherPlayer*)*iter)->GetID() == m_pPlayerData->ID)
+			if (g_myid != vecPlayerData->vecPositionData[i].ID)
 			{
-				((COtherPlayer*)*iter)->SetPlayerData(m_pPlayerData->vPos, m_pPlayerData->vDir);
-				if (m_pPlayerData->strColllayData.bShoot)
+				list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"OtherPlayer");
+				if (pObjList == NULL)
+					break;
+
+				list<CGameObject*>::iterator iter = pObjList->begin();
+				list<CGameObject*>::iterator iter_end = pObjList->end();
+
+				for (iter; iter != iter_end; ++iter)
 				{
-					CGameObject* pGameObject = CBomb::Create(CGraphicDev::GetInstance()->GetContext());
-					pGameObject->SetTransformPosition(m_pPlayerData->strColllayData.xmf3CollPos);
-					pLayer->Ready_Object(L"Effect", pGameObject);
-					if (g_myid == m_pPlayerData->strColllayData.iCollPlayerID)
+					if (((COtherPlayer*)*iter)->GetID() == vecPlayerData->vecPositionData[i].ID)
 					{
-						list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"Player");
-						list<CGameObject*>::iterator iter = pObjList->begin();
-						((CPlayer*)*iter)->SetHP();
+						((COtherPlayer*)*iter)->SetPlayerData(vecPlayerData->vecPositionData[i].vPos, vecPlayerData->vecPositionData[i].fAngle);
 					}
 				}
 			}
 		}
+
+
+		/*if (g_myid == m_pPlayerData->ID)
+		{
+			list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"Player");
+			if (pObjList == NULL)
+				break;
+			list<CGameObject*>::iterator iter = pObjList->begin();
+
+			((CPlayer*)*iter)->Set_KeyState(m_pPlayerData->sBitKey, m_pPlayerData->fAngle);
+		}
+		else
+		{
+			list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"OtherPlayer");
+			if (pObjList == NULL)
+				break;
+
+			list<CGameObject*>::iterator iter = pObjList->begin();
+			list<CGameObject*>::iterator iter_end = pObjList->end();
+
+			for (iter; iter != iter_end; ++iter)
+			{
+				if (((COtherPlayer*)*iter)->GetID() == m_pPlayerData->ID)
+				{
+					((COtherPlayer*)*iter)->Set_KeyState(m_pPlayerData->sBitKey, m_pPlayerData->fAngle);
+				}
+			}*/
+			/*for (iter; iter != iter_end; ++iter)
+			{
+			if (((COtherPlayer*)*iter)->GetID() == m_pPlayerData->ID)
+			{
+			((COtherPlayer*)*iter)->SetPlayerData(m_pPlayerData->vPos, m_pPlayerData->vDir);
+			if (m_pPlayerData->strColllayData.bShoot)
+			{
+			CGameObject* pGameObject = CBomb::Create(CGraphicDev::GetInstance()->GetContext());
+			pGameObject->SetTransformPosition(m_pPlayerData->strColllayData.xmf3CollPos);
+			pLayer->Ready_Object(L"Effect", pGameObject);
+			if (g_myid == m_pPlayerData->strColllayData.iCollPlayerID)
+			{
+			list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"Player");
+			list<CGameObject*>::iterator iter = pObjList->begin();
+			((CPlayer*)*iter)->SetHP();
+			}
+			}
+			}
+			}
+		}*/
 	}
 	break;
+	case CLIENT_SEND_POSITION:
+	{
+		Ser_SEND_PLAYER_DATA* pPlayerData = reinterpret_cast<Ser_SEND_PLAYER_DATA*>((Ser_SEND_PLAYER_DATA*)buf);
+
+		pScene = CManagement::GetInstance()->GetScene();
+		pLayer = pScene->FindLayer(L"Layer_GameLogic");
+
+		if (g_myid == pPlayerData->ID)
+		{
+			list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"Player");
+			if (pObjList == NULL)
+				break;
+			list<CGameObject*>::iterator iter = pObjList->begin();
+
+			((CPlayer*)*iter)->Set_KeyState(pPlayerData->sBitKey, pPlayerData->fAngle, pPlayerData->sHP);
+		}
+		else
+		{
+			list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"OtherPlayer");
+			if (pObjList == NULL)
+				break;
+
+			list<CGameObject*>::iterator iter = pObjList->begin();
+			list<CGameObject*>::iterator iter_end = pObjList->end();
+
+			for (iter; iter != iter_end; ++iter)
+			{
+				if (((COtherPlayer*)*iter)->GetID() == pPlayerData->ID)
+				{
+					((COtherPlayer*)*iter)->Set_KeyState(pPlayerData->sBitKey, pPlayerData->fAngle, pPlayerData->sHP);
+				}
+			}
+
+// 			if (pPlayerData->xmf3CollPos.x != 0.f && pPlayerData->xmf3CollPos.y != 0.f && pPlayerData->xmf3CollPos.z != 0.f)
+// 			{
+// 				CGameObject* pGameObject = CBomb::Create(CGraphicDev::GetInstance()->GetContext());
+// 				pGameObject->SetTransformPosition(pPlayerData->xmf3CollPos);
+// 				pLayer->Ready_Object(L"Effect", pGameObject);
+// 			}
+			
+		}
+	}
+		break;
 	case CLIENT_DIRECTION:
 		break;
 	case CLIENT_ANIMATION:
@@ -393,13 +478,13 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 
 		for (iter; iter != iter_end; ++iter)
 		{
-			if (((COtherPlayer*)*iter)->GetID() == AnimationData.ID)
+			/*if (((COtherPlayer*)*iter)->GetID() == AnimationData.ID)
 			{
 				if (((COtherPlayer*)*iter)->IsSoldier() == AnimationData.bIsSoldier)
 					((COtherPlayer*)*iter)->PlayAnimation(AnimationData.dwAniIdx, AnimationData.bImmediate);
 				else
 					((COtherPlayer*)*iter)->SoldierChange();
-			}
+			}*/
 		}
 	}
 	break;
@@ -409,11 +494,28 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 
 		pScene = CManagement::GetInstance()->GetScene();
 		pLayer = pScene->FindLayer(L"Layer_GameLogic");
-		if (g_myid == strCollData.ID)
+		if (g_myid == strCollData.iCollPlayerID)
 		{
 			list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"Player");
 			list<CGameObject*>::iterator iter = pObjList->begin();
 			((CPlayer*)*iter)->SetHP();
+		}
+		else
+		{
+			list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"OtherPlayer");
+			if (pObjList == NULL)
+				break;
+
+			list<CGameObject*>::iterator iter = pObjList->begin();
+			list<CGameObject*>::iterator iter_end = pObjList->end();
+
+			for (iter; iter != iter_end; ++iter)
+			{
+				if (((COtherPlayer*)*iter)->GetID() == strCollData.iCollPlayerID)
+				{
+					((COtherPlayer*)*iter)->SetHP();
+				}
+			}
 		}
 
 		CGameObject* pGameObject = CBomb::Create(CGraphicDev::GetInstance()->GetContext());

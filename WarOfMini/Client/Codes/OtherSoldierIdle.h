@@ -1,13 +1,13 @@
-#ifndef SoldierIdle_h__
-#define SoldierIdle_h__
+#ifndef OtherSoldierIdle_h__
+#define OtherSoldierIdle_h__
 
-#include "SoldierState.h"
+#include "OtherSoldierState.h"
 
-class CSoldierIdle : public CSoldierState
+class COtherSoldierIdle : public COtherSoldierState
 {
 protected:
-	explicit	CSoldierIdle(CPlayer*	pSoldier);
-	virtual		~CSoldierIdle();
+	explicit	COtherSoldierIdle(COtherPlayer*	pSoldier);
+	virtual		~COtherSoldierIdle();
 
 protected:
 	virtual int	InState();
@@ -17,7 +17,7 @@ protected:
 	virtual void ShootCheck(void);
 
 public:
-	static	CSoldierIdle*		Create(CPlayer* pSoldier);
+	static	COtherSoldierIdle*		Create(COtherPlayer* pSoldier);
 
 protected:
 	virtual void Release(void);

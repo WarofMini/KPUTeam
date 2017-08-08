@@ -1,35 +1,29 @@
 #include "stdafx.h"
-#include "SoldierLying.h"
+#include "OtherSoldierLying.h"
 #include "Input.h"
 
-CSoldierLying::CSoldierLying(CPlayer* pSoldier)
-	: CSoldierState(pSoldier)
+COtherSoldierLying::COtherSoldierLying(COtherPlayer* pSoldier)
+	: COtherSoldierState(pSoldier)
 {
 
 }
 
-CSoldierLying::~CSoldierLying()
+COtherSoldierLying::~COtherSoldierLying()
 {
 
 }
 
-int CSoldierLying::InState()
+int COtherSoldierLying::InState()
 {
-	CSoldierState::InState();
-	if (m_pSoldier->IsAbleReload())
-		m_bShoot = false;
-	else
-		m_bShoot = m_pkey[KEY_LCLICK];
+	COtherSoldierState::InState();
+	m_bShoot = m_pkey[KEY_LCLICK];
 	return 0;
 }
 
-int CSoldierLying::OnState()
+int COtherSoldierLying::OnState()
 {
-	CSoldierState::OnState();
-	if (m_pSoldier->IsAbleReload())
-		m_bShoot = false;
-	else
-		m_bShoot = m_pkey[KEY_LCLICK];
+	COtherSoldierState::OnState();
+	m_bShoot = m_pkey[KEY_LCLICK];
 	m_bIsLying = m_pkey[KEY_CTRL];
 
 	if (ISLying())
@@ -42,13 +36,13 @@ int CSoldierLying::OnState()
 	return 1;
 }
 
-int CSoldierLying::OutState()
+int COtherSoldierLying::OutState()
 {
-	CSoldierState::OutState();
+	COtherSoldierState::OutState();
 	return 0;
 }
 
-bool CSoldierLying::ISLying(void)
+bool COtherSoldierLying::ISLying(void)
 {
 	if (!m_bIsLying)
 	{
@@ -57,12 +51,10 @@ bool CSoldierLying::ISLying(void)
 			if (m_bShoot)
 			{
 				m_pSoldier->PlayAnimation(PLAYER_Shoot);
-				m_pSoldier->Set_Fire(true);
 			}
 			else
 			{
 				m_pSoldier->PlayAnimation(PLAYER_idle);
-				m_pSoldier->Set_Fire(false);
 			}
 			*(m_pSoldier->Get_State()) = CPlayer::SOLDIER_IDLE;
 		}
@@ -71,12 +63,10 @@ bool CSoldierLying::ISLying(void)
 			if (m_bShoot)
 			{
 				m_pSoldier->PlayAnimation(PLAYER_Iron_Shoot);
-				m_pSoldier->Set_Fire(true);
 			}
 			else
 			{
 				m_pSoldier->PlayAnimation(PLAYER_Iron_Idle);
-				m_pSoldier->Set_Fire(false);
 			}
 			*(m_pSoldier->Get_State()) = CPlayer::SOLDIER_IDLE;
 		}
@@ -85,7 +75,7 @@ bool CSoldierLying::ISLying(void)
 	return false;
 }
 
-void CSoldierLying::MoveKeyCheck(void)
+void COtherSoldierLying::MoveKeyCheck(void)
 {
 	if (m_bShoot)
 		return;
@@ -162,19 +152,17 @@ void CSoldierLying::MoveKeyCheck(void)
 	}
 }
 
-void CSoldierLying::ShootCheck(void)
+void COtherSoldierLying::ShootCheck(void)
 {
 	if (m_pSoldier->IsSoldier())
 	{
 		if (m_bShoot && *m_pAniIdx != PLAYER_LyingShoot)
 		{
 			m_pSoldier->PlayAnimation(PLAYER_LyingShoot);
-			m_pSoldier->Set_Fire(true);
 		}
 		else if (!m_bShoot && *m_pAniIdx == PLAYER_LyingShoot)
 		{
 			m_pSoldier->PlayAnimation(PLAYER_Lying);
-			m_pSoldier->Set_Fire(false);
 		}
 	}
 	else
@@ -182,22 +170,20 @@ void CSoldierLying::ShootCheck(void)
 		if (m_bShoot && *m_pAniIdx != PLAYER_Iron_LyingShoot)
 		{
 			m_pSoldier->PlayAnimation(PLAYER_Iron_LyingShoot);
-			m_pSoldier->Set_Fire(true);
 		}
 		else if (!m_bShoot && *m_pAniIdx == PLAYER_Iron_LyingShoot)
 		{
 			m_pSoldier->PlayAnimation(PLAYER_Iron_Lying);
-			m_pSoldier->Set_Fire(false);
 		}
 	}
 }
 
-CSoldierLying* CSoldierLying::Create(CPlayer* pSoldier)
+COtherSoldierLying* COtherSoldierLying::Create(COtherPlayer* pSoldier)
 {
-	return new CSoldierLying(pSoldier);
+	return new COtherSoldierLying(pSoldier);
 }
 
-void CSoldierLying::Release(void)
+void COtherSoldierLying::Release(void)
 {
-	CSoldierState::Release();
+	COtherSoldierState::Release();
 }

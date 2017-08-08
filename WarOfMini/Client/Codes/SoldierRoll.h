@@ -23,8 +23,6 @@ protected:
 private:
 	void EndRoll(void);
 	
-private:
-	CPlayer*	m_pSoldier;
 };
 
 #endif // SoldierRoll_h__

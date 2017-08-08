@@ -1,33 +1,30 @@
 #include "stdafx.h"
-#include "SoldierRoll.h"
+#include "OtherSoldierRoll.h"
 #include "Input.h"
-#include "Player.h"
-#include "SoldierState.h"
+#include "OtherPlayer.h"
+#include "OtherSoldierState.h"
 
-CSoldierRoll::CSoldierRoll(CPlayer* pSoldier)
-	: CSoldierState(pSoldier)
+COtherSoldierRoll::COtherSoldierRoll(COtherPlayer* pSoldier)
+	: COtherSoldierState(pSoldier)
 {
 
 }
 
-CSoldierRoll::~CSoldierRoll()
+COtherSoldierRoll::~COtherSoldierRoll()
 {
 
 }
 
-int CSoldierRoll::InState()
+int COtherSoldierRoll::InState()
 {
-	CSoldierState::InState();
+	COtherSoldierState::InState();
 	return 0;
 }
 
-int CSoldierRoll::OnState()
+int COtherSoldierRoll::OnState()
 {
-	CSoldierState::OnState();
-	if (m_pSoldier->IsAbleReload())
-		m_bShoot = false;
-	else
-		m_bShoot = m_pkey[KEY_LCLICK];
+	COtherSoldierState::OnState();
+	m_bShoot = m_pkey[KEY_LCLICK];
 
 	if (m_pSoldier->Check_AnimationFrame())
 	{
@@ -38,13 +35,13 @@ int CSoldierRoll::OnState()
 	return 1;
 }
 
-int CSoldierRoll::OutState()
+int COtherSoldierRoll::OutState()
 {
-	CSoldierState::OutState();
+	COtherSoldierState::OutState();
 	return 0;
 }
 
-void CSoldierRoll::EndRoll(void)
+void COtherSoldierRoll::EndRoll(void)
 {
 	if (m_pSoldier->IsSoldier())
 	{
@@ -55,12 +52,10 @@ void CSoldierRoll::EndRoll(void)
 		case DIR_UR:
 			if (m_bShoot)
 			{
-				m_pSoldier->Set_Fire(true);
 				m_pSoldier->PlayAnimation(PLAYER_RunForwardShoot);
 			}
 			else
 			{
-				m_pSoldier->Set_Fire(false);
 				m_pSoldier->PlayAnimation(PLAYER_RunForward);
 			}
 			*(m_pSoldier->Get_State()) = CPlayer::SOLDIER_MOVE;
@@ -70,12 +65,10 @@ void CSoldierRoll::EndRoll(void)
 		case DIR_DR:
 			if (m_bShoot)
 			{
-				m_pSoldier->Set_Fire(true);
 				m_pSoldier->PlayAnimation(PLAYER_RunBackShoot);
 			}
 			else
 			{
-				m_pSoldier->Set_Fire(false);
 				m_pSoldier->PlayAnimation(PLAYER_Runback);
 			}
 			*(m_pSoldier->Get_State()) = CPlayer::SOLDIER_MOVE;
@@ -83,12 +76,10 @@ void CSoldierRoll::EndRoll(void)
 		case DIR_L:
 			if (m_bShoot)
 			{
-				m_pSoldier->Set_Fire(true);
 				m_pSoldier->PlayAnimation(PLAYER_RunLeftShoot);
 			}
 			else
 			{
-				m_pSoldier->Set_Fire(false);
 				m_pSoldier->PlayAnimation(PLAYER_RunLeft);
 			}
 			*(m_pSoldier->Get_State()) = CPlayer::SOLDIER_MOVE;
@@ -96,12 +87,10 @@ void CSoldierRoll::EndRoll(void)
 		case DIR_R:
 			if (m_bShoot)
 			{
-				m_pSoldier->Set_Fire(true);
 				m_pSoldier->PlayAnimation(PLAYER_RunRightShoot);
 			}
 			else
 			{
-				m_pSoldier->Set_Fire(false);
 				m_pSoldier->PlayAnimation(PLAYER_RunRight);
 			}
 			*(m_pSoldier->Get_State()) = CPlayer::SOLDIER_MOVE;
@@ -109,12 +98,10 @@ void CSoldierRoll::EndRoll(void)
 		default:
 			if (m_bShoot)
 			{
-				m_pSoldier->Set_Fire(true);
 				m_pSoldier->PlayAnimation(PLAYER_Shoot);
 			}
 			else
 			{
-				m_pSoldier->Set_Fire(false);
 				m_pSoldier->PlayAnimation(PLAYER_idle);
 			}
 			*(m_pSoldier->Get_State()) = CPlayer::SOLDIER_IDLE;
@@ -130,12 +117,10 @@ void CSoldierRoll::EndRoll(void)
 		case DIR_UR:
 			if (m_bShoot)
 			{
-				m_pSoldier->Set_Fire(true);
 				m_pSoldier->PlayAnimation(PLAYER_Iron_RunForwardShoot);
 			}
 			else
 			{
-				m_pSoldier->Set_Fire(false);
 				m_pSoldier->PlayAnimation(PLAYER_Iron_RunForward);
 			}
 			*(m_pSoldier->Get_State()) = CPlayer::SOLDIER_MOVE;
@@ -145,12 +130,10 @@ void CSoldierRoll::EndRoll(void)
 		case DIR_DR:
 			if (m_bShoot)
 			{
-				m_pSoldier->Set_Fire(true);
 				m_pSoldier->PlayAnimation(PLAYER_Iron_RunBackShoot);
 			}
 			else
 			{
-				m_pSoldier->Set_Fire(false);
 				m_pSoldier->PlayAnimation(PLAYER_Iron_RunBack);
 			}
 			*(m_pSoldier->Get_State()) = CPlayer::SOLDIER_MOVE;
@@ -158,12 +141,10 @@ void CSoldierRoll::EndRoll(void)
 		case DIR_L:
 			if (m_bShoot)
 			{
-				m_pSoldier->Set_Fire(true);
 				m_pSoldier->PlayAnimation(PLAYER_Iron_RunLeftShoot);
 			}
 			else
 			{
-				m_pSoldier->Set_Fire(false);
 				m_pSoldier->PlayAnimation(PLAYER_Iron_RunLeft);
 			}
 			*(m_pSoldier->Get_State()) = CPlayer::SOLDIER_MOVE;
@@ -171,12 +152,10 @@ void CSoldierRoll::EndRoll(void)
 		case DIR_R:
 			if (m_bShoot)
 			{
-				m_pSoldier->Set_Fire(true);
 				m_pSoldier->PlayAnimation(PLAYER_Iron_RunRightShoot);
 			}
 			else
 			{
-				m_pSoldier->Set_Fire(false);
 				m_pSoldier->PlayAnimation(PLAYER_Iron_RunRight);
 			}
 			*(m_pSoldier->Get_State()) = CPlayer::SOLDIER_MOVE;
@@ -184,12 +163,10 @@ void CSoldierRoll::EndRoll(void)
 		default:
 			if (m_bShoot)
 			{
-				m_pSoldier->Set_Fire(true);
 				m_pSoldier->PlayAnimation(PLAYER_Iron_Shoot);
 			}
 			else
 			{
-				m_pSoldier->Set_Fire(false);
 				m_pSoldier->PlayAnimation(PLAYER_Iron_Idle);
 			}
 			*(m_pSoldier->Get_State()) = CPlayer::SOLDIER_IDLE;
@@ -199,13 +176,13 @@ void CSoldierRoll::EndRoll(void)
 	
 }
 
-CSoldierRoll* CSoldierRoll::Create(CPlayer* pSoldier)
+COtherSoldierRoll* COtherSoldierRoll::Create(COtherPlayer* pSoldier)
 {
-	return new CSoldierRoll(pSoldier);
+	return new COtherSoldierRoll(pSoldier);
 }
 
-void CSoldierRoll::Release(void)
+void COtherSoldierRoll::Release(void)
 {
-	CSoldierState::Release();
+	COtherSoldierState::Release();
 }
 

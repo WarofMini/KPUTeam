@@ -56,7 +56,8 @@ public:
 	_bool		IsAbleReload(void) { return m_bAbleReload; }
 	void		Reload(void);
 	FLOAT		Get_Time(void) { return m_fTimeDelta; }
-
+	void		Set_KeyState(_short sBitKeyState, float fAngle, short sHP);
+	_bool*		Get_KeyState(void) { return m_bKey; }
 public:
 	void		UpdateDir(void);
 
@@ -73,12 +74,14 @@ private:
 	CGun*			m_pEquipment[2];
 	_int			m_iEquipBone;
 	FLOAT			m_fTimeDelta;
+	FLOAT			m_fMoveAngleY;
 
 	//Player Animation
 	DWORD			m_dwState;
 	DWORD			m_dwAniIdx;
 	CStateMachine*	m_pComStateMachine;
 	_bool			m_bKey[KEY_END];
+	_short			m_sBitKey;
 	MOVE_DIR		m_eMoveDir;
 	XMFLOAT3		m_vMoveDir;
 	//Player Mesh
@@ -89,6 +92,7 @@ private:
 	MATNODE*		m_pMatBoneNode_Iron;
 	_uint			m_uiObjNum_Normal;
 	_uint			m_uiObjNum_Iron;
+
 	FLOAT			m_fRollSpeed;
 	XMFLOAT3		m_fRollDir;
 	FLOAT			m_fRateOfFire;
@@ -100,7 +104,7 @@ private:
 	PxScene*		m_pScene;
 
 	//test
-	_int			m_iHP;
+	_short			m_iHP;
 	_int			m_iOriginHP; //초기 HP값
 	_float			m_fBoost;    //부스트 게이지
 	_float			m_fMaxBoost; //초기 부스트 게이지

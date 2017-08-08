@@ -1,25 +1,25 @@
 #include "stdafx.h"
-#include "SoldierJump.h"
+#include "OtherSoldierJump.h"
 #include "Input.h"
+#include "OtherPlayer.h"
+#include "OtherSoldierState.h"
 
-CSoldierJump::CSoldierJump(CPlayer* pSoldier)
-	: CSoldierState(pSoldier)
+COtherSoldierJump::COtherSoldierJump(COtherPlayer* pSoldier)
+	: COtherSoldierState(pSoldier)
 {
 
 }
 
-CSoldierJump::~CSoldierJump()
+COtherSoldierJump::~COtherSoldierJump()
 {
 
 }
 
-int CSoldierJump::InState()
+int COtherSoldierJump::InState()
 {
-	CSoldierState::InState();
-	if (m_pSoldier->IsAbleReload())
-		m_bShoot = false;
-	else
-		m_bShoot = m_pkey[KEY_LCLICK];
+	COtherSoldierState::InState();
+	
+	m_bShoot = m_pkey[KEY_LCLICK];
 
 	if (m_pSoldier->IsSoldier())
 	{
@@ -28,12 +28,10 @@ int CSoldierJump::InState()
 			if (m_bShoot)
 			{
 				m_pSoldier->PlayAnimation(PLAYER_JumpAndShootLoop);
-				m_pSoldier->Set_Fire(true);
 			}
 			else
 			{
 				m_pSoldier->PlayAnimation(PLAYER_JumpLoop);
-				m_pSoldier->Set_Fire(false);
 			}
 			return 0;
 		}
@@ -43,8 +41,6 @@ int CSoldierJump::InState()
 		if (*m_pSoldier->Get_AniIdx() == PLAYER_Iron_JumpandShootIn && m_pSoldier->Check_AnimationFrame())
 		{
 			m_pSoldier->PlayAnimation(PLAYER_Iron_JumpandShootLoop);
-			if (m_bShoot)	m_pSoldier->Set_Fire(true);
-			else			m_pSoldier->Set_Fire(false);
 			return 0;
 		}
 	}
@@ -52,13 +48,10 @@ int CSoldierJump::InState()
 	return 1;
 }
 
-int CSoldierJump::OnState()
+int COtherSoldierJump::OnState()
 {
-	CSoldierState::OnState();
-	if (m_pSoldier->IsAbleReload())
-		m_bShoot = false;
-	else
-		m_bShoot = m_pkey[KEY_LCLICK];
+	COtherSoldierState::OnState();
+	m_bShoot = m_pkey[KEY_LCLICK];
 
 	if(m_pSoldier->IsSoldier())
 		LoopJump(m_bShoot);
@@ -66,8 +59,6 @@ int CSoldierJump::OnState()
 	{
 		if (m_pkey[KEY_SPACE] && !m_pSoldier->IsOnGround())
 			m_pSoldier->Soldier_Iron_AddVelocity(200.f * m_pSoldier->Get_Time());
-		if (m_bShoot)	m_pSoldier->Set_Fire(true);
-		else			m_pSoldier->Set_Fire(false);
 	}
 
 	if (EndJump())
@@ -76,9 +67,9 @@ int CSoldierJump::OnState()
 	return 1;
 }
 
-int CSoldierJump::OutState()
+int COtherSoldierJump::OutState()
 {
-	CSoldierState::OutState();
+	COtherSoldierState::OutState();
 	if (m_pSoldier->Check_AnimationFrame())
 	{
 		if (m_pSoldier->IsSoldier())
@@ -92,19 +83,18 @@ int CSoldierJump::OutState()
 	return 1;
 }
 
-void CSoldierJump::ShootCheck(void)
+void COtherSoldierJump::ShootCheck(void)
 {
 	
 }
 
-void CSoldierJump::LoopJump(bool bShoot)
+void COtherSoldierJump::LoopJump(bool bShoot)
 {
 	if (bShoot)
 	{
 		if (*m_pAniIdx == PLAYER_JumpLoop)
 		{
 			m_pSoldier->PlayAnimation(PLAYER_JumpAndShootLoop);
-			m_pSoldier->Set_Fire(true);
 		}
 	}
 	else
@@ -112,16 +102,14 @@ void CSoldierJump::LoopJump(bool bShoot)
 		if (*m_pAniIdx == PLAYER_JumpAndShootLoop)
 		{
 			m_pSoldier->PlayAnimation(PLAYER_JumpLoop);
-			m_pSoldier->Set_Fire(false);
 		}
 	}
 }
 
-bool CSoldierJump::EndJump(void)
+bool COtherSoldierJump::EndJump(void)
 {
 	if (m_pSoldier->IsOnGround())
 	{
-		m_pSoldier->Set_Fire(false);
 		if(m_pSoldier->IsSoldier())
 			m_pSoldier->PlayAnimation(PLAYER_JumpOut);
 		else
@@ -132,12 +120,12 @@ bool CSoldierJump::EndJump(void)
 	return false;
 }
 
-CSoldierJump* CSoldierJump::Create(CPlayer* pSoldier)
+COtherSoldierJump* COtherSoldierJump::Create(COtherPlayer* pSoldier)
 {
-	return new CSoldierJump(pSoldier);
+	return new COtherSoldierJump(pSoldier);
 }
 
-void CSoldierJump::Release(void)
+void COtherSoldierJump::Release(void)
 {
-	CSoldierState::Release();
+	COtherSoldierState::Release();
 }

@@ -1,35 +1,29 @@
 #include "stdafx.h"
-#include "SoldierMove.h"
+#include "OtherSoldierMove.h"
 #include "Input.h"
 
-CSoldierMove::CSoldierMove(CPlayer* pSoldier)
-	: CSoldierState(pSoldier)
+COtherSoldierMove::COtherSoldierMove(COtherPlayer* pSoldier)
+	: COtherSoldierState(pSoldier)
 {
 
 }
 
-CSoldierMove::~CSoldierMove()
+COtherSoldierMove::~COtherSoldierMove()
 {
 
 }
 
-int CSoldierMove::InState()
+int COtherSoldierMove::InState()
 {
-	CSoldierState::InState();
-	if (m_pSoldier->IsAbleReload())
-		m_bShoot = false;
-	else
-		m_bShoot = m_pkey[KEY_LCLICK];
+	COtherSoldierState::InState();
+	m_bShoot = m_pkey[KEY_LCLICK];
 	return 0;
 }
 
-int CSoldierMove::OnState()
+int COtherSoldierMove::OnState()
 {
-	CSoldierState::OnState();
-	if (m_pSoldier->IsAbleReload())
-		m_bShoot = false;
-	else
-		m_bShoot = m_pkey[KEY_LCLICK];
+	COtherSoldierState::OnState();
+	m_bShoot = m_pkey[KEY_LCLICK];
 
 	ShootCheck();
 
@@ -56,13 +50,13 @@ int CSoldierMove::OnState()
 	return 1;
 }
 
-int CSoldierMove::OutState()
+int COtherSoldierMove::OutState()
 {
-	CSoldierState::OutState();
+	COtherSoldierState::OutState();
 	return 0;
 }
 
-bool CSoldierMove::MoveKeyCheck(void)
+bool COtherSoldierMove::MoveKeyCheck(void)
 {
 	switch (*m_pMoveDir)
 	{
@@ -74,7 +68,6 @@ bool CSoldierMove::MoveKeyCheck(void)
 			if (*m_pAniIdx != PLAYER_sprint)
 			{
 				m_pSoldier->PlayAnimation(PLAYER_sprint);
-				m_pSoldier->Set_Fire(false);
 			}
 		}
 		else
@@ -84,12 +77,10 @@ bool CSoldierMove::MoveKeyCheck(void)
 				if (m_bShoot)
 				{
 					m_pSoldier->PlayAnimation(PLAYER_RunForwardShoot);
-					m_pSoldier->Set_Fire(true);
 				}
 				else
 				{
 					m_pSoldier->PlayAnimation(PLAYER_RunForward);
-					m_pSoldier->Set_Fire(false);
 				}
 			}
 		}
@@ -102,12 +93,10 @@ bool CSoldierMove::MoveKeyCheck(void)
 			if (m_bShoot)
 			{
 				m_pSoldier->PlayAnimation(PLAYER_RunBackShoot);
-				m_pSoldier->Set_Fire(true);
 			}
 			else
 			{
 				m_pSoldier->PlayAnimation(PLAYER_Runback);
-				m_pSoldier->Set_Fire(false);
 			}
 		}
 		break;
@@ -116,12 +105,10 @@ bool CSoldierMove::MoveKeyCheck(void)
 		{
 			if (m_bShoot)
 			{
-				m_pSoldier->Set_Fire(true);
 				m_pSoldier->PlayAnimation(PLAYER_RunLeftShoot);
 			}
 			else
 			{
-				m_pSoldier->Set_Fire(false);
 				m_pSoldier->PlayAnimation(PLAYER_RunLeft);
 			}
 		}
@@ -131,12 +118,10 @@ bool CSoldierMove::MoveKeyCheck(void)
 		{
 			if (m_bShoot)
 			{
-				m_pSoldier->Set_Fire(true);
 				m_pSoldier->PlayAnimation(PLAYER_RunRightShoot);
 			}
 			else
 			{
-				m_pSoldier->Set_Fire(false);
 				m_pSoldier->PlayAnimation(PLAYER_RunRight);
 			}
 		}
@@ -144,12 +129,10 @@ bool CSoldierMove::MoveKeyCheck(void)
 	default:
 		if (m_bShoot)
 		{
-			m_pSoldier->Set_Fire(true);
 			m_pSoldier->PlayAnimation(PLAYER_Shoot);
 		}
 		else
 		{
-			m_pSoldier->Set_Fire(false);
 			m_pSoldier->PlayAnimation(PLAYER_idle);
 		}
 		*(m_pSoldier->Get_State()) = CPlayer::SOLDIER_IDLE;
@@ -160,7 +143,7 @@ bool CSoldierMove::MoveKeyCheck(void)
 	return false;
 }
 
-bool CSoldierMove::MoveKeyCheck_Iron(void)
+bool COtherSoldierMove::MoveKeyCheck_Iron(void)
 {
 	switch (*m_pMoveDir)
 	{
@@ -172,7 +155,6 @@ bool CSoldierMove::MoveKeyCheck_Iron(void)
 			if (*m_pAniIdx != PLAYER_Iron_Sprint)
 			{
 				m_pSoldier->PlayAnimation(PLAYER_Iron_Sprint);
-				m_pSoldier->Set_Fire(false);
 			}
 		}
 		else
@@ -182,12 +164,10 @@ bool CSoldierMove::MoveKeyCheck_Iron(void)
 				if (m_bShoot)
 				{
 					m_pSoldier->PlayAnimation(PLAYER_Iron_RunForwardShoot);
-					m_pSoldier->Set_Fire(true);
 				}
 				else
 				{
 					m_pSoldier->PlayAnimation(PLAYER_Iron_RunForward);
-					m_pSoldier->Set_Fire(false);
 				}
 			}
 		}
@@ -199,12 +179,10 @@ bool CSoldierMove::MoveKeyCheck_Iron(void)
 		{
 			if (m_bShoot)
 			{
-				m_pSoldier->Set_Fire(true);
 				m_pSoldier->PlayAnimation(PLAYER_Iron_RunBackShoot);
 			}
 			else
 			{
-				m_pSoldier->Set_Fire(false);
 				m_pSoldier->PlayAnimation(PLAYER_Iron_RunBack);
 			}
 		}
@@ -214,12 +192,10 @@ bool CSoldierMove::MoveKeyCheck_Iron(void)
 		{
 			if (m_bShoot)
 			{
-				m_pSoldier->Set_Fire(true);
 				m_pSoldier->PlayAnimation(PLAYER_Iron_RunLeftShoot);
 			}
 			else
 			{
-				m_pSoldier->Set_Fire(false);
 				m_pSoldier->PlayAnimation(PLAYER_Iron_RunLeft);
 			}
 		}
@@ -229,12 +205,10 @@ bool CSoldierMove::MoveKeyCheck_Iron(void)
 		{
 			if (m_bShoot)
 			{
-				m_pSoldier->Set_Fire(true);
 				m_pSoldier->PlayAnimation(PLAYER_Iron_RunRightShoot);
 			}
 			else
 			{
-				m_pSoldier->Set_Fire(false);
 				m_pSoldier->PlayAnimation(PLAYER_Iron_RunRight);
 			}
 		}
@@ -242,12 +216,10 @@ bool CSoldierMove::MoveKeyCheck_Iron(void)
 	default:
 		if (m_bShoot)
 		{
-			m_pSoldier->Set_Fire(true);
 			m_pSoldier->PlayAnimation(PLAYER_Iron_Shoot);
 		}
 		else
 		{
-			m_pSoldier->Set_Fire(false);
 			m_pSoldier->PlayAnimation(PLAYER_Iron_Idle);
 		}
 		*(m_pSoldier->Get_State()) = CPlayer::SOLDIER_IDLE;
@@ -258,11 +230,10 @@ bool CSoldierMove::MoveKeyCheck_Iron(void)
 	return false;
 }
 
-bool CSoldierMove::RollKeyCheck(void)
+bool COtherSoldierMove::RollKeyCheck(void)
 {
 	if (m_pkey[KEY_RCLICK])
 	{
-		m_pSoldier->Set_Fire(false);
 		if (m_pSoldier->IsSoldier())
 		{
 			switch (*m_pAniIdx)
@@ -320,16 +291,15 @@ bool CSoldierMove::RollKeyCheck(void)
 	return false;
 }
 
-bool CSoldierMove::LyingKeyCheck(void)
+bool COtherSoldierMove::LyingKeyCheck(void)
 {
 	return false;
 }
 
-bool CSoldierMove::IsSoldierJump(void)
+bool COtherSoldierMove::IsSoldierJump(void)
 {
 	if (m_pSoldier->IsOnGround() && m_pkey[KEY_SPACE])
 	{
-		m_pSoldier->Set_Fire(false);
 		if (m_pSoldier->IsSoldier())
 			m_pSoldier->PlayAnimation(PLAYER_JumpIn);
 		else
@@ -341,7 +311,7 @@ bool CSoldierMove::IsSoldierJump(void)
 	return false;
 }
 
-void CSoldierMove::ShootCheck(void)
+void COtherSoldierMove::ShootCheck(void)
 {
 	if (m_pSoldier->IsSoldier())
 	{
@@ -349,7 +319,6 @@ void CSoldierMove::ShootCheck(void)
 			return;
 		if (m_bShoot)
 		{
-			m_pSoldier->Set_Fire(true);
 			switch (*m_pAniIdx)
 			{
 			case PLAYER_RunForward:
@@ -368,7 +337,6 @@ void CSoldierMove::ShootCheck(void)
 		}
 		else
 		{
-			m_pSoldier->Set_Fire(false);
 			switch (*m_pAniIdx)
 			{
 			case PLAYER_RunForwardShoot:
@@ -392,7 +360,6 @@ void CSoldierMove::ShootCheck(void)
 			return;
 		if (m_bShoot)
 		{
-			m_pSoldier->Set_Fire(true);
 			switch (*m_pAniIdx)
 			{
 			case PLAYER_Iron_RunForward:
@@ -411,7 +378,6 @@ void CSoldierMove::ShootCheck(void)
 		}
 		else
 		{
-			m_pSoldier->Set_Fire(false);
 			switch (*m_pAniIdx)
 			{
 			case PLAYER_Iron_RunForwardShoot:
@@ -432,12 +398,12 @@ void CSoldierMove::ShootCheck(void)
 	
 }
 
-CSoldierMove* CSoldierMove::Create(CPlayer* pSoldier)
+COtherSoldierMove* COtherSoldierMove::Create(COtherPlayer* pSoldier)
 {
-	return new CSoldierMove(pSoldier);
+	return new COtherSoldierMove(pSoldier);
 }
 
-void CSoldierMove::Release(void)
+void COtherSoldierMove::Release(void)
 {
-	CSoldierState::Release();
+	COtherSoldierState::Release();
 }

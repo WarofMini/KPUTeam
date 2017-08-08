@@ -1,13 +1,13 @@
-#ifndef SoldierLying_h__
-#define SoldierLying_h__
+#ifndef OtherSoldierLying_h__
+#define OtherSoldierLying_h__
 
-#include "SoldierState.h"
+#include "OtherSoldierState.h"
 
-class CSoldierLying : public CSoldierState
+class COtherSoldierLying : public COtherSoldierState
 {
 protected:
-	explicit	CSoldierLying(CPlayer*	pSoldier);
-	virtual		~CSoldierLying();
+	explicit	COtherSoldierLying(COtherPlayer*	pSoldier);
+	virtual		~COtherSoldierLying();
 
 protected:
 	virtual int	InState();
@@ -17,7 +17,7 @@ protected:
 	virtual void ShootCheck(void);
 
 public:
-	static	CSoldierLying*		Create(CPlayer* pSoldier);
+	static	COtherSoldierLying*		Create(COtherPlayer* pSoldier);
 
 protected:
 	virtual void Release(void);

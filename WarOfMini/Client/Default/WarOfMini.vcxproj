@@ -206,6 +206,13 @@
     <ClInclude Include="..\Codes\MeshMgr.h" />
     <ClInclude Include="..\Codes\Numbering.h" />
     <ClInclude Include="..\Codes\OtherPlayer.h" />
+    <ClInclude Include="..\Codes\OtherSoldierDefine.h" />
+    <ClInclude Include="..\Codes\OtherSoldierIdle.h" />
+    <ClInclude Include="..\Codes\OtherSoldierJump.h" />
+    <ClInclude Include="..\Codes\OtherSoldierLying.h" />
+    <ClInclude Include="..\Codes\OtherSoldierMove.h" />
+    <ClInclude Include="..\Codes\OtherSoldierRoll.h" />
+    <ClInclude Include="..\Codes\OtherSoldierState.h" />
     <ClInclude Include="..\Codes\Panel.h" />
     <ClInclude Include="..\Codes\PhysicsDoor.h" />
     <ClInclude Include="..\Codes\PhysicsObect.h" />
@@ -313,6 +320,12 @@
     <ClCompile Include="..\Codes\MeshMgr.cpp" />
     <ClCompile Include="..\Codes\Numbering.cpp" />
     <ClCompile Include="..\Codes\OtherPlayer.cpp" />
+    <ClCompile Include="..\Codes\OtherSoldierIdle.cpp" />
+    <ClCompile Include="..\Codes\OtherSoldierJump.cpp" />
+    <ClCompile Include="..\Codes\OtherSoldierLying.cpp" />
+    <ClCompile Include="..\Codes\OtherSoldierMove.cpp" />
+    <ClCompile Include="..\Codes\OtherSoldierRoll.cpp" />
+    <ClCompile Include="..\Codes\OtherSoldierState.cpp" />
     <ClCompile Include="..\Codes\Panel.cpp" />
     <ClCompile Include="..\Codes\PhysicsDoor.cpp" />
     <ClCompile Include="..\Codes\PhysicsObject.cpp" />

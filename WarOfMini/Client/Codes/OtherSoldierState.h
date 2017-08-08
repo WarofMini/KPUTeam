@@ -1,19 +1,19 @@
-#ifndef SoldierState_h__
-#define SoldierState_h__
+#ifndef OtherSoldierState_h__
+#define OtherSoldierState_h__
 
 #include "State.h"
 #include "Include.h"
 
-class CPlayer;
-class CInput;
-class CSoldierState : public CState
+#include "OtherPlayer.h"
+
+class COtherSoldierState : public CState
 {
 public:
 	enum eKey { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT, KEY_END };
 
 protected:
-	explicit	CSoldierState(CPlayer*	pSoldier);
-	virtual		~CSoldierState()PURE;
+	explicit	COtherSoldierState(COtherPlayer*	pSoldier);
+	virtual		~COtherSoldierState()PURE;
 
 protected:
 	virtual int	InState();
@@ -23,8 +23,7 @@ protected:
 	virtual void ShootCheck(void);
 
 protected:
-	CInput*			m_pInput;
-	CPlayer*		m_pSoldier;
+	COtherPlayer*	m_pSoldier;
 	DWORD*			m_pAniIdx;
 	bool			m_bShoot;
 
