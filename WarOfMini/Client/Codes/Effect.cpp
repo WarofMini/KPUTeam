@@ -22,7 +22,6 @@ CEffect::CEffect(ID3D11DeviceContext * pContext)
 , m_bAllBillboardCheck(false)
 , m_bYBillboardCheck(false)
 , m_bLoop(false)
-, m_bDead(false)
 {
 
 }

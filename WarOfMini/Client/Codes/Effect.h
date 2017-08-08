@@ -37,7 +37,6 @@ protected:
 	_bool			m_bAllBillboardCheck;
 	_bool			m_bYBillboardCheck;
 	_bool			m_bLoop;
-	_bool			m_bDead;
 
 public:
 	void			SetFrame(_int iNumber) { m_iFrame = iNumber; }

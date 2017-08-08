@@ -50,14 +50,17 @@ INT CGunFlash::Update(const FLOAT & fTimeDelta)
 
 	XMStoreFloat4x4(&matViewWorld, XMLoadFloat4x4(&m_pTransform->m_matWorld) * matView);
 
-	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_EFFECT_ALPHA, this, matViewWorld._43);
-
 	ComputeBillboard();
 
 	if (m_fAlpha <= 0.0f)
-		return 1;
+	{
+		m_bDead = true;
+	}
 
-	return 0;
+	if(!m_bDead)
+		CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_EFFECT_ALPHA, this, matViewWorld._43);
+
+	return m_bDead;
 }
 
 void CGunFlash::Render(void)

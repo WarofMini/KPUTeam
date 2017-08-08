@@ -10,6 +10,7 @@ CGameObject::CGameObject(ID3D11DeviceContext * pContext)
 , m_uiObjNum(0)
 , m_fWeight(0.0f)
 , m_fMass(0.0f)
+, m_bDead(false)
 {
 }
 

@@ -24,7 +24,7 @@ protected:
 	_uint										m_uiObjNum; //皋矫 锅龋
 	_float										m_fWeight; //饭捞客 按眉啊 何刁躯阑锭
 	_float										m_fMass; //按眉客 按眉啊 何刁躯阑锭
-
+	_bool										m_bDead; //按眉狼 家戈 咯何
 protected:
 	ID3D11DeviceContext* m_pContext;
 
