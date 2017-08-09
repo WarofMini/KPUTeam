@@ -1,5 +1,7 @@
 #include "Server.h"
 #include <bitset>
+//아이피 입력
+
 
 CServer::CServer()
 	: m_iStarterCnt(0)
@@ -223,6 +225,7 @@ void CServer::Accept_thread()
 			++Ateam;
 			User->m_bRedBlue = true;
 			PlayerTemp.vPos = XMFLOAT3(20.f * User->id, 0.f, 0.f);//여기이따가고치자씨발...
+																
 		}
 		else
 		{
@@ -391,15 +394,16 @@ void CServer::Timer_Thread()
 
 	while (1)
 	{
-		cout << m_iStarterCnt;
-		if (m_iStarterCnt < 2)
+
+		if (m_iStarterCnt < 1)
 			continue;
-		//else
-		//{
+		if(m_iStarterCnt >= 1)
+		{
+
 			for (int i = 4; i > 0; --i)
 			{
 				CTimer::TimerCount(1.f);
-				cout << "ReCount : " << i - 1 << endl;
+				cout << "CountDown : " << i - 1 << endl;
 
 				Ser_Time_DATA timepacket;
 				timepacket.size = sizeof(timepacket);
@@ -407,16 +411,18 @@ void CServer::Timer_Thread()
 				timepacket.gamestate = GS_READY;
 				timepacket.time = i - 1;
 
-				if (i == 1)
-				{
-					//startTime = CTimer::SetTime();
-					cout << "Play ~!" << endl;
-				}
+				
 
 				for (int i = 0; i < m_Client.size(); ++i)
 				{
 					if (m_Client[i]->connected)
 						SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&timepacket));
+				}
+
+				if (i == 1)
+				{
+					//startTime = CTimer::SetTime();
+					cout << "Play ~!" << endl;
 				}
 			}
 
@@ -538,7 +544,8 @@ void CServer::Timer_Thread()
 
 			}
 		}
-	//}
+	}
+
 	//while (true) {
 	//	Sleep(1);
 	//	if (timer_queue.size() == 0)
@@ -685,6 +692,7 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 				SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strPlayerData));
 			}
 		}	
+		cout << "StageCnt : " << m_iStarterCnt << endl;
 	}
 	break;
 	case CLIENT_POSITION:
@@ -825,6 +833,7 @@ void CServer::CountTime()	//시간을 계속해서 보내주자.
 	Time.time = CTimer::GetTime(startTime);
 	
 	cout << "TimeCount : " << Time.time << endl;
+	
 	//i++;
 	//for (int i = 0; i <= playerIndex; ++i)
 	//SendPacket(, reinterpret_cast<Packet*>(&Time));
