@@ -275,30 +275,30 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 		}
 		else
 		{
-			/*if (Check_AnimationFrame())
+			if (Check_AnimationFrame())
 			{
-				m_iHP = 5;
-				m_dwState = SOLDIER_IDLE;
-				if (m_bIsSoldier)
-					PlayAnimation(PLAYER_idle);
-				else
-					PlayAnimation(PLAYER_Iron_Idle);
-				m_pComStateMachine->Enter_State(SOLDIER_IDLE);
-			}*/
+				m_pAnimInfo->Set_PlayAni(false);
+// 				m_iHP = 5;
+// 				m_dwState = SOLDIER_IDLE;
+// 				if (m_bIsSoldier)
+// 					PlayAnimation(PLAYER_idle);
+// 				else
+// 					PlayAnimation(PLAYER_Iron_Idle);
+// 				m_pComStateMachine->Enter_State(SOLDIER_IDLE);
+			}
 		}
 	}
 	else
 	{
-		/*if (m_dwState == SOLDIER_DEAD && Check_AnimationFrame())
+		if (m_dwState == SOLDIER_DEAD && Check_AnimationFrame())
 		{
-			m_iHP = 5;
 			m_dwState = SOLDIER_IDLE;
 			if (m_bIsSoldier)
 				PlayAnimation(PLAYER_idle);
 			else
 				PlayAnimation(PLAYER_Iron_Idle);
 			m_pComStateMachine->Enter_State(SOLDIER_IDLE);
-		}*/
+		}
 
 		KeyCheck();
 
