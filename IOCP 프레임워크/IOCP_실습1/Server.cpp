@@ -392,7 +392,7 @@ void CServer::Timer_Thread()
 	while (1)
 	{
 		cout << m_iStarterCnt;
-		if (m_iStarterCnt < 1)
+		if (m_iStarterCnt < 2)
 			continue;
 		//else
 		//{
@@ -698,10 +698,16 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//±Ùµ¥ ¾ê
 		strSendData.ID = strPlayerData.ID;
 		strSendData.fAngle = strPlayerData.fAngle;
 		strSendData.sBitKey = strPlayerData.sBitKey;
-		strSendData.sHP = strPlayerData.sHP;
+		strSendData.xmf3CollPos = strPlayerData.strColllayData.xmf3CollPos;
 
-// 		if (strPlayerData.strColllayData.bShoot)
-// 			strSendData.xmf3CollPos = strPlayerData.strColllayData.xmf3CollPos;
+		if (strPlayerData.strColllayData.iCollPlayerID != -1)
+		{
+			for (int i = 0; i < vecID.size(); ++i)
+				if (m_vecPlayer[vecID[i]].ID == strPlayerData.strColllayData.iCollPlayerID)
+					--m_vecPlayer[vecID[i]].sHP;
+		}
+
+		strSendData.sHP = m_vecPlayer[strPlayerData.ID].sHP;
 
 		for (int i = 0; i < vecID.size(); ++i)
 		{
@@ -711,7 +717,6 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//±Ùµ¥ ¾ê
 				m_vecPlayer[vecID[i]].fAngle = strPlayerData.fAngle;
 				/*m_vecPlayer[vecID[i]].strColllayData = strPlayerData.strColllayData;*/
 				m_vecPlayer[vecID[i]].sBitKey = strPlayerData.sBitKey;
-				m_vecPlayer[vecID[i]].sHP = strPlayerData.sHP;
 				SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strSendData));
 			}
 			else
