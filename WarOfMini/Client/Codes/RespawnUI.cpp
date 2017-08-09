@@ -262,15 +262,20 @@ void CRespawnUI::StationCollision(void)
 			(m_pStationUI[i])->SetSizeX(90);
 			(m_pStationUI[i])->SetSizeY(80);
 
-			if(m_pInput->Get_DIMouseState(CInput::DIM_LB)) //플레이어가 점령한 타워이고 L버튼을 클릭한경우 -> 해당 타워로 이동
+			CStation::eFlagState eTeam = CStation::FLAG_EMPTY;
+			if (g_myid % 2 == 0)
+				eTeam = CStation::FLAG_TEAM1;
+			else
+				eTeam = CStation::FLAG_TEAM2;
+
+			if(m_pInput->Get_DIMouseState(CInput::DIM_LB) &&
+				eTeam == m_pStation[i]->GetFlagState()) //플레이어가 점령한 타워이고 L버튼을 클릭한경우 -> 해당 타워로 이동
 			{
-				
 				m_vRespawnPos = m_pStation[i]->GetTransformPosition();
 
 				m_vRespawnPos.x += PositionRand(-50.f, 50.f);
 				m_vRespawnPos.z += PositionRand(-50.f, 50.f);
 				m_vRespawnPos.y += 20.f;
-
 
 				m_bRespawnSelect = true;
 
