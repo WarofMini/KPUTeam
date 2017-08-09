@@ -450,17 +450,15 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 					((COtherPlayer*)*iter)->Set_KeyState(pPlayerData->sBitKey, pPlayerData->fAngle, pPlayerData->sHP);
 				}
 			}
-
-// 			if (pPlayerData->xmf3CollPos.x != 0.f && pPlayerData->xmf3CollPos.y != 0.f && pPlayerData->xmf3CollPos.z != 0.f)
-// 			{
-// 				CGameObject* pGameObject = CBomb::Create(CGraphicDev::GetInstance()->GetContext());
-// 				pGameObject->SetTransformPosition(pPlayerData->xmf3CollPos);
-// 				pLayer->Ready_Object(L"Effect", pGameObject);
-// 			}
-			
+			if (pPlayerData->xmf3CollPos.x != 0.f && pPlayerData->xmf3CollPos.y != 0.f && pPlayerData->xmf3CollPos.z != 0.f)
+			{
+				CGameObject* pGameObject = CBomb::Create(CGraphicDev::GetInstance()->GetContext());
+				pGameObject->SetTransformPosition(pPlayerData->xmf3CollPos);
+				pLayer->Ready_Object(L"Effect", pGameObject);
+			}
 		}
 	}
-		break;
+	break;
 	case CLIENT_DIRECTION:
 		break;
 	case CLIENT_ANIMATION:

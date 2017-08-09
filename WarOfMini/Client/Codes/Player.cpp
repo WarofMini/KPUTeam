@@ -57,7 +57,8 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 	ZeroMemory(m_pEquipment, sizeof(CEquipment*) * 2);
 	ZeroMemory(&m_bKey, sizeof(bool) * KEY_END);
 	ZeroMemory(&m_ColllayData, sizeof(Ser_COLLLAY_DATA));
-	
+	m_ColllayData.iCollPlayerID = -1;
+
 	m_pServer_PlayerData = new Ser_PLAYER_DATA;
 
 	m_fSpeed = 40.f;
@@ -274,7 +275,7 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 		}
 		else
 		{
-			if (Check_AnimationFrame())
+			/*if (Check_AnimationFrame())
 			{
 				m_iHP = 5;
 				m_dwState = SOLDIER_IDLE;
@@ -283,12 +284,12 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 				else
 					PlayAnimation(PLAYER_Iron_Idle);
 				m_pComStateMachine->Enter_State(SOLDIER_IDLE);
-			}
+			}*/
 		}
 	}
 	else
 	{
-		if (m_dwState == SOLDIER_DEAD && Check_AnimationFrame())
+		/*if (m_dwState == SOLDIER_DEAD && Check_AnimationFrame())
 		{
 			m_iHP = 5;
 			m_dwState = SOLDIER_IDLE;
@@ -297,7 +298,7 @@ void CPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 			else
 				PlayAnimation(PLAYER_Iron_Idle);
 			m_pComStateMachine->Enter_State(SOLDIER_IDLE);
-		}
+		}*/
 
 		KeyCheck();
 
@@ -660,6 +661,7 @@ void CPlayer::Soldier_Iron_Move(const FLOAT& fTimeDelta)
 void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 {
 	ZeroMemory(&m_ColllayData, sizeof(Ser_COLLLAY_DATA));
+	m_ColllayData.iCollPlayerID = -1;
 
 	if (!m_bFire)
 	{
@@ -756,7 +758,6 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 
 				m_bTwoCheck = m_pScene->raycast(StartPos, BulletDir, maxGunDistance, Gunhit, PxHitFlags(PxHitFlag::eDEFAULT), Gunfd);
 
-
 				if (m_bTwoCheck == true)
 				{
 					m_vtestpos = XMFLOAT3(Gunhit.block.position.x, Gunhit.block.position.y, Gunhit.block.position.z);
@@ -780,7 +781,6 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 
 					int intValue = -1;
 					//m_ColllayData.bShoot = true;
-					m_ColllayData.iCollPlayerID = -1;
 					m_ColllayData.xmf3CollPos = m_vtestpos;
 					
 					if (iStartIdx != -1)
@@ -795,11 +795,9 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 					g_Client->sendPacket(sizeof(Ser_COLLLAY_DATA), COLLISION_LAY, reinterpret_cast<BYTE*>(&m_ColllayData));*/
 
 					//Effect
-					/*CGameObject* pGameObject = CBomb::Create(m_pContext);
-
+					CGameObject* pGameObject = CBomb::Create(m_pContext);
 					pGameObject->SetTransformPosition(m_vtestpos);
-
-					pLayer->Ready_Object(L"Effect", pGameObject);*/
+					pLayer->Ready_Object(L"Effect", pGameObject);
 
 					//Dynamic Actor(::레이에 맞은 다이나믹 오브젝트 리액션)
 					PxRigidDynamic* actor = Gunhit.block.actor->is<PxRigidDynamic>();
@@ -1131,7 +1129,7 @@ void CPlayer::SendPacketAlways(void)
 	m_pPlayerData.vPos = m_pTransform->m_vPos;
 	m_pPlayerData.fAngle = m_fMoveAngleY;
 	m_pPlayerData.SC_ID = g_CurrentScene;
-	//m_pPlayerData.strColllayData = m_ColllayData;
+	m_pPlayerData.strColllayData = m_ColllayData;
 	m_pPlayerData.sBitKey = m_sBitKey;
 	m_pPlayerData.sHP = m_iHP;
 	g_Client->sendPacket(sizeof(Ser_PLAYER_DATA), CLIENT_POSITION, reinterpret_cast<BYTE*>(&m_pPlayerData));

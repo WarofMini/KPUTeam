@@ -83,8 +83,8 @@ struct PLAYER_INFO
 
 struct Ser_COLLLAY_DATA
 {
-	BYTE size;	// 이게 전체 size 이고
-	BYTE type;	// 너가 말한 서버의 buf[1] 이 요거고 -> 아까 process packet 에서 구분한 이벤트는 요 type 인거야.
+	//BYTE size;	// 이게 전체 size 이고
+	//BYTE type;	// 너가 말한 서버의 buf[1] 이 요거고 -> 아까 process packet 에서 구분한 이벤트는 요 type 인거야.
 	int iCollPlayerID;	// 이게 클라이언트에게 줄 id 값이야
 	XMFLOAT3 xmf3CollPos;
 };
@@ -99,7 +99,7 @@ struct Ser_PLAYER_DATA
 	float	fAngle;
 	short	sBitKey;
 	short	sHP;
-	//Ser_COLLLAY_DATA strColllayData;
+	Ser_COLLLAY_DATA strColllayData;
 };
 
 struct Ser_SEND_PLAYER_DATA
