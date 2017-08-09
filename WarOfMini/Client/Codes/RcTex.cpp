@@ -89,6 +89,7 @@ HRESULT CRcTex::Create_Buffer(void)
 
 	hr = m_pGraphicDev->CreateBuffer(&tBufferDesc, &tSubData, &m_pIB);
 
+
 	if (FAILED(hr) == TRUE)
 	{
 		MSG_BOX(L"RcTex IB CreateBuffer Failed");
@@ -107,6 +108,7 @@ void CRcTex::Render(void)
 	m_pContext->IASetIndexBuffer(m_pIB, DXGI_FORMAT_R32_UINT, 0);
 
 	m_pContext->DrawIndexed(6, 0, 0);
+
 }
 
 void CRcTex::Release(void)

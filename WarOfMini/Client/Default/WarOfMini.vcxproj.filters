@@ -331,6 +331,9 @@
     <Filter Include="95.Engine\00.Utility\14.Sound\00.Manager">
       <UniqueIdentifier>{a1ce6927-f3e7-431a-a8bf-d75cb5c15b0d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\08.UI\11.Mouse">
+      <UniqueIdentifier>{55da0d7c-b0d2-43a1-ba79-b463e9d8784a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -669,6 +672,9 @@
     <ClInclude Include="..\Codes\Sound_Manager.h">
       <Filter>95.Engine\00.Utility\14.Sound\00.Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Mouse.h">
+      <Filter>02.Object\08.UI\11.Mouse</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -961,6 +967,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Sound_Manager.cpp">
       <Filter>95.Engine\00.Utility\14.Sound\00.Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Mouse.cpp">
+      <Filter>02.Object\08.UI\11.Mouse</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

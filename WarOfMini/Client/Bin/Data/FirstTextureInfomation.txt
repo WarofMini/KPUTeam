@@ -6,3 +6,4 @@ Office-png-0
 LoadingBar-png-0
 Gage-png-0
 LoadingEffectGage-png-0
+Cursor-png-0

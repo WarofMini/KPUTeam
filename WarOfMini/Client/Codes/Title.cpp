@@ -34,11 +34,11 @@ CTitle * CTitle::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext
 
 HRESULT CTitle::Ready_Scene(void)
 {
-	
-	if (FAILED(Ready_GameLogic()))
-		return E_FAIL;
 
 	if (FAILED(Ready_Environment()))
+		return E_FAIL;
+	
+	if (FAILED(Ready_GameLogic()))
 		return E_FAIL;
 
 	return S_OK;

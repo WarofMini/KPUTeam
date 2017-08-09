@@ -26,6 +26,7 @@
 #include "Count.h"
 #include "GunFlash.h"
 #include "RespawnUI.h"
+#include "Mouse.h"
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 : CScene(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking)
@@ -53,6 +54,9 @@ CStage* CStage::Create(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext,
 
 HRESULT CStage::Ready_Scene(void)
 {
+	//마우스커서 보이게..
+	g_bCursorShow = false;
+
 	//PxMaterial : 표면 특성 집합을 나타내는 재질 클래스
 	m_pPxMaterial = m_pPxPhysicsSDK->createMaterial(0.5f, 0.5f, 0.2f); //1.정지 마찰계수 운동마찰계수, 반발계수
 
@@ -877,6 +881,12 @@ HRESULT CStage::InitUIObject(void)
 	if (NULL == pGameObject)
 		return E_FAIL;
 	pLayer->Ready_Object(L"Respawn", pGameObject);
+
+	//Mouse
+	pGameObject = CMouseUI::Create(m_pContext);
+	if (NULL == pGameObject)
+		return E_FAIL;
+	pLayer->Ready_Object(L"Cursor", pGameObject);
 
 	return S_OK;
 }

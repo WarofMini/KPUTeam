@@ -13,6 +13,7 @@
 #include "UIEffect.h"
 #include "UI.h"
 #include "FontMgr.h"
+#include "Mouse.h"
 
 BYTE		g_CurrentScene = SC_LOGO;
 
@@ -42,6 +43,9 @@ HRESULT CLogo::Ready_Scene(void)
 {
 	if (m_pLoading == NULL)
 		m_pLoading = CLoading::Create(CLoading::LOADING_LOGO);
+
+	//마우스커서 보이게..
+	g_bCursorShow = true;
 
 
 	if (FAILED(Ready_GameLogic()))	
@@ -116,6 +120,14 @@ HRESULT CLogo::Ready_GameLogic(void)
 	((CUIEffect*)pGameObject)->SetLoadingBar(pLoadingBar);
 
 	pLayer->Ready_Object(L"Loading", pGameObject);
+
+
+	//Mouse
+	pGameObject = CMouseUI::Create(m_pContext);
+	if (NULL == pGameObject)
+		return E_FAIL;
+	pLayer->Ready_Object(L"MouseCursor", pGameObject);
+
 
 
 	m_mapLayer.insert(MAPLAYER::value_type(L"Layer_GameLogic", pLayer));

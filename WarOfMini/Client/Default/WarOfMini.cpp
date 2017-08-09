@@ -38,6 +38,9 @@ wstring g_strFullPath;
 _float g_fBGMValue = 0.5f;
 _float g_fEffectSoundValue = 0.5f;
 
+//Mouse Cursor
+_bool  g_bCursorShow = false;
+
 // 이 코드 모듈에 들어 있는 함수의 정방향 선언입니다.
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);

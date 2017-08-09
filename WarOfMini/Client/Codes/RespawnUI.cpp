@@ -121,6 +121,9 @@ _int CRespawnUI::Update(const _float & fTimeDelta)
 
 	if(GetAsyncKeyState('B') & 1) //리스폰 UI 실행 -> 나중에 플레이어가 죽으면 알아서 뜨도록 변경
 	{
+		//마우스 커서 보이도록....
+		g_bCursorShow = true;
+
 		m_pPanel->SetStart(true);
 		m_pMiniMap->SetStart(true);
 
@@ -305,6 +308,9 @@ void CRespawnUI::RespawnSelectUpdate(void)
 
 	if (m_pPanel->GetResetCheck() == true)
 	{
+		//마우스 커서 다시 안보이도록
+		g_bCursorShow = false;
+
 		m_pPlayer->SetPosition(m_vRespawnPos);
 		CCameraMgr::GetInstance()->Set_CurCamera(CCameraMgr::CAMERALIST::CAMERA_STATIC);
 		m_bRespawnSelect = false;

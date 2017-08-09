@@ -41,6 +41,9 @@ HRESULT CMainApp::Initialize(void)
 	cout << "콘솔창테스트" << endl;
 #endif
 
+	//마우스커서 숨기기
+	ShowCursor(FALSE);
+
 	// Graphic Device
 	ID3D11Device* pGraphicDev = NULL;
 	ID3D11DeviceContext* pContext = NULL;

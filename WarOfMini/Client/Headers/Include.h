@@ -50,5 +50,7 @@ extern wstring  g_strFullPath;
 extern _float g_fBGMValue;
 extern _float g_fEffectSoundValue;
 
+extern _bool  g_bCursorShow;
+
 
 #endif
