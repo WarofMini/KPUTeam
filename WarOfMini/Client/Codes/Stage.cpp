@@ -27,6 +27,7 @@
 #include "GunFlash.h"
 #include "RespawnUI.h"
 #include "Mouse.h"
+#include "ResultUI.h"
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 : CScene(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking)
@@ -881,6 +882,13 @@ HRESULT CStage::InitUIObject(void)
 	if (NULL == pGameObject)
 		return E_FAIL;
 	pLayer->Ready_Object(L"Respawn", pGameObject);
+
+	//ResultUI
+	pGameObject = CResultUI::Create(m_pContext);
+	if (NULL == pGameObject)
+		return E_FAIL;
+	pLayer->Ready_Object(L"Result", pGameObject);
+
 
 	//Mouse
 	pGameObject = CMouseUI::Create(m_pContext);

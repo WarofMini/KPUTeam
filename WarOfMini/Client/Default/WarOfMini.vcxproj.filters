@@ -334,6 +334,12 @@
     <Filter Include="02.Object\08.UI\11.Mouse">
       <UniqueIdentifier>{55da0d7c-b0d2-43a1-ba79-b463e9d8784a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\08.UI\12.ResultUI">
+      <UniqueIdentifier>{47a76988-2e6e-4a2b-8c6d-0c9e9cf5acec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\12.ResultUI\00.Outcom">
+      <UniqueIdentifier>{d93052bf-5db7-4dfd-b2e2-d8c375462ee0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -675,6 +681,9 @@
     <ClInclude Include="..\Codes\Mouse.h">
       <Filter>02.Object\08.UI\11.Mouse</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\ResultUI.h">
+      <Filter>02.Object\08.UI\12.ResultUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -970,6 +979,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Mouse.cpp">
       <Filter>02.Object\08.UI\11.Mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\ResultUI.cpp">
+      <Filter>02.Object\08.UI\12.ResultUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

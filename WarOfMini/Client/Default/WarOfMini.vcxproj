@@ -225,6 +225,7 @@
     <ClInclude Include="..\Codes\Resources.h" />
     <ClInclude Include="..\Codes\ResourcesMgr.h" />
     <ClInclude Include="..\Codes\RespawnUI.h" />
+    <ClInclude Include="..\Codes\ResultUI.h" />
     <ClInclude Include="..\Codes\Scene.h" />
     <ClInclude Include="..\Codes\SceneSelector.h" />
     <ClInclude Include="..\Codes\Shader.h" />
@@ -339,6 +340,7 @@
     <ClCompile Include="..\Codes\Resources.cpp" />
     <ClCompile Include="..\Codes\ResourcesMgr.cpp" />
     <ClCompile Include="..\Codes\RespawnUI.cpp" />
+    <ClCompile Include="..\Codes\ResultUI.cpp" />
     <ClCompile Include="..\Codes\Scene.cpp" />
     <ClCompile Include="..\Codes\Shader.cpp" />
     <ClCompile Include="..\Codes\ShaderMgr.cpp" />
