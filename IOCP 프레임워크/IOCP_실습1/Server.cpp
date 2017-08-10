@@ -94,10 +94,11 @@ void CServer::Initialize(void)
 		error_quit(L"Server Initalize Fail", Error_No);
 	}
 
-	ZeroMemory(m_strStation, sizeof(strStation) * 3);
-	for (int i = 0; i < 3; ++i)
+	ZeroMemory(m_strStation, sizeof(strStation) * 5);
+	for (int i = 0; i < 5; ++i)
 		m_strStation[i].stationID = i;
-
+	m_strStation[0].flagState = 1;
+	m_strStation[2].flagState = 2;
 	Ateam = 0;
 	Bteam = 0;
 
@@ -220,18 +221,21 @@ void CServer::Accept_thread()
 		PlayerTemp.type = INIT_CLIENT;
 		PlayerTemp.sHP = 5;
 
+		float fRansPosx = ((100.f)*((float)rand() / RAND_MAX)) + -50.f;
+		float fRansPosy = ((100.f)*((float)rand() / RAND_MAX)) + -50.f;
+
 		if (Ateam <= Bteam)
 		{
 			++Ateam;
 			User->m_bRedBlue = true;
-			PlayerTemp.vPos = XMFLOAT3(20.f * User->id, 0.f, 0.f);//여기이따가고치자씨발...
+			PlayerTemp.vPos = XMFLOAT3(200.f + fRansPosx, 57.f, 100.f + fRansPosy);
 																
 		}
 		else
 		{
 			++Bteam;
 			User->m_bRedBlue = false;
-			PlayerTemp.vPos = XMFLOAT3(100.f * User->id, 0.f, 0.f);
+			PlayerTemp.vPos = XMFLOAT3(200.f + fRansPosx, 57.f, 1090.f + fRansPosy);
 		}
 
 	/*	if (User->m_bRedBlue == true)
@@ -394,7 +398,7 @@ void CServer::Timer_Thread()
 
 	while (1)
 	{
-
+		cout << m_iStarterCnt;
 		if (m_iStarterCnt < 1)
 			continue;
 		if(m_iStarterCnt >= 1)
@@ -408,15 +412,18 @@ void CServer::Timer_Thread()
 				Ser_Time_DATA timepacket;
 				timepacket.size = sizeof(timepacket);
 				timepacket.type = TIMECOUNT;
-				timepacket.gamestate = GS_READY;
+				if (i == 1)
+					timepacket.gamestate = GS_START;
+				else
+					timepacket.gamestate = GS_READY;
 				timepacket.time = i - 1;
 
 				
 
-				for (int i = 0; i < m_Client.size(); ++i)
+				for (int j = 0; j < m_Client.size(); ++j)
 				{
-					if (m_Client[i]->connected)
-						SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&timepacket));
+					if (m_Client[j]->connected)
+						SendPacket(m_Client[j]->id, reinterpret_cast<Packet*>(&timepacket));
 				}
 
 				if (i == 1)
@@ -433,7 +440,7 @@ void CServer::Timer_Thread()
 				fTime = CTimer::FrameSec();
 				m_fTimeCnt += fTime;
 
-				for (int i = 0; i < 3; ++i)
+				for (int i = 0; i < 5; ++i)
 				{
 					if (m_strStation[i].ATeamCnt != 0 && m_strStation[i].BTeamCnt == 0)
 					{
@@ -522,7 +529,7 @@ void CServer::Timer_Thread()
 
 					bDataChanged = false;
 					Ser_CurStation_DATA curStationData;
-					memcpy(&curStationData.station[0], m_strStation, sizeof(strStation) * 3);
+					memcpy(&curStationData.station[0], m_strStation, sizeof(strStation) * 5);
 					curStationData.size = sizeof(Ser_CurStation_DATA);
 					curStationData.type = INGAME_CUR_STATION;
 
@@ -784,7 +791,7 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 		}
 		
 		Ser_CurStation_DATA curStationData;
-		memcpy(&curStationData.station[0], m_strStation, sizeof(strStation) * 3);
+		memcpy(&curStationData.station[0], m_strStation, sizeof(strStation) * 5);
 		curStationData.size = sizeof(Ser_CurStation_DATA);
 		curStationData.type = INGAME_CUR_STATION;
 
