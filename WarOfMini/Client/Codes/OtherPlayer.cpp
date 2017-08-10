@@ -234,14 +234,18 @@ void COtherPlayer::Operate_StateMAchine(const FLOAT& fTimeDelta)
 		}
 		else
 		{
-			if (Check_AnimationFrame())
-				m_pAnimInfo->Set_PlayAni(false);
+			if (m_pAnimInfo->Get_PlayAni())
+			{
+				if (Check_AnimationFrame())
+					m_pAnimInfo->Set_PlayAni(false);
+			}
 		}
 	}
 	else
 	{
 		if (m_dwState == SOLDIER_DEAD && Check_AnimationFrame())
 		{
+			m_pAnimInfo->Set_PlayAni(true);
 			m_dwState = SOLDIER_IDLE;
 			if (m_bIsSoldier)
 				PlayAnimation(PLAYER_idle);

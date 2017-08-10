@@ -144,6 +144,7 @@ public:
 
 	//test
 	void			SetHP(void) { --m_iHP; }
+	void			SetHP(_short sHp) { m_iHP = sHp; }
 	bool			UseTank(void);
 	_int			GetHP(void) { return m_iHP; }
 	_int			GetOriginHP(void) { return m_iOriginHP;  }

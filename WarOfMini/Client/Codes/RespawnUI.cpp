@@ -21,6 +21,9 @@ CRespawnUI::CRespawnUI(ID3D11DeviceContext * pContext)
 , m_pMiniMap(NULL)
 , m_pPlayer(NULL)
 , m_bRespawnSelect(false)
+, m_fTimeCnt(0.f)
+, m_bUIOpen(false)
+, m_bClearPlayer(false)
 {
 	ZeroMemory(m_pStationUI, sizeof(CStationUI*) * 5);
 	ZeroMemory(m_pFlagUI, sizeof(CFlagUI*) * 5);
@@ -158,15 +161,35 @@ _int CRespawnUI::Update(const _float & fTimeDelta)
 
 	StationCollision();
 
-	if(GetAsyncKeyState('B') & 1) //리스폰 UI 실행 -> 나중에 플레이어가 죽으면 알아서 뜨도록 변경
+	//if(GetAsyncKeyState('B') & 1) //리스폰 UI 실행 -> 나중에 플레이어가 죽으면 알아서 뜨도록 변경
+	if (m_pPlayer!= NULL && m_pPlayer->GetHP() <= 0) //리스폰 UI 실행 -> 나중에 플레이어가 죽으면 알아서 뜨도록 변경
 	{
+		if (m_bUIOpen == false)
+		{
+			m_fTimeCnt += fTimeDelta;
+			if (m_fTimeCnt >= 1.f && m_bClearPlayer == false)
+			{
+				CCameraMgr::GetInstance()->Set_CurCamera(CCameraMgr::CAMERALIST::CAMERA_DYNAMIC);
+				m_pPlayer->SetPosition(XMFLOAT3(-1111.f, -1111.f, -1111.f));
+				m_bClearPlayer = true;
+			}
 		//마우스 커서 보이도록....
 		g_bCursorShow = true;
 
 		m_pPanel->SetStart(true);
 		m_pMiniMap->SetStart(true);
 
-		CCameraMgr::GetInstance()->Set_CurCamera(CCameraMgr::CAMERALIST::CAMERA_DYNAMIC);
+			if (m_fTimeCnt >= 3.f)
+			{
+				m_fTimeCnt = 0.f;
+				m_bUIOpen = false;
+				m_bClearPlayer = false;	
+				m_pPanel->SetStart(true);
+				m_pMiniMap->SetStart(true);
+
+			}
+		}
+		
 	}
 	/*
 	if (GetAsyncKeyState('N') & 1)
@@ -323,7 +346,8 @@ void CRespawnUI::StationCollision(void)
 
 				m_pPanel->SetEnd(true);
 				m_pMiniMap->SetEnd(true);
-				
+				m_bUIOpen = false;
+				m_pPlayer->SetHP(9999);
 			}
 		}
 		else //다른 팀의 타워일경우 -> 반응없음

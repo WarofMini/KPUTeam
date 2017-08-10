@@ -29,6 +29,9 @@ private:
 
 private:
 	CInput*			m_pInput;
+	_float			m_fTimeCnt;
+	_bool			m_bUIOpen;
+	_bool			m_bClearPlayer;
 
 public:
 	static CRespawnUI* Create(ID3D11DeviceContext* pContext);
