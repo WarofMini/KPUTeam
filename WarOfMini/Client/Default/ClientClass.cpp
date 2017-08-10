@@ -303,6 +303,7 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 			first_time = false;
 			g_myid = id;
 			g_vPos = m_pPlayerData->vPos;
+			g_GameState = m_pPlayerData->SC_ID;
 		}
 		else
 		{

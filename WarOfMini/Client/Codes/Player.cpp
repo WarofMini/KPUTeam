@@ -131,7 +131,6 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 {
 	m_fTimeDelta = fTimeDelta;
 
-	//ÀÏ´Ü test
 	if (g_GameState)
 		UpdateBoost(fTimeDelta);
 	else
@@ -639,7 +638,7 @@ void CPlayer::Soldier_Iron_Move(const FLOAT& fTimeDelta)
 			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta * 1.4f, 0, fTimeDelta, PxControllerFilters());
 		else
 			m_pPxCharacterController->move(PxVec3(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * m_fSpeed * fTimeDelta, 0, fTimeDelta, PxControllerFilters());
-		break;
+		break; 
 	case SOLDIER_LYING:
 		//vDir = XMLoadFloat3(&m_vMoveDir);
 		if (m_dwAniIdx != PLAYER_Iron_Lying && m_dwAniIdx != PLAYER_Iron_LyingShoot)
