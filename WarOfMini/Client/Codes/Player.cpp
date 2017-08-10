@@ -131,7 +131,11 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 {
 	m_fTimeDelta = fTimeDelta;
 
-	UpdateBoost(fTimeDelta);
+	//¿œµÚ§ßtest
+	if (g_GameState)
+		UpdateBoost(fTimeDelta);
+	else
+		UpdateBoost(0);
 
 	CDynamicObject::Update(fTimeDelta);
 	

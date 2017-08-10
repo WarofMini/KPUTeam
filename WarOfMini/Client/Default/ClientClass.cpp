@@ -11,6 +11,7 @@
 
 int		g_myid;
 XMFLOAT3 g_vPos;
+_int	g_GameState = 0;
 
 AsynchronousClientClass::AsynchronousClientClass()
 {
@@ -544,6 +545,8 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 	{
 		Ser_Time_DATA timedata = *reinterpret_cast<Ser_Time_DATA*>((Ser_Time_DATA*)buf);
 		m_time = &timedata;
+		
+		g_GameState = timedata.gamestate;
 
 		pScene = CManagement::GetInstance()->GetScene();
 		pLayer = pScene->FindLayer(L"Layer_GameLogic");

@@ -174,7 +174,7 @@ struct Ser_CurStation_DATA
 {
 	BYTE size;
 	BYTE type;
-	strStation station[3];
+	strStation station[5];
 };
 
 struct Ser_Packet_Remove_Player

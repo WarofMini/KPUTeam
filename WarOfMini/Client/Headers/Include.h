@@ -52,5 +52,6 @@ extern _float g_fEffectSoundValue;
 
 extern _bool  g_bCursorShow;
 
+extern _int		g_GameState;
 
 #endif

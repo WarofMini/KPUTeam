@@ -653,7 +653,6 @@ HRESULT CStage::InitPhysicsObject(void)
 
 	//Station One
 	CStation* pStation = CStation::Create(m_pContext, 0);
-
 	if (NULL == pStation)
 		return E_FAIL;
 
@@ -666,6 +665,7 @@ HRESULT CStage::InitPhysicsObject(void)
 	pStation->SetFlag(pClothObject);
 	pStation->SetCircleGage(pGageCircle);
 	pStation->SetCircle(pCircle);
+	pStation->SerSetStation(CStation::FLAG_TEAM1, 0, 0, 0.f);
 	pLayer->Ready_Object(L"Station", pStation);
 	//============================================================================================================
 
@@ -749,6 +749,7 @@ HRESULT CStage::InitPhysicsObject(void)
 	pStationThree->SetFlag(pClothObjectThree);
 	pStationThree->SetCircleGage(pGageCircle);
 	pStationThree->SetCircle(pCircleThree);
+	pStationThree->SerSetStation(CStation::FLAG_TEAM2, 0, 0, 0.f);
 	pLayer->Ready_Object(L"Station", pStationThree);
 	//============================================================================================================
 	
