@@ -715,6 +715,8 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//±Ùµ¥ ¾ê
 					--m_vecPlayer[vecID[i]].sHP;
 		}
 
+		if (strPlayerData.sHP >= 1000)
+			m_vecPlayer[strPlayerData.ID].sHP = 5;
 		strSendData.sHP = m_vecPlayer[strPlayerData.ID].sHP;
 
 		for (int i = 0; i < vecID.size(); ++i)
