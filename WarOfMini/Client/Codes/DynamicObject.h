@@ -28,6 +28,10 @@ protected:
 	_float			m_fSpeed;
 	_float			m_fHeight;
 	_ubyte			m_byColor;
+
+public:
+	void	SetSpeed(_float fSpeed) { m_fSpeed = fSpeed; }
+	_float	GetSpeed(void) { return m_fSpeed; }
 };
 
 #endif // DynamicObject_h__

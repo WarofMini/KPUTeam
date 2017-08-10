@@ -252,6 +252,7 @@ void CStation::CollisionObject(const _float& fTimeDelta) //객체 충돌
 
 		if (m_fDist <= m_fFlagDist) //거점 범위안에 있는경우
 		{
+
 			if (m_bPlayerInStation == false)//처음 들어오는 경우
 			{
 				m_bPlayerInStation = true;

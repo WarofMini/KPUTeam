@@ -799,6 +799,7 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 					pGameObject->SetTransformPosition(m_vtestpos);
 					pLayer->Ready_Object(L"Effect", pGameObject);
 
+	
 					//Dynamic Actor(::레이에 맞은 다이나믹 오브젝트 리액션)
 					PxRigidDynamic* actor = Gunhit.block.actor->is<PxRigidDynamic>();
 
