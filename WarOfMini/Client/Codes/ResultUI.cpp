@@ -22,6 +22,7 @@ CResultUI::CResultUI(ID3D11DeviceContext * pContext)
 , m_pOutCom(NULL)
 , m_pFlag(NULL)
 , m_bStart(false)
+, m_bResultOff(false)
 {
 	m_pInput = CInput::GetInstance();
 	ZeroMemory(m_pButton, sizeof(CButtonUI*) * 2);
@@ -110,11 +111,13 @@ _int CResultUI::Update(const _float & fTimeDelta)
 			}
 
 			m_bStart = false;
+			m_bResultOff = true;
 		}	
 	}
 
-	if (m_pPanel->GetResetCheck() == true)
+	if (m_pPanel->GetResetCheck() == true && (m_bResultOff == true))
 	{
+		m_bResultOff = false;
 		g_bCursorShow = false;
 		CCameraMgr::GetInstance()->Set_CurCamera(CCameraMgr::CAMERALIST::CAMERA_STATIC);
 	}

@@ -162,7 +162,7 @@ _int CRespawnUI::Update(const _float & fTimeDelta)
 	StationCollision();
 
 	//if(GetAsyncKeyState('B') & 1) //리스폰 UI 실행 -> 나중에 플레이어가 죽으면 알아서 뜨도록 변경
-	if (m_pPlayer!= NULL && m_pPlayer->GetHP() <= 0) //리스폰 UI 실행 -> 나중에 플레이어가 죽으면 알아서 뜨도록 변경
+	if ((m_pPlayer!= NULL) && (m_pPlayer->GetHP() <= 0)) //리스폰 UI 실행 -> 나중에 플레이어가 죽으면 알아서 뜨도록 변경
 	{
 		if (m_bUIOpen == false)
 		{

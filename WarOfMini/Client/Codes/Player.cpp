@@ -131,7 +131,7 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 {
 	m_fTimeDelta = fTimeDelta;
 
-	//¿œµÚ§ßtest
+	//¿œ¥‹ test
 	if (g_GameState)
 		UpdateBoost(fTimeDelta);
 	else

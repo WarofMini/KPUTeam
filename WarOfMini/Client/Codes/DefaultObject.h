@@ -3,7 +3,7 @@
 
 #include "GameObject.h"
 
-
+class CSound;
 
 class CDefaultObj
 	: public CGameObject
@@ -26,8 +26,7 @@ private:
 
 	//Physx SDK Member Variables =========================
 private:
-	PxRigidStatic	*m_pPxActor;
-
+	PxRigidStatic*  m_pPxActor;
 
 public:
 	void			BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, XMFLOAT3 vScale, PxCooking* pCooking,  const char* name);

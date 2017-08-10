@@ -23,7 +23,7 @@ private:
 	CFlagUI*		m_pFlag; //½Â¸®ÆÀ ±ê¹ß
 	CButtonUI*		m_pButton[2];
 	_bool			m_bStart;
-
+	_bool			m_bResultOff;
 public:
 	static CResultUI* Create(ID3D11DeviceContext* pContext);
 

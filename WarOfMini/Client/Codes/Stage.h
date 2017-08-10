@@ -31,11 +31,14 @@ public:
 
 	HRESULT  LoadStageMap(void);
 
+	HRESULT	 InitStaticObject(void);
+
 	MESHNUM	 MatchingObject(wstring strMeshName);
 
 	HRESULT	 InitPhysicsObject(void);
 
 	HRESULT  InitUIObject(void);
+
 
 private:
 	bool	m_bEnterGame;
