@@ -131,7 +131,7 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 {
 	m_fTimeDelta = fTimeDelta;
 
-	if (g_GameState)
+	if (g_GameState == 1)
 		UpdateBoost(fTimeDelta);
 	else
 		UpdateBoost(0);
