@@ -5,6 +5,7 @@
 
 CServer::CServer()
 	: m_iStarterCnt(0)
+	, m_bGameStart(false)
 {
 	ServerIpAddress();
 	CheckCPUCoreCount();
@@ -425,7 +426,7 @@ void CServer::Timer_Thread()
 					if (m_Client[j]->connected)
 						SendPacket(m_Client[j]->id, reinterpret_cast<Packet*>(&timepacket));
 				}
-
+				m_bGameStart = true;
 				if (i == 1)
 				{
 					//startTime = CTimer::SetTime();
@@ -679,6 +680,11 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 		Ser_PLAYER_DATA strPlayerData;
 		strPlayerData = *reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)&buf[2]);
 
+		if(!m_bGameStart)
+			strPlayerData.SC_ID = GS_READY;//클라가 들어오면 게임시작전인지 시작하고 나서인지알려줄거
+		else
+			strPlayerData.SC_ID = GS_START;
+
 		++m_iStarterCnt;
 
 		cout << "[NO. " << strPlayerData.ID << "]ID value Recv.. " << endl;
@@ -699,7 +705,6 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 				SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strPlayerData));
 			}
 		}	
-		cout << "StageCnt : " << m_iStarterCnt << endl;
 	}
 	break;
 	case CLIENT_POSITION:
@@ -723,7 +728,10 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 		}
 
 		if (strPlayerData.sHP >= 1000)
+		{
+			m_fTimeCnt = 1.4f;
 			m_vecPlayer[strPlayerData.ID].sHP = 5;
+		}
 		strSendData.sHP = m_vecPlayer[strPlayerData.ID].sHP;
 
 		for (int i = 0; i < vecID.size(); ++i)

@@ -21,7 +21,7 @@ private:
 	unsigned int playerIndex{ UINT_MAX };
 
 	int		m_iStarterCnt;
-	bool	m_bReady = false;
+	bool	m_bGameStart;
 	
 	int Ateam;
 	int Bteam;
