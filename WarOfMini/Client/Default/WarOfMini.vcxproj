@@ -167,6 +167,7 @@
     <ClInclude Include="..\Codes\Bomb.h" />
     <ClInclude Include="..\Codes\Boost.h" />
     <ClInclude Include="..\Codes\BulletNumbering.h" />
+    <ClInclude Include="..\Codes\Button.h" />
     <ClInclude Include="..\Codes\Camera.h" />
     <ClInclude Include="..\Codes\CameraMgr.h" />
     <ClInclude Include="..\Codes\Circle.h" />
@@ -188,7 +189,6 @@
     <ClInclude Include="..\Codes\FontMgr.h" />
     <ClInclude Include="..\Codes\Frame.h" />
     <ClInclude Include="..\Codes\FrameMgr.h" />
-    <ClInclude Include="..\Codes\Gabiscon.h" />
     <ClInclude Include="..\Codes\GageUI.h" />
     <ClInclude Include="..\Codes\GameObject.h" />
     <ClInclude Include="..\Codes\GraphicDev.h" />
@@ -214,6 +214,7 @@
     <ClInclude Include="..\Codes\OtherSoldierMove.h" />
     <ClInclude Include="..\Codes\OtherSoldierRoll.h" />
     <ClInclude Include="..\Codes\OtherSoldierState.h" />
+    <ClInclude Include="..\Codes\OutCom.h" />
     <ClInclude Include="..\Codes\Panel.h" />
     <ClInclude Include="..\Codes\PhysicsDoor.h" />
     <ClInclude Include="..\Codes\PhysicsObect.h" />
@@ -248,15 +249,12 @@
     <ClInclude Include="..\Codes\StaticObject.h" />
     <ClInclude Include="..\Codes\Station.h" />
     <ClInclude Include="..\Codes\StationUI.h" />
-    <ClInclude Include="..\Codes\Tank.h" />
     <ClInclude Include="..\Codes\Texture.h" />
     <ClInclude Include="..\Codes\Timer_Manager.h" />
     <ClInclude Include="..\Codes\Timer.h" />
-    <ClInclude Include="..\Codes\Tire.h" />
     <ClInclude Include="..\Codes\Title.h" />
     <ClInclude Include="..\Codes\TitleBack.h" />
     <ClInclude Include="..\Codes\Transform.h" />
-    <ClInclude Include="..\Codes\Truck.h" />
     <ClInclude Include="..\Codes\UI.h" />
     <ClInclude Include="..\Codes\UIEffect.h" />
     <ClInclude Include="..\Codes\xnacollision.h" />
@@ -283,6 +281,7 @@
     <ClCompile Include="..\Codes\Bomb.cpp" />
     <ClCompile Include="..\Codes\Boost.cpp" />
     <ClCompile Include="..\Codes\BulletNumbering.cpp" />
+    <ClCompile Include="..\Codes\Button.cpp" />
     <ClCompile Include="..\Codes\Camera.cpp" />
     <ClCompile Include="..\Codes\CameraMgr.cpp" />
     <ClCompile Include="..\Codes\Circle.cpp" />
@@ -304,7 +303,6 @@
     <ClCompile Include="..\Codes\FontMgr.cpp" />
     <ClCompile Include="..\Codes\Frame.cpp" />
     <ClCompile Include="..\Codes\FrameMgr.cpp" />
-    <ClCompile Include="..\Codes\Gabiscon.cpp" />
     <ClCompile Include="..\Codes\GageUI.cpp" />
     <ClCompile Include="..\Codes\GameObject.cpp" />
     <ClCompile Include="..\Codes\GraphicDev.cpp" />
@@ -329,6 +327,7 @@
     <ClCompile Include="..\Codes\OtherSoldierMove.cpp" />
     <ClCompile Include="..\Codes\OtherSoldierRoll.cpp" />
     <ClCompile Include="..\Codes\OtherSoldierState.cpp" />
+    <ClCompile Include="..\Codes\OutCom.cpp" />
     <ClCompile Include="..\Codes\Panel.cpp" />
     <ClCompile Include="..\Codes\PhysicsDoor.cpp" />
     <ClCompile Include="..\Codes\PhysicsObject.cpp" />
@@ -361,15 +360,12 @@
     <ClCompile Include="..\Codes\StaticObject.cpp" />
     <ClCompile Include="..\Codes\Station.cpp" />
     <ClCompile Include="..\Codes\StationUI.cpp" />
-    <ClCompile Include="..\Codes\Tank.cpp" />
     <ClCompile Include="..\Codes\Texture.cpp" />
     <ClCompile Include="..\Codes\Timer_Manager.cpp" />
     <ClCompile Include="..\Codes\Timer.cpp" />
-    <ClCompile Include="..\Codes\Tire.cpp" />
     <ClCompile Include="..\Codes\Title.cpp" />
     <ClCompile Include="..\Codes\TitleBack.cpp" />
     <ClCompile Include="..\Codes\Transform.cpp" />
-    <ClCompile Include="..\Codes\Truck.cpp" />
     <ClCompile Include="..\Codes\UI.cpp" />
     <ClCompile Include="..\Codes\UIEffect.cpp" />
     <ClCompile Include="..\Codes\xnacollision.cpp" />

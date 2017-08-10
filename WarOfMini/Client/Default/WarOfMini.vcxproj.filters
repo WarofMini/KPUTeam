@@ -340,6 +340,9 @@
     <Filter Include="02.Object\08.UI\12.ResultUI\00.Outcom">
       <UniqueIdentifier>{d93052bf-5db7-4dfd-b2e2-d8c375462ee0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\08.UI\12.ResultUI\01.Button">
+      <UniqueIdentifier>{7e7175df-cfda-42cf-84e4-fc6560816312}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -558,18 +561,6 @@
     <ClInclude Include="..\Codes\SoldierJump.h">
       <Filter>02.Object\01.Soldier\00.SoldierMain\State\Jump</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\Gabiscon.h">
-      <Filter>02.Object\03.Gabiscon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Codes\Tank.h">
-      <Filter>02.Object\04.Tank</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Codes\Truck.h">
-      <Filter>02.Object\04.Tank\Truck</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Codes\Tire.h">
-      <Filter>02.Object\04.Tank\Tire</Filter>
-    </ClInclude>
     <ClInclude Include="..\Codes\PhysicsObect.h">
       <Filter>02.Object\05.PhysicsObject</Filter>
     </ClInclude>
@@ -683,6 +674,12 @@
     </ClInclude>
     <ClInclude Include="..\Codes\ResultUI.h">
       <Filter>02.Object\08.UI\12.ResultUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\OutCom.h">
+      <Filter>02.Object\08.UI\12.ResultUI\00.Outcom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Button.h">
+      <Filter>02.Object\08.UI\12.ResultUI\01.Button</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -860,18 +857,6 @@
     <ClCompile Include="..\Codes\SoldierJump.cpp">
       <Filter>02.Object\01.Soldier\00.SoldierMain\State\Jump</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\Gabiscon.cpp">
-      <Filter>02.Object\03.Gabiscon</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\Tank.cpp">
-      <Filter>02.Object\04.Tank</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\Truck.cpp">
-      <Filter>02.Object\04.Tank\Truck</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\Tire.cpp">
-      <Filter>02.Object\04.Tank\Tire</Filter>
-    </ClCompile>
     <ClCompile Include="..\Codes\PhysicsObject.cpp">
       <Filter>02.Object\05.PhysicsObject</Filter>
     </ClCompile>
@@ -982,6 +967,12 @@
     </ClCompile>
     <ClCompile Include="..\Codes\ResultUI.cpp">
       <Filter>02.Object\08.UI\12.ResultUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\OutCom.cpp">
+      <Filter>02.Object\08.UI\12.ResultUI\00.Outcom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Button.cpp">
+      <Filter>02.Object\08.UI\12.ResultUI\01.Button</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

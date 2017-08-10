@@ -23,3 +23,4 @@ MiniMap-png-0
 Station-png-0
 ResultPanel-png-0
 OutCom-png-2
+Btn-png-2
