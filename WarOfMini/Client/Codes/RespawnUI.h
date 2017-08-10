@@ -20,9 +20,9 @@ private:
 private:
 	CPanel*		m_pPanel;
 	CPanel*		m_pMiniMap; //맵 텍스쳐
-	CStationUI* m_pStationUI[3]; //타워
-	CFlagUI*	m_pFlagUI[3]; //깃발
-	CStation*   m_pStation[3]; //타워 포인터
+	CStationUI* m_pStationUI[5]; //타워
+	CFlagUI*	m_pFlagUI[5]; //깃발
+	CStation*   m_pStation[5]; //타워 포인터
 	CPlayer*	m_pPlayer;
 	_bool		m_bRespawnSelect;
 	XMFLOAT3	m_vRespawnPos;

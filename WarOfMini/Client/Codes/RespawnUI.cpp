@@ -22,9 +22,9 @@ CRespawnUI::CRespawnUI(ID3D11DeviceContext * pContext)
 , m_pPlayer(NULL)
 , m_bRespawnSelect(false)
 {
-	ZeroMemory(m_pStationUI, sizeof(CStationUI*) * 3);
-	ZeroMemory(m_pFlagUI, sizeof(CFlagUI*) * 3);
-	ZeroMemory(m_pStation, sizeof(CStation*) * 3);
+	ZeroMemory(m_pStationUI, sizeof(CStationUI*) * 5);
+	ZeroMemory(m_pFlagUI, sizeof(CFlagUI*) * 5);
+	ZeroMemory(m_pStation, sizeof(CStation*) * 5);
 	m_pInput = CInput::GetInstance();
 
 }
@@ -61,54 +61,93 @@ HRESULT CRespawnUI::Initialize(void)
 	((CUI*)m_pMiniMap)->ComputeFXFY();
 
 
-	//Station One
+	//Station One======================================
 	m_pStationUI[0] = CStationUI::Create(m_pContext);
 	((CUI*)m_pStationUI[0])->SetSizeX(80);
 	((CUI*)m_pStationUI[0])->SetSizeY(70);
-	((CUI*)m_pStationUI[0])->SetMoveX(-270.f);
-	((CUI*)m_pStationUI[0])->SetMoveY(140.f);
+	((CUI*)m_pStationUI[0])->SetMoveX(-300.f);
+	((CUI*)m_pStationUI[0])->SetMoveY(180.f);
 	((CUI*)m_pStationUI[0])->ComputeFXFY();
-
-	//Station Two
-	m_pStationUI[1] = CStationUI::Create(m_pContext);
-	((CUI*)m_pStationUI[1])->SetSizeX(80);
-	((CUI*)m_pStationUI[1])->SetSizeY(70);
-	((CUI*)m_pStationUI[1])->SetMoveX(10.f);
-	((CUI*)m_pStationUI[1])->SetMoveY(-220.f);
-	((CUI*)m_pStationUI[1])->ComputeFXFY();
-
-	//Station Three
-	m_pStationUI[2] = CStationUI::Create(m_pContext);
-	((CUI*)m_pStationUI[2])->SetSizeX(80);
-	((CUI*)m_pStationUI[2])->SetSizeY(70);
-	((CUI*)m_pStationUI[2])->SetMoveX(330.f);
-	((CUI*)m_pStationUI[2])->SetMoveY(15.f);
-	((CUI*)m_pStationUI[2])->ComputeFXFY();
 
 	//Station One Flag
 	m_pFlagUI[0] = CFlagUI::Create(m_pContext);
 	((CUI*)m_pFlagUI[0])->SetSizeX(50);
 	((CUI*)m_pFlagUI[0])->SetSizeY(40);
-	((CUI*)m_pFlagUI[0])->SetMoveX(-245.f);
-	((CUI*)m_pFlagUI[0])->SetMoveY(100.f);
+	((CUI*)m_pFlagUI[0])->SetMoveX(-275.f);
+	((CUI*)m_pFlagUI[0])->SetMoveY(140.f);
 	((CUI*)m_pFlagUI[0])->ComputeFXFY();
+	//================================================
+
+
+	//Station Two===================================
+	m_pStationUI[1] = CStationUI::Create(m_pContext);
+	((CUI*)m_pStationUI[1])->SetSizeX(80);
+	((CUI*)m_pStationUI[1])->SetSizeY(70);
+	((CUI*)m_pStationUI[1])->SetMoveX(-30.f);
+	((CUI*)m_pStationUI[1])->SetMoveY(180.f);
+	((CUI*)m_pStationUI[1])->ComputeFXFY();
 
 	//Station Two Flag
 	m_pFlagUI[1] = CFlagUI::Create(m_pContext);
 	((CUI*)m_pFlagUI[1])->SetSizeX(50);
 	((CUI*)m_pFlagUI[1])->SetSizeY(40);
-	((CUI*)m_pFlagUI[1])->SetMoveX(35.f);
-	((CUI*)m_pFlagUI[1])->SetMoveY(-260.f);
+	((CUI*)m_pFlagUI[1])->SetMoveX(-5.f);
+	((CUI*)m_pFlagUI[1])->SetMoveY(140.f);
 	((CUI*)m_pFlagUI[1])->ComputeFXFY();
+	//================================================
 
+
+	//Station Three==================================
+	m_pStationUI[2] = CStationUI::Create(m_pContext);
+	((CUI*)m_pStationUI[2])->SetSizeX(80);
+	((CUI*)m_pStationUI[2])->SetSizeY(70);
+	((CUI*)m_pStationUI[2])->SetMoveX(-300.f);
+	((CUI*)m_pStationUI[2])->SetMoveY(-200.f);
+	((CUI*)m_pStationUI[2])->ComputeFXFY();
 
 	//Station Three Flag
 	m_pFlagUI[2] = CFlagUI::Create(m_pContext);
 	((CUI*)m_pFlagUI[2])->SetSizeX(50);
 	((CUI*)m_pFlagUI[2])->SetSizeY(40);
-	((CUI*)m_pFlagUI[2])->SetMoveX(355.f);
-	((CUI*)m_pFlagUI[2])->SetMoveY(-25.f);
+	((CUI*)m_pFlagUI[2])->SetMoveX(-275.f);
+	((CUI*)m_pFlagUI[2])->SetMoveY(-240.f);
 	((CUI*)m_pFlagUI[2])->ComputeFXFY();
+	//================================================
+
+
+	//Station Four====================================
+	m_pStationUI[3] = CStationUI::Create(m_pContext);
+	((CUI*)m_pStationUI[3])->SetSizeX(80);
+	((CUI*)m_pStationUI[3])->SetSizeY(70);
+	((CUI*)m_pStationUI[3])->SetMoveX(-30.f);
+	((CUI*)m_pStationUI[3])->SetMoveY(-200.f);
+	((CUI*)m_pStationUI[3])->ComputeFXFY();
+
+	//Station Four Flag
+	m_pFlagUI[3] = CFlagUI::Create(m_pContext);
+	((CUI*)m_pFlagUI[3])->SetSizeX(50);
+	((CUI*)m_pFlagUI[3])->SetSizeY(40);
+	((CUI*)m_pFlagUI[3])->SetMoveX(-5.f);
+	((CUI*)m_pFlagUI[3])->SetMoveY(-240.f);
+	((CUI*)m_pFlagUI[3])->ComputeFXFY();
+	//================================================
+
+	//Station Five====================================
+	m_pStationUI[4] = CStationUI::Create(m_pContext);
+	((CUI*)m_pStationUI[4])->SetSizeX(80);
+	((CUI*)m_pStationUI[4])->SetSizeY(70);
+	((CUI*)m_pStationUI[4])->SetMoveX(330.f);
+	((CUI*)m_pStationUI[4])->SetMoveY(15.f);
+	((CUI*)m_pStationUI[4])->ComputeFXFY();
+
+	//Station Five Flag
+	m_pFlagUI[4] = CFlagUI::Create(m_pContext);
+	((CUI*)m_pFlagUI[4])->SetSizeX(50);
+	((CUI*)m_pFlagUI[4])->SetSizeY(40);
+	((CUI*)m_pFlagUI[4])->SetMoveX(355.f);
+	((CUI*)m_pFlagUI[4])->SetMoveY(-25.f);
+	((CUI*)m_pFlagUI[4])->ComputeFXFY();
+	//================================================
 
 	return S_OK;
 }
@@ -146,7 +185,7 @@ _int CRespawnUI::Update(const _float & fTimeDelta)
 	m_pPanel->Update(fTimeDelta);
 	m_pMiniMap->Update(fTimeDelta);
 
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < 5; ++i)
 	{
 		m_pStationUI[i]->Update(fTimeDelta);
 		m_pFlagUI[i]->Update(fTimeDelta);
@@ -162,7 +201,7 @@ void CRespawnUI::Render(void)
 	m_pPanel->Render();
 	m_pMiniMap->Render();
 
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < 5; ++i)
 	{
 		m_pStationUI[i]->Render();
 		m_pFlagUI[i]->Render();
@@ -174,7 +213,7 @@ void CRespawnUI::Release(void)
 	m_pPanel->Release();
 	m_pMiniMap->Release();
 
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < 5; ++i)
 	{
 		m_pStationUI[i]->Release();
 		m_pFlagUI[i]->Release();
@@ -190,7 +229,7 @@ HRESULT CRespawnUI::Ready_Component(void)
 
 void CRespawnUI::StationUIUpdate(void)
 {
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < 5; ++i)
 	{
 		if ((m_pMiniMap->GetAlpha() >= 0.5f) && (m_pMiniMap->GetStart()))
 		{
@@ -234,7 +273,7 @@ void CRespawnUI::StationFlagUIUpdate(void)
 	}
 	else
 	{
-		for (int i = 0; i < 3; ++i)
+		for (int i = 0; i < 5; ++i)
 		{
 			m_pFlagUI[i]->Set_TextureNumber(m_pStation[i]->GetFlagState());
 		}
@@ -250,7 +289,7 @@ void CRespawnUI::StationCollision(void)
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < 5; ++i)
 	{
 		if (m_pStationUI[i]->GetStart() == false)
 			continue ;

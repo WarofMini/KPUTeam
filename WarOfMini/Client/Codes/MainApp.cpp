@@ -76,6 +76,9 @@ HRESULT CMainApp::Initialize(void)
 	CResourcesMgr::GetInstance()->Ready_Buffer(pGraphicDev, pContext, RESOURCE_STAGE, CResourcesMgr::BUFFER_FLAGTEX, L"Buffer_FlagTexOne", 20, 20, 40, 20);
 	CResourcesMgr::GetInstance()->Ready_Buffer(pGraphicDev, pContext, RESOURCE_STAGE, CResourcesMgr::BUFFER_FLAGTEX, L"Buffer_FlagTexTwo", 20, 20, 40, 20);
 	CResourcesMgr::GetInstance()->Ready_Buffer(pGraphicDev, pContext, RESOURCE_STAGE, CResourcesMgr::BUFFER_FLAGTEX, L"Buffer_FlagTexThree", 20, 20, 40, 20);
+	CResourcesMgr::GetInstance()->Ready_Buffer(pGraphicDev, pContext, RESOURCE_STAGE, CResourcesMgr::BUFFER_FLAGTEX, L"Buffer_FlagTexFour", 20, 20, 40, 20);
+	CResourcesMgr::GetInstance()->Ready_Buffer(pGraphicDev, pContext, RESOURCE_STAGE, CResourcesMgr::BUFFER_FLAGTEX, L"Buffer_FlagTexFive", 20, 20, 40, 20);
+
 	// Management
 	if (FAILED(CManagement::GetInstance()->Ready_Management(pGraphicDev, pContext, m_pPxPhysicsSDK, m_pPxScene, m_pPxControllerManager, m_pCooking)))
 	{
