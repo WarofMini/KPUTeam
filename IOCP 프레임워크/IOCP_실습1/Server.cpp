@@ -221,6 +221,11 @@ void CServer::Accept_thread()
 		PlayerTemp.size = sizeof(Ser_PLAYER_DATA);
 		PlayerTemp.type = INIT_CLIENT;
 		PlayerTemp.sHP = 5;
+		
+		if (m_bGameStart == false)
+			PlayerTemp.SC_ID = GS_READY;//클라가 들어오면 게임시작전인지 시작하고 나서인지알려줄거
+		else
+			PlayerTemp.SC_ID = GS_START;
 
 		float fRansPosx = ((100.f)*((float)rand() / RAND_MAX)) + -50.f;
 		float fRansPosy = ((100.f)*((float)rand() / RAND_MAX)) + -50.f;
@@ -400,9 +405,9 @@ void CServer::Timer_Thread()
 	while (1)
 	{
 		cout << m_iStarterCnt;
-		if (m_iStarterCnt < 1)
+		if (m_iStarterCnt < 2)
 			continue;
-		if(m_iStarterCnt >= 1)
+		//if(m_iStarterCnt >= 2)
 		{
 
 			for (int i = 4; i > 0; --i)
@@ -680,7 +685,7 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 		Ser_PLAYER_DATA strPlayerData;
 		strPlayerData = *reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)&buf[2]);
 
-		if(!m_bGameStart)
+		if(m_bGameStart == false)
 			strPlayerData.SC_ID = GS_READY;//클라가 들어오면 게임시작전인지 시작하고 나서인지알려줄거
 		else
 			strPlayerData.SC_ID = GS_START;
