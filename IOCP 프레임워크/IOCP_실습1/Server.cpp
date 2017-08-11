@@ -241,7 +241,7 @@ void CServer::Accept_thread()
 		{
 			++Bteam;
 			User->m_bRedBlue = false;
-			PlayerTemp.vPos = XMFLOAT3(200.f + fRansPosx, 57.f, 1090.f + fRansPosy);
+			PlayerTemp.vPos = XMFLOAT3(300.f + fRansPosx, 57.f, 1090.f + fRansPosy);
 		}
 
 	/*	if (User->m_bRedBlue == true)
