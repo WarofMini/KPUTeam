@@ -39,14 +39,33 @@ HRESULT CDefaultObj::Initialize()
 
 _int CDefaultObj::Update(const _float& fTimeDelta)
 {
+	if (m_uiObjNum == MESHNUM_FENCE && (g_GameState == GS_START))
+	{
+		PxTransform _PxTransform = m_pPxActor->getGlobalPose();
+
+		if (_PxTransform.p.y <= -40.f)
+		{
+			m_bDead = true;
+		}
+		else
+		{
+			_PxTransform.p = PxVec3(_PxTransform.p.x, _PxTransform.p.y - (fTimeDelta * 5.f), _PxTransform.p.z);
+
+			m_pPxActor->setGlobalPose(_PxTransform);
+
+			m_pTransform->m_vPos = XMFLOAT3(_PxTransform.p.x, _PxTransform.p.y - (fTimeDelta * 5.f), _PxTransform.p.z);
+
+		}		
+	}
+
 
 	CGameObject::Update(fTimeDelta);
 
-
-	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
+	if (!m_bDead)
+		CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ZSORT, this);
 
 	
-	return 0;
+	return m_bDead;
 }
 
 void CDefaultObj::Render(void)

@@ -418,8 +418,8 @@ HRESULT CStage::LoadStageMap(void)
 
 HRESULT CStage::InitStaticObject(void)
 {
+	//CeilingLight
 	CLayer* pLayer = FindLayer(L"Layer_GameLogic");
-
 
 	CGameObject* pGameObject = NULL;
 
@@ -455,37 +455,230 @@ HRESULT CStage::InitStaticObject(void)
 	pLayer->Ready_Object(L"StaticObject", pGameObject);
 
 
-	//Fence==========================================================
-	/*
-	pGameObject = NULL;
-	pGameObject = CDefaultObj::Create(m_pContext);
+	//Fence
+	for (int i = 0; i < 2; ++i)
+	{
+		float fMoveX, fMoveZ;
 
-	if (NULL == pGameObject)
-		return E_FAIL;
+		fMoveX = i* 100.f;
+		fMoveZ = i* 990.f;
 
-	eMeshNum = MESHNUM_FENCE;
+		
+		//Fence==========================================================
+		//One
+		pGameObject = CDefaultObj::Create(m_pContext);
 
+		if (NULL == pGameObject)
+			return E_FAIL;
 
-	vPos = XMVectorSet(200.f, 100.f, 200.f, 0.0f);
-	vAngle = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-	vScale = XMVectorSet(1.f, 1.f, 1.f, 0.0f);
-
-	((CDefaultObj*)pGameObject)->SetObjNum(eMeshNum);
-
-	XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos, vPos);
-	XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle, vAngle);
-	XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale, vScale);
-
-	XMStoreFloat3(&m_vScale, vScale);
-	XMStoreFloat3(&m_vPos, vPos);
-	XMStoreFloat3(&m_vAngle, vAngle);
+		eMeshNum = MESHNUM_FENCE;
 
 
-	((CDefaultObj*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, m_vScale, m_pCooking, "Fence");
-	((CDefaultObj*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(m_vAngle.x), (_float)D3DXToRadian(m_vAngle.y), (_float)D3DXToRadian(m_vAngle.z)));
-	((CDefaultObj*)pGameObject)->SetPosition(m_vPos);
-	pLayer->Ready_Object(L"StaticObject", pGameObject);
-	*/
+		vPos = XMVectorSet(149.6f + fMoveX, 20.f, 200.f + fMoveZ, 0.0f);
+		vAngle = XMVectorSet(270.0f, 0.0f, 0.0f, 0.0f);
+		vScale = XMVectorSet(1.7f, 1.f, 1.f, 0.0f);
+
+		((CDefaultObj*)pGameObject)->SetObjNum(eMeshNum);
+
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos, vPos);
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle, vAngle);
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale, vScale);
+
+		XMStoreFloat3(&m_vScale, vScale);
+		XMStoreFloat3(&m_vPos, vPos);
+		XMStoreFloat3(&m_vAngle, vAngle);
+
+
+		((CDefaultObj*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, m_vScale, m_pCooking, "Fence");
+		((CDefaultObj*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(m_vAngle.x), (_float)D3DXToRadian(m_vAngle.y), (_float)D3DXToRadian(m_vAngle.z)));
+		((CDefaultObj*)pGameObject)->SetPosition(m_vPos);
+		pLayer->Ready_Object(L"StaticObject", pGameObject);
+
+		//Two
+		pGameObject = CDefaultObj::Create(m_pContext);
+
+		if (NULL == pGameObject)
+			return E_FAIL;
+
+		vPos = XMVectorSet(250.f + fMoveX, 20.f, 200.f + fMoveZ, 0.0f);
+		vAngle = XMVectorSet(270.0f, 0.0f, 0.0f, 0.0f);
+		vScale = XMVectorSet(1.7f, 1.f, 1.f, 0.0f);
+
+		((CDefaultObj*)pGameObject)->SetObjNum(eMeshNum);
+
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos, vPos);
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle, vAngle);
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale, vScale);
+
+		XMStoreFloat3(&m_vScale, vScale);
+		XMStoreFloat3(&m_vPos, vPos);
+		XMStoreFloat3(&m_vAngle, vAngle);
+
+
+		((CDefaultObj*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, m_vScale, m_pCooking, "Fence");
+		((CDefaultObj*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(m_vAngle.x), (_float)D3DXToRadian(m_vAngle.y), (_float)D3DXToRadian(m_vAngle.z)));
+		((CDefaultObj*)pGameObject)->SetPosition(m_vPos);
+		pLayer->Ready_Object(L"StaticObject", pGameObject);
+
+		//Three
+		pGameObject = CDefaultObj::Create(m_pContext);
+
+		if (NULL == pGameObject)
+			return E_FAIL;
+
+		vPos = XMVectorSet(298.f + fMoveX, 20.f, 147.5f + fMoveZ, 0.0f);
+		vAngle = XMVectorSet(270.0f, 90.0f, 0.0f, 0.0f);
+		vScale = XMVectorSet(1.7f, 1.f, 1.f, 0.0f);
+
+		((CDefaultObj*)pGameObject)->SetObjNum(eMeshNum);
+
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos, vPos);
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle, vAngle);
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale, vScale);
+
+		XMStoreFloat3(&m_vScale, vScale);
+		XMStoreFloat3(&m_vPos, vPos);
+		XMStoreFloat3(&m_vAngle, vAngle);
+
+
+		((CDefaultObj*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, m_vScale, m_pCooking, "Fence");
+		((CDefaultObj*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(m_vAngle.x), (_float)D3DXToRadian(m_vAngle.y), (_float)D3DXToRadian(m_vAngle.z)));
+		((CDefaultObj*)pGameObject)->SetPosition(m_vPos);
+		pLayer->Ready_Object(L"StaticObject", pGameObject);
+
+		//Four
+		pGameObject = CDefaultObj::Create(m_pContext);
+
+		if (NULL == pGameObject)
+			return E_FAIL;
+
+		vPos = XMVectorSet(298.f + fMoveX, 20.f, 47.1f + fMoveZ, 0.0f);
+		vAngle = XMVectorSet(270.0f, 90.0f, 0.0f, 0.0f);
+		vScale = XMVectorSet(1.7f, 1.f, 1.f, 0.0f);
+
+		((CDefaultObj*)pGameObject)->SetObjNum(eMeshNum);
+
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos, vPos);
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle, vAngle);
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale, vScale);
+
+		XMStoreFloat3(&m_vScale, vScale);
+		XMStoreFloat3(&m_vPos, vPos);
+		XMStoreFloat3(&m_vAngle, vAngle);
+
+
+		((CDefaultObj*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, m_vScale, m_pCooking, "Fence");
+		((CDefaultObj*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(m_vAngle.x), (_float)D3DXToRadian(m_vAngle.y), (_float)D3DXToRadian(m_vAngle.z)));
+		((CDefaultObj*)pGameObject)->SetPosition(m_vPos);
+		pLayer->Ready_Object(L"StaticObject", pGameObject);
+
+
+		//Five
+		pGameObject = CDefaultObj::Create(m_pContext);
+
+		if (NULL == pGameObject)
+			return E_FAIL;
+
+
+		vPos = XMVectorSet(149.6f + fMoveX, 20.f, -5.5f + fMoveZ, 0.0f);
+		vAngle = XMVectorSet(270.0f, 0.0f, 0.0f, 0.0f);
+		vScale = XMVectorSet(1.7f, 1.f, 1.f, 0.0f);
+
+		((CDefaultObj*)pGameObject)->SetObjNum(eMeshNum);
+
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos, vPos);
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle, vAngle);
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale, vScale);
+
+		XMStoreFloat3(&m_vScale, vScale);
+		XMStoreFloat3(&m_vPos, vPos);
+		XMStoreFloat3(&m_vAngle, vAngle);
+
+
+		((CDefaultObj*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, m_vScale, m_pCooking, "Fence");
+		((CDefaultObj*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(m_vAngle.x), (_float)D3DXToRadian(m_vAngle.y), (_float)D3DXToRadian(m_vAngle.z)));
+		((CDefaultObj*)pGameObject)->SetPosition(m_vPos);
+		pLayer->Ready_Object(L"StaticObject", pGameObject);
+
+		//Six
+		pGameObject = CDefaultObj::Create(m_pContext);
+
+		if (NULL == pGameObject)
+			return E_FAIL;
+
+		vPos = XMVectorSet(250.f + fMoveX, 20.f, -5.5f + fMoveZ, 0.0f);
+		vAngle = XMVectorSet(270.0f, 0.0f, 0.0f, 0.0f);
+		vScale = XMVectorSet(1.7f, 1.f, 1.f, 0.0f);
+
+		((CDefaultObj*)pGameObject)->SetObjNum(eMeshNum);
+
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos, vPos);
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle, vAngle);
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale, vScale);
+
+		XMStoreFloat3(&m_vScale, vScale);
+		XMStoreFloat3(&m_vPos, vPos);
+		XMStoreFloat3(&m_vAngle, vAngle);
+
+
+		((CDefaultObj*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, m_vScale, m_pCooking, "Fence");
+		((CDefaultObj*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(m_vAngle.x), (_float)D3DXToRadian(m_vAngle.y), (_float)D3DXToRadian(m_vAngle.z)));
+		((CDefaultObj*)pGameObject)->SetPosition(m_vPos);
+		pLayer->Ready_Object(L"StaticObject", pGameObject);
+
+		//Seven
+		pGameObject = CDefaultObj::Create(m_pContext);
+
+		if (NULL == pGameObject)
+			return E_FAIL;
+
+		vPos = XMVectorSet(101.6f + fMoveX, 20.f, 147.5f + fMoveZ, 0.0f);
+		vAngle = XMVectorSet(270.0f, 90.0f, 0.0f, 0.0f);
+		vScale = XMVectorSet(1.7f, 1.f, 1.f, 0.0f);
+
+		((CDefaultObj*)pGameObject)->SetObjNum(eMeshNum);
+
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos, vPos);
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle, vAngle);
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale, vScale);
+
+		XMStoreFloat3(&m_vScale, vScale);
+		XMStoreFloat3(&m_vPos, vPos);
+		XMStoreFloat3(&m_vAngle, vAngle);
+
+
+		((CDefaultObj*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, m_vScale, m_pCooking, "Fence");
+		((CDefaultObj*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(m_vAngle.x), (_float)D3DXToRadian(m_vAngle.y), (_float)D3DXToRadian(m_vAngle.z)));
+		((CDefaultObj*)pGameObject)->SetPosition(m_vPos);
+		pLayer->Ready_Object(L"StaticObject", pGameObject);
+
+		//Eight
+		pGameObject = CDefaultObj::Create(m_pContext);
+
+		if (NULL == pGameObject)
+			return E_FAIL;
+
+		vPos = XMVectorSet(101.6f + fMoveX, 20.f, 47.1f + fMoveZ, 0.0f);
+		vAngle = XMVectorSet(270.0f, 90.0f, 0.0f, 0.0f);
+		vScale = XMVectorSet(1.7f, 1.f, 1.f, 0.0f);
+
+		((CDefaultObj*)pGameObject)->SetObjNum(eMeshNum);
+
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos, vPos);
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle, vAngle);
+		XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale, vScale);
+
+		XMStoreFloat3(&m_vScale, vScale);
+		XMStoreFloat3(&m_vPos, vPos);
+		XMStoreFloat3(&m_vAngle, vAngle);
+
+
+		((CDefaultObj*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, m_vScale, m_pCooking, "Fence");
+		((CDefaultObj*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(m_vAngle.x), (_float)D3DXToRadian(m_vAngle.y), (_float)D3DXToRadian(m_vAngle.z)));
+		((CDefaultObj*)pGameObject)->SetPosition(m_vPos);
+		pLayer->Ready_Object(L"StaticObject", pGameObject);
+
+	}
 
 	return S_OK;
 }
@@ -692,7 +885,7 @@ HRESULT CStage::InitPhysicsObject(void)
 
 	//x, y, z, = x,z, y축으로 돌아간다...
 	//((CPhysicsObect*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f), (_float)D3DXToRadian(0.f)));
-	((CPhysicsObect*)pGameObject)->SetPosition(XMFLOAT3(100.f, 100.f, 30.f));
+	((CPhysicsObect*)pGameObject)->SetPosition(XMFLOAT3(200.f, 100.f, 130.f));
 	pGameObject->SetWeight(3.f); //숫자가 클수록 피격됬을시 충격으로 멀리 날아간다.
 	pGameObject->SetMass(0.4f); //객체와 객체가 부딛혔을때 밀리는 정도 (값이 높을수록 강하게 밀린다.)
 	pLayer->Ready_Object(L"PhysicsBook", pGameObject);
@@ -789,7 +982,7 @@ HRESULT CStage::InitPhysicsObject(void)
 
 	//점령전을 위한 세번째 기지==================================================================================
 
-	XMFLOAT3 vStationThreePos = XMFLOAT3(200.f, 37.f, 1090.f);
+	XMFLOAT3 vStationThreePos = XMFLOAT3(300.f, 37.f, 1090.f);
 
 	CCloth* pClothObjectThree = CCloth::Create(m_pContext, L"Buffer_FlagTexThree");
 	(pClothObjectThree)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(1.0f, 1.0f, 1.0f), m_pCooking, "PhysicsCloth");
