@@ -140,6 +140,7 @@ void CServer::MakeWorkerThread_AcceptThread()
 	}
 	
 	acceptThread.join();
+	timer_thread.join();
 }
 
 void CServer::Accept_thread()
@@ -395,23 +396,226 @@ void CServer::Worker_thread()
 
 
 }
+
+// 수신한 패킷을 잘 조립해서 끝냈으니, 이제 여기서 클라이언트가 보낸 값을 잘 읽기만 하고
+// 그 읽은값에 맞춰서 잘 데이터를 처리하는 공간인거야.
+void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘가 꼭 const인 이유가 있나 ?
+{
+	vector<int> vecID;//연결되있는 클라이언트들
+	for (int i = 0; i <= playerIndex; ++i)
+	{
+		if (m_Client[i]->connected)
+			vecID.push_back(i);
+	}
+
+	//unsigned char m_sendbuf[256]{ 0 };
+
+	// 여기서 은 무엇이겠어
+	// 한번 말해봥 클라이언트 기준에서 한번 맞춰봥
+	switch (buf[1])
+	{
+		//case TEST:
+		//{
+		//	//클라에서 받은 패킷을 그대로 다시 돌려준다.
+		//	cout << "[NO. " << id << "]TEST Packet Recv.. " << endl;
+		//	cout << "buf[0] =  " << buf[0] << "buf[1] = " << buf[1] << "buf[2] =  " << buf[2] << endl;
+		//	SendPacket(id, buf);
+		//	break;
+		//}
+
+	case INIT_CLIENT:
+	{
+		Ser_PLAYER_DATA strPlayerData;
+		strPlayerData = *reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)&buf[2]);
+
+		if (m_bGameStart == false)
+			strPlayerData.SC_ID = GS_READY;//클라가 들어오면 게임시작전인지 시작하고 나서인지알려줄거
+		else
+			strPlayerData.SC_ID = GS_START;
+
+		++m_iStarterCnt;
+
+		cout << "[NO. " << strPlayerData.ID << "]ID value Recv.. " << endl;
+		for (int i = 0; i < vecID.size(); ++i)
+		{
+			if (m_Client[vecID[i]]->id == strPlayerData.ID)
+			{
+				for (int j = 0; j < vecID.size(); ++j)
+				{
+					if (m_Client[vecID[j]]->id == strPlayerData.ID)
+						continue;
+					m_vecPlayer[vecID[j]].type = INIT_CLIENT;
+					SendPacket(strPlayerData.ID, reinterpret_cast<Packet*>(&m_vecPlayer[vecID[j]]));
+				}
+			}
+			else
+			{
+				SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strPlayerData));
+			}
+		}
+
+		cout << "m_StartCnt : " << m_iStarterCnt << endl;
+
+	}
+	break;
+	case CLIENT_POSITION:
+	{
+		Ser_PLAYER_DATA strPlayerData;
+		strPlayerData = *reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)&buf[2]);
+
+		Ser_SEND_PLAYER_DATA strSendData;
+		strSendData.size = sizeof(Ser_SEND_PLAYER_DATA);
+		strSendData.type = CLIENT_SEND_POSITION;
+		strSendData.ID = strPlayerData.ID;
+		strSendData.fAngle = strPlayerData.fAngle;
+		strSendData.sBitKey = strPlayerData.sBitKey;
+		strSendData.xmf3CollPos = strPlayerData.strColllayData.xmf3CollPos;
+
+		if (strPlayerData.strColllayData.iCollPlayerID != -1)
+		{
+			for (int i = 0; i < vecID.size(); ++i)
+				if (m_vecPlayer[vecID[i]].ID == strPlayerData.strColllayData.iCollPlayerID)
+					--m_vecPlayer[vecID[i]].sHP;
+		}
+
+		if (strPlayerData.sHP >= 1000)
+		{
+			m_fTimeCnt = 1.4f;
+			m_vecPlayer[strPlayerData.ID].sHP = 5;
+		}
+		strSendData.sHP = m_vecPlayer[strPlayerData.ID].sHP;
+
+		for (int i = 0; i < vecID.size(); ++i)
+		{
+			if (m_vecPlayer[vecID[i]].ID == strPlayerData.ID)
+			{
+				m_vecPlayer[vecID[i]].vPos = strPlayerData.vPos;
+				m_vecPlayer[vecID[i]].fAngle = strPlayerData.fAngle;
+				/*m_vecPlayer[vecID[i]].strColllayData = strPlayerData.strColllayData;*/
+				m_vecPlayer[vecID[i]].sBitKey = strPlayerData.sBitKey;
+				SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strSendData));
+			}
+			else
+			{
+				SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strSendData));
+			}
+		}
+	}
+	break;
+	case CLIENT_ANIMATION:
+	{//일단냅두고
+	 /*Ser_ANIMATION_DATA strAnimationData;
+	 strAnimationData = *reinterpret_cast<Ser_ANIMATION_DATA*>((Ser_ANIMATION_DATA*)&buf[2]);
+
+	 for (int i = 0; i < vecID.size(); ++i)
+	 {
+	 if (m_vecPlayer[vecID[i]].ID == strAnimationData.ID)
+	 continue;
+	 m_vecPlayer[vecID[i]].type = CLIENT_ANIMATION;
+	 SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strAnimationData));
+	 }*/
+	}
+	break;
+	case COLLISION_LAY:
+	{
+		/*Ser_COLLLAY_DATA strColData;
+		strColData = *reinterpret_cast<Ser_COLLLAY_DATA*>((Ser_COLLLAY_DATA*)&buf[2]);
+
+		for (int i = 0; i < vecID.size(); ++i)
+		{
+		SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strColData));
+		}*/
+	}
+	break;
+	case INGAME_STATION:
+	{
+		Ser_Station_DATA strStationData;
+		strStationData = *reinterpret_cast<Ser_Station_DATA*>((Ser_Station_DATA*)&buf[2]);
+
+		strStation& Station = m_strStation[strStationData.stationID];
+
+		if (strStationData.team == 0)//TeamA
+		{
+			if (strStationData.occupation)
+				++Station.ATeamCnt;
+			else
+				--Station.ATeamCnt;
+		}
+		else//TeamB
+		{
+			if (strStationData.occupation)
+				++Station.BTeamCnt;
+			else
+				--Station.BTeamCnt;
+		}
+
+		Ser_CurStation_DATA curStationData;
+		memcpy(&curStationData.station[0], m_strStation, sizeof(strStation) * 5);
+		curStationData.size = sizeof(Ser_CurStation_DATA);
+		curStationData.type = INGAME_CUR_STATION;
+
+		for (int i = 0; i < vecID.size(); ++i)
+		{
+			SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&curStationData));
+		}
+
+		/*Ser_CurStation_DATA curStationData;
+		memcpy(&curStationData.station[0], m_strStation, sizeof(strStation) * 3);
+		curStationData.size = sizeof(Ser_CurStation_DATA);
+		curStationData.type = INGAME_CUR_STATION;
+		for (int i = 0; i < vecID.size(); ++i)
+		{
+		SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&curStationData));
+		}*/
+	}
+	break;
+	case PLAYER_DISCONNECTED:
+	{
+		Ser_EscapeGame EscapeGameData;
+		EscapeGameData = *reinterpret_cast<Ser_EscapeGame*>((Ser_EscapeGame*)&buf[2]);
+
+		for (int i = 0; i < vecID.size(); ++i)
+		{
+			if (m_vecPlayer[vecID[i]].ID == EscapeGameData.id)
+				continue;
+			m_vecPlayer[vecID[i]].type = PLAYER_DISCONNECTED;
+			SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&EscapeGameData));
+		}
+
+		closesocket(m_Client[EscapeGameData.id]->sock);
+		m_Client[EscapeGameData.id]->connected = false;
+		cout << "[No. " << EscapeGameData.id << "] Disconnected " << endl;
+		--m_iStarterCnt;
+	}
+	break;
+	}
+
+}
+
 void CServer::Timer_Thread()
 {
 	// 클라에서 서버에게 씬의 상태를 보낸다.
 	// 서버에서 그 씬의 상태를 받아서 모두가 스테이지 상태에 도달하면 카운트 다운.
 
 	m_fTimeCnt = 1.f;
-
+	bool start = false;
 	while (1)
 	{
-		cout << m_iStarterCnt;
-		if (m_iStarterCnt < 2)
-			continue;
-		//if(m_iStarterCnt >= 2)
+		if (!start)
 		{
-
+			start = true;
+			cout << " .......... Stage Entered.......... " << endl;
+		}
+		//if ( <= 1)
+		//{
+		//	continue;
+		//}
+		if(m_iStarterCnt > 1)
+		//if (m_iStarterCnt >= 2)
+		{
 			for (int i = 4; i > 0; --i)
 			{
+
 				CTimer::TimerCount(1.f);
 				cout << "CountDown : " << i - 1 << endl;
 
@@ -424,7 +628,7 @@ void CServer::Timer_Thread()
 					timepacket.gamestate = GS_READY;
 				timepacket.time = i - 1;
 
-				
+
 
 				for (int j = 0; j < m_Client.size(); ++j)
 				{
@@ -551,12 +755,14 @@ void CServer::Timer_Thread()
 				curStationData.type = INGAME_CUR_STATION;
 				for (int i = 0; i < m_Client.size(); ++i)
 				{
-					if (m_Client[i]->connected)
-						SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&curStationData));
+				if (m_Client[i]->connected)
+				SendPacket(m_Client[i]->id, reinterpret_cast<Packet*>(&curStationData));
 				}*/
 
 			}
 		}
+
+
 	}
 
 	//while (true) {
@@ -652,198 +858,6 @@ void CServer::SendPacket(unsigned int id, const Packet* packet)
 
 		}*/
 	}
-}
-
-// 수신한 패킷을 잘 조립해서 끝냈으니, 이제 여기서 클라이언트가 보낸 값을 잘 읽기만 하고
-// 그 읽은값에 맞춰서 잘 데이터를 처리하는 공간인거야.
-void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘가 꼭 const인 이유가 있나 ?
-{
-	vector<int> vecID;//연결되있는 클라이언트들
-	for (int i = 0; i <= playerIndex; ++i)
-	{
-		if (m_Client[i]->connected)
-			vecID.push_back(i);
-	}
-
-	//unsigned char m_sendbuf[256]{ 0 };
-
-	// 여기서 은 무엇이겠어
-	// 한번 말해봥 클라이언트 기준에서 한번 맞춰봥
-	switch (buf[1])
-	{
-	//case TEST:
-	//{
-	//	//클라에서 받은 패킷을 그대로 다시 돌려준다.
-	//	cout << "[NO. " << id << "]TEST Packet Recv.. " << endl;
-	//	cout << "buf[0] =  " << buf[0] << "buf[1] = " << buf[1] << "buf[2] =  " << buf[2] << endl;
-	//	SendPacket(id, buf);
-	//	break;
-	//}
-
-	case INIT_CLIENT:
-	{
-		Ser_PLAYER_DATA strPlayerData;
-		strPlayerData = *reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)&buf[2]);
-
-		if(m_bGameStart == false)
-			strPlayerData.SC_ID = GS_READY;//클라가 들어오면 게임시작전인지 시작하고 나서인지알려줄거
-		else
-			strPlayerData.SC_ID = GS_START;
-
-		++m_iStarterCnt;
-
-		cout << "[NO. " << strPlayerData.ID << "]ID value Recv.. " << endl;
-		for (int i = 0; i < vecID.size(); ++i)
-		{
-			if (m_Client[vecID[i]]->id == strPlayerData.ID)
-			{
-				for (int j = 0; j < vecID.size(); ++j)
-				{
-					if (m_Client[vecID[j]]->id == strPlayerData.ID)
-						continue;
-					m_vecPlayer[vecID[j]].type = INIT_CLIENT;
-					SendPacket(strPlayerData.ID, reinterpret_cast<Packet*>(&m_vecPlayer[vecID[j]]));
-				}
-			}
-			else
-			{
-				SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strPlayerData));
-			}
-		}	
-	}
-	break;
-	case CLIENT_POSITION:
-	{
-		Ser_PLAYER_DATA strPlayerData;
-		strPlayerData = *reinterpret_cast<Ser_PLAYER_DATA*>((Ser_PLAYER_DATA*)&buf[2]);
-
-		Ser_SEND_PLAYER_DATA strSendData;
-		strSendData.size = sizeof(Ser_SEND_PLAYER_DATA);
-		strSendData.type = CLIENT_SEND_POSITION;
-		strSendData.ID = strPlayerData.ID;
-		strSendData.fAngle = strPlayerData.fAngle;
-		strSendData.sBitKey = strPlayerData.sBitKey;
-		strSendData.xmf3CollPos = strPlayerData.strColllayData.xmf3CollPos;
-
-		if (strPlayerData.strColllayData.iCollPlayerID != -1)
-		{
-			for (int i = 0; i < vecID.size(); ++i)
-				if (m_vecPlayer[vecID[i]].ID == strPlayerData.strColllayData.iCollPlayerID)
-					--m_vecPlayer[vecID[i]].sHP;
-		}
-
-		if (strPlayerData.sHP >= 1000)
-		{
-			m_fTimeCnt = 1.4f;
-			m_vecPlayer[strPlayerData.ID].sHP = 5;
-		}
-		strSendData.sHP = m_vecPlayer[strPlayerData.ID].sHP;
-
-		for (int i = 0; i < vecID.size(); ++i)
-		{
-			if (m_vecPlayer[vecID[i]].ID == strPlayerData.ID)
-			{
-				m_vecPlayer[vecID[i]].vPos = strPlayerData.vPos;
-				m_vecPlayer[vecID[i]].fAngle = strPlayerData.fAngle;
-				/*m_vecPlayer[vecID[i]].strColllayData = strPlayerData.strColllayData;*/
-				m_vecPlayer[vecID[i]].sBitKey = strPlayerData.sBitKey;
-				SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strSendData));
-			}
-			else
-			{
-				SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strSendData));
-			}
-		}
-	}
-	break;
-	case CLIENT_ANIMATION:
-	{//일단냅두고
-		/*Ser_ANIMATION_DATA strAnimationData;
-		strAnimationData = *reinterpret_cast<Ser_ANIMATION_DATA*>((Ser_ANIMATION_DATA*)&buf[2]);
-
-		for (int i = 0; i < vecID.size(); ++i)
-		{
-			if (m_vecPlayer[vecID[i]].ID == strAnimationData.ID)
-				continue;
-			m_vecPlayer[vecID[i]].type = CLIENT_ANIMATION;
-			SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strAnimationData));
-		}*/
-	}
-	break;
-	case COLLISION_LAY:
-	{
-		/*Ser_COLLLAY_DATA strColData;
-		strColData = *reinterpret_cast<Ser_COLLLAY_DATA*>((Ser_COLLLAY_DATA*)&buf[2]);
-
-		for (int i = 0; i < vecID.size(); ++i)
-		{
-			SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&strColData));
-		}*/
-	}
-		break;
-	case INGAME_STATION:
-	{
-		Ser_Station_DATA strStationData;
-		strStationData = *reinterpret_cast<Ser_Station_DATA*>((Ser_Station_DATA*)&buf[2]);
-		
-		strStation& Station = m_strStation[strStationData.stationID];
-		
-		if (strStationData.team == 0)//TeamA
-		{
-			if(strStationData.occupation)
-				++Station.ATeamCnt;
-			else
-				--Station.ATeamCnt;
-		}
-		else//TeamB
-		{
-			if (strStationData.occupation)
-				++Station.BTeamCnt;
-			else
-				--Station.BTeamCnt;
-		}
-		
-		Ser_CurStation_DATA curStationData;
-		memcpy(&curStationData.station[0], m_strStation, sizeof(strStation) * 5);
-		curStationData.size = sizeof(Ser_CurStation_DATA);
-		curStationData.type = INGAME_CUR_STATION;
-
-		for (int i = 0; i < vecID.size(); ++i)
-		{
-			SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&curStationData));
-		}
-
-		/*Ser_CurStation_DATA curStationData;
-		memcpy(&curStationData.station[0], m_strStation, sizeof(strStation) * 3);
-		curStationData.size = sizeof(Ser_CurStation_DATA);
-		curStationData.type = INGAME_CUR_STATION;
-		for (int i = 0; i < vecID.size(); ++i)
-		{
-			SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&curStationData));
-		}*/
-	}
-	break;
-	case PLAYER_DISCONNECTED:
-	{
-		Ser_EscapeGame EscapeGameData;
-		EscapeGameData = *reinterpret_cast<Ser_EscapeGame*>((Ser_EscapeGame*)&buf[2]);
-
-		for (int i = 0; i < vecID.size(); ++i)
-		{
-			if (m_vecPlayer[vecID[i]].ID == EscapeGameData.id)
-				continue;
-			m_vecPlayer[vecID[i]].type = PLAYER_DISCONNECTED;
-			SendPacket(m_vecPlayer[vecID[i]].ID, reinterpret_cast<Packet*>(&EscapeGameData));
-		}
-
-		closesocket(m_Client[EscapeGameData.id]->sock);
-		m_Client[EscapeGameData.id]->connected = false;
-		cout << "[No. " << EscapeGameData.id << "] Disconnected " << endl;
-		--m_iStarterCnt;
-	}
-	break;
-	}
-	
 }
 
 void CServer::CountTime()	//시간을 계속해서 보내주자.

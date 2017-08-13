@@ -22,11 +22,11 @@ private:
 
 	int		m_iStarterCnt;
 	bool	m_bGameStart;
-	
 	int Ateam;
 	int Bteam;
 	CRITICAL_SECTION cs;
 	float startTime;
+
 
 	//DWORD KeyValue;
 	//CPlayer*	m_pPlayer;
