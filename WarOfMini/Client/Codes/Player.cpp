@@ -665,15 +665,20 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 
 	if (!m_bFire)
 	{
+		g_fGunReaction = max(g_fGunReaction - (fTimeDelta * 4.f), 0.0f);
 		m_fRateOfFire = 0.f;
 		return;
 	}
 	m_fRateOfFire += fTimeDelta;
+
 	if (m_fRateOfFire >= 0.2f)
 	{
 		m_fRateOfFire = 0.1f;
 		if (((CGun*)m_pEquipment[0])->Fire())
 		{
+			//총기반동
+			g_fGunReaction = min(g_fGunReaction + (fTimeDelta * 2.f), 10.f);
+
 			XMFLOAT3 m_vCameraEye = CCameraMgr::GetInstance()->Get_CurCameraEye();
 			XMFLOAT3 m_vCameraLookAt = CCameraMgr::GetInstance()->Get_CurCameraLookAt();
 
@@ -735,7 +740,11 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 			//최종 검사
 			if (m_bOneCheck == true)
 			{
-				XMFLOAT3 m_vGoalPos = XMFLOAT3(Onehit.block.position.x, Onehit.block.position.y, Onehit.block.position.z);
+				XMFLOAT3 GunReaction = XMFLOAT3(GunReactionRand(-g_fGunReaction, g_fGunReaction), 
+												GunReactionRand(-g_fGunReaction, g_fGunReaction), 
+												GunReactionRand(-g_fGunReaction, g_fGunReaction));
+
+				XMFLOAT3 m_vGoalPos = XMFLOAT3(Onehit.block.position.x + GunReaction.x, Onehit.block.position.y + GunReaction.y, Onehit.block.position.z + GunReaction.z);
 
 
 				//Bullet의 방향벡터
@@ -825,6 +834,7 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 				}
 
 			}
+			
 		}
 		else
 		{
@@ -1044,6 +1054,11 @@ bool CPlayer::UseTank(void)
 	if (m_pTank)
 		return true;
 	else return false;	
+}
+
+_float CPlayer::GunReactionRand(_float a, _float b)
+{
+	return ((b - a)*((float)rand() / RAND_MAX)) + a;
 }
 
 //타 객체 충돌감지

@@ -34,11 +34,11 @@ HRESULT CAim::Initialize(void)
 	m_fX = (_float)(WINCX >> 1);
 	m_fY = (_float)(WINCY >> 1);
 
-	m_fSizeX = 50;
-	m_fSizeY = 50;
+	m_fSizeX = 50.f;
+	m_fSizeY = 50.f;
 
-	m_fOriginSizeX = 50;
-	m_fOriginSizeY = 50;
+	m_fOriginSizeX = 50.f;
+	m_fOriginSizeY = 50.f;
 
 	return S_OK;
 }
@@ -47,6 +47,14 @@ _int CAim::Update(const _float & fTimeDelta)
 {
 	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
 		return 0;
+
+	
+	m_fSizeX = 50.f + (g_fGunReaction * 10.f);
+	m_fSizeY = 50.f + (g_fGunReaction * 10.f);
+
+	m_fOriginSizeX = m_fSizeX;
+	m_fOriginSizeY = m_fSizeY;
+
 
 	CGameObject::Update(fTimeDelta);
 

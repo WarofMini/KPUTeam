@@ -151,6 +151,8 @@ public:
 	_float			GetBoost(void) { return m_fBoost; }
 	_float			GetMaxBoost(void) { return m_fMaxBoost; }
 
+	_float			GunReactionRand(_float a, _float b);
+
 public:
 	virtual void							onShapeHit(const PxControllerShapeHit& hit);
 	virtual void							onControllerHit(const PxControllersHit& hit) {}

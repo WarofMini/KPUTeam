@@ -54,4 +54,6 @@ extern _bool  g_bCursorShow;
 
 extern _int	  g_GameState;
 
+extern _float g_fGunReaction;
+
 #endif
