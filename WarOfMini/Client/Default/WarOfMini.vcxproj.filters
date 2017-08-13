@@ -349,6 +349,9 @@
     <Filter Include="02.Object\08.UI\13.ScoreUI\00.ScoreCount">
       <UniqueIdentifier>{a266fe77-7b55-4ff6-8b1e-9f479671b910}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\08.UI\14.BloodyScreen">
+      <UniqueIdentifier>{7c6450e0-5987-4642-8cec-5a8bdb43a6e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -693,6 +696,9 @@
     <ClInclude Include="..\Codes\ScoreCount.h">
       <Filter>02.Object\08.UI\13.ScoreUI\00.ScoreCount</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\BloodyScreen.h">
+      <Filter>02.Object\08.UI\14.BloodyScreen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -991,6 +997,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\ScoreCount.cpp">
       <Filter>02.Object\08.UI\13.ScoreUI\00.ScoreCount</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\BloodyScreen.cpp">
+      <Filter>02.Object\08.UI\14.BloodyScreen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

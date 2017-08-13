@@ -153,6 +153,7 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 	}	
 
 	// 본행렬 찾기 위한 디버그
+	/*
 	if (GetAsyncKeyState('G') & 1)
 	{
 		m_iBoneNum += 1;
@@ -162,11 +163,8 @@ INT CPlayer::Update(const FLOAT& fTimeDelta)
 	{
 		m_iBoneNum -= 1;
 		cout << "BoneNum" << m_iBoneNum << endl;
-	}	
-	if (GetAsyncKeyState('J') & 1)
-	{
-		--m_iHP;
 	}
+	*/
 	
 
 	// Update

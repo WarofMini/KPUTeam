@@ -27,3 +27,4 @@ OutCom-png-2
 Btn-png-2
 ScoreBoard-png-0
 Count-png-6
+BloodyScreen-png-0

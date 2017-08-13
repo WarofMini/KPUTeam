@@ -29,6 +29,7 @@
 #include "Mouse.h"
 #include "ResultUI.h"
 #include "ScoreUI.h"
+#include "BloodyScreen.h"
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 : CScene(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking)
@@ -1233,6 +1234,12 @@ HRESULT CStage::InitUIObject(void)
 		return E_FAIL;
 	pLayer->Ready_Object(L"Count", pGameObject);
 
+	//BloodyScreen
+	pGameObject = CBloodyScreen::Create(m_pContext);
+	if (NULL == pGameObject)
+		return E_FAIL;
+	pLayer->Ready_Object(L"BloodyScreen", pGameObject);
+
 
 	
 	//Respawn
@@ -1264,7 +1271,7 @@ void CStage::BlackOutUpdate(const _float& fTimeDelta)
 	{
 		m_fBlackOutTime += fTimeDelta;
 
-		if ( (m_fBlackOutTime >= 10.0f) && (m_bChange == false))
+		if((m_fBlackOutTime >= 10.0f) && (m_bChange == false))
 		{
 			g_fLightPower = 1.0f;
 			m_fBlackOutTime = 0.0f;
@@ -1299,6 +1306,5 @@ void CStage::BlackOutUpdate(const _float& fTimeDelta)
 				g_fLightPower = 1.0f;
 			}
 		}
-
 	}
 }

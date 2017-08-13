@@ -164,6 +164,7 @@
     <ClInclude Include="..\Codes\Aim.h" />
     <ClInclude Include="..\Codes\Animation.h" />
     <ClInclude Include="..\Codes\AnimationInfo.h" />
+    <ClInclude Include="..\Codes\BloodyScreen.h" />
     <ClInclude Include="..\Codes\Bomb.h" />
     <ClInclude Include="..\Codes\Boost.h" />
     <ClInclude Include="..\Codes\BulletNumbering.h" />
@@ -280,6 +281,7 @@
     <ClCompile Include="..\Codes\Aim.cpp" />
     <ClCompile Include="..\Codes\Animation.cpp" />
     <ClCompile Include="..\Codes\AnimationInfo.cpp" />
+    <ClCompile Include="..\Codes\BloodyScreen.cpp" />
     <ClCompile Include="..\Codes\Bomb.cpp" />
     <ClCompile Include="..\Codes\Boost.cpp" />
     <ClCompile Include="..\Codes\BulletNumbering.cpp" />
