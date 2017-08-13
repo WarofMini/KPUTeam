@@ -343,6 +343,12 @@
     <Filter Include="02.Object\08.UI\12.ResultUI\01.Button">
       <UniqueIdentifier>{7e7175df-cfda-42cf-84e4-fc6560816312}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\08.UI\13.ScoreUI">
+      <UniqueIdentifier>{0b0b19d6-9f05-48d5-b5b8-8e777636c33b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\13.ScoreUI\00.ScoreCount">
+      <UniqueIdentifier>{a266fe77-7b55-4ff6-8b1e-9f479671b910}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -681,6 +687,12 @@
     <ClInclude Include="..\Codes\Button.h">
       <Filter>02.Object\08.UI\12.ResultUI\01.Button</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\ScoreUI.h">
+      <Filter>02.Object\08.UI\13.ScoreUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\ScoreCount.h">
+      <Filter>02.Object\08.UI\13.ScoreUI\00.ScoreCount</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -973,6 +985,12 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Button.cpp">
       <Filter>02.Object\08.UI\12.ResultUI\01.Button</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\ScoreUI.cpp">
+      <Filter>02.Object\08.UI\13.ScoreUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\ScoreCount.cpp">
+      <Filter>02.Object\08.UI\13.ScoreUI\00.ScoreCount</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

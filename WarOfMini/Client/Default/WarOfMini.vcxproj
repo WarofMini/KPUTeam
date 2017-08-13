@@ -229,6 +229,8 @@
     <ClInclude Include="..\Codes\ResultUI.h" />
     <ClInclude Include="..\Codes\Scene.h" />
     <ClInclude Include="..\Codes\SceneSelector.h" />
+    <ClInclude Include="..\Codes\ScoreCount.h" />
+    <ClInclude Include="..\Codes\ScoreUI.h" />
     <ClInclude Include="..\Codes\Shader.h" />
     <ClInclude Include="..\Codes\ShaderMgr.h" />
     <ClInclude Include="..\Codes\SoldierDefine.h" />
@@ -341,6 +343,8 @@
     <ClCompile Include="..\Codes\RespawnUI.cpp" />
     <ClCompile Include="..\Codes\ResultUI.cpp" />
     <ClCompile Include="..\Codes\Scene.cpp" />
+    <ClCompile Include="..\Codes\ScoreCount.cpp" />
+    <ClCompile Include="..\Codes\ScoreUI.cpp" />
     <ClCompile Include="..\Codes\Shader.cpp" />
     <ClCompile Include="..\Codes\ShaderMgr.cpp" />
     <ClCompile Include="..\Codes\SoldierIdle.cpp" />

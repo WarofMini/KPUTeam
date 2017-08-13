@@ -25,3 +25,5 @@ Station-png-0
 ResultPanel-png-0
 OutCom-png-2
 Btn-png-2
+ScoreBoard-png-0
+Count-png-6
