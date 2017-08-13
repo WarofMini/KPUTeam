@@ -195,6 +195,7 @@
     <ClInclude Include="..\Codes\GraphicDev.h" />
     <ClInclude Include="..\Codes\Gun.h" />
     <ClInclude Include="..\Codes\GunFlash.h" />
+    <ClInclude Include="..\Codes\HitScreen.h" />
     <ClInclude Include="..\Codes\HP.h" />
     <ClInclude Include="..\Codes\Input.h" />
     <ClInclude Include="..\Codes\Layer.h" />
@@ -312,6 +313,7 @@
     <ClCompile Include="..\Codes\GraphicDev.cpp" />
     <ClCompile Include="..\Codes\Gun.cpp" />
     <ClCompile Include="..\Codes\GunFlash.cpp" />
+    <ClCompile Include="..\Codes\HitScreen.cpp" />
     <ClCompile Include="..\Codes\HP.cpp" />
     <ClCompile Include="..\Codes\Input.cpp" />
     <ClCompile Include="..\Codes\Layer.cpp" />

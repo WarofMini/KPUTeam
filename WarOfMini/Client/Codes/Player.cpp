@@ -18,6 +18,7 @@
 #include "Tank.h"
 #include "Bomb.h"
 #include "GunFlash.h"
+#include "HitScreen.h"
 
 XMFLOAT3		g_vPlayerPos;
 
@@ -824,6 +825,20 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 					CGameObject* pGameObject = CBomb::Create(m_pContext);
 					pGameObject->SetTransformPosition(m_vtestpos);
 					pLayer->Ready_Object(L"Effect", pGameObject);
+
+					
+					//Hit Reaction==========================================
+					pGameObject = CHitScreen::Create(m_pContext);
+
+					m_vtestpos.y += 10.f;
+
+					pGameObject->SetTransformPosition(m_vtestpos);
+					pGameObject->SetTransformScale(XMFLOAT3(20.f, 20.f, 20.f));
+					((CHitScreen*)pGameObject)->SetAlphaSpeed(2.f);
+					pGameObject->Set_TextureNumber(0); //0 : 공격표시(히트) 1 : 데미지받았을때 (피격) OOPS
+					pLayer->Ready_Object(L"Effect", pGameObject);
+					//=======================================================
+
 
 	
 					//Dynamic Actor(::레이에 맞은 다이나믹 오브젝트 리액션)

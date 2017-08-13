@@ -352,6 +352,9 @@
     <Filter Include="02.Object\08.UI\14.BloodyScreen">
       <UniqueIdentifier>{7c6450e0-5987-4642-8cec-5a8bdb43a6e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\07.Effect\03.HitScreen">
+      <UniqueIdentifier>{d0c26245-49e8-4223-94dc-e6bb4c6780e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -699,6 +702,9 @@
     <ClInclude Include="..\Codes\BloodyScreen.h">
       <Filter>02.Object\08.UI\14.BloodyScreen</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\HitScreen.h">
+      <Filter>02.Object\07.Effect\03.HitScreen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -1000,6 +1006,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\BloodyScreen.cpp">
       <Filter>02.Object\08.UI\14.BloodyScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\HitScreen.cpp">
+      <Filter>02.Object\07.Effect\03.HitScreen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

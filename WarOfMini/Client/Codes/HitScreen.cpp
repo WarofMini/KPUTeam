@@ -1,33 +1,37 @@
 #include "stdafx.h"
-#include "Circle.h"
+#include "HitScreen.h"
 #include "Management.h"
 #include "ResourcesMgr.h"
 #include "ShaderMgr.h"
 #include "GraphicDev.h"
 #include "CameraMgr.h"
 #include "Transform.h"
+#include "Sound.h"
 
 
-CCircle::CCircle(ID3D11DeviceContext * pContext)
+CHitScreen::CHitScreen(ID3D11DeviceContext * pContext)
 :CEffect(pContext)
+, m_fAlpha(1.f)
+, m_fAlphaSpeed(0.f)
+{
+	m_bAllBillboardCheck = true;
+}
+
+CHitScreen::~CHitScreen(void)
 {
 }
 
-CCircle::~CCircle(void)
+CHitScreen* CHitScreen::Create(ID3D11DeviceContext * pContext)
 {
+	CHitScreen* pHitScreen = new CHitScreen(pContext);
+
+	if (FAILED(pHitScreen->Initialize()))
+		Safe_Release(pHitScreen);
+
+	return pHitScreen;
 }
 
-CCircle * CCircle::Create(ID3D11DeviceContext * pContext)
-{
-	CCircle* pEffect = new CCircle(pContext);
-
-	if (FAILED(pEffect->Initialize()))
-		Safe_Release(pEffect);
-
-	return pEffect;
-}
-
-HRESULT CCircle::Initialize(void)
+HRESULT CHitScreen::Initialize(void)
 {
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
@@ -35,8 +39,12 @@ HRESULT CCircle::Initialize(void)
 	return S_OK;
 }
 
-INT CCircle::Update(const FLOAT & fTimeDelta)
+INT CHitScreen::Update(const FLOAT & fTimeDelta)
 {
+	m_fAlpha = max((_float)(m_fAlpha - (fTimeDelta * m_fAlphaSpeed)), 0.0f);
+
+	m_pTransform->m_vPos.y = m_pTransform->m_vPos.y + (fTimeDelta * 10.f);
+
 
 	CEffect::Update(fTimeDelta);
 
@@ -46,18 +54,26 @@ INT CCircle::Update(const FLOAT & fTimeDelta)
 
 	XMStoreFloat4x4(&matViewWorld, XMLoadFloat4x4(&m_pTransform->m_matWorld) * matView);
 
-	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_ALPHA, this, matViewWorld._43);
+	ComputeBillboard();
 
+	if (m_fAlpha <= 0.0f)
+	{
+		m_bDead = true;
+	}
 
-	return 0;
+	if (!m_bDead)
+		CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_EFFECT_ALPHA, this, matViewWorld._43);
+
+	return m_bDead;
 }
 
-void CCircle::Render(void)
+void CHitScreen::Render(void)
 {
-
-	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Default"));
+	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_GunFlash"));
 
 	ID3D11Buffer* pBaseShaderCB = CGraphicDev::GetInstance()->GetBaseShaderCB();
+	ID3D11Buffer* pAlphaShaderCB = CGraphicDev::GetInstance()->GetAlphaShaderCB();
+
 	ID3D11SamplerState* pBaseSampler = CGraphicDev::GetInstance()->GetBaseSampler();
 
 	BASESHADER_CB tBaseShaderCB;
@@ -67,24 +83,31 @@ void CCircle::Render(void)
 	tBaseShaderCB.matProj = XMMatrixTranspose(XMLoadFloat4x4(CCameraMgr::GetInstance()->Get_CurCameraProj()));
 	m_pContext->UpdateSubresource(pBaseShaderCB, 0, NULL, &tBaseShaderCB, 0, 0);
 
+	ALPHA_CB tAlphaShaderCB;
+	tAlphaShaderCB.fAlpha = m_fAlpha;
+	m_pContext->UpdateSubresource(pAlphaShaderCB, 0, NULL, &tAlphaShaderCB, 0, 0);
 
 
-	m_pContext->VSSetShader(CShaderMgr::GetInstance()->Get_VertexShader(L"Shader_Default"), NULL, 0);
+	m_pContext->VSSetShader(CShaderMgr::GetInstance()->Get_VertexShader(L"Shader_GunFlash"), NULL, 0);
 	m_pContext->VSSetConstantBuffers(0, 1, &pBaseShaderCB);
-	m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_Default"), NULL, 0);
+	m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_GunFlash"), NULL, 0);
+	m_pContext->PSSetConstantBuffers(1, 1, &pAlphaShaderCB);
 	m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
 
+
+	//m_iTextureNumber 0 : 공격
+	//m_iTextureNumber 1 : 피격
 	m_pTexture->Render(0, m_iTextureNumber);
 	m_pBuffer->Render();
 
 }
 
-void CCircle::Release(void)
+void CHitScreen::Release(void)
 {
 	CEffect::Release();
 }
 
-HRESULT CCircle::Ready_Component(void)
+HRESULT CHitScreen::Ready_Component(void)
 {
 	CComponent* pComponent = NULL;
 
@@ -95,7 +118,7 @@ HRESULT CCircle::Ready_Component(void)
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Buffer", pComponent));
 
 	//Texture
-	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, L"Texture_Circle");
+	pComponent = CResourcesMgr::GetInstance()->Clone_ResourceMgr(RESOURCE_STAGE, L"Texture_Hit");
 	m_pTexture = dynamic_cast<CTextures*>(pComponent);
 	if (pComponent == NULL) return E_FAIL;
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Texture", pComponent));
