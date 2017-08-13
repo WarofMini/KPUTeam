@@ -35,8 +35,7 @@ void CStaticObject::Render(void)
 		m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_Object"));
 
 		ID3D11Buffer* pBaseShaderCB = CGraphicDev::GetInstance()->GetBaseShaderCB();
-		ID3D11Buffer* pDirShaderCB = CGraphicDev::GetInstance()->GetDirLightShaderCB();
-		ID3D11Buffer* pMaterialCB = CGraphicDev::GetInstance()->GetMaterialShaderCB();
+		ID3D11Buffer* pLightPowerShaderCB = CGraphicDev::GetInstance()->GetLightPowerCB();
 
 		
 		ID3D11SamplerState* pBaseSampler = CGraphicDev::GetInstance()->GetBaseSampler();
@@ -51,30 +50,19 @@ void CStaticObject::Render(void)
 
 		m_pContext->UpdateSubresource(pBaseShaderCB, 0, NULL, &tBaseShaderCB, 0, 0);
 
-		DIRECTIONALIGHT_CB tDirCB;
+		LIGHTPOWER_CB tLightPowerCB;
 
-		tDirCB.Ambient   = g_tDirectionalLight.Ambient;
-		tDirCB.Diffuse   = g_tDirectionalLight.Diffuse;
-		tDirCB.Specular  = g_tDirectionalLight.Specular;
-		tDirCB.Direction = XMVector4Normalize(XMLoadFloat3(&m_pTransform->m_vPos) - g_tDirectionalLight.Direction);
+		tLightPowerCB.m_fLightPower = g_fLightPower;
+		m_pContext->UpdateSubresource(pLightPowerShaderCB, 0, NULL, &tLightPowerCB, 0, 0);
 
-		m_pContext->UpdateSubresource(pDirShaderCB, 0, NULL, &tDirCB, 0, 0);
-
-		MATERIAL_CB tMaterialCB;
-
-		tMaterialCB.Ambient = XMVectorSet(0.8f, 0.8f, 0.8f, 1.0f);
-		tMaterialCB.Diffuse = XMVectorSet(0.8f, 0.8f, 0.8f, 1.0f);
-		tMaterialCB.Specular = XMVectorSet(0.8f, 0.8f, 0.8f, 10.0f);
-		tMaterialCB.Eye = XMLoadFloat3(&CCameraMgr::GetInstance()->Get_CurCameraEye());
-
-		m_pContext->UpdateSubresource(pMaterialCB, 0, NULL, &tMaterialCB, 0, 0);
 
 		m_pContext->VSSetShader(CShaderMgr::GetInstance()->Get_VertexShader(L"Shader_Object"), NULL, 0);
 		m_pContext->VSSetConstantBuffers(0, 1, &pBaseShaderCB);
 		m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_Object"), NULL, 0);
+		m_pContext->PSSetConstantBuffers(1, 1, &pLightPowerShaderCB);
 		m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
-		m_pContext->PSSetConstantBuffers(1, 1, &pDirShaderCB);
-		m_pContext->PSSetConstantBuffers(2, 1, &pMaterialCB);
+
+
 
 
 		CMeshMgr::GetInstance()->Render_MeshMgr(m_uiObjNum, m_iTextureNumber, FALSE);

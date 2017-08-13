@@ -21,6 +21,11 @@ private:
 	HRESULT Ready_GameLogic(void);
 	HRESULT Ready_Environment(void);
 
+	_float	m_fBlackOutTime;
+	_bool	m_bChange;
+	_bool	m_bCheck;
+	_float  m_fBlackCount;
+
 public:
 	virtual void Release(void);
 
@@ -38,6 +43,9 @@ public:
 	HRESULT	 InitPhysicsObject(void);
 
 	HRESULT  InitUIObject(void);
+
+	//정전기능
+	void	 BlackOutUpdate(const _float& fTimeDelta);
 
 
 private:

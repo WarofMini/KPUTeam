@@ -40,8 +40,8 @@ void CDynamicObject::Render(void)
 
 	ID3D11Buffer* pBaseShaderCB = CGraphicDev::GetInstance()->GetBaseShaderCB();
 	ID3D11Buffer* pDynamicShaderCB = CGraphicDev::GetInstance()->GetDynamicShaderCB();
-	ID3D11Buffer* pDirShaderCB = CGraphicDev::GetInstance()->GetDirLightShaderCB();
-	ID3D11Buffer* pMaterialCB = CGraphicDev::GetInstance()->GetMaterialShaderCB();
+	ID3D11Buffer* pLightPowerShaderCB = CGraphicDev::GetInstance()->GetLightPowerCB();
+
 
 	ID3D11SamplerState* pBaseSampler = CGraphicDev::GetInstance()->GetBaseSampler();
 
@@ -54,40 +54,23 @@ void CDynamicObject::Render(void)
 	tBaseShaderCB.vLightPos = XMVectorSet(g_vLightPos.x - g_vPlayerPos.x, g_vLightPos.y - g_vPlayerPos.y
 										, g_vLightPos.z - g_vPlayerPos.z, 1.f);
 
-	/*XMMATRIX matView = XMMatrixLookAtLH(XMLoadFloat3(&g_vLightPos) - XMLoadFloat3(&g_vPlayerPos)
-	, XMLoadFloat3(&g_vPlayerPos), XMVectorSet(0.f, 1.f, 0.f, 0.f));
-
-	tBaseShaderCB.matLightView[0] = XMMatrixTranspose(matView);*/
 
 	m_pContext->UpdateSubresource(pBaseShaderCB, 0, NULL, &tBaseShaderCB, 0, 0);
 
+	LIGHTPOWER_CB tLightPowerCB;
 
-	DIRECTIONALIGHT_CB tDirCB;
+	tLightPowerCB.m_fLightPower = g_fLightPower;
 
-	tDirCB.Ambient   = g_tDirectionalLight.Ambient;
-	tDirCB.Diffuse   = g_tDirectionalLight.Diffuse;
-	tDirCB.Specular  = g_tDirectionalLight.Specular;
-	tDirCB.Direction = XMVector4Normalize(XMLoadFloat3(&m_pTransform->m_vPos) - g_tDirectionalLight.Direction);
+	m_pContext->UpdateSubresource(pLightPowerShaderCB, 0, NULL, &tLightPowerCB, 0, 0);
 
-	m_pContext->UpdateSubresource(pDirShaderCB, 0, NULL, &tDirCB, 0, 0);
-
-	MATERIAL_CB tMaterialCB;
-
-	tMaterialCB.Ambient = XMVectorSet(0.8f, 0.8f, 0.8f, 1.0f);
-	tMaterialCB.Diffuse = XMVectorSet(0.8f, 0.8f, 0.8f, 1.0f);
-	tMaterialCB.Specular = XMVectorSet(0.8f, 0.8f, 0.8f, 50.0f);
-	tMaterialCB.Eye = XMLoadFloat3(&CCameraMgr::GetInstance()->Get_CurCameraEye());
-
-	m_pContext->UpdateSubresource(pMaterialCB, 0, NULL, &tMaterialCB, 0, 0);
-
+	
 
 	m_pContext->VSSetShader(CShaderMgr::GetInstance()->Get_VertexShader(L"Shader_DynamicMesh"), NULL, 0);
 	m_pContext->VSSetConstantBuffers(0, 1, &pBaseShaderCB);
 	m_pContext->VSSetConstantBuffers(1, 1, &pDynamicShaderCB);
+	m_pContext->VSSetConstantBuffers(2, 1, &pLightPowerShaderCB);
 	
 	m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_DynamicMesh"), NULL, 0);
-	m_pContext->PSSetConstantBuffers(2, 1, &pDirShaderCB);
-	m_pContext->PSSetConstantBuffers(3, 1, &pMaterialCB);
 
 	m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
 

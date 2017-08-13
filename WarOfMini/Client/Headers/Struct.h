@@ -121,6 +121,15 @@ typedef struct Material_CB
 	XMVECTOR Eye;
 
 }MATERIAL_CB;
+
+
+typedef struct tagLightPower_CB
+{
+	XMVECTOR m_fPad;
+	float	 m_fLightPower;
+
+}LIGHTPOWER_CB;
+
 //===============================================
 
 

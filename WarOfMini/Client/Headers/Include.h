@@ -56,4 +56,8 @@ extern _int	  g_GameState;
 
 extern _float g_fGunReaction;
 
+extern _float g_fLightPower;
+
+extern _bool  g_bBlackOut;
+
 #endif

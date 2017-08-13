@@ -10,20 +10,9 @@ cbuffer ConstantBuffer : register(b0)
 
 cbuffer ConstantLightBuffer : register(b1)
 {
-	float4   Light_Ambient;
-	float4   Light_Diffuse;
-	float4   Light_Specular;
-	float4   Light_Direction;
-	float	 Light_m_fPad;
-};
-
-cbuffer ConstantMaterialBuffer : register(b2)
-{
-	float4 Ambient;
-	float4 Diffuse;
-	float4 Specular;
-	float4 Reflect;
-	float4 Eye;
+	float4   vPad;
+	float	 fLightPower;
+	
 };
 
 struct VS_OUTPUT
@@ -49,10 +38,25 @@ VS_OUTPUT VS(float4 vPos : POSITION, float2 vTexUV : TEXCOORD0, float3 vNormal :
 
 	output.vTexUV = vTexUV;
 
+
+	output.vProjPos = output.vPos;
+	/*
+	vector vLightDir = vector(0.f, -0.5f, -0.5f, 0.f);
+
+	vector vWorld_Normal = normalize(mul(vector(vNormal.xyz, 0.f), output.vPosW));
+	vector vWorld_LightDirInv = normalize(vLightDir) * -1.f;
+
+	output.fShade = max(dot(vWorld_Normal, vWorld_LightDirInv), 0.f) + 0.3f;
+	output.fShade = min(output.fShade, 1.f);
+
+	output.vProjPos = output.vPos;
+	*/
+
+	/*
 	vector vWorld_Normal = normalize(mul(vector(vNormal.xyz, 0.f), matWorld));
 	output.vNormal = vWorld_Normal;
 	output.vProjPos = output.vPos;
-
+	*/
 	return output;
 }
 
@@ -71,7 +75,12 @@ PS_OUTPUT PS(VS_OUTPUT input)
 
 	output.vColor = txDiffuse.Sample(BaseSampler, input.vTexUV);
 
+	output.vColor.rgb *= fLightPower;
 
+	output.vDepth = input.vProjPos.z * 0.005f;
+
+
+	/*
 	input.vNormal = normalize(input.vNormal);
 
 	float3 toEye = Eye - input.vPosW;
@@ -119,7 +128,7 @@ PS_OUTPUT PS(VS_OUTPUT input)
 
 	output.vDepth = input.vProjPos.z * 0.005f;
 	output.vDepth.a = output.vColor.a;
-
+	*/
 
 	return output;
 }

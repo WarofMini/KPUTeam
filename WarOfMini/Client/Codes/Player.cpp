@@ -788,6 +788,25 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 						}
 					}
 
+					//조명을 맞추는 경우====================================
+					//CeilingLight
+					const char* pLightName = NULL;
+					string strLightName;
+					pLightName = Gunhit.block.actor->getName();
+					if (pLightName)
+					{
+						strLightName = pLightName;
+
+						if ((strLightName == "CeilingLight") && (g_bBlackOut == false))
+						{
+							g_fLightPower = 0.2f;
+							g_bBlackOut = true;
+						}
+					}
+					//======================================================
+
+
+
 					int intValue = -1;
 					//m_ColllayData.bShoot = true;
 					m_ColllayData.xmf3CollPos = m_vtestpos;

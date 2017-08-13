@@ -18,20 +18,9 @@ cbuffer ConstantBoneWorld :register(b1)
 
 cbuffer ConstantLightBuffer : register(b2)
 {
-	float4   Light_Ambient;
-	float4   Light_Diffuse;
-	float4   Light_Specular;
-	float4   Light_Direction;
-	float	 Light_m_fPad;
-};
+	float4   vPad;
+	float	 fLightPower;
 
-cbuffer ConstantMaterialBuffer : register(b3)
-{
-	float4 Ambient;
-	float4 Diffuse;
-	float4 Specular;
-	float4 Reflect;
-	float4 Eye;
 };
 
 
@@ -72,10 +61,14 @@ VS_OUTPUT VS(float4 vPos : POSITION, float2 vTexUV : TEXCOORD0, float3 vNormal :
 	output.vTexUV = vTexUV;
 
 
+	vector vLightDir = vector(0.f, -0.5f, -0.5f, 0.f);
 
 	vector vWorld_Normal = normalize(mul(vector(vNormal.xyz, 0.f), matTrans));
-	output.fNormal = vWorld_Normal;
-	
+	vector vWorld_LightDirInv = normalize(vLightDir) * -1.f;
+
+	output.fShade = max(dot(vWorld_Normal, vWorld_LightDirInv), 0.f) + (fLightPower * 0.3f);
+	output.fShade = min(output.fShade, 1.f);
+
 	output.vProjPos = output.vPos;
 	
 
@@ -97,47 +90,51 @@ PS_OUTPUT PS(VS_OUTPUT input)
 	PS_OUTPUT output = (PS_OUTPUT)0;
 
 	output.vColor = txDiffuse.Sample(BaseSampler, input.vTexUV);
-	
-	input.fNormal = normalize(input.fNormal);
-	float3 toEye = Eye - input.vPosW;
-	float distToEye = length(toEye);
-	// Normalize.
-	toEye /= distToEye;
 
-	//½ºÆåÅ§·¯ ÇØÁ¦
-	toEye = float3(0.0f, 0.0f, 0.0f);
-	
-	float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	float4 spec = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	
+	output.vColor.rgb *= input.fShade;
 
-	float3 lightVec = -Light_Direction;
+	output.vDepth = input.vProjPos.z * 0.005f;
 	
-	// The light vector aims opposite the direction the light rays travel.
-	ambient = Ambient * Light_Ambient;
+	//input.fNormal = normalize(input.fNormal);
+	//float3 toEye = Eye - input.vPosW;
+	//float distToEye = length(toEye);
+	//// Normalize.
+	//toEye /= distToEye;
 
-	
-	// Add ambient term.
-	float diffuseFactor = dot(lightVec, input.fNormal);
+	////½ºÆåÅ§·¯ ÇØÁ¦
+	//toEye = float3(0.0f, 0.0f, 0.0f);
+	//
+	//float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	//float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	//float4 spec = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	//
 
-	
-	// Flatten to avoid dynamic branching.	
-	if (diffuseFactor > 0.0f)
-	{
-		float3 v = reflect(-lightVec, input.fNormal);
-		float specFactor = pow(max(dot(v, toEye), 0.0f), Specular.w);
+	//float3 lightVec = -Light_Direction;
+	//
+	//// The light vector aims opposite the direction the light rays travel.
+	//ambient = Ambient * Light_Ambient;
 
-		diffuse = diffuseFactor * Diffuse * Light_Diffuse;
-		spec = specFactor * Specular * Light_Specular;
-	}
-	
-	float4 litColor = ambient + diffuse;
+	//
+	//// Add ambient term.
+	//float diffuseFactor = dot(lightVec, input.fNormal);
+
+	//
+	//// Flatten to avoid dynamic branching.	
+	//if (diffuseFactor > 0.0f)
+	//{
+	//	float3 v = reflect(-lightVec, input.fNormal);
+	//	float specFactor = pow(max(dot(v, toEye), 0.0f), Specular.w);
+
+	//	diffuse = diffuseFactor * Diffuse * Light_Diffuse;
+	//	spec = specFactor * Specular * Light_Specular;
+	//}
+	//
+	//float4 litColor = ambient + diffuse;
 
 
-	output.vColor.rgb *= litColor.rgb;
-	
-	output.vColor.rgba += spec;
+	//output.vColor.rgb *= litColor.rgb;
+	//
+	//output.vColor.rgba += spec;
 
 	return output;
 }

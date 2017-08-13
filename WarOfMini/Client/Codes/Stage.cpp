@@ -32,7 +32,11 @@
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 : CScene(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking)
-	, m_bEnterGame(false)
+, m_bEnterGame(false)
+, m_fBlackOutTime(0.0f)
+, m_bChange(false)
+, m_bCheck(false)
+, m_fBlackCount(0.5f)
 {
 }
 
@@ -100,6 +104,8 @@ _int CStage::Update(const _float& fTimeDelta)
 		g_Client->sendPacket(sizeof(Ser_PLAYER_DATA), INIT_CLIENT, reinterpret_cast<BYTE*>(&m_pPlayerData));
 		m_bEnterGame = true;
 	}
+	//정전기능
+	BlackOutUpdate(fTimeDelta);
 
 	CScene::Update(fTimeDelta);
 	CCameraMgr::GetInstance()->Update_CurCamera(fTimeDelta);
@@ -1250,4 +1256,49 @@ HRESULT CStage::InitUIObject(void)
 	pLayer->Ready_Object(L"Cursor", pGameObject);
 
 	return S_OK;
+}
+
+void CStage::BlackOutUpdate(const _float& fTimeDelta)
+{
+	if (g_bBlackOut)//정전이 된경우
+	{
+		m_fBlackOutTime += fTimeDelta;
+
+		if ( (m_fBlackOutTime >= 10.0f) && (m_bChange == false))
+		{
+			g_fLightPower = 1.0f;
+			m_fBlackOutTime = 0.0f;
+			m_bChange = true;
+		}
+
+		if (m_fBlackOutTime >= m_fBlackCount && (m_bChange == true))
+		{
+			m_fBlackOutTime = 0.0f;
+
+			if (m_bCheck == false)
+			{
+				m_bCheck = true;
+				g_fLightPower = 0.2f;
+				
+			}
+			else
+			{
+				g_fLightPower = 1.0f;
+				m_bCheck = false;
+			}
+
+			m_fBlackCount = max(m_fBlackCount - 0.1f, 0.f);
+
+			if (m_fBlackCount <= 0.0f)
+			{
+				g_bBlackOut = false;
+				m_fBlackOutTime = 0.0f;
+				m_bChange = false;
+				m_bCheck = false;
+				m_fBlackCount = 0.5f;
+				g_fLightPower = 1.0f;
+			}
+		}
+
+	}
 }
