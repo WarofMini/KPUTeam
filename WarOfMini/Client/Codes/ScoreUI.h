@@ -34,6 +34,7 @@ protected:
 
 public:
 	void	FlagUpdate(void);
+	void	SetScore(Ser_CurStation_DATA strData);
 
 };
 

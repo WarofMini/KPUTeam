@@ -139,3 +139,20 @@ void CScoreUI::FlagUpdate(void)
 		}
 	}
 }
+
+void CScoreUI::SetScore(Ser_CurStation_DATA strData)
+{
+	int iStaCntA = 0;
+	int iStaCntB = 0;
+
+	for (int i = 0; i < 5; ++i)
+	{
+		if (strData.station[i].flagState == 1)
+			++iStaCntA;
+		if (strData.station[i].flagState == 2)
+			++iStaCntB;
+	}
+
+	m_pCount[1]->Set_TextureNumber(iStaCntA);
+	m_pCount[0]->Set_TextureNumber(iStaCntB);
+}

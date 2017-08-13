@@ -8,6 +8,7 @@
 #include "Bomb.h"
 #include "Station.h"
 #include "Count.h"
+#include "ScoreUI.h"
 
 int		g_myid;
 XMFLOAT3 g_vPos;
@@ -540,6 +541,12 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 			((CStation*)*iter)->SerSetStation(curStationdata.station[i].flagState, 
 				curStationdata.station[i].ATeamCnt, curStationdata.station[i].BTeamCnt, curStationdata.station[i].fTime);
 		}
+
+		list<CGameObject*>* pObjScoreUI= pLayer->Find_ObjectList(L"Score");
+		if (pObjList == NULL)
+			break;
+		list<CGameObject*>::iterator iterUI = pObjScoreUI->begin();
+		((CScoreUI*)*iterUI)->SetScore(curStationdata);
 	}
 	break;
 	case TIMECOUNT: //½Ã°£
