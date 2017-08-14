@@ -221,7 +221,7 @@ void CServer::Accept_thread()
 		PlayerTemp.ID = User->id;
 		PlayerTemp.size = sizeof(Ser_PLAYER_DATA);
 		PlayerTemp.type = INIT_CLIENT;
-		PlayerTemp.sHP = 5;
+		PlayerTemp.sHP = 20;
 		
 		if (m_bGameStart == false)
 			PlayerTemp.SC_ID = GS_READY;//클라가 들어오면 게임시작전인지 시작하고 나서인지알려줄거
@@ -480,8 +480,8 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//근데 얘
 
 		if (strPlayerData.sHP >= 1000)
 		{
-			m_fTimeCnt = 1.4f;
-			m_vecPlayer[strPlayerData.ID].sHP = 5;
+			m_fTimeCnt = 1.5f;
+			m_vecPlayer[strPlayerData.ID].sHP = 20;
 		}
 		strSendData.sHP = m_vecPlayer[strPlayerData.ID].sHP;
 
