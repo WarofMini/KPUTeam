@@ -34,6 +34,8 @@ public:
 	void			SetRotate(XMFLOAT3 vRot);
 
 	PxRigidStatic*  GetPxActor(void);
+
+	void			SoundUpdate(void);
 };
 
 #endif // DefaultObj_h__

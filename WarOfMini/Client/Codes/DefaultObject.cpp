@@ -6,6 +6,7 @@
 #include "Management.h"
 #include "GraphicDev.h"
 #include "CameraMgr.h"
+#include "Sound.h"
 
 CDefaultObj::CDefaultObj(ID3D11DeviceContext* pContext)
 : CGameObject(pContext)
@@ -39,6 +40,9 @@ HRESULT CDefaultObj::Initialize()
 
 _int CDefaultObj::Update(const _float& fTimeDelta)
 {
+	SoundUpdate();
+
+
 	if (m_uiObjNum == MESHNUM_FENCE && (g_GameState == GS_START))
 	{
 		PxTransform _PxTransform = m_pPxActor->getGlobalPose();
@@ -132,6 +136,15 @@ HRESULT CDefaultObj::Ready_Component()
 	m_pTransform = dynamic_cast<CTransform*>(pComponent);
 	if (pComponent == NULL) return E_FAIL;
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Transform", pComponent));
+
+
+	//Sound
+	pComponent = CSound::Create((CTransform*)pComponent);
+	m_pSound = dynamic_cast<CSound*>(pComponent);
+	if (pComponent == NULL) return E_FAIL;
+	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Sound", pComponent));
+	m_pSound->Set_Sound(L"Clock", L"Clock.wav");
+	
 
 	return S_OK;
 }
@@ -247,4 +260,14 @@ void CDefaultObj::SetRotate(XMFLOAT3 vRot)
 PxRigidStatic * CDefaultObj::GetPxActor(void)
 {
 	return m_pPxActor;
+}
+
+void CDefaultObj::SoundUpdate(void)
+{
+	if (m_uiObjNum == MESHNUM_CLOCK)
+	{
+		m_pSound->MyPlaySound(L"Clock");
+		m_pSound->Check_Distance();
+		m_pSound->Check_SoundEnd();
+	}
 }

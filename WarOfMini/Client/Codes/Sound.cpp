@@ -57,6 +57,7 @@ _bool CSound::MyPlaySound(const wstring & wstrKey, _bool bLoop, _bool bOverWrite
 	{
 		if (bOverWrite)
 		{
+
 			iter_channel->second.dwTime = GetTickCount();
 			FMOD_System_PlaySound(m_pSystem, FMOD_CHANNEL_REUSE, iter->second, 0, &iter_channel->second.pChannel);
 		}
@@ -148,9 +149,10 @@ void CSound::Check_Distance(void)
 		XMFLOAT3 vPos;
 		if (m_pTransCom == NULL)
 		{
-			FMOD_Channel_SetVolume(iter->second.pChannel, 1.f * g_fEffectSoundValue);
+			FMOD_Channel_SetVolume(iter->second.pChannel, 0.5f * g_fEffectSoundValue);
 			continue;
 		}
+
 		vPos = m_pTransCom->m_vPos;
 
 		XMFLOAT3 vTargetPos = CCameraMgr::GetInstance()->Get_CurCameraEye();

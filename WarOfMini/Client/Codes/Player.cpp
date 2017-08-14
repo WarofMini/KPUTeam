@@ -733,8 +733,9 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 
 			CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
 
+			//Sound
 			m_pSound->MyPlaySound(L"Hit", false, true);
-
+			m_pSound->Check_Distance();
 
 			//GunFlash
 			CGameObject* pGunFlash = CGunFlash::Create(m_pContext);
