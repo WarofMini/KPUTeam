@@ -221,7 +221,7 @@ void CServer::Accept_thread()
 		PlayerTemp.ID = User->id;
 		PlayerTemp.size = sizeof(Ser_PLAYER_DATA);
 		PlayerTemp.type = INIT_CLIENT;
-		PlayerTemp.sHP = 5;
+		PlayerTemp.sHP = 20;
 		
 		if (m_bGameStart == false)
 			PlayerTemp.SC_ID = GS_READY;//클라가 들어오면 게임시작전인지 시작하고 나서인지알려줄거
