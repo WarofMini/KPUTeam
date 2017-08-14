@@ -39,7 +39,7 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 , m_pPxCharacterController(NULL)
 , m_fFallAcceleration(9.8f)
 , m_fFallvelocity(0.f)
-, m_iHP(5)
+, m_iHP(20)
 , m_iOriginHP(m_iHP)
 , m_pTank(NULL)
 , m_fBoost(0.0f)
@@ -815,6 +815,17 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 						string strID = strFullName.substr(12, strFullName.length() - 11);
 						intValue = atoi(strID.c_str());
 						m_ColllayData.iCollPlayerID = intValue;
+
+						//Hit Reaction==========================================
+						CGameObject* pGameObject = CHitScreen::Create(m_pContext);
+
+						m_vtestpos.y += 10.f;
+
+						pGameObject->SetTransformPosition(m_vtestpos);
+						pGameObject->SetTransformScale(XMFLOAT3(20.f, 20.f, 20.f));
+						((CHitScreen*)pGameObject)->SetAlphaSpeed(2.f);
+						pGameObject->Set_TextureNumber(0); //0 : 공격표시(히트) 1 : 데미지받았을때 (피격) OOPS
+						pLayer->Ready_Object(L"Effect", pGameObject);
 					}
 
 					/*m_ColllayData.size = sizeof(Ser_COLLLAY_DATA);
@@ -827,17 +838,17 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 					pLayer->Ready_Object(L"Effect", pGameObject);
 
 					
-					//Hit Reaction==========================================
-					pGameObject = CHitScreen::Create(m_pContext);
+					////Hit Reaction==========================================
+					//pGameObject = CHitScreen::Create(m_pContext);
 
-					m_vtestpos.y += 10.f;
+					//m_vtestpos.y += 10.f;
 
-					pGameObject->SetTransformPosition(m_vtestpos);
-					pGameObject->SetTransformScale(XMFLOAT3(20.f, 20.f, 20.f));
-					((CHitScreen*)pGameObject)->SetAlphaSpeed(2.f);
-					pGameObject->Set_TextureNumber(0); //0 : 공격표시(히트) 1 : 데미지받았을때 (피격) OOPS
-					pLayer->Ready_Object(L"Effect", pGameObject);
-					//=======================================================
+					//pGameObject->SetTransformPosition(m_vtestpos);
+					//pGameObject->SetTransformScale(XMFLOAT3(20.f, 20.f, 20.f));
+					//((CHitScreen*)pGameObject)->SetAlphaSpeed(2.f);
+					//pGameObject->Set_TextureNumber(0); //0 : 공격표시(히트) 1 : 데미지받았을때 (피격) OOPS
+					//pLayer->Ready_Object(L"Effect", pGameObject);
+					////=======================================================
 
 
 	
@@ -888,6 +899,22 @@ void CPlayer::Reload(void)
 
 void CPlayer::Set_KeyState(_short sBitKeyState, float fAngle, short sHP)
 {
+	if (m_iHP != sHP)
+	{
+		//Hit Reaction==========================================
+		CGameObject* pGameObject = CHitScreen::Create(m_pContext);
+
+		XMFLOAT3 xmf3Pos = m_pTransform->m_vPos;
+		xmf3Pos.y += 20.f;
+
+		pGameObject->SetTransformPosition(xmf3Pos);
+		pGameObject->SetTransformScale(XMFLOAT3(20.f, 20.f, 20.f));
+		((CHitScreen*)pGameObject)->SetAlphaSpeed(2.f);
+		pGameObject->Set_TextureNumber(1); //0 : 공격표시(히트) 1 : 데미지받았을때 (피격) OOPS
+		CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
+		pLayer->Ready_Object(L"Effect", pGameObject);
+	}
+
 	m_bKey[KEY_UP] = sBitKeyState & 1;
 	m_bKey[KEY_DOWN] = sBitKeyState & 2;
 	m_bKey[KEY_LEFT] = sBitKeyState & 4;

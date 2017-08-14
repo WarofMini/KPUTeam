@@ -89,7 +89,7 @@ HRESULT CResultUI::Initialize(void)
 
 _int CResultUI::Update(const _float & fTimeDelta)
 {
-	if (GetAsyncKeyState('M') & 1) //결과창UI 실행
+	if (iScoreA == 0 || iScoreB == 0) //결과창UI 실행
 	{
 		if (!m_bStart) //결과창 On
 		{
@@ -99,20 +99,20 @@ _int CResultUI::Update(const _float & fTimeDelta)
 			CCameraMgr::GetInstance()->Set_CurCamera(CCameraMgr::CAMERALIST::CAMERA_DYNAMIC);
 			m_bStart = true;
 		}
-		else //결과창 Off
-		{
-			m_pPanel->SetEnd(true);
-			m_pFlag->SetStart(false);
-			m_pOutCom->SetStart(false);
-			
-			for (int i = 0; i < 2; ++i)
-			{
-				m_pButton[i]->SetStart(false);
-			}
+		//else //결과창 Off
+		//{
+		//	m_pPanel->SetEnd(true);
+		//	m_pFlag->SetStart(false);
+		//	m_pOutCom->SetStart(false);
+		//	
+		//	for (int i = 0; i < 2; ++i)
+		//	{
+		//		m_pButton[i]->SetStart(false);
+		//	}
 
-			m_bStart = false;
-			m_bResultOff = true;
-		}	
+		//	m_bStart = false;
+		//	m_bResultOff = true;
+		//}	
 	}
 
 	if (m_pPanel->GetResetCheck() == true && (m_bResultOff == true))
@@ -177,6 +177,15 @@ void CResultUI::OutComUpdate(void)
 
 	if ((m_pPanel->GetStart()) && (m_pPanel->GetAlpha() >= 0.5f))
 	{
+		if (g_myid % 2)
+			m_pOutCom->Set_TextureNumber(0);
+		if (g_myid % 2)
+			m_pOutCom->Set_TextureNumber(1);
+		
+		if(iScoreA)
+			m_pFlag->Set_TextureNumber(1);
+		if (iScoreB)
+			m_pFlag->Set_TextureNumber(2);
 		//m_pOutCom->Set_TextureNumber(1); 
 		//나중에 승패판정 0 : 승리, 1: 패배
 		//m_pFlag->Set_TextureNumber();

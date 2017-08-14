@@ -13,6 +13,9 @@
 #include "FlagUI.h"
 #include "ScoreCount.h"
 
+int iScoreA = 1;
+int iScoreB = 1;
+
 CScoreUI::CScoreUI(ID3D11DeviceContext * pContext)
 : CUI(pContext)
 , m_pPanel(NULL)
@@ -155,4 +158,7 @@ void CScoreUI::SetScore(Ser_CurStation_DATA strData)
 
 	m_pCount[1]->Set_TextureNumber(iStaCntA);
 	m_pCount[0]->Set_TextureNumber(iStaCntB);
+
+	iScoreA = iStaCntA;
+	iScoreB = iStaCntB;
 }

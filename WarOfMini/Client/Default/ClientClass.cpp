@@ -427,7 +427,7 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 
 		pScene = CManagement::GetInstance()->GetScene();
 		pLayer = pScene->FindLayer(L"Layer_GameLogic");
-
+		
 		if (g_myid == pPlayerData->ID)
 		{
 			list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"Player");

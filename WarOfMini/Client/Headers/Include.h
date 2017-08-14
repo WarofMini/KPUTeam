@@ -36,6 +36,9 @@ extern _bool		g_bCollisionDraw;
 extern _uint		WINCX;
 extern _uint		WINCY;
 
+extern	int iScoreA;
+extern	int iScoreB;
+
 extern DIRECTIONALIGHT_CB g_tDirectionalLight;
 
 extern BYTE		g_CurrentScene;
