@@ -75,8 +75,8 @@ INT CBoostTrail::Update(const FLOAT & fTimeDelta)
 
 		if (m_bJumpCheck)
 		{
-			m_vStart = XMFLOAT3(-4.0f, -3.0f, -8.0f);
-			m_vEnd = XMFLOAT3(4.0f, -3.0f, -8.0f);
+			m_vStart = XMFLOAT3(-2.5f, -2.0f, -8.0f);
+			m_vEnd = XMFLOAT3(6.5f, -2.0f, -8.0f);
 
 			XMStoreFloat3(&m_vStart, XMVector3TransformCoord(XMLoadFloat3(&m_vStart), XMLoadFloat4x4(&m_pPlayer->GetTransformMatWorld())));
 			XMStoreFloat3(&m_vEnd, XMVector3TransformCoord(XMLoadFloat3(&m_vEnd), XMLoadFloat4x4(&m_pPlayer->GetTransformMatWorld())));
@@ -194,8 +194,8 @@ void CBoostTrail::CheckPlayer(void)
 
 void CBoostTrail::InitTrail(void)
 {
-	m_vStart = XMFLOAT3(-4.0f, -5.0f, -8.0f);
-	m_vEnd = XMFLOAT3(4.0f, -5.0f, -8.0f);
+	m_vStart = XMFLOAT3(-2.5f, -2.0f, -8.0f);
+	m_vEnd = XMFLOAT3(6.5f, -2.0f, -8.0f);
 
 	XMStoreFloat3(&m_vStart, XMVector3TransformCoord(XMLoadFloat3(&m_vStart), XMLoadFloat4x4(&m_pPlayer->GetTransformMatWorld())));
 	XMStoreFloat3(&m_vEnd, XMVector3TransformCoord(XMLoadFloat3(&m_vEnd), XMLoadFloat4x4(&m_pPlayer->GetTransformMatWorld())));

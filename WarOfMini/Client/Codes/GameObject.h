@@ -72,7 +72,7 @@ public:
 	XMFLOAT3	GetTransformPosition(void) { return m_pTransform->m_vPos; }
 	XMFLOAT3	GetTransformScale(void) { return m_pTransform->m_vScale; }
 	XMFLOAT3	GetTransformRotate(void) { return m_pTransform->m_vAngle; }
-	XMFLOAT4X4	GetTransformMatWorld(void) { return m_pTransform->m_matNScaleWorld; }
+	XMFLOAT4X4	GetTransformMatWorld(void) { return m_pTransform->m_matWorld; }
 
 	void			SetObjNum(_uint uNum) { m_uiObjNum = uNum; }
 	_uint			GetObjNum(void) { return m_uiObjNum; }
