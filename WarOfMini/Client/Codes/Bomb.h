@@ -5,7 +5,6 @@
 
 class CTextures;
 class CRcTex;
-class CSound;
 
 class CBomb
 	: public CEffect
@@ -15,7 +14,6 @@ private:
 	virtual ~CBomb(void);
 
 private:
-	CSound*		m_pSound;
 	_bool		m_bSoundStart;
 
 public:

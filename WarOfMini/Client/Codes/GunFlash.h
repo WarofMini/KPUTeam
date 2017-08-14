@@ -15,8 +15,8 @@ private:
 	virtual ~CGunFlash(void);
 
 private:
-	_float	m_fAlpha;
-	_float	m_fAlphaSpeed;
+	_float		m_fAlpha;
+	_float		m_fAlphaSpeed;
 
 public:
 	static CGunFlash* Create(ID3D11DeviceContext* pContext);

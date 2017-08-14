@@ -30,6 +30,7 @@
 #include "ResultUI.h"
 #include "ScoreUI.h"
 #include "BloodyScreen.h"
+#include "BoostTrail.h"
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 : CScene(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking)
@@ -129,6 +130,12 @@ HRESULT CStage::Ready_GameLogic(void)
 	((CPlayer*)pGameObject)->SetPosition(g_vPos);
 
 	pLayer->Ready_Object(L"Player", pGameObject);
+
+	//Trail
+	pGameObject = CBoostTrail::Create(m_pContext);
+	if (NULL == pGameObject)
+		return E_FAIL;
+	pLayer->Ready_Object(L"Trail", pGameObject);
 
 	/*pGameObject = CTank::Create(m_pGraphicDev, m_pContext);
 	((CTank*)pGameObject)->SetPos(XMFLOAT3(150.f, 0, 50.f));

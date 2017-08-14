@@ -29,3 +29,4 @@ ScoreBoard-png-0
 Count-png-6
 BloodyScreen-png-0
 Hit-png-2
+Trail-png-0

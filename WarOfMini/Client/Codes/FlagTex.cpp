@@ -9,10 +9,10 @@ CFlagTex::CFlagTex(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext)
 , m_uiVtxCnt(0)
 , m_uiIdxCnt(0)
 , m_pVertex(nullptr)
-, m_fResX(NULL)
-, m_fResZ(NULL)
-, m_fSizeX(NULL)
-, m_fSizeZ(NULL)
+, m_fResX(0.0f)
+, m_fResZ(0.0f)
+, m_fSizeX(0.0f)
+, m_fSizeZ(0.0f)
 {
 }
 

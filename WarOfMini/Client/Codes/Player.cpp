@@ -19,6 +19,7 @@
 #include "Bomb.h"
 #include "GunFlash.h"
 #include "HitScreen.h"
+#include "Sound.h"
 
 XMFLOAT3		g_vPlayerPos;
 
@@ -68,6 +69,7 @@ CPlayer::CPlayer(ID3D11DeviceContext* pContext)
 	XMStoreFloat4x4(&m_matBone, XMMatrixIdentity());
 	m_iBoneNum = 0;
 	//pSphereMesh = CSphereMesh::Create(m_pContext, 1.f);
+
 }
 
 CPlayer::~CPlayer(void)
@@ -124,6 +126,13 @@ HRESULT CPlayer::Initialize(ID3D11Device* pGraphicDev)
 		m_iTextureNumber = 0;
 	else 
 		m_iTextureNumber = 1;
+
+	//StageBGM
+	m_pSound->IsPlaying(L"Stage");
+	m_pSound->MyStopSoundAll();
+	m_pSound->MyPlaySound(L"Stage", true);
+	m_pSound->Update_Component(0.f);
+
 
 	return S_OK;
 }
@@ -216,6 +225,16 @@ HRESULT CPlayer::Ready_Component(ID3D11Device* pGraphicDev)
 	pComponent = m_pComStateMachine = CStateMachine::Create(SOLDIER_END);
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"StateMachine", pComponent));
+
+
+	//Sound
+	pComponent = CSound::Create(NULL);
+	m_pSound = dynamic_cast<CSound*>(pComponent);
+	if (pComponent == NULL) return E_FAIL;
+	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Sound", pComponent));
+	m_pSound->Set_Sound(L"Stage", L"Stage_Battle_bgm.mp3");
+	m_pSound->Set_Sound(L"Hit", L"GunShot.wav");
+
 
 	return S_OK;
 }
@@ -713,6 +732,9 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 			XMStoreFloat3(&m_vWorldGunPos, XMVector3TransformCoord(XMLoadFloat3(&m_vWorldGunPos), XMLoadFloat4x4(&vmatWorld)));
 
 			CLayer* pLayer = CManagement::GetInstance()->GetScene()->FindLayer(L"Layer_GameLogic");
+
+			m_pSound->MyPlaySound(L"Hit", false, true);
+
 
 			//GunFlash
 			CGameObject* pGunFlash = CGunFlash::Create(m_pContext);

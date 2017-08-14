@@ -79,6 +79,11 @@ HRESULT CResourcesMgr::Ready_Buffer(ID3D11Device* pGraphicDev, ID3D11DeviceConte
 	case BUFFER_FLAGTEX:
 		pResource = CFlagTex::Create(pGraphicDev, pContext, wCntX, wCntZ, wItvX, wItvZ);
 		break;
+
+	case BUFFER_TRAILTEX:
+		pResource = CTrailTex::Create(pGraphicDev, pContext, wCntX, wCntZ, wItvX);
+		break;
+
 	}
 
 	NULL_CHECK_RETURN_MSG(pResource, E_FAIL, L"Ready_Buffer Create Failed");

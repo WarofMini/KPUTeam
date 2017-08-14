@@ -6,6 +6,7 @@
 #include "GraphicDev.h"
 #include "CameraMgr.h"
 #include "Transform.h"
+#include "Sound.h"
 
 
 CGunFlash::CGunFlash(ID3D11DeviceContext * pContext)
@@ -14,6 +15,7 @@ CGunFlash::CGunFlash(ID3D11DeviceContext * pContext)
 , m_fAlphaSpeed(0.f)
 {
 	m_bAllBillboardCheck = true;
+
 }
 
 CGunFlash::~CGunFlash(void)
@@ -40,6 +42,7 @@ HRESULT CGunFlash::Initialize(void)
 
 INT CGunFlash::Update(const FLOAT & fTimeDelta)
 {
+
 	m_fAlpha = max((_float)(m_fAlpha - (fTimeDelta * m_fAlphaSpeed)), 0.0f);
 
 	CEffect::Update(fTimeDelta);

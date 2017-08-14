@@ -49,12 +49,14 @@ HRESULT CBomb::Initialize(void)
 
 INT CBomb::Update(const FLOAT & fTimeDelta)
 {
+	/*
 	if (!m_bSoundStart)
 	{
 		m_pSound->MyPlaySound(L"Hit");
 		m_pSound->Check_Distance();
 		m_bSoundStart = true;
 	}
+	*/
 
 	m_fRealTime += fTimeDelta;
 
@@ -151,11 +153,13 @@ HRESULT CBomb::Ready_Component(void)
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Transform", pComponent));
 
 	//Sound
+	/*
 	pComponent = CSound::Create((CTransform*)pComponent);
 	m_pSound = dynamic_cast<CSound*>(pComponent);
 	if (pComponent == NULL) return E_FAIL;
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Sound", pComponent));
-	m_pSound->Set_Sound(L"Hit", L"WitchHit.wav");
+	m_pSound->Set_Sound(L"Hit", L"GunShot.wav");
+	*/
 
 	return S_OK;
 }

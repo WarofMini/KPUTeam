@@ -5,6 +5,7 @@
 #include "Transform.h"
 
 class CComponent;
+class CSound;
 
 
 class CGameObject
@@ -25,6 +26,11 @@ protected:
 	_float										m_fWeight; //·¹ÀÌ¿Í °´Ã¼°¡ ºÎµóÇûÀ»¶§
 	_float										m_fMass; //°´Ã¼¿Í °´Ã¼°¡ ºÎµóÇûÀ»¶§
 	_bool										m_bDead; //°´Ã¼ÀÇ ¼Ò¸ê ¿©ºÎ
+
+	//Sound
+	CSound*										m_pSound;
+
+
 protected:
 	ID3D11DeviceContext* m_pContext;
 
@@ -66,6 +72,7 @@ public:
 	XMFLOAT3	GetTransformPosition(void) { return m_pTransform->m_vPos; }
 	XMFLOAT3	GetTransformScale(void) { return m_pTransform->m_vScale; }
 	XMFLOAT3	GetTransformRotate(void) { return m_pTransform->m_vAngle; }
+	XMFLOAT4X4	GetTransformMatWorld(void) { return m_pTransform->m_matNScaleWorld; }
 
 	void			SetObjNum(_uint uNum) { m_uiObjNum = uNum; }
 	_uint			GetObjNum(void) { return m_uiObjNum; }

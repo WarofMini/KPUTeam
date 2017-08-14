@@ -111,6 +111,9 @@ HRESULT CRenderer::Ready_Renderer(void)
 	if (FAILED(CShaderMgr::GetInstance()->Ready_ShaderFromFiles(m_pGraphicDev, m_pContext, L"Shader_Panel", L"../Bin/ShaderCode/Shader_Panel.fx", 0)))
 		return E_FAIL;
 
+	if (FAILED(CShaderMgr::GetInstance()->Ready_ShaderFromFiles(m_pGraphicDev, m_pContext, L"Shader_Trail", L"../Bin/ShaderCode/Shader_Trail.fx", 0)))
+		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -301,6 +304,7 @@ void CRenderer::Render_Alpha(void)
 void CRenderer::Render_Effect_Alpha(void)
 {
 	CRenderTargetMgr::GetInstance()->Set_RenderTarget(L"RT_Blend", 2, TRUE);
+	CGraphicDev::GetInstance()->SetCullEnable(FALSE);
 	CGraphicDev::GetInstance()->SetAlphaEnable(TRUE);
 	CGraphicDev::GetInstance()->SetDepthStencilState(TRUE);
 
@@ -314,6 +318,7 @@ void CRenderer::Render_Effect_Alpha(void)
 
 	CGraphicDev::GetInstance()->SetDepthStencilState(FALSE);
 	CGraphicDev::GetInstance()->SetAlphaEnable(FALSE);
+	CGraphicDev::GetInstance()->SetCullEnable(TRUE);
 }
 
 void CRenderer::Render_UI(void)

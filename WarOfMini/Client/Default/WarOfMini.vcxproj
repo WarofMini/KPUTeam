@@ -167,6 +167,7 @@
     <ClInclude Include="..\Codes\BloodyScreen.h" />
     <ClInclude Include="..\Codes\Bomb.h" />
     <ClInclude Include="..\Codes\Boost.h" />
+    <ClInclude Include="..\Codes\BoostTrail.h" />
     <ClInclude Include="..\Codes\BulletNumbering.h" />
     <ClInclude Include="..\Codes\Button.h" />
     <ClInclude Include="..\Codes\Camera.h" />
@@ -258,6 +259,7 @@
     <ClInclude Include="..\Codes\Timer.h" />
     <ClInclude Include="..\Codes\Title.h" />
     <ClInclude Include="..\Codes\TitleBack.h" />
+    <ClInclude Include="..\Codes\TrailTex.h" />
     <ClInclude Include="..\Codes\Transform.h" />
     <ClInclude Include="..\Codes\UI.h" />
     <ClInclude Include="..\Codes\UIEffect.h" />
@@ -285,6 +287,7 @@
     <ClCompile Include="..\Codes\BloodyScreen.cpp" />
     <ClCompile Include="..\Codes\Bomb.cpp" />
     <ClCompile Include="..\Codes\Boost.cpp" />
+    <ClCompile Include="..\Codes\BoostTrail.cpp" />
     <ClCompile Include="..\Codes\BulletNumbering.cpp" />
     <ClCompile Include="..\Codes\Button.cpp" />
     <ClCompile Include="..\Codes\Camera.cpp" />
@@ -373,6 +376,7 @@
     <ClCompile Include="..\Codes\Timer.cpp" />
     <ClCompile Include="..\Codes\Title.cpp" />
     <ClCompile Include="..\Codes\TitleBack.cpp" />
+    <ClCompile Include="..\Codes\TrailTex.cpp" />
     <ClCompile Include="..\Codes\Transform.cpp" />
     <ClCompile Include="..\Codes\UI.cpp" />
     <ClCompile Include="..\Codes\UIEffect.cpp" />
@@ -454,6 +458,10 @@
     <FxCompile Include="..\Bin\ShaderCode\Shader_TitleBack.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderCode\Shader_Trail.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

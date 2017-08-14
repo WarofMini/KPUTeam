@@ -47,11 +47,11 @@ HRESULT CBloodyScreen::Initialize(void)
 	m_fX = (_float)(WINCX >> 1) + m_fMoveX;
 	m_fY = (_float)(WINCY >> 1) + m_fMoveY;
 
-	m_fSizeX = 1700.f;
-	m_fSizeY = 1000.f;
+	m_fSizeX = 1800.f;
+	m_fSizeY = 1100.f;
 
-	m_fOriginSizeX = 1700.f;
-	m_fOriginSizeY = 1000.f;
+	m_fOriginSizeX = 1800.f;
+	m_fOriginSizeY = 1100.f;
 
 
 	return S_OK;
@@ -69,7 +69,7 @@ _int CBloodyScreen::Update(const _float & fTimeDelta)
 	{
 		if (m_bCheck == false)
 		{
-			m_fAlpha = min(m_fAlpha + (fTimeDelta * 2.f), 1.0f);
+			m_fAlpha = min(m_fAlpha + (fTimeDelta * 1.f), 1.0f);
 
 			if (m_fAlpha >= 1.0f)
 			{
@@ -78,7 +78,7 @@ _int CBloodyScreen::Update(const _float & fTimeDelta)
 		}
 		else
 		{
-			m_fAlpha = max(m_fAlpha - (fTimeDelta * 2.f), 0.0f);
+			m_fAlpha = max(m_fAlpha - (fTimeDelta * 1.f), 0.0f);
 
 			if (m_fAlpha <= 0.0f)
 			{
@@ -91,7 +91,7 @@ _int CBloodyScreen::Update(const _float & fTimeDelta)
 	{
 		if (m_fAlpha > 0.0f)
 		{
-			m_fAlpha = max(m_fAlpha - (fTimeDelta * 2.f), 0.0f);
+			m_fAlpha = max(m_fAlpha - (fTimeDelta * 1.f), 0.0f);
 		}
 	}
 

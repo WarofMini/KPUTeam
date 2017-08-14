@@ -6,7 +6,6 @@
 class CEquipment;
 class CStateMachine;
 class CInput;
-
 class CGun;
 
 class CPlayer
@@ -117,6 +116,7 @@ private:
 
 
 	_uint			m_iGunFlashTexture;
+
 
 	//Physx SDK Member Variables =========================
 private:

@@ -3,7 +3,6 @@
 
 #include "UI.h"
 
-class CSound;
 
 class CLogoBack
 	: public CUI
@@ -11,9 +10,6 @@ class CLogoBack
 private:
 	explicit CLogoBack(ID3D11DeviceContext* pContext);
 	virtual ~CLogoBack(void);
-
-private:
-	CSound*		m_pSound;
 
 public:
 	static CLogoBack* Create(ID3D11DeviceContext* pContext);

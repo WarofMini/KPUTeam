@@ -5,6 +5,7 @@
 #include "RcTex.h"
 #include "CubeTex.h"
 #include "FlagTex.h"
+#include "TrailTex.h"
 #include "StaticMesh.h"
 #include "DynamicMesh.h"
 #include "Texture.h"
@@ -14,7 +15,7 @@ class CResourcesMgr
 	DECLARE_SINGLETON(CResourcesMgr)
 
 public:
-	enum BUFFERTYPE { BUFFER_RCTEX, BUFFER_CUBE, BUFFER_FLAGTEX, BUFFER_END };
+	enum BUFFERTYPE { BUFFER_RCTEX, BUFFER_CUBE, BUFFER_FLAGTEX, BUFFER_TRAILTEX, BUFFER_END };
 	enum MESHTYPE { MESH_STATIC, MESH_DYNAMIC, MESH_END };
 
 private:

@@ -355,6 +355,12 @@
     <Filter Include="02.Object\07.Effect\03.HitScreen">
       <UniqueIdentifier>{d0c26245-49e8-4223-94dc-e6bb4c6780e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="95.Engine\01.Resources\03.Buffer\04.Trail">
+      <UniqueIdentifier>{5d412814-727a-46bc-aa7b-95309c8a393a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\07.Effect\04.BoostTrail">
+      <UniqueIdentifier>{2adc8e6e-0c90-4ab9-b17d-8a1ae2be641a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -705,6 +711,12 @@
     <ClInclude Include="..\Codes\HitScreen.h">
       <Filter>02.Object\07.Effect\03.HitScreen</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\TrailTex.h">
+      <Filter>95.Engine\01.Resources\03.Buffer\04.Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\BoostTrail.h">
+      <Filter>02.Object\07.Effect\04.BoostTrail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -1010,6 +1022,12 @@
     <ClCompile Include="..\Codes\HitScreen.cpp">
       <Filter>02.Object\07.Effect\03.HitScreen</Filter>
     </ClCompile>
+    <ClCompile Include="..\Codes\TrailTex.cpp">
+      <Filter>95.Engine\01.Resources\03.Buffer\04.Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\BoostTrail.cpp">
+      <Filter>02.Object\07.Effect\04.BoostTrail</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -1070,6 +1088,9 @@
       <Filter>95.Engine\00.Utility\05.Shader\01.ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderCode\Shader_Panel.fx">
+      <Filter>95.Engine\00.Utility\05.Shader\01.ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderCode\Shader_Trail.fx">
       <Filter>95.Engine\00.Utility\05.Shader\01.ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>

@@ -11,6 +11,7 @@ CGameObject::CGameObject(ID3D11DeviceContext * pContext)
 , m_fWeight(0.0f)
 , m_fMass(0.0f)
 , m_bDead(false)
+, m_pSound(false)
 {
 }
 
