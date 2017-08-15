@@ -471,7 +471,9 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//±Ùµ¥ ¾ê
 		strSendData.sBitKey = strPlayerData.sBitKey;
 		strSendData.xmf3CollPos = strPlayerData.strColllayData.xmf3CollPos;
 
-		if (strPlayerData.strColllayData.iCollPlayerID != -1)
+		strSendData.iCollPlayerID = strPlayerData.strColllayData.iCollPlayerID;
+
+		if (strPlayerData.strColllayData.iCollPlayerID != -1 && strPlayerData.strColllayData.iCollPlayerID != 100)
 		{
 			for (int i = 0; i < vecID.size(); ++i)
 				if (m_vecPlayer[vecID[i]].ID == strPlayerData.strColllayData.iCollPlayerID)

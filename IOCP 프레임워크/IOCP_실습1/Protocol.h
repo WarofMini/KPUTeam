@@ -109,6 +109,7 @@ struct Ser_SEND_PLAYER_DATA
 	int ID;	// 이게 클라이언트에게 줄 id 값이야
 	float	fAngle;
 	short	sBitKey;
+	int iCollPlayerID;
 	XMFLOAT3 xmf3CollPos;
 	short	sHP;
 };
