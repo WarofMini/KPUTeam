@@ -496,6 +496,11 @@ void COtherPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 		CGameObject* pGunFlash = CGunFlash::Create(m_pContext);
 		pGunFlash->SetTransformPosition(XMFLOAT3(m_vWorldGunPos.x, m_vWorldGunPos.y, m_vWorldGunPos.z));
 
+		int iSpecialTexture = 0;
+
+		if (!m_bIsSoldier)
+			iSpecialTexture = 2;
+
 		if (m_iGunFlashTexture == 1)
 		{
 			m_iGunFlashTexture = 0;
@@ -509,7 +514,7 @@ void COtherPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 			((CGunFlash*)pGunFlash)->SetAlphaSpeed(15.f);
 		}
 
-		pGunFlash->Set_TextureNumber(m_iGunFlashTexture);
+		pGunFlash->Set_TextureNumber(m_iGunFlashTexture + iSpecialTexture);
 		pLayer->Ready_Object(L"Effect", pGunFlash);
 	}
 }

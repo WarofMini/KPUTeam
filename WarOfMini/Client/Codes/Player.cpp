@@ -829,6 +829,7 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 						{
 							g_fLightPower = 0.2f;
 							g_bBlackOut = true;
+							m_ColllayData.iCollPlayerID = 100;
 						}
 					}
 					//======================================================

@@ -424,7 +424,7 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 	case CLIENT_SEND_POSITION:
 	{
 		Ser_SEND_PLAYER_DATA* pPlayerData = reinterpret_cast<Ser_SEND_PLAYER_DATA*>((Ser_SEND_PLAYER_DATA*)buf);
-
+		
 		pScene = CManagement::GetInstance()->GetScene();
 		pLayer = pScene->FindLayer(L"Layer_GameLogic");
 		
@@ -445,19 +445,33 @@ void AsynchronousClientClass::ProcessPacket(const Packet buf[])
 
 			list<CGameObject*>::iterator iter = pObjList->begin();
 			list<CGameObject*>::iterator iter_end = pObjList->end();
+			bool bIsSoldier = true;
 
 			for (iter; iter != iter_end; ++iter)
 			{
 				if (((COtherPlayer*)*iter)->GetID() == pPlayerData->ID)
 				{
 					((COtherPlayer*)*iter)->Set_KeyState(pPlayerData->sBitKey, pPlayerData->fAngle, pPlayerData->sHP);
+					bIsSoldier = ((COtherPlayer*)*iter)->IsSoldier();
 				}
 			}
 			if (pPlayerData->xmf3CollPos.x != 0.f && pPlayerData->xmf3CollPos.y != 0.f && pPlayerData->xmf3CollPos.z != 0.f)
 			{
+				int iSpecialTexture = 0;
+
+				if (!bIsSoldier)
+					iSpecialTexture = 1;
+
 				CGameObject* pGameObject = CBomb::Create(CGraphicDev::GetInstance()->GetContext());
 				pGameObject->SetTransformPosition(pPlayerData->xmf3CollPos);
+				pGameObject->Set_TextureNumber(iSpecialTexture);
 				pLayer->Ready_Object(L"Effect", pGameObject);
+			}
+
+			if (pPlayerData->iCollPlayerID == 100)
+			{
+				g_fLightPower = 0.2f;
+				g_bBlackOut = true;
 			}
 		}
 	}
