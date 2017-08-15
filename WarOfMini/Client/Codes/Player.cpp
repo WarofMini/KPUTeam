@@ -742,6 +742,12 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 
 			pGunFlash->SetTransformPosition(XMFLOAT3(m_vWorldGunPos.x, m_vWorldGunPos.y, m_vWorldGunPos.z));
 
+			int iSpecialTexture = 0;
+
+			if (!m_bIsSoldier)
+				iSpecialTexture = 2;
+
+
 			if (m_iGunFlashTexture == 1)
 			{
 				m_iGunFlashTexture = 0;
@@ -755,7 +761,7 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 				((CGunFlash*)pGunFlash)->SetAlphaSpeed(15.f);
 			}
 
-			pGunFlash->Set_TextureNumber(m_iGunFlashTexture);
+			pGunFlash->Set_TextureNumber(m_iGunFlashTexture + iSpecialTexture);
 			pLayer->Ready_Object(L"Effect", pGunFlash);
 
 
@@ -856,8 +862,14 @@ void CPlayer::Soldier_Fire(const FLOAT& fTimeDelta)
 					g_Client->sendPacket(sizeof(Ser_COLLLAY_DATA), COLLISION_LAY, reinterpret_cast<BYTE*>(&m_ColllayData));*/
 
 					//Effect
+					int iSpecialTexture = 0;
+
+					if (!m_bIsSoldier)
+						iSpecialTexture = 1;
+
 					CGameObject* pGameObject = CBomb::Create(m_pContext);
 					pGameObject->SetTransformPosition(m_vtestpos);
+					pGameObject->Set_TextureNumber(iSpecialTexture);
 					pLayer->Ready_Object(L"Effect", pGameObject);
 
 					

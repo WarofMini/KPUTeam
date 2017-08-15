@@ -469,6 +469,35 @@ HRESULT CStage::InitStaticObject(void)
 	((CDefaultObj*)pGameObject)->SetPosition(m_vPos);
 	pLayer->Ready_Object(L"StaticObject", pGameObject);
 
+	//Door===========================================================================================
+	pGameObject = CDefaultObj::Create(m_pContext);
+
+	if (NULL == pGameObject)
+		return E_FAIL;
+
+	eMeshNum = MESHNUM_DOOR2;
+
+	vPos = XMVectorSet(1100.0f, 161.0f, 270.0f, 0.0f);
+	vAngle = XMVectorSet(270.0f, 150.0f, 0.0f, 0.0f);
+	vScale = XMVectorSet(1.99f, 2.0f, 2.5f, 0.0f);
+	((CDefaultObj*)pGameObject)->SetObjNum(eMeshNum);
+
+	XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vPos, vPos);
+	XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vAngle, vAngle);
+	XMStoreFloat3(&((CTransform*)pGameObject->Get_Component(L"Com_Transform"))->m_vScale, vScale);
+
+
+	XMStoreFloat3(&m_vScale, vScale);
+	XMStoreFloat3(&m_vPos, vPos);
+	XMStoreFloat3(&m_vAngle, vAngle);
+
+
+	((CDefaultObj*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, m_vScale, m_pCooking, "Door");
+	((CDefaultObj*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(m_vAngle.x), (_float)D3DXToRadian(m_vAngle.y), (_float)D3DXToRadian(m_vAngle.z)));
+	((CDefaultObj*)pGameObject)->SetPosition(m_vPos);
+	pLayer->Ready_Object(L"StaticObject", pGameObject);
+	//=============================================================================================
+
 
 	//Fence
 	for (int i = 0; i < 2; ++i)
@@ -883,6 +912,7 @@ HRESULT CStage::InitPhysicsObject(void)
 {
 	CLayer* pLayer = FindLayer(L"Layer_GameLogic");
 
+	/*
 	//Door
 	CPhysicsDoor* pDoorObject = CPhysicsDoor::Create(m_pContext);
 	(pDoorObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, XMFLOAT3(1.99f, 2.0f, 2.5f), m_pCooking, "PhysicsDoor");
@@ -893,7 +923,7 @@ HRESULT CStage::InitPhysicsObject(void)
 	(pDoorObject)->SetWeight(0.05f); //숫자가 클수록 피격됬을시 충격으로 멀리 날아간다.
 	(pDoorObject)->SetMass(0.001f); //객체와 객체가 부딛혔을때 밀리는 정도 (값이 높을수록 강하게 밀린다.)
 	pLayer->Ready_Object(L"PhysicsDoor", pDoorObject);
-
+	*/
 
 	CGameObject* pGameObject = CDefaultPhysicsObect::Create(m_pContext);
 	pGameObject->SetObjNum(MESHNUM_BOOK1);

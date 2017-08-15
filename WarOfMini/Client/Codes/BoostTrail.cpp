@@ -53,7 +53,9 @@ HRESULT CBoostTrail::Initialize(void)
 INT CBoostTrail::Update(const FLOAT & fTimeDelta)
 {
 	if (m_pPlayer == NULL)
+	{
 		CheckPlayer();
+	}
 
 	CEffect::Update(fTimeDelta);
 
@@ -195,7 +197,10 @@ void CBoostTrail::CheckPlayer(void)
 	list<CGameObject*>* pObjList = pLayer->Find_ObjectList(L"Player");
 
 	if (pObjList != NULL)
+	{
 		m_pPlayer = (CPlayer*)(*pObjList->begin());
+		InitTrail();
+	}
 }
 
 void CBoostTrail::InitTrail(void)

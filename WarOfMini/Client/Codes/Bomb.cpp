@@ -119,7 +119,7 @@ void CBomb::Render(void)
 	m_pContext->PSSetShader(CShaderMgr::GetInstance()->Get_PixelShader(L"Shader_Effect"), NULL, 0);
 	m_pContext->PSSetSamplers(0, 1, &pBaseSampler);
 
-	m_pTexture->Render(0, 0);
+	m_pTexture->Render(0, m_iTextureNumber);
 	m_pBuffer->Render();
 
 }
