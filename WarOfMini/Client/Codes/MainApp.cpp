@@ -22,7 +22,7 @@ CMainApp::CMainApp(void)
 {
 	srand(GetTickCount());
 	ZeroMemory(&m_szFPS, sizeof(_tchar) * 128);
-	m_bDebugRender = true;
+	m_bDebugRender = false;
 	//ÄÜ¼ÖÃ¢===================================
 	/*AllocConsole();
 	freopen("CONOUT$", "wt", stdout);

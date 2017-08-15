@@ -74,3 +74,16 @@ Fence-0-0
 Ceiling-0-0
 Sphere-0-0
 Tower-0-0
+CarboardBox-0-0
+JanitorCart-0-0
+Magazines-0-0
+FireExtinguisher-0-0
+Clipboard-0-0
+PaperGroup-0-0
+Papers-0-0
+Whiteboard-0-0
+CarboardBox2-0-0
+PowerOutletMulti-0-0
+Laptop-0-0
+FileBox1-0-0
+FileBox2-0-0

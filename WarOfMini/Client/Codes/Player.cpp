@@ -1023,7 +1023,7 @@ void CPlayer::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *
 	PxCapsuleControllerDesc	PxCapsuledesc;
 	PxCapsuledesc.position = PxExtendedVec3(0, 0, 0);
 	PxCapsuledesc.radius = 5.0f;
-	PxCapsuledesc.height = 10.0f;
+	PxCapsuledesc.height = 6.0f;
 	//캐릭터가 올라갈 수있는 장애물의 최대 높이를 정의합니다. 
 	PxCapsuledesc.stepOffset = 2.f;
 	

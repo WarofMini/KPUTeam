@@ -142,6 +142,7 @@ void CDynamicCamera::KeyState(const _float& fTimeDelta)
 	}
 
 	//Mouse Fix
+	/*
 	if (GetAsyncKeyState('Q') & 1)
 	{
 		if (m_bMouseFix == true)
@@ -149,6 +150,7 @@ void CDynamicCamera::KeyState(const _float& fTimeDelta)
 		else
 			m_bMouseFix = true;
 	}
+	*/
 
 	//Speed Control
 	if (GetAsyncKeyState('O') & 1) //Speed °¨¼Ó

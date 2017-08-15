@@ -154,11 +154,12 @@ void CRenderer::Render(void)
 
 
 	//·»´õÅ¸°Ù On/ Off
+	/*
 	if((GetAsyncKeyState('K')) & 1) 
 		m_bDrawRenderTarget = !m_bDrawRenderTarget;
 	if (m_bDrawRenderTarget) 
 		CRenderTargetMgr::GetInstance()->Render(L"RT_Blend");
-
+	*/
 	
 	m_pContext->IASetInputLayout(CShaderMgr::GetInstance()->Get_InputLayout(L"Shader_FogResult"));
 

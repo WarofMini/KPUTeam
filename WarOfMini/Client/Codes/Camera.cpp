@@ -10,7 +10,7 @@ CCamera::CCamera(ID3D11DeviceContext* pContext)
 , m_pUp(nullptr)
 , m_fNear(0.0f)
 , m_fFar(0.0f)
-, m_fCameraSpeed(100.0f)
+, m_fCameraSpeed(150.0f)
 , m_bMouseFix(false)
 , m_pPxScene(NULL)
 {
