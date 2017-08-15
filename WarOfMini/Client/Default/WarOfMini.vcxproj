@@ -200,6 +200,7 @@
     <ClInclude Include="..\Codes\HP.h" />
     <ClInclude Include="..\Codes\Input.h" />
     <ClInclude Include="..\Codes\Layer.h" />
+    <ClInclude Include="..\Codes\LightParticle.h" />
     <ClInclude Include="..\Codes\Loading.h" />
     <ClInclude Include="..\Codes\Logo.h" />
     <ClInclude Include="..\Codes\LogoBack.h" />
@@ -219,6 +220,7 @@
     <ClInclude Include="..\Codes\OtherSoldierState.h" />
     <ClInclude Include="..\Codes\OutCom.h" />
     <ClInclude Include="..\Codes\Panel.h" />
+    <ClInclude Include="..\Codes\Particle.h" />
     <ClInclude Include="..\Codes\PhysicsDoor.h" />
     <ClInclude Include="..\Codes\PhysicsObect.h" />
     <ClInclude Include="..\Codes\Player.h" />
@@ -320,6 +322,7 @@
     <ClCompile Include="..\Codes\HP.cpp" />
     <ClCompile Include="..\Codes\Input.cpp" />
     <ClCompile Include="..\Codes\Layer.cpp" />
+    <ClCompile Include="..\Codes\LightParticle.cpp" />
     <ClCompile Include="..\Codes\Loading.cpp" />
     <ClCompile Include="..\Codes\Logo.cpp" />
     <ClCompile Include="..\Codes\LogoBack.cpp" />
@@ -338,6 +341,7 @@
     <ClCompile Include="..\Codes\OtherSoldierState.cpp" />
     <ClCompile Include="..\Codes\OutCom.cpp" />
     <ClCompile Include="..\Codes\Panel.cpp" />
+    <ClCompile Include="..\Codes\Particle.cpp" />
     <ClCompile Include="..\Codes\PhysicsDoor.cpp" />
     <ClCompile Include="..\Codes\PhysicsObject.cpp" />
     <ClCompile Include="..\Codes\Player.cpp" />

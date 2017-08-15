@@ -31,6 +31,7 @@
 #include "ScoreUI.h"
 #include "BloodyScreen.h"
 #include "BoostTrail.h"
+#include "LightParticle.h"
 
 CStage::CStage(ID3D11Device* pGraphicDev, ID3D11DeviceContext* pContext, PxPhysics* pPxPhysicsSDK, PxScene* pPxScene, PxControllerManager*	pPxControllerManager, PxCooking* pCooking)
 : CScene(pGraphicDev, pContext, pPxPhysicsSDK, pPxScene, pPxControllerManager, pCooking)
@@ -152,6 +153,14 @@ HRESULT CStage::Ready_GameLogic(void)
 
 	pLayer->Ready_Object(L"OtherPlayer", pGameObject);
 	*/
+
+	//LightParticle
+
+	pGameObject = CLightParticle::Create(m_pContext);
+	if (NULL == pGameObject)
+		return E_FAIL;
+	pLayer->Ready_Object(L"Particle", pGameObject);
+
 	
 
 	m_mapLayer.insert(MAPLAYER::value_type(L"Layer_GameLogic", pLayer));
