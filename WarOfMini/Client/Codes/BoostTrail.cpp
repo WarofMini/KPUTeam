@@ -75,38 +75,44 @@ INT CBoostTrail::Update(const FLOAT & fTimeDelta)
 
 		if (m_bJumpCheck)
 		{
-			m_vStart = XMFLOAT3(-2.5f, -2.0f, -8.0f);
-			m_vEnd = XMFLOAT3(6.5f, -2.0f, -8.0f);
+			m_vStart = XMFLOAT3(-2.0f, -2.0f, -8.0f);
+			m_vMiddle = XMFLOAT3(3.0f, -1.0f, -8.0f);
+			m_vEnd = XMFLOAT3(4.0f, 2.0f, -8.0f);
+
 
 			XMStoreFloat3(&m_vStart, XMVector3TransformCoord(XMLoadFloat3(&m_vStart), XMLoadFloat4x4(&m_pPlayer->GetTransformMatWorld())));
+			XMStoreFloat3(&m_vMiddle, XMVector3TransformCoord(XMLoadFloat3(&m_vMiddle), XMLoadFloat4x4(&m_pPlayer->GetTransformMatWorld())));
 			XMStoreFloat3(&m_vEnd, XMVector3TransformCoord(XMLoadFloat3(&m_vEnd), XMLoadFloat4x4(&m_pPlayer->GetTransformMatWorld())));
 
 			for (int i = 0; i < m_pTrailBuffer->GetSizeZ(); ++i)
 			{
-				XMFLOAT3 Temp, Temp2;
+				XMFLOAT3 Temp, Temp1, Temp2;
 
 				if (i == 0)
 				{
 					Temp = m_pTrailVtx[0].vPos;
+					Temp1 = m_pTrailVtx[1].vPos;
 					Temp2 = m_pTrailVtx[(_int)(m_pTrailBuffer->GetSizeX()) - 1].vPos;
 
 					m_pTrailVtx[0].vPos = m_vStart;
+					m_pTrailVtx[1].vPos = m_vMiddle;
 					m_pTrailVtx[(_int)(m_pTrailBuffer->GetSizeX()) - 1].vPos = m_vEnd;
 				}
 				else
 				{
-					XMFLOAT3 vTemp, vTemp2;
+					XMFLOAT3 vTemp, vTemp1, vTemp2;
 
 					vTemp = m_pTrailVtx[((_int)(m_pTrailBuffer->GetSizeX())) * i].vPos;
-
+					vTemp1 = m_pTrailVtx[(((_int)(m_pTrailBuffer->GetSizeX())) * (i + 1)) - 2].vPos;
 					vTemp2 = m_pTrailVtx[(((_int)(m_pTrailBuffer->GetSizeX())) * (i + 1)) - 1].vPos;
 
 
 					m_pTrailVtx[((_int)(m_pTrailBuffer->GetSizeX())) * i].vPos = Temp;
-
+					m_pTrailVtx[(((_int)(m_pTrailBuffer->GetSizeX())) * (i + 1)) - 2].vPos = Temp1;
 					m_pTrailVtx[(((_int)(m_pTrailBuffer->GetSizeX())) * (i + 1)) - 1].vPos = Temp2;
 
 					Temp = vTemp;
+					Temp1 = vTemp1;
 					Temp2 = vTemp2;
 				}
 			}
@@ -194,25 +200,28 @@ void CBoostTrail::CheckPlayer(void)
 
 void CBoostTrail::InitTrail(void)
 {
-	m_vStart = XMFLOAT3(-2.5f, -2.0f, -8.0f);
-	m_vEnd = XMFLOAT3(6.5f, -2.0f, -8.0f);
+	m_vStart = XMFLOAT3(-2.0f, -2.0f, -8.0f);
+	m_vMiddle = XMFLOAT3(3.0f, -1.0f, -8.0f);
+	m_vEnd = XMFLOAT3(4.0f, 2.0f, -8.0f);
 
 	XMStoreFloat3(&m_vStart, XMVector3TransformCoord(XMLoadFloat3(&m_vStart), XMLoadFloat4x4(&m_pPlayer->GetTransformMatWorld())));
+	XMStoreFloat3(&m_vMiddle, XMVector3TransformCoord(XMLoadFloat3(&m_vMiddle), XMLoadFloat4x4(&m_pPlayer->GetTransformMatWorld())));
 	XMStoreFloat3(&m_vEnd, XMVector3TransformCoord(XMLoadFloat3(&m_vEnd), XMLoadFloat4x4(&m_pPlayer->GetTransformMatWorld())));
 
 	for (int i = 0; i < m_pTrailBuffer->GetSizeZ(); ++i)
 	{
-		XMFLOAT3 Temp, Temp2;
+		XMFLOAT3 Temp, Temp1, Temp2;
 
 		if (i == 0)
 		{
 			m_pTrailVtx[0].vPos = m_vStart;
+			m_pTrailVtx[1].vPos = m_vMiddle;
 			m_pTrailVtx[(_int)(m_pTrailBuffer->GetSizeX()) - 1].vPos = m_vEnd;
 		}
 		else
 		{
 			m_pTrailVtx[((_int)(m_pTrailBuffer->GetSizeX())) * i].vPos = m_vStart;
-
+			m_pTrailVtx[(((_int)(m_pTrailBuffer->GetSizeX())) * (i + 1)) - 2].vPos = m_vMiddle;
 			m_pTrailVtx[(((_int)(m_pTrailBuffer->GetSizeX())) * (i + 1)) - 1].vPos = m_vEnd;
 
 		}

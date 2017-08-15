@@ -507,6 +507,7 @@ HRESULT CStage::InitStaticObject(void)
 		((CDefaultObj*)pGameObject)->BuildObject(m_pPxPhysicsSDK, m_pPxScene, m_pPxMaterial, m_vScale, m_pCooking, "Fence");
 		((CDefaultObj*)pGameObject)->SetRotate(XMFLOAT3((_float)D3DXToRadian(m_vAngle.x), (_float)D3DXToRadian(m_vAngle.y), (_float)D3DXToRadian(m_vAngle.z)));
 		((CDefaultObj*)pGameObject)->SetPosition(m_vPos);
+		((CDefaultObj*)pGameObject)->SelectFence(true);
 		pLayer->Ready_Object(L"StaticObject", pGameObject);
 
 		//Two

@@ -11,6 +11,8 @@
 CDefaultObj::CDefaultObj(ID3D11DeviceContext* pContext)
 : CGameObject(pContext)
 , m_pPxActor(NULL)
+, m_bFenceCheck(false)
+, m_bSelectFence(false)
 {
 	m_uiObjNum = 0;
 }
@@ -45,8 +47,14 @@ _int CDefaultObj::Update(const _float& fTimeDelta)
 
 	if (m_uiObjNum == MESHNUM_FENCE && (g_GameState == GS_START))
 	{
+		m_bFenceCheck = true;
+
 		PxTransform _PxTransform = m_pPxActor->getGlobalPose();
 
+		if (_PxTransform.p.y <= -30.f)
+		{
+			m_pSound->MyStopSound(L"Fencee");
+		}
 		if (_PxTransform.p.y <= -40.f)
 		{
 			m_bDead = true;
@@ -144,6 +152,7 @@ HRESULT CDefaultObj::Ready_Component()
 	if (pComponent == NULL) return E_FAIL;
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Sound", pComponent));
 	m_pSound->Set_Sound(L"Clock", L"Clock.wav");
+	m_pSound->Set_Sound(L"Fence", L"Fence.mp3");
 	
 
 	return S_OK;
@@ -269,5 +278,11 @@ void CDefaultObj::SoundUpdate(void)
 		m_pSound->MyPlaySound(L"Clock");
 		m_pSound->Check_Distance();
 		m_pSound->Check_SoundEnd();
+	}
+	else if ((m_bFenceCheck == true) && (m_bSelectFence == true))
+	{
+		m_pSound->MyPlaySound(L"Fencee");
+		m_bFenceCheck = false;
+		m_bSelectFence = false;
 	}
 }

@@ -22,6 +22,7 @@ private:
 	VTXTEX*			m_pTrailVtx;
 
 	XMFLOAT3		m_vStart;
+	XMFLOAT3		m_vMiddle;
 	XMFLOAT3		m_vEnd;
 	_bool			m_bJumpCheck;
 

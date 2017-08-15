@@ -78,7 +78,7 @@ HRESULT CMainApp::Initialize(void)
 	CResourcesMgr::GetInstance()->Ready_Buffer(pGraphicDev, pContext, RESOURCE_STAGE, CResourcesMgr::BUFFER_FLAGTEX, L"Buffer_FlagTexThree", 20, 20, 40, 20);
 	CResourcesMgr::GetInstance()->Ready_Buffer(pGraphicDev, pContext, RESOURCE_STAGE, CResourcesMgr::BUFFER_FLAGTEX, L"Buffer_FlagTexFour", 20, 20, 40, 20);
 	CResourcesMgr::GetInstance()->Ready_Buffer(pGraphicDev, pContext, RESOURCE_STAGE, CResourcesMgr::BUFFER_FLAGTEX, L"Buffer_FlagTexFive", 20, 20, 40, 20);
-	CResourcesMgr::GetInstance()->Ready_Buffer(pGraphicDev, pContext, RESOURCE_STAGE, CResourcesMgr::BUFFER_TRAILTEX, L"Buffer_BoostTrail", 2, 20, 1);
+	CResourcesMgr::GetInstance()->Ready_Buffer(pGraphicDev, pContext, RESOURCE_STAGE, CResourcesMgr::BUFFER_TRAILTEX, L"Buffer_BoostTrail", 3, 20, 1);
 
 
 	// Management

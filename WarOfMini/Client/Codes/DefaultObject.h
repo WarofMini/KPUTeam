@@ -27,6 +27,8 @@ private:
 	//Physx SDK Member Variables =========================
 private:
 	PxRigidStatic*  m_pPxActor;
+	_bool			m_bFenceCheck;
+	_bool			m_bSelectFence;
 
 public:
 	void			BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMaterial *pPxMaterial, XMFLOAT3 vScale, PxCooking* pCooking,  const char* name);
@@ -36,6 +38,8 @@ public:
 	PxRigidStatic*  GetPxActor(void);
 
 	void			SoundUpdate(void);
+
+	void			SelectFence(_bool bCheck) { m_bSelectFence = bCheck; }
 };
 
 #endif // DefaultObj_h__
