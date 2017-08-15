@@ -51,9 +51,9 @@ _int CDefaultObj::Update(const _float& fTimeDelta)
 
 		PxTransform _PxTransform = m_pPxActor->getGlobalPose();
 
-		if (_PxTransform.p.y <= -30.f)
+		if (_PxTransform.p.y <= -20.f)
 		{
-			m_pSound->MyStopSound(L"Fencee");
+			m_pSound->MyStopSound(L"Fence");
 		}
 		if (_PxTransform.p.y <= -40.f)
 		{
@@ -152,7 +152,7 @@ HRESULT CDefaultObj::Ready_Component()
 	if (pComponent == NULL) return E_FAIL;
 	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Sound", pComponent));
 	m_pSound->Set_Sound(L"Clock", L"Clock.wav");
-	m_pSound->Set_Sound(L"Fence", L"Fence.mp3");
+	m_pSound->Set_Sound(L"Fence", L"Fence.wav");
 	
 
 	return S_OK;
@@ -281,7 +281,8 @@ void CDefaultObj::SoundUpdate(void)
 	}
 	else if ((m_bFenceCheck == true) && (m_bSelectFence == true))
 	{
-		m_pSound->MyPlaySound(L"Fencee");
+		m_pSound->MyPlaySound(L"Fence", true);
+		m_pSound->Check_Distance();
 		m_bFenceCheck = false;
 		m_bSelectFence = false;
 	}

@@ -15,6 +15,7 @@
 #include "CameraMgr.h"
 #include "FlagUI.h"
 #include "Button.h"
+#include "Sound.h"
 
 CResultUI::CResultUI(ID3D11DeviceContext * pContext)
 : CUI(pContext)
@@ -45,6 +46,9 @@ CResultUI* CResultUI::Create(ID3D11DeviceContext * pContext)
 
 HRESULT CResultUI::Initialize(void)
 {
+	if (FAILED(Ready_Component()))
+		return E_FAIL;
+
 	m_pPanel = CPanel::Create(m_pContext, L"Texture_ResultPanel");
 	((CUI*)m_pPanel)->SetSizeX(900);
 	((CUI*)m_pPanel)->SetSizeY(700);
@@ -167,6 +171,14 @@ void CResultUI::Release(void)
 
 HRESULT CResultUI::Ready_Component(void)
 {
+	CComponent* pComponent = NULL;
+	//Sound
+	pComponent = CSound::Create((CTransform*)pComponent);
+	m_pSound = dynamic_cast<CSound*>(pComponent);
+	if (pComponent == NULL) return E_FAIL;
+	m_mapComponent.insert(MAPCOMPONENT::value_type(L"Com_Sound", pComponent));
+	m_pSound->Set_Sound(L"button", L"button02.wav");
+
 	return S_OK;
 }
 
@@ -177,15 +189,24 @@ void CResultUI::OutComUpdate(void)
 
 	if ((m_pPanel->GetStart()) && (m_pPanel->GetAlpha() >= 0.5f))
 	{
-		if (g_myid % 2)
-			m_pOutCom->Set_TextureNumber(0);
-		if (g_myid % 2)
-			m_pOutCom->Set_TextureNumber(1);
-		
-		if(iScoreA)
+		if (iScoreA != 0)
+		{
 			m_pFlag->Set_TextureNumber(1);
-		if (iScoreB)
+
+			if (g_myid % 2)
+				m_pOutCom->Set_TextureNumber(1);
+			else
+				m_pOutCom->Set_TextureNumber(0);
+		}
+		if (iScoreB != 0)
+		{
 			m_pFlag->Set_TextureNumber(2);
+
+			if (g_myid % 2)
+				m_pOutCom->Set_TextureNumber(0);
+			else
+				m_pOutCom->Set_TextureNumber(1);
+		}
 		//m_pOutCom->Set_TextureNumber(1); 
 		//나중에 승패판정 0 : 승리, 1: 패배
 		//m_pFlag->Set_TextureNumber();
@@ -236,6 +257,11 @@ void CResultUI::ButtonCollision(void)
 			((CUI*)m_pButton[i])->SetSizeX(110);
 			((CUI*)m_pButton[i])->SetSizeY(110);
 			
+			if (m_bButtonSound[i] == false)
+			{
+				m_pSound->MyPlaySound(L"button");
+				m_bButtonSound[i] = true;
+			}
 
 			if (m_pInput->Get_DIMouseState(CInput::DIM_LB))
 			{
@@ -257,6 +283,11 @@ void CResultUI::ButtonCollision(void)
 		}
 		else
 		{
+			if (m_bButtonSound[i] == true)
+			{
+				m_pSound->MyStopSound(L"button");
+				m_bButtonSound[i] = false;
+			}
 			((CUI*)m_pButton[i])->SetSizeX(100);
 			((CUI*)m_pButton[i])->SetSizeY(100);
 		}

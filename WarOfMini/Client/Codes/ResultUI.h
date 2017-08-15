@@ -24,6 +24,7 @@ private:
 	CButtonUI*		m_pButton[2];
 	_bool			m_bStart;
 	_bool			m_bResultOff;
+	_bool			m_bButtonSound[2];
 public:
 	static CResultUI* Create(ID3D11DeviceContext* pContext);
 
