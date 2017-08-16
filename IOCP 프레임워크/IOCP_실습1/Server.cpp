@@ -483,7 +483,7 @@ void CServer::ProcessPacket(const Packet* buf, const unsigned int& id)	//±Ùµ¥ ¾ê
 		if (strPlayerData.sHP >= 1000)
 		{
 			m_fTimeCnt = 1.4f;
-			m_vecPlayer[strPlayerData.ID].sHP = 5;
+			m_vecPlayer[strPlayerData.ID].sHP = 20;
 		}
 		strSendData.sHP = m_vecPlayer[strPlayerData.ID].sHP;
 
