@@ -66,7 +66,7 @@ VS_OUTPUT VS(float4 vPos : POSITION, float2 vTexUV : TEXCOORD0, float3 vNormal :
 	vector vWorld_Normal = normalize(mul(vector(vNormal.xyz, 0.f), matTrans));
 	vector vWorld_LightDirInv = normalize(vLightDir) * -1.f;
 
-	output.fShade = max(dot(vWorld_Normal, vWorld_LightDirInv), 0.f) + (fLightPower * 0.3f);
+	output.fShade = max(dot(vWorld_Normal, vWorld_LightDirInv), 0.f) + (fLightPower * 0.7f);
 	output.fShade = min(output.fShade, 1.f);
 
 	output.vProjPos = output.vPos;

@@ -59,9 +59,6 @@ HRESULT CBloodyScreen::Initialize(void)
 
 _int CBloodyScreen::Update(const _float & fTimeDelta)
 {
-	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
-		return 0;
-
 	if (m_pPlayer == NULL)
 		CheckPlayer();
 
@@ -95,9 +92,11 @@ _int CBloodyScreen::Update(const _float & fTimeDelta)
 		}
 	}
 
-	
-
 	CGameObject::Update(fTimeDelta);
+
+	if (CCameraMgr::GetInstance()->Get_CurCamera() == CCameraMgr::CAMERA_DYNAMIC)
+		return 0;
+	
 
 	CManagement::GetInstance()->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
