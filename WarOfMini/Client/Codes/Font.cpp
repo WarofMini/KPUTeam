@@ -16,6 +16,7 @@ CFont::~CFont(void)
 HRESULT CFont::Ready_Font(const _tchar * pFontName)
 {
 	FAILED_CHECK(FW1CreateFactory(FW1_VERSION, &m_pFW1Factory));
+
 	FAILED_CHECK(m_pFW1Factory->CreateFontWrapper(m_pGraphicDev, pFontName, &m_pFontWrapper));
 
 	return S_OK;

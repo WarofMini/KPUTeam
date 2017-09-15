@@ -58,7 +58,11 @@ HRESULT CMainApp::Initialize(void)
 	CSound_Manager::GetInstance()->Ready_SoundManager();
 
 	//Ready Font
+	AddFontResource(L"../ThirdParty/FontFile/BMDOHYEON_ttf.ttf");
+	AddFontResource(L"../ThirdParty/FontFile/koverwatch.ttf");
+	CFontMgr::GetInstance()->Ready_Font(pGraphicDev, pContext, L"koverwatch");
 	CFontMgr::GetInstance()->Ready_Font(pGraphicDev, pContext, L"°íµñ");
+
 
 	// Resource
 	CResourcesMgr::GetInstance()->Reserve_ContainerSize(RESOURCE_END);

@@ -25,9 +25,9 @@ public:
 private:
 	ID3D11Device*			m_pGraphicDev;
 	ID3D11DeviceContext*	m_pContext;
+
 	IFW1Factory*			m_pFW1Factory;
 	IFW1FontWrapper*		m_pFontWrapper;
-
 };
 
 

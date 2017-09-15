@@ -9,6 +9,7 @@
 #include "Scene.h"
 #include "Player.h"
 #include "Layer.h"
+#include "FontMgr.h"
 
 CHPUI::CHPUI(ID3D11DeviceContext * pContext)
 : CUI(pContext)
@@ -127,6 +128,9 @@ void CHPUI::Render(void)
 
 	m_pTexture->Render(0, m_iTextureNumber);
 	m_pBuffer->Render();
+
+
+	CFontMgr::GetInstance()->Render_Font(L"koverwatch", L"HP", 30.f, 140.f, 785.f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.f));
 }
 
 void CHPUI::Release(void)

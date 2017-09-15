@@ -9,6 +9,7 @@
 #include "Scene.h"
 #include "Player.h"
 #include "Layer.h"
+#include "FontMgr.h"
 
 CBoostUI::CBoostUI(ID3D11DeviceContext * pContext)
 : CUI(pContext)
@@ -127,6 +128,8 @@ void CBoostUI::Render(void)
 
 	m_pTexture->Render(0, m_iTextureNumber);
 	m_pBuffer->Render();
+
+	CFontMgr::GetInstance()->Render_Font(L"koverwatch", L"BOOST", 30.f, 120.f, 834.f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.f));
 }
 
 void CBoostUI::Release(void)

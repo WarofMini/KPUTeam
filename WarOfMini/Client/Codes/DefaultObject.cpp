@@ -211,7 +211,6 @@ void CDefaultObj::BuildObject(PxPhysics* pPxPhysics, PxScene* pPxScene, PxMateri
 	m_pPxActor->setName(name);
 
 	pPxScene->addActor(*m_pPxActor);
-
 	/*
 	//바운딩박스
 	XMFLOAT3 vMin = *(CMeshMgr::GetInstance()->Get_MeshMin(m_uiObjNum));
